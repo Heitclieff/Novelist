@@ -8,9 +8,9 @@ Icon,
 ScrollView
  } from 'native-base'
  
-import Banner from '../../components/main/[container]/Banner'
-import { AssetImages } from '../../../systems/ImagesAssets'
-import CollectionFields from '../../components/main/[layout]/Collections/CollectionFileds'
+import Banner from '../../../components/main/[container]/Banner'
+import { AssetImages } from '../../../../systems/ImagesAssets'
+import CollectionFields from '../../../components/main/[layout]/Collections/CollectionFileds'
 
 
  interface MainProps {}

@@ -28,7 +28,8 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
       }) => {
         return (
         <VStack
-        w = '160px'
+        w = {160}
+        h = {280}
         space=  {3}
         bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "coolGray.100"}
         rounded={'md'}
@@ -36,8 +37,8 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
         >
             <Box 
             id = "Displaycase"
-            w = "150px"
-            h = "200px"
+            w = {150}
+            h = {200}
             rounded={'sm'}
             borderWidth={'1px'}
             borderColor={'gray.200'}
@@ -78,7 +79,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
               <IconButton 
               size = 'sm'
               w = '10%'
-              h = '25px'
+              h = {25}
               icon = {
                 <Icon 
                 as = {Feather} 

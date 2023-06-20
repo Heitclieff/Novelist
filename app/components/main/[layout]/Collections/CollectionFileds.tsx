@@ -22,7 +22,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
   return (
     <Box
     w =  '100%'
-    h = "350px"
+    h =  {350}
     p = {5}
     overflow = 'auto'
     >

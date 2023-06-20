@@ -38,8 +38,8 @@ const Appbar : React.FC <AppbarProps> = () => {
                >
                     <Button
                     rounded={'full'}
-                    w = '35px'
-                    h = '35px'
+                    w = {35}
+                    h = {35}
                     bg=  'gray.200'
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
@@ -54,8 +54,8 @@ const Appbar : React.FC <AppbarProps> = () => {
                     </Button>
                     <Button
                     rounded={'full'}
-                    w = '35px'
-                    h = '35px'
+                    w = {35}
+                    h = {35}
                     bg = 'coolGray.200'
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}

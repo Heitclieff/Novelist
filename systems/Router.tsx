@@ -8,6 +8,7 @@ import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons} from '@expo/vector-i
 import { Icon } from 'native-base'
 //Pages 
 import Main from '../app/pages/Main'
+import Category from '../app/pages/Category'
 
 interface Router { }
 
@@ -39,11 +40,21 @@ const TabsNavigation = () => {
         name = 'TabMain'
         component={Main}
         options={{
+          title : 'Home',
           headerShown: false,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={FontAwesome5} name = "home" />)
-          }
-        }
+          }}
+        />
+        <Tab.Screen
+        name = 'TabCategory'
+        component={Category}
+        options={{
+          title : 'Category',
+          headerShown: true,
+          tabBarIcon :(({size ,color}) => 
+          <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
+          }}
         />
       </Tab.Navigator>
     )

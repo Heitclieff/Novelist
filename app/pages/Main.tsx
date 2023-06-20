@@ -18,7 +18,7 @@ const Main: React.FC <Homeprops> = ({navigation}) => {
   return (
     <Box>
       <Appbar/>
-      <Box w = '100%' h=  '100%' pt = {3}>
+      <Box w = '100%' h= '100%' py={3}>
         <TabsControls/>
       </Box>
     </Box>
