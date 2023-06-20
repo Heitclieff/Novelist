@@ -57,3 +57,11 @@ export const Categorydata = [{
 },
 
 ]
+
+export const userdata = [{
+    username : "Heitclieff",
+    email : "kittituch.pulp@bumail.net",
+    follower : '100',
+    following : '200',
+    image : 'https://thicc-af.mywaifulist.moe/waifus/kiyotaka-ayanokoji-classroom-of-the-elite/F8ZuqDJpbyBprRJmQ3g7dvL6bdo89QUV4aovJ1Qz.jpg?class=thumbnail',
+}]

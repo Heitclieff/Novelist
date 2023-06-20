@@ -4,11 +4,12 @@ import { NativeBaseProvider } from 'native-base'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons} from '@expo/vector-icons';
+import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
 import { Icon } from 'native-base'
 //Pages 
 import Main from '../app/pages/Main'
 import Category from '../app/pages/Category'
+import Menu from '../app/pages/Menu'
 
 interface Router { }
 
@@ -26,7 +27,6 @@ const Router : React.FC <Router> = () =>  {
               options={{headerShown : false}}
               />
           </Stack.Navigator>
-
       </NativeBaseProvider>
     </NavigationContainer>
   
@@ -56,7 +56,18 @@ const TabsNavigation = () => {
           <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
           }}
         />
+         <Tab.Screen
+        name = 'TabMenu'
+        component={Menu}
+        options={{
+          title : 'Menu',
+          headerShown: false,
+          tabBarIcon :(({size ,color}) => 
+          <Icon size = {size} color = {color} as ={EvilIcons} name = "user" />)
+          }}
+        />
       </Tab.Navigator>
+      
     )
 }
 

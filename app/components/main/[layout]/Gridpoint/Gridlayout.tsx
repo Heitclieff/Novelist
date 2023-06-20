@@ -4,6 +4,7 @@ Box,
 ScrollView,
 VStack,
 Text,
+Center,
 } from 'native-base'
 import { FlatGrid } from 'react-native-super-grid'
 import CollectionItems from '../Collections/CollectionItems'
@@ -25,17 +26,21 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title}) => {
             </Text>
 
             <FlatGrid
+                
                 contentContainerStyle = {{paddingBottom : 150}}
                 showsVerticalScrollIndicator = {false}
                 itemDimension={130}
                 data = {collections}
                 spacing={10}
                 renderItem={({item}:any) => (
-                    <CollectionItems
-                    title = {item.title}
-                    images = {item.images}
-                    view = {item.view}
-                    />
+                    <Center>
+                        <CollectionItems
+                        title = {item.title}
+                        images = {item.images}
+                        view = {item.view}
+                        />
+                    </Center>
+                    
                 )}
                 >
             </FlatGrid> 

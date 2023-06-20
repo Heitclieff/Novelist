@@ -15,6 +15,8 @@ const CategoryGrid : React.FC <LayoutProps> = ({category}) => {
   return (
     <Box w=  '100%' p = {5} >
       <FlatGrid
+      bounces = {false}
+      bouncesZoom = {false}
       itemDimension={180}
       data = {category}
       spacing={10}
