@@ -10,6 +10,7 @@ import { Icon } from 'native-base'
 import Main from '../app/pages/Main'
 import Category from '../app/pages/Category'
 import Menu from '../app/pages/Menu'
+import Library from '../app/pages/Library'
 
 interface Router { }
 
@@ -54,6 +55,16 @@ const TabsNavigation = () => {
           headerShown: true,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
+          }}
+        />
+         <Tab.Screen
+        name = 'TabLibrary'
+        component={Library}
+        options={{
+          title : 'Library',
+          headerShown: true,
+          tabBarIcon :(({size ,color}) => 
+          <Icon size = {size} color = {color} as ={Ionicons} name = "ios-library" />)
           }}
         />
          <Tab.Screen

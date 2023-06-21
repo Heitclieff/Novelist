@@ -16,6 +16,7 @@ const CategoryGrid : React.FC <LayoutProps> = ({category}) => {
     <Box w=  '100%' p = {5} >
       <FlatGrid
       bounces = {false}
+      showsVerticalScrollIndicator = {false}
       bouncesZoom = {false}
       itemDimension={180}
       data = {category}

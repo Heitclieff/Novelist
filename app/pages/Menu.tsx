@@ -16,9 +16,9 @@ import Menubar from '../components/menu/[container]/Menubar'
 //userdata
 import { userdata } from '../../assets/VisualCollectionsdata'
 
-interface Pagesprops { }
+interface Pageprops { }
 
-const Menu :React.FC <Pagesprops> = () => {
+const Menu :React.FC <Pageprops> = () => {
   const Menuitems = [{
   title : 'Edit Profile',
   direct : '',
@@ -75,9 +75,10 @@ const Menu :React.FC <Pagesprops> = () => {
           w = '100%'
           
           >
-            {Menuitems.map((item) => {
+            {Menuitems.map((item, key) => {
               return (
                 <Optionfield
+                key={key}
                 title  = {item.title}
                 OptionIcon = {item.IconProperty}
               />    

@@ -8,12 +8,12 @@ VStack
 import Appbar from '../components/main/[container]/Appbar'
 import TabsControls from './[mainTabs]/TabsControls'
 
-interface Homeprops { 
+interface Pageprops { 
   navigation :any
 }
 
 
-const Main: React.FC <Homeprops> = ({navigation}) => {
+const Main: React.FC <Pageprops> = ({navigation}) => {
   
   return (
     <Box>
