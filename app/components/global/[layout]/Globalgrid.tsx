@@ -12,13 +12,15 @@ import { Dimensions, SafeAreaView ,View} from 'react-native'
 
 interface LayoutProps {
     collections : any
+    bottomSpace : number
+    multiproject : any
 }   
 
-const Globalgrid : React.FC <LayoutProps>= ({collections }) => {
+const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 , multiproject}) => {
     return (
     <Box w=  '100%' p = {5} >
             <FlatGrid
-                contentContainerStyle = {{paddingBottom : 160}}
+                contentContainerStyle = {{paddingBottom : bottomSpace}}
                 showsVerticalScrollIndicator = {false}
                 itemDimension={130}
                 data = {collections}
@@ -29,6 +31,7 @@ const Globalgrid : React.FC <LayoutProps>= ({collections }) => {
                         title = {item.title}
                         images = {item.images}
                         view = {item.view}
+                        multiproject = {multiproject}
                         />
                     </Center>
                     

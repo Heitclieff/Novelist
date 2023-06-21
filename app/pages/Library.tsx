@@ -41,6 +41,7 @@ const Library: React.FC <Pageprops> = () => {
         </Box>
         <Globalgrid
             collections={Collectionsdata}
+            bottomSpace={160}
         />
     </VStack>
   )

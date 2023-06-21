@@ -15,10 +15,12 @@ import { FontAwesome5 , Feather , AntDesign} from '@expo/vector-icons'
 interface CollectionProps { 
   title : string,
   view : string,
-  images : string
+  images : string,
+  avatar : any,
+  multiproject : any,
 }
 
-const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => {
+const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null , multiproject = null}) => {
   return (
     <Pressable >
       {({
@@ -29,7 +31,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
         return (
         <VStack
         w = {160}
-        h = {280}
+        h = {multiproject ? 300 : 280}
         space=  {3}
         bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "coolGray.100"}
         rounded={'md'}
@@ -54,7 +56,6 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
             <HStack justifyContent={'space-between'} w = '100%'>
               <VStack  w = '90%'>
                   <Text
-
                   fontWeight={'semibold'}
                   color = 'gray.700'
                   numberOfLines={2}
@@ -75,6 +76,35 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
                     name = 'eyeo'
                     />
                   </HStack>
+
+                  <HStack>
+                    {
+                      multiproject && multiproject.map((item:any ,key:number) => {
+                        return (
+                          <Box key = {key} rounded={'xl'} bg = 'coolGray.200' padding={0.5}>
+                            <Box
+                              id='images-container'
+                              w={5}
+                              h={5}
+                              rounded='full'
+                              bg='gray.300'
+                              overflow='hidden'
+                            >
+                              <Image
+                                w='100%'
+                                h='100%'
+                                resizeMode='cover'
+                                source={{ uri: item.image }}
+                                alt="image"
+                              />
+                            </Box>    
+                          </Box>
+                        )}
+                      )
+                    }
+                      
+                 
+                  </HStack>
               </VStack>
               <IconButton 
               size = 'sm'
@@ -87,6 +117,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images}) => 
                 name = 'more-vertical'/>}
                 />
             </HStack>
+           
         </VStack>
         )
       }}

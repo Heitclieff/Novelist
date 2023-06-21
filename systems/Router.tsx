@@ -11,6 +11,7 @@ import Main from '../app/pages/Main'
 import Category from '../app/pages/Category'
 import Menu from '../app/pages/Menu'
 import Library from '../app/pages/Library'
+import Creater from '../app/pages/Creater'
 
 interface Router { }
 
@@ -57,7 +58,17 @@ const TabsNavigation = () => {
           <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
           }}
         />
-         <Tab.Screen
+        <Tab.Screen
+        name = 'TabCreater'
+        component={Creater}
+        options={{
+          title : 'Create',
+          headerShown: false,
+          tabBarIcon :(({size ,color}) => 
+          <Icon size = {size} color = {color} as ={Ionicons} name = "create" />)
+          }}
+        />
+        <Tab.Screen
         name = 'TabLibrary'
         component={Library}
         options={{
