@@ -6,12 +6,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
 import { Icon } from 'native-base'
-//Pages 
+//Pages Tabs 
 import Main from '../app/pages/Main'
 import Category from '../app/pages/Category'
 import Menu from '../app/pages/Menu'
 import Library from '../app/pages/Library'
 import Creater from '../app/pages/Creater'
+
+// Pages Stack
+import Settings from '../app/pages/[stack]/settings/Settings'
 
 interface Router { }
 
@@ -27,6 +30,13 @@ const Router : React.FC <Router> = () =>  {
               name = "MainStack"
               component={TabsNavigation}
               options={{headerShown : false}}
+              />
+                <Stack.Screen 
+              name = "SettingsStack"
+              component={Settings}
+              options={{
+                title : 'Settings',
+                headerShown : true}}
               />
           </Stack.Navigator>
       </NativeBaseProvider>

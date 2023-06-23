@@ -73,3 +73,32 @@ export const userdata = [{
     image : 'https://static.wikia.nocookie.net/yahari/images/5/5d/Hachiman.png/revision/latest?cb=20180928155052',
 }
 ]
+
+import { FontAwesome5 , EvilIcons , Ionicons , Feather} from "@expo/vector-icons"
+
+export const Settingmenu = [{
+    title : 'Account',
+    detail : 'Password, Privacy, your personal detail.',
+    icon : EvilIcons,
+    name : 'user',
+    tag : 'account',
+},{
+    title : 'Notification',
+    detail : null,
+    icon : Ionicons,
+    name : 'notifications-outline',
+    tag : 'notification'
+},
+{
+    title : "Dark mode",
+    detail : null,
+    icon : Feather,
+    name : 'moon',
+    tag : 'system',
+},
+{
+    title : 'Log out',
+    detail : null ,
+    color : 'blue.600',
+    tag : 'system',
+}]

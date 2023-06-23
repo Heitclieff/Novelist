@@ -10,15 +10,17 @@ import { Feather, MaterialIcons } from '@expo/vector-icons'
 
  //Components
 import Userfield from '../components/menu/[container]/Userfield'
-import Optionfield from '../components/menu/[container]/Optionfield'
+import Optionfield from '../components/global/[container]/Optionfield'
 import Menubar from '../components/menu/[container]/Menubar'
 
 //userdata
 import { userdata } from '../../assets/VisualCollectionsdata'
 
-interface Pageprops { }
+interface Pageprops { 
+  navigation :any,
+}
 
-const Menu :React.FC <Pageprops> = () => {
+const Menu :React.FC <Pageprops> = ({navigation}) => {
   const Menuitems = [{
   title : 'Edit Profile',
   direct : '',
@@ -45,7 +47,7 @@ const Menu :React.FC <Pageprops> = () => {
 },
 {
   title : 'Settings',
-  direct : '',
+  direct : 'SettingsStack',
   IconProperty : {
     type : Feather,
     name : 'settings'
@@ -81,6 +83,8 @@ const Menu :React.FC <Pageprops> = () => {
                 key={key}
                 title  = {item.title}
                 OptionIcon = {item.IconProperty}
+                navigation={navigation}
+                direction = {item.direct}
               />    
               )
             })}
