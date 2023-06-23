@@ -7,13 +7,21 @@ import Topnovelpages from './[page]/Topnovelpages'
 import Hotnovelpages from './[page]/Hotnovelpages'
 import Allnovelpages from './[page]/Allnovelpages'
 
-const renderScene = SceneMap({
-     first: Firstpages,
-     second: Topnovelpages,
-     third : Hotnovelpages,
-     forth : Allnovelpages,
-   });
 
+const renderScene = (theme: string) => ({ route }: { route: Route }) => {
+     switch (route.key) {
+     case 'first':
+          return <Firstpages theme={theme} />;
+     case 'second':
+          return <Topnovelpages theme={theme} />;
+     case 'third':
+          return <Hotnovelpages theme={theme} />;
+     case 'fourth':
+          return <Allnovelpages theme={theme} />;
+       default:
+         return null;
+     }
+ };
 const renderTabBar = (props:any) => (
 <Box w = '100%' display=  'flex' flexDir={'row'} justifyContent={'center'} >
      <TabBar        
@@ -26,20 +34,25 @@ const renderTabBar = (props:any) => (
 
 );
 
-export default function TabsControls() {
+interface Tabprops { 
+     theme : any
+}
+
+const TabsControls : React.FC <Tabprops> = ({theme}) => {
      const layout = useWindowDimensions();
      const [index , setIndex] = useState<number>(0);
      const [routes] = useState([
      {key  : 'first' , title : 'Home'},
      {key  : 'second', title : "Top Novels"},
      {key  : 'third',  title : "Hot Novels"},
-     {key  : 'forth',  title : "All Novels"},
+     {key  : 'fourth',  title : "All Novels"},
      ])
 
+     const renderSceneWithTheme = renderScene(theme)
   return (
      <TabView
             navigationState={{index, routes}}
-            renderScene = {renderScene}
+            renderScene = {renderSceneWithTheme}
             renderTabBar={renderTabBar}
             onIndexChange={setIndex}
             initialLayout={{width  :layout.width}}
@@ -47,3 +60,5 @@ export default function TabsControls() {
      />
   )
 }
+
+export default TabsControls;

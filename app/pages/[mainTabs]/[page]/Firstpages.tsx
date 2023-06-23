@@ -13,9 +13,11 @@ import { AssetImages } from '../../../../systems/ImagesAssets'
 import CollectionFields from '../../../components/main/[layout]/Collections/CollectionFileds'
 
 
- interface MainProps {}
+ interface MainProps {
+     theme : any
+ }
 
-const Firstpages : React.FC <MainProps> = () => {
+const Firstpages : React.FC <MainProps> = ({theme}) => {
      const Collectionsdata =  [{
           title : 'yahari ore no seishun love comedy wa machigatteiru.',
           view : "100,503",
@@ -45,10 +47,12 @@ const Firstpages : React.FC <MainProps> = () => {
                          images = {AssetImages}
                     />
                          <CollectionFields
+                              theme = {theme}
                               title = "Hot New Novels"
                               collections = {Collectionsdata}             
                          />
                          <CollectionFields
+                         theme = {theme}
                          title = "Top new Novels"
                          collections = {Collectionsdata}    
                          />               

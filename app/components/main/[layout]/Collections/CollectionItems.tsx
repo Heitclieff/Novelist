@@ -19,10 +19,10 @@ interface CollectionProps {
   view : string,
   images : string,
   avatar : any,
+  theme :any,
 }
 
-const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null }) => {
-  const {colorMode} = useColorMode()
+const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, images ,avatar = null }) => {
   return (
     <Pressable >
       {({
@@ -35,7 +35,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
         w = {160}
         h = {280}
         space=  {3}
-        bg={isPressed ? colorMode === 'dark' ? "coolGray.700" : "coolGray.200" : isHovered ? colorMode === 'dark' ? "coolGray.800" : "coolGray.200"  : colorMode === 'dark'? 'coolGray.800' : "coolGray.100"}
+        bg={isPressed ? theme === 'dark' ? "coolGray.700" : "coolGray.200" : isHovered ? theme === 'dark' ? "coolGray.800" : "coolGray.200"  : null}
         rounded={'md'}
         alignItems={'center'}
         >
@@ -57,7 +57,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
               <VStack  w = '90%'>
                   <Text
                   fontWeight={'semibold'}
-                  color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                  color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                   numberOfLines={2}
                   >{title}</Text>
                   <HStack
@@ -67,7 +67,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
 
                     <Text 
                     fontSize={'xs'}
-                    color={colorMode === 'dark' ? Themecolor.collection.viewtext.dark : Themecolor.collection.viewtext.light}
+                    color={theme === 'dark' ? Themecolor.collection.viewtext.dark : Themecolor.collection.viewtext.light}
                     >{view}
                     </Text>
                     <Icon
@@ -84,7 +84,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
               icon = {
                 <Icon 
                 as = {Feather} 
-                color = {colorMode === 'dark' ?  'gray.400' : 'gray.700'}
+                color = {theme === 'dark' ?  'gray.200' : 'gray.700'}
                 name = 'more-vertical'/>}
                 />
             </HStack>

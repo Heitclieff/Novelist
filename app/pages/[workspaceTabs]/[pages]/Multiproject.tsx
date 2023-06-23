@@ -4,9 +4,11 @@ import { Box } from 'native-base'
 import Globalgrid from '../../../components/global/[layout]/Globalgrid'
 
 import { Collectionsdata } from '../../../../assets/VisualCollectionsdata'
-interface pageprops {}
+interface pageprops {
+  theme : any
+}
 
-const Multiproject : React.FC <pageprops> = () => {
+const Multiproject : React.FC <pageprops> = ({theme}) => {
   return (
     <Box
     w =  '100%'
@@ -14,6 +16,7 @@ const Multiproject : React.FC <pageprops> = () => {
     >
       <Globalgrid
         collections ={Collectionsdata}
+        theme = {theme}
       />
     </Box>
   )

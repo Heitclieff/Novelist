@@ -2,7 +2,6 @@ import React,{FC} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Themecolor } from './theme'
-import { useColorMode } from 'native-base'
 
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
 import { Icon } from 'native-base'
@@ -16,97 +15,106 @@ import Creater from '../app/pages/Creater'
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
 
-interface Router { }
+interface Router {
+  theme : any
+  setTheme : any
+ }
 
 const Tab =  createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 
-const Router : React.FC <Router> = () =>  {
-  const {colorMode} = useColorMode();
+const Router : React.FC <Router> = ({theme , setTheme}) =>  {
+  console.log("Router Props" ,theme)
   return (
     <Stack.Navigator screenOptions={{headerStyle : {
       
-      backgroundColor : colorMode === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,
+      backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,
     }, 
-      headerTitleStyle : {color : colorMode === 'dark' ? 'white' :'black' } ,
+      headerTitleStyle : {color : theme === 'dark' ? 'white' :'black' } ,
       
       }}>
         <Stack.Screen 
         name = "MainStack"
-        component={TabsNavigation}
-        options={{headerShown : false }}/>
-          <Stack.Screen 
+        options={{headerShown : false }}>
+          {(props:any) => <TabsNavigation {...props} theme = {theme} setTheme={setTheme}/>}
+        </Stack.Screen>
+        <Stack.Screen 
         name = "SettingsStack"
-        component={Settings}
         options={{
           title : 'Settings',
           headerShown : true,
         }}
-        />
+        >
+          {(props:any) => <Settings {...props} theme = {theme} setTheme = {setTheme}/>}
+        </Stack.Screen>
     </Stack.Navigator>
   )
 }
 
-const TabsNavigation = () => {
-    const {colorMode} = useColorMode();
+
+interface Tabprops { 
+  theme : any;
+  setTheme : any
+}
+const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
     return (
       <Tab.Navigator screenOptions={{
-        tabBarStyle : {backgroundColor : colorMode === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,borderTopColor : colorMode === 'dark' ? Themecolor.tabbar.border.dark : Themecolor.tabbar.border.light} ,
-        headerStyle : {backgroundColor : colorMode === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light , shadowColor : colorMode === 'dark' ? '#18181b': '#d1d5db'},
-        headerTitleStyle : {color : colorMode === 'dark' ? 'white' :'black'} ,
+        tabBarStyle : {backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,borderTopColor : theme === 'dark' ? Themecolor.tabbar.border.dark : Themecolor.tabbar.border.light} ,
+        headerStyle : {backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light , shadowColor : theme === 'dark' ? '#18181b': '#d1d5db'},
+        headerTitleStyle : {color : theme === 'dark' ? 'white' :'black'} ,
       }}>
         <Tab.Screen
         name = 'TabMain'
-        component= {Main}
         options={{
           title : 'Home',
           headerShown: false,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={FontAwesome5} name = "home" />)
-          }}
-        />
+          }}>
+            {(props:any) => <Main {...props} theme =  {theme}/>}
+          </Tab.Screen>
         <Tab.Screen
         name = 'TabCategory'
-        component={Category}
         options={{
           title : 'Category',
           headerShown: true,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
-          }}
-        />
+          }}>
+            {(props:any) => <Category {...props} theme =  {theme}/>}
+        </Tab.Screen>
         <Tab.Screen
         name = 'TabCreater'
-        component={Creater}
         options={{
           title : 'Create',
           headerShown: false,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={Ionicons} name = "create" />),
-          
-          }}
-        />
+          }}>
+             {(props:any) => <Creater {...props} theme =  {theme}/>}
+        </Tab.Screen>
         <Tab.Screen
         name = 'TabLibrary'
-        component={Library}
         options={{
           title : 'Library',
           headerShown: true,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={Ionicons} name = "ios-library" />)
-          }}
-        />
+          }}>
+          {(props:any) => <Library {...props} theme =  {theme}/>}
+        </Tab.Screen>
          <Tab.Screen
         name = 'TabMenu'
-        component={Menu}
         options={{
           title : 'Menu',
           headerShown: false,
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={EvilIcons} name = "user" />)
           }}
-        />
+        >
+          {(props:any) => <Menu {...props} theme =  {theme} setTheme = {setTheme} />}
+        </Tab.Screen>
       </Tab.Navigator>
       
     )

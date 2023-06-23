@@ -7,13 +7,15 @@ Center,
 Image,
 Pressable,
  } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 
 interface Itemsprops {
     images : string 
-    title : string
+    title : string 
+    theme : any
 }
 
-const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
+const CategoryItems : React.FC <Itemsprops> = ({images , title , theme}) =>{
   return (
     <Pressable >
     {({
@@ -39,7 +41,7 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
             </Box>
             <Box p = {2}>
                 <Center>
-                    <Text>{title ? title : "Title"}</Text>
+                    <Text color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}>{title ? title : "Title"}</Text>
                 </Center>
             </Box>
         

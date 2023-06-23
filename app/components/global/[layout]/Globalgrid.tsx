@@ -12,7 +12,8 @@ import { Dimensions, SafeAreaView ,View} from 'react-native'
 
 interface LayoutProps {
     collections : any
-    bottomSpace : number
+    bottomSpace : number,
+    theme :any
 }   
 
 interface Collections {
@@ -23,12 +24,13 @@ interface Collections {
 
 const MemorizedCollectitonsItems = React.memo(CollectionItems);
 
-const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 }) => {
+const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,theme}) => {
 
 
     const renderItem = ({item}: {item:Collections}) => (
         <Center>
             <MemorizedCollectitonsItems
+                theme = {theme}
                 title={item.title}
                 images = {item.images}
                 view = {item.view}

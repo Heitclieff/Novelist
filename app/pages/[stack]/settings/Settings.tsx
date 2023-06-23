@@ -9,9 +9,12 @@ import { Settingmenu } from '../../../../assets/VisualCollectionsdata'
 import { useColorMode } from 'native-base'
 import { Themecolor } from '../../../../systems/theme'
 
-interface Pageprops {}
+interface Pageprops {
+    theme : any ,
+    setTheme :any ,
+}
 
-const Settings : React.FC <Pageprops> = ()  => {
+const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
     const {colorMode} = useColorMode();
     const SettingsCategory = [{
         title : 'Account And Privacy',
@@ -29,7 +32,7 @@ const Settings : React.FC <Pageprops> = ()  => {
 
   return (
 
-    <Box w  = '100%' h=  '100%' bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
+    <Box w  = '100%' h=  '100%' bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
         <VStack p = {5} >
             {SettingsCategory.map((item ,key) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
@@ -37,12 +40,13 @@ const Settings : React.FC <Pageprops> = ()  => {
                     <VStack key = {key}>
                         <Text
                         fontWeight={'semibold'}
-                        color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                        color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                         >{item.title}</Text>
                         {option.map((optionitem , key) => {
                             return( 
-                                <Box mb = {1}>
+                                <Box mb = {1} key = {key}>
                                     <Optionfield
+                                        theme =  {theme}
                                         title = {optionitem.title}
                                         isDividerEnable = {false}
                                         justifyIcon  = 'start'

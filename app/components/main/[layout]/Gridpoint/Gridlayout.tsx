@@ -9,10 +9,12 @@ Center,
 import { FlatGrid } from 'react-native-super-grid'
 import CollectionItems from '../Collections/CollectionItems'
 import { Dimensions, SafeAreaView ,View} from 'react-native'
+import { Themecolor } from '../../../../../systems/theme'
 
 interface LayoutProps {
     collections : any
     title : string
+    theme : any
 }   
 
 interface Collections {
@@ -23,11 +25,12 @@ interface Collections {
 
 const MemorizedCollectitonsItems = React.memo(CollectionItems)
 
-const Gridlayout : React.FC <LayoutProps>= ({collections ,title}) => {
+const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
 
     const renderItem = ({item}: {item:Collections}) => (
         <Center>
             <MemorizedCollectitonsItems
+                theme  = {theme} 
                 title={item.title}
                 images = {item.images}
                 view = {item.view}
@@ -39,6 +42,7 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title}) => {
             <Text
             fontSize={'md'}
             fontWeight={'semibold'}
+            color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
 
             >   {title ? title : 'Title'}
             </Text>

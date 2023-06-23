@@ -21,9 +21,11 @@ import { userdata } from '../../assets/VisualCollectionsdata'
 
 interface Pageprops { 
   navigation :any,
+  theme : string,
+  setTheme: any,
 }
 
-const Menu :React.FC <Pageprops> = ({navigation}) => {
+const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
   const Menuitems = [{
   title : 'Edit Profile',
   direct : '',
@@ -58,16 +60,14 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
 },
 ]
 
-const {colorMode} = useColorMode();
-
   return (
     <Box 
     w=  '100%'
     h=  '100%'
     p = {3}
-    bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
+    bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
     >
-      <Menubar />
+      <Menubar  theme = {theme} setTheme = {setTheme} />
         <VStack paddingY={5}>
           <Box
           id = 'profile-section'
@@ -76,17 +76,19 @@ const {colorMode} = useColorMode();
           >
             <Userfield
               data = {userdata}
+              theme = {theme}
               />
           </Box>
-          <Box
+          <VStack
           id = 'Options-section'
           w = '100%'
-          
+          space=  {1}
           >
             {Menuitems.map((item, key) => {
               return (
                 <Optionfield
                 key={key}
+                theme = {theme}
                 title  = {item.title}
                 OptionIcon = {item.IconProperty}
                 navigation={navigation}
@@ -95,7 +97,7 @@ const {colorMode} = useColorMode();
               )
             })}
              
-          </Box>
+          </VStack>
         </VStack>
 
     </Box>

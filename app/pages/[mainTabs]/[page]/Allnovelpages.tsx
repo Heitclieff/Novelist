@@ -6,15 +6,18 @@ VStack,
 import Gridlayout from '../../../components/main/[layout]/Gridpoint/Gridlayout'
 import { Collectionsdata } from '../../../../assets/VisualCollectionsdata'
 
-interface Pageprops { }
+interface Pageprops { 
+  theme : any
+}
 
-const Allnovelpages : React.FC <Pageprops> = () => {
+const Allnovelpages : React.FC <Pageprops> = ({theme}) => {
   return (
     <Box 
     w = '100%' 
     h= '100%' 
     >
       <Gridlayout
+        theme = {theme}
         collections = {Collectionsdata}
         title =  'All Novels'
       />

@@ -8,10 +8,11 @@ import CategoryItems from '../[container]/CategoryItems';
 import { FlatGrid } from 'react-native-super-grid';
 
 interface LayoutProps {
-  category : any
+  category : any , 
+  theme : any
 }
 
-const CategoryGrid : React.FC <LayoutProps> = ({category}) => {
+const CategoryGrid : React.FC <LayoutProps> = ({category , theme}) => {
   return (
     <Box w=  '100%' p = {5} >
       <FlatGrid
@@ -21,6 +22,7 @@ const CategoryGrid : React.FC <LayoutProps> = ({category}) => {
       spacing={10}
       renderItem={({item}:any) => (
         <CategoryItems
+          theme = {theme}
           images = {item.images}
           title = {item.title}
         />

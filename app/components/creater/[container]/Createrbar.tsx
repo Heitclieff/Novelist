@@ -11,10 +11,11 @@ import { AntDesign } from '@expo/vector-icons'
 import { useColorMode } from 'native-base'
 import { Themecolor } from '../../../../systems/theme'
 
-interface Createprops { }
+interface Createprops { 
+  theme :any
+}
 
-const Createrbar : React.FC <Createprops> = () => {
-  const {colorMode} = useColorMode();
+const Createrbar : React.FC <Createprops> = ({theme}) => {
   return  (
     <Box
     safeAreaTop
@@ -26,6 +27,7 @@ const Createrbar : React.FC <Createprops> = () => {
             <Text
             fontSize={'lg'}
             fontWeight={'semibold'}
+            color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
             >   Workspace
             </Text>
             <IconButton 
@@ -36,7 +38,7 @@ const Createrbar : React.FC <Createprops> = () => {
               icon = {
                 <Icon 
                 as = {AntDesign} 
-                color = {colorMode === 'dark' ? Themecolor.icon.Addicon.dark : Themecolor.icon.Addicon.light}
+                color = {theme === 'dark' ? Themecolor.icon.Addicon.dark : Themecolor.icon.Addicon.light}
                 name = 'plus'/>}
                 />
         </HStack>

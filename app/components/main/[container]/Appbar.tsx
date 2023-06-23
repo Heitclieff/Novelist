@@ -11,15 +11,15 @@ Icon
 import { AntDesign,FontAwesome , Ionicons} from '@expo/vector-icons'
      
 interface AppbarProps {
-     bg : string
+    theme : any
 }
 
-const Appbar : React.FC <AppbarProps> = ({bg}) => {
+const Appbar : React.FC <AppbarProps> = ({theme}) => {
   return (
      <VStack 
      safeAreaTop = {12}
      w = '100%'
-     bg  = {bg}
+     bg  = {theme.bg}
      justifyContent={'flex-end'}
      >
           <HStack
@@ -32,6 +32,7 @@ const Appbar : React.FC <AppbarProps> = ({bg}) => {
                     <Text 
                     fontSize={'2xl'}
                     fontWeight={'bold'}
+                    color = {theme.textcolor}
                     >Nobelist</Text>
                </VStack>
                <HStack 
@@ -42,7 +43,7 @@ const Appbar : React.FC <AppbarProps> = ({bg}) => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg=  'gray.200'
+                    bg= {theme.Buttoncolor}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
 
@@ -50,7 +51,7 @@ const Appbar : React.FC <AppbarProps> = ({bg}) => {
                          <Icon 
                          as = {AntDesign}
                          name = 'search1'
-                         color={'gray.700'}
+                         color={theme.Buttonicon}
                          />
                      
                     </Button>
@@ -58,14 +59,14 @@ const Appbar : React.FC <AppbarProps> = ({bg}) => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg = 'coolGray.200'
+                    bg = {theme.Buttoncolor}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
                     >
                          <Icon 
                          as = {Ionicons}
                          name = {'notifications'}
-                         color={'gray.700'}
+                         color={theme.Buttonicon}
                          />
                     </Button>
                </HStack>

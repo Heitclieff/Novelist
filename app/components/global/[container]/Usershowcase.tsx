@@ -14,17 +14,18 @@ import { Themecolor } from '../../../../systems/theme'
 
 interface Showcaseprops {
     username : string,
-    image : string
+    image : string ,
+    theme :any
 }
 
-const Usershowcase :React.FC <Showcaseprops> = ({username, image}) => {
-    const {colorMode} = useColorMode();
+const Usershowcase :React.FC <Showcaseprops> = ({username, image , theme}) => {
+    const textcolor = theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light
   return (
     <HStack 
     w = '100%' 
     h = {130} 
     alignItems={'center'}
-    bg = {colorMode === 'dark' ? Themecolor.boxbg.dark : Themecolor.boxbg.light}
+    bg = {theme === 'dark' ? Themecolor.boxbg.dark : Themecolor.boxbg.light}
     rounded = 'md'
     space = {2}
     p = {3}>
@@ -53,21 +54,22 @@ const Usershowcase :React.FC <Showcaseprops> = ({username, image}) => {
             <Text
             fontSize={'lg'}
             fontWeight={'semibold'}
+            color = {textcolor}
             >{username ? username : 'Username'}</Text>
             <VStack justifyContent ={'center'}>
                 <HStack space = {1}>
                     <Text
-                    color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }
+                    color = {textcolor}
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }>Project</Text>
+                    <Text color = {textcolor}>Project</Text>
                 </HStack>
                 <HStack space = {1}>
                     <Text
-                    color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }
+                    color = {textcolor}
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }>Collaboration</Text>
+                    <Text color = {textcolor}>Collaboration</Text>
                 </HStack>
             </VStack>
         </VStack>

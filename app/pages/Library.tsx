@@ -14,14 +14,15 @@ import Showcasebar from '../components/library/[container]/Showcasebar'
 import { userdata , Collectionsdata } from '../../assets/VisualCollectionsdata'
 import Globalgrid from '../components/global/[layout]/Globalgrid'
 
-interface Pageprops {}
+interface Pageprops {
+  theme : any
+}
 
-const Library: React.FC <Pageprops> = () => {
-  const {colorMode} = useColorMode();
-  
+const Library: React.FC <Pageprops> = ({theme}) => {
   return (
-    <VStack w = '100%' h = '100%' p = {2} bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
+    <VStack w = '100%' h = '100%' p = {2} bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
         <Showcasebar
+        theme = {theme}
         books='10'
         username = {userdata[0].username}
         image= {userdata[0].image}
@@ -39,14 +40,16 @@ const Library: React.FC <Pageprops> = () => {
                 <Text
                 fontSize={'md'}
                 fontWeight={'semibold'}
+                color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                 >My Library
                 </Text>
             </HStack>
            
         </Box>
         <Globalgrid
-            collections={Collectionsdata}
-            bottomSpace={160}
+          theme =  {theme}  
+          collections={Collectionsdata}
+          bottomSpace={160}
         />
     </VStack>
   )

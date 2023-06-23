@@ -17,26 +17,28 @@ import { Themecolor } from '../../systems/theme'
 //visual data
 import { userdata } from '../../assets/VisualCollectionsdata'
 
-interface Pageprops { }
+interface Pageprops { 
+    theme : any
+}
 
-const Creater : React.FC <Pageprops> = () => {
-    const {colorMode} = useColorMode();
+const Creater : React.FC <Pageprops> = ({theme}) => {
   return (
-    <VStack w = '100%' h = '100%' bg = {colorMode === 'dark' ? Themecolor.bg.dark : 'gray.100'} space = {2}>
+    <VStack w = '100%' h = '100%' bg = {theme === 'dark' ? Themecolor.bg.dark : 'gray.100'} space = {2}>
         <Box h = '12%'>
-            <Createrbar/>
+            <Createrbar theme = {theme} />
         </Box>
         
         <Box w = '100%' h = '15%' alignItems={'center'}>
             <Box w = '90%'>
                 <Usershowcase
+                theme = {theme}
                 username = {userdata[0].username}
                 image={userdata[0].image}
                 />
             </Box>
         </Box>
         <Box w = '100%' h = '73%' >
-                <TabsControls/>
+             <TabsControls theme = {theme}/>
         </Box>
     </VStack>
   )

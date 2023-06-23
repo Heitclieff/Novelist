@@ -16,11 +16,11 @@ import { useColorMode } from 'native-base'
 import { Themecolor } from '../../../../systems/theme'
 interface FiledProps {
     data: any,
+    theme : any,
 }
 
-const Userfield: React.FC<FiledProps> = ({ data }) => {
-    const {colorMode} = useColorMode();
-
+const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
+    const Textcolor = theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light
     return (
         <Pressable >
             {({
@@ -34,7 +34,7 @@ const Userfield: React.FC<FiledProps> = ({ data }) => {
                         h={150}
                         alignItems={'center'}
                         rounded = 'md'
-                        bg = {isPressed ? colorMode === 'dark' ? "coolGray.700" :"coolGray.200" : isHovered ? colorMode === 'dark' ? "coolGray.700": "coolGray.200" : colorMode === 'dark' ? "coolGray.800": "coolGray.100"}
+                        bg = {isPressed ? theme === 'dark' ? Themecolor.bgPress.dark : Themecolor.bgPress.light : isHovered ? theme === 'dark' ? Themecolor.bgPress.dark: Themecolor.bgPress.light : theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
                         p = {1}
                     >
                         <Box w='30%'>
@@ -62,16 +62,19 @@ const Userfield: React.FC<FiledProps> = ({ data }) => {
                             <Text
                                 fontWeight={'semibold'}
                                 fontSize={'md'}
+                                color = {Textcolor}
                             >{data[0] ? data[0].username : "undifined username"}
                             </Text>
-                            <Text>
+                            <Text
+                                color = {Textcolor}
+                            >
                                 {data[0] ? data[0].email : "undifined Email"}
                             </Text>
                             <HStack space={2}>
-                                <Text fontSize={'xs'}>{`${data[0] ? data[0].follower : 0} follower`}</Text>
+                                <Text fontSize={'xs'} color = {Textcolor}>{`${data[0] ? data[0].follower : 0} follower`}</Text>
                                 <Divider
                                     orientation='vertical' />
-                                <Text fontSize={'xs'}>{`${data[0] ? data[0].following : 0} following`}</Text>
+                                <Text fontSize={'xs'} color = {Textcolor}>{`${data[0] ? data[0].following : 0} following`}</Text>
                             </HStack>
                         </Box>
                         <Box

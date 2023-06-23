@@ -5,22 +5,25 @@ import { Categorydata } from '../../assets/VisualCollectionsdata'
 import { useColorMode } from 'native-base'
 import { Themecolor } from '../../systems/theme'
 
-interface Pageprops { }
+interface Pageprops {
+  theme : any
+ }
 
-const Category: React.FC <Pageprops> = () => {
+const Category: React.FC <Pageprops> = ({theme}) => {
   const {colorMode} = useColorMode();
   return (
     <Box
     w = '100%'
     h = '100%'
     py = {3}
-    bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
+    bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
     >
       <ScrollView
       showsVerticalScrollIndicator = {false}
       />
       <CategoryGrid
-          category={Categorydata}
+        theme = {theme}
+        category={Categorydata}
         />
     </Box>
   )
