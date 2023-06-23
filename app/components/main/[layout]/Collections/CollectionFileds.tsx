@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC , useCallback} from 'react'
 import { 
 Box,
 VStack,
@@ -20,8 +20,27 @@ interface Fieldsprops {
   collections  : any
  }
 
+interface Collections {
+  title : string,
+  images : string[ ];
+  view : number;
+}
+
+const MemorizedColletionItems = React.memo(CollectionItems)
+
 const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
   const {colorMode} = useColorMode();
+
+  const renderCollectionItem = useCallback(
+    (items : Collections, round : number) => (
+      <MemorizedColletionItems
+      key = {round}
+      title = {items.title}
+      view = {items.view}
+      images = {items.images}
+      />
+    ),[]
+  );
   return (
     <Box
     w =  '100%'
@@ -54,23 +73,13 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
           space= {5}
           w = '100%'
           >
-            {collections ? 
-                  collections.map((items:any, round:number) => {
-                    return (
-                      <CollectionItems
-                        key = {round}
-                        title = {items.title}
-                        view = {items.view}
-                        images = {items.images}
-                      /> 
-                    )
-                  })
-                  : null
-                }
+            {collections
+            ? collections.map((items: any, round: number) =>
+                renderCollectionItem(items, round)
+              )
+            : null}
           </HStack>
         </ScrollView>
-       
-           
       </VStack> 
     </Box>
   )

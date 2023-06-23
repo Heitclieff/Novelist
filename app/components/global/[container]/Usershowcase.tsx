@@ -24,8 +24,6 @@ const Usershowcase :React.FC <Showcaseprops> = ({username, image}) => {
     w = '100%' 
     h = {130} 
     alignItems={'center'}
-    borderWidth={'1'}
-    borderColor={colorMode === 'dark' ? 'gray.500' :'gray.300'}
     bg = {colorMode === 'dark' ? Themecolor.boxbg.dark : Themecolor.boxbg.light}
     rounded = 'md'
     space = {2}

@@ -22,7 +22,7 @@ interface Pageprops { }
 const Creater : React.FC <Pageprops> = () => {
     const {colorMode} = useColorMode();
   return (
-    <VStack w = '100%' h = '100%' bg = {colorMode === 'dark' ? Themecolor.bg.dark : 'gray.200'} space = {2}>
+    <VStack w = '100%' h = '100%' bg = {colorMode === 'dark' ? Themecolor.bg.dark : 'gray.100'} space = {2}>
         <Box h = '12%'>
             <Createrbar/>
         </Box>
@@ -35,10 +35,8 @@ const Creater : React.FC <Pageprops> = () => {
                 />
             </Box>
         </Box>
-        <Box w = '100%' h = '73%' alignItems={'center'}>
-            <Box w = '90%' h = '100%' bg ={colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light} mt = {2} rounded ='md'>
+        <Box w = '100%' h = '73%' >
                 <TabsControls/>
-            </Box>
         </Box>
     </VStack>
   )

@@ -13,10 +13,28 @@ import { Dimensions, SafeAreaView ,View} from 'react-native'
 interface LayoutProps {
     collections : any
     bottomSpace : number
-    multiproject : any
 }   
 
-const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 , multiproject}) => {
+interface Collections {
+    title : string,
+    images : string [],
+    view : number,
+}
+
+const MemorizedCollectitonsItems = React.memo(CollectionItems);
+
+const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 }) => {
+
+
+    const renderItem = ({item}: {item:Collections}) => (
+        <Center>
+            <MemorizedCollectitonsItems
+                title={item.title}
+                images = {item.images}
+                view = {item.view}
+            />
+        </Center>
+    )
     return (
     <Box w=  '100%' p = {5} >
             <FlatGrid
@@ -25,20 +43,9 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 , mul
                 itemDimension={130}
                 data = {collections}
                 spacing={10}
-                renderItem={({item}:any) => (
-                    <Center>
-                        <CollectionItems
-                        title = {item.title}
-                        images = {item.images}
-                        view = {item.view}
-                        />
-                    </Center>
-                    
-                )}
+                renderItem={renderItem}
                 >
-            </FlatGrid> 
-
-            
+            </FlatGrid>        
     </Box>
   )
 }

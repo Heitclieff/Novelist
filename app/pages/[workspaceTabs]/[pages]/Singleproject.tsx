@@ -10,6 +10,7 @@ const Singleproject : React.FC <pageprops> = () => {
   return (
     <Box
     w =  '100%'
+    h = '100%'
     >
       <Globalgrid
         collections ={Collectionsdata}
