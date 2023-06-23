@@ -31,7 +31,6 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 , mul
                         title = {item.title}
                         images = {item.images}
                         view = {item.view}
-                        multiproject = {multiproject}
                         />
                     </Center>
                     

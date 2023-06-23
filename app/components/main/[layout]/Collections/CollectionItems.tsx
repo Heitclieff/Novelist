@@ -11,16 +11,18 @@ IconButton,
 Pressable,
  } from 'native-base'
 import { FontAwesome5 , Feather , AntDesign} from '@expo/vector-icons'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../../systems/theme'
 
 interface CollectionProps { 
   title : string,
   view : string,
   images : string,
   avatar : any,
-  multiproject : any,
 }
 
-const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null , multiproject = null}) => {
+const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null }) => {
+  const {colorMode} = useColorMode()
   return (
     <Pressable >
       {({
@@ -31,9 +33,9 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
         return (
         <VStack
         w = {160}
-        h = {multiproject ? 300 : 280}
+        h = {280}
         space=  {3}
-        bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "coolGray.100"}
+        bg={isPressed ? colorMode === 'dark' ? "coolGray.700" : "coolGray.200" : isHovered ? colorMode === 'dark' ? "coolGray.800" : "coolGray.200"  : colorMode === 'dark'? 'coolGray.800' : "coolGray.100"}
         rounded={'md'}
         alignItems={'center'}
         >
@@ -41,8 +43,6 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
             id = "Displaycase"
             w = {150}
             h = {200}
-            rounded={'sm'}
-            borderWidth={'1px'}
             borderColor={'gray.200'}
             >
               <Image
@@ -57,7 +57,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
               <VStack  w = '90%'>
                   <Text
                   fontWeight={'semibold'}
-                  color = 'gray.700'
+                  color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                   numberOfLines={2}
                   >{title}</Text>
                   <HStack
@@ -67,7 +67,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
 
                     <Text 
                     fontSize={'xs'}
-                    color={'gray.500'}
+                    color={colorMode === 'dark' ? Themecolor.collection.viewtext.dark : Themecolor.collection.viewtext.light}
                     >{view}
                     </Text>
                     <Icon
@@ -75,35 +75,6 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
                     as = {AntDesign}
                     name = 'eyeo'
                     />
-                  </HStack>
-
-                  <HStack>
-                    {
-                      multiproject && multiproject.map((item:any ,key:number) => {
-                        return (
-                          <Box key = {key} rounded={'xl'} bg = 'coolGray.200' padding={0.5}>
-                            <Box
-                              id='images-container'
-                              w={5}
-                              h={5}
-                              rounded='full'
-                              bg='gray.300'
-                              overflow='hidden'
-                            >
-                              <Image
-                                w='100%'
-                                h='100%'
-                                resizeMode='cover'
-                                source={{ uri: item.image }}
-                                alt="image"
-                              />
-                            </Box>    
-                          </Box>
-                        )}
-                      )
-                    }
-                      
-                 
                   </HStack>
               </VStack>
               <IconButton 
@@ -113,7 +84,7 @@ const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avat
               icon = {
                 <Icon 
                 as = {Feather} 
-                color = {'gray.700'}
+                color = {colorMode === 'dark' ?  'gray.400' : 'gray.700'}
                 name = 'more-vertical'/>}
                 />
             </HStack>

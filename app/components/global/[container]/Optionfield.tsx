@@ -11,6 +11,8 @@ Pressable
 } from 'native-base'
 import { Entypo } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 
 interface FiledProps {
     isDividerEnable : boolean,
@@ -38,6 +40,8 @@ const Optionfield :React.FC <FiledProps> = ({
     OptionIcon, 
     direction , 
     navigation}) => {
+
+        const {colorMode} = useColorMode();
   return (
     <Pressable onPress={()=> navigation.navigate(direction)}>
     {({
@@ -51,8 +55,7 @@ const Optionfield :React.FC <FiledProps> = ({
             h = {60}
             m = {0.3}
             rounded = 'md'
-            bg = {isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "coolGray.100"}
-        
+            bg = {isPressed ? colorMode === 'dark' ? Themecolor.bgPress.dark : Themecolor.bgPress.light : isHovered ? colorMode === 'dark' ?  Themecolor.bgPress.dark: Themecolor.bgPress.light : colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
             >
                 <HStack 
                 w= '100%'
@@ -69,8 +72,7 @@ const Optionfield :React.FC <FiledProps> = ({
                                 as={OptionIcon ? OptionIcon.type : null}
                                 name= {OptionIcon ? OptionIcon.name : ''}
                                 size={'md'}
-                                color = 'gray.700'
-                            
+                                color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                                 />
                         </Box>
                     }

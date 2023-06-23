@@ -10,14 +10,16 @@ Icon
 } from 'native-base'
 import { AntDesign,FontAwesome , Ionicons} from '@expo/vector-icons'
      
-interface AppbarProps {}
+interface AppbarProps {
+     bg : string
+}
 
-const Appbar : React.FC <AppbarProps> = () => {
+const Appbar : React.FC <AppbarProps> = ({bg}) => {
   return (
      <VStack 
      safeAreaTop = {12}
      w = '100%'
-     
+     bg  = {bg}
      justifyContent={'flex-end'}
      >
           <HStack
@@ -68,8 +70,7 @@ const Appbar : React.FC <AppbarProps> = () => {
                     </Button>
                </HStack>
           </HStack>
-          
-          <Divider bg ={'gray.100'}/>
+
      </VStack>
   )
 }

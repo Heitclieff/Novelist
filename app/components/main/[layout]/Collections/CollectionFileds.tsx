@@ -12,6 +12,8 @@ ScrollView
 } from 'native-base'
 import CollectionItems from './CollectionItems'
 import { FontAwesome5 ,Entypo } from '@expo/vector-icons'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../../systems/theme'
 
 interface Fieldsprops {
   title : string,
@@ -19,6 +21,7 @@ interface Fieldsprops {
  }
 
 const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
+  const {colorMode} = useColorMode();
   return (
     <Box
     w =  '100%'
@@ -32,7 +35,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           <Heading 
           size= 'md'
-          color = 'gray.700'
+          color = {colorMode === 'dark' ? Themecolor.collection.Filedtitle.dark : Themecolor.collection.Filedtitle.light}
           >{title}</Heading>
           <Box>
             <IconButton 

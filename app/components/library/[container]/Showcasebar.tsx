@@ -9,6 +9,8 @@ VStack,
 Icon,
 } from 'native-base'
 import { Ionicons } from '@expo/vector-icons'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 
 interface Showcaseprops {
     books : string,
@@ -17,6 +19,7 @@ interface Showcaseprops {
 }
 
 const Showcasebar :React.FC <Showcaseprops> = ({books , username, image}) => {
+    const {colorMode} = useColorMode();
   return (
     <HStack 
     w = '100%' 
@@ -54,15 +57,17 @@ const Showcasebar :React.FC <Showcaseprops> = ({books , username, image}) => {
                     <Icon
                     as = {Ionicons}
                     name = 'ios-library'
-                    color = 'gray.600'
+                    color = {colorMode === 'dark' ? Themecolor.icon.library.dark : Themecolor.icon.library.light}
                     />
                 </Box>
                 <HStack space = {1}>
                     <Text 
-                    color = 'gray.700'
+                    color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                     fontWeight={'semibold'}
                     >{books ? books : 0}</Text>
-                    <Text color = 'gray.700'>books in Library</Text>
+                    <Text color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}>
+                        Books in Library
+                    </Text>
                 </HStack>
             </HStack>
         </VStack>

@@ -9,6 +9,8 @@ VStack,
 Icon,
 } from 'native-base'
 import { Ionicons ,Foundation } from '@expo/vector-icons'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 
 interface Showcaseprops {
     username : string,
@@ -16,14 +18,15 @@ interface Showcaseprops {
 }
 
 const Usershowcase :React.FC <Showcaseprops> = ({username, image}) => {
+    const {colorMode} = useColorMode();
   return (
     <HStack 
     w = '100%' 
     h = {130} 
     alignItems={'center'}
     borderWidth={'1'}
-    borderColor={'gray.300'}
-    bg = 'coolGray.100'
+    borderColor={colorMode === 'dark' ? 'gray.500' :'gray.300'}
+    bg = {colorMode === 'dark' ? Themecolor.boxbg.dark : Themecolor.boxbg.light}
     rounded = 'md'
     space = {2}
     p = {3}>
@@ -56,17 +59,17 @@ const Usershowcase :React.FC <Showcaseprops> = ({username, image}) => {
             <VStack justifyContent ={'center'}>
                 <HStack space = {1}>
                     <Text
-                    color = 'gray.700'
+                    color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = 'gray.700'>Project</Text>
+                    <Text color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }>Project</Text>
                 </HStack>
                 <HStack space = {1}>
                     <Text
-                    color = 'gray.700'
+                    color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = 'gray.700'>Collaboration</Text>
+                    <Text color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light }>Collaboration</Text>
                 </HStack>
             </VStack>
         </VStack>

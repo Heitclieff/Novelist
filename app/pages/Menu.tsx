@@ -5,8 +5,11 @@ VStack,
 HStack,
 Text,
 Divider,
+Button,
  } from 'native-base'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { useColorMode , useColorModeValue } from 'native-base'
+import { Themecolor } from '../../systems/theme'
 
  //Components
 import Userfield from '../components/menu/[container]/Userfield'
@@ -54,14 +57,17 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
   }
 },
 ]
+
+const {colorMode} = useColorMode();
+
   return (
     <Box 
     w=  '100%'
     h=  '100%'
     p = {3}
-    bg = 'coolGray.100'
+    bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
     >
-      <Menubar/>
+      <Menubar />
         <VStack paddingY={5}>
           <Box
           id = 'profile-section'
@@ -90,7 +96,6 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
             })}
              
           </Box>
-            
         </VStack>
 
     </Box>

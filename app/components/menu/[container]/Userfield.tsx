@@ -12,11 +12,14 @@ import {
     Pressable
 } from 'native-base'
 import { Entypo } from '@expo/vector-icons'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 interface FiledProps {
     data: any,
 }
 
 const Userfield: React.FC<FiledProps> = ({ data }) => {
+    const {colorMode} = useColorMode();
 
     return (
         <Pressable >
@@ -31,7 +34,7 @@ const Userfield: React.FC<FiledProps> = ({ data }) => {
                         h={150}
                         alignItems={'center'}
                         rounded = 'md'
-                        bg = {isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "coolGray.100"}
+                        bg = {isPressed ? colorMode === 'dark' ? "coolGray.700" :"coolGray.200" : isHovered ? colorMode === 'dark' ? "coolGray.700": "coolGray.200" : colorMode === 'dark' ? "coolGray.800": "coolGray.100"}
                         p = {1}
                     >
                         <Box w='30%'>

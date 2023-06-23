@@ -6,10 +6,13 @@ HStack,
 Text, } from 'native-base'
 import Optionfield from '../../../components/global/[container]/Optionfield'
 import { Settingmenu } from '../../../../assets/VisualCollectionsdata'
+import { useColorMode } from 'native-base'
+import { Themecolor } from '../../../../systems/theme'
 
 interface Pageprops {}
 
 const Settings : React.FC <Pageprops> = ()  => {
+    const {colorMode} = useColorMode();
     const SettingsCategory = [{
         title : 'Account And Privacy',
         tag : 'account',
@@ -23,8 +26,10 @@ const Settings : React.FC <Pageprops> = ()  => {
         tag : 'system'
     }
 ]
+
   return (
-    <Box w  = '100%' h=  '100%' bg= 'coolGray.100'>
+
+    <Box w  = '100%' h=  '100%' bg = {colorMode === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
         <VStack p = {5} >
             {SettingsCategory.map((item ,key) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
@@ -32,7 +37,7 @@ const Settings : React.FC <Pageprops> = ()  => {
                     <VStack key = {key}>
                         <Text
                         fontWeight={'semibold'}
-                        color = 'coolGray.700'
+                        color = {colorMode === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
                         >{item.title}</Text>
                         {option.map((optionitem , key) => {
                             return( 
