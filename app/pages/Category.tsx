@@ -16,7 +16,7 @@ const Category: React.FC <Pageprops> = ({theme}) => {
     w = '100%'
     h = '100%'
     py = {3}
-    bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
+    bg = {theme.Bg.base}
     >
       <ScrollView
       showsVerticalScrollIndicator = {false}

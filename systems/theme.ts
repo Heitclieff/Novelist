@@ -80,4 +80,62 @@ export const Themecolor = ({
         dark : 'lightText',
       }
     },
+    
+})
+
+
+export const Themedark = ({
+  themeMode : 'dark',
+  Bg : {
+    tabbar : '#1f2937',
+    base : 'coolGray.800',
+    container : 'coolGray.700',
+    action : 'coolGray.700',
+  },
+  Text : {
+    heading : 'coolGray.200',
+    base : 'coolGray.300',
+    tabbar : 'white',
+    description : 'coolGray.400'
+  },
+  Icon : {
+    base : 'coolGray.300',
+    heading : 'lightText'
+  },
+  Divider : {
+    base : 'coolGray.700',
+    tabbar : '#475569',
+    stackbar : '#18181b',
+  },
+  Button: {
+    base : 'coolGray.700',
+  },
+})
+
+export const Themelight = ({
+  themeMode : 'light',
+  Bg : {
+    tabbar : 'white',
+    base : 'coolGray.100',
+    container : 'coolGray.200',
+    action : 'coolGray.200',
+  },
+  Text : {
+    heading : 'coolGray.800',
+    tabbar : 'black',
+    base : 'coolGray.700',
+    description : 'coolGray.500'
+  },
+  Icon : {
+    base : 'coolGray.600',
+    heading : 'coolGray.800'
+  },
+  Divider : {
+    base : 'coolGray.300',
+    tabbar : '#e4e4e7',
+    stackbar : '#d4d4d8',
+  },
+  Button: {
+    base : 'coolGray.200',
+  },
 })

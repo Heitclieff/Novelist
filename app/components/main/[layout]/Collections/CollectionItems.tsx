@@ -35,7 +35,7 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
         w = {160}
         h = {280}
         space=  {3}
-        bg={isPressed ? theme === 'dark' ? "coolGray.700" : "coolGray.200" : isHovered ? theme === 'dark' ? "coolGray.800" : "coolGray.200"  : null}
+        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}
         rounded={'md'}
         alignItems={'center'}
         >
@@ -43,7 +43,6 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
             id = "Displaycase"
             w = {150}
             h = {200}
-            borderColor={'gray.200'}
             >
               <Image
               w = '100%'
@@ -57,7 +56,7 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
               <VStack  w = '90%'>
                   <Text
                   fontWeight={'semibold'}
-                  color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                  color = {theme.Text.base}
                   numberOfLines={2}
                   >{title}</Text>
                   <HStack
@@ -67,11 +66,12 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
 
                     <Text 
                     fontSize={'xs'}
-                    color={theme === 'dark' ? Themecolor.collection.viewtext.dark : Themecolor.collection.viewtext.light}
+                    color={theme.Text.description}
                     >{view}
                     </Text>
                     <Icon
                     size = 'xs'
+                    color = {theme.Text.description}
                     as = {AntDesign}
                     name = 'eyeo'
                     />
@@ -84,7 +84,7 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
               icon = {
                 <Icon 
                 as = {Feather} 
-                color = {theme === 'dark' ?  'gray.200' : 'gray.700'}
+                color = {theme.Text.description}
                 name = 'more-vertical'/>}
                 />
             </HStack>

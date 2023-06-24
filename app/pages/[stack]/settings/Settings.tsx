@@ -32,7 +32,7 @@ const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
 
   return (
 
-    <Box w  = '100%' h=  '100%' bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
+    <Box w  = '100%' h=  '100%' bg = {theme.Bg.base}>
         <VStack p = {5} >
             {SettingsCategory.map((item ,key) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
@@ -40,7 +40,7 @@ const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
                     <VStack key = {key}>
                         <Text
                         fontWeight={'semibold'}
-                        color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                        color = {theme.Text.heading}
                         >{item.title}</Text>
                         {option.map((optionitem , key) => {
                             return( 

@@ -25,14 +25,14 @@ const Stack = createNativeStackNavigator();
 
 
 const Router : React.FC <Router> = ({theme , setTheme}) =>  {
-  console.log("Router Props" ,theme)
+  console.log("Router Props" ,theme.Bg)
+
   return (
     <Stack.Navigator screenOptions={{headerStyle : {
       
-      backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,
+      backgroundColor : theme.Bg.tabbar,
     }, 
-      headerTitleStyle : {color : theme === 'dark' ? 'white' :'black' } ,
-      
+      headerTitleStyle : {color : theme.Text.tabbar} ,
       }}>
         <Stack.Screen 
         name = "MainStack"
@@ -60,9 +60,9 @@ interface Tabprops {
 const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
     return (
       <Tab.Navigator screenOptions={{
-        tabBarStyle : {backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light ,borderTopColor : theme === 'dark' ? Themecolor.tabbar.border.dark : Themecolor.tabbar.border.light} ,
-        headerStyle : {backgroundColor : theme === 'dark' ? Themecolor.tabbar.dark : Themecolor.tabbar.light , shadowColor : theme === 'dark' ? '#18181b': '#d1d5db'},
-        headerTitleStyle : {color : theme === 'dark' ? 'white' :'black'} ,
+        tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
+        headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
+        headerTitleStyle : {color : theme.Text.tabbar} ,
       }}>
         <Tab.Screen
         name = 'TabMain'

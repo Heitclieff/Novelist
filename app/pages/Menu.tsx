@@ -21,7 +21,7 @@ import { userdata } from '../../assets/VisualCollectionsdata'
 
 interface Pageprops { 
   navigation :any,
-  theme : string,
+  theme :  any,
   setTheme: any,
 }
 
@@ -65,7 +65,7 @@ const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
     w=  '100%'
     h=  '100%'
     p = {3}
-    bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
+    bg = {theme.Bg.base}
     >
       <Menubar  theme = {theme} setTheme = {setTheme} />
         <VStack paddingY={5}>

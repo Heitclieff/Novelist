@@ -23,7 +23,7 @@ interface Pageprops {
 
 const Creater : React.FC <Pageprops> = ({theme}) => {
   return (
-    <VStack w = '100%' h = '100%' bg = {theme === 'dark' ? Themecolor.bg.dark : 'gray.100'} space = {2}>
+    <VStack w = '100%' h = '100%' bg = {theme.Bg.base} space = {2}>
         <Box h = '12%'>
             <Createrbar theme = {theme} />
         </Box>

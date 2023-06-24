@@ -41,7 +41,7 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title , theme}) =>{
             </Box>
             <Box p = {2}>
                 <Center>
-                    <Text color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}>{title ? title : "Title"}</Text>
+                    <Text color = {theme.Text.base}>{title ? title : "Title"}</Text>
                 </Center>
             </Box>
         

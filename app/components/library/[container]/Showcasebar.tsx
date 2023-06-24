@@ -20,8 +20,6 @@ interface Showcaseprops {
 }
 
 const Showcasebar :React.FC <Showcaseprops> = ({books , username, image ,theme}) => {
-    const {colorMode} = useColorMode();
-    const textcolor = theme === 'dark' ? Themecolor.icon.library.dark : Themecolor.icon.library.light
   return (
     <HStack 
     w = '100%' 
@@ -53,22 +51,22 @@ const Showcasebar :React.FC <Showcaseprops> = ({books , username, image ,theme})
             <Text
             fontSize={'lg'}
             fontWeight={'semibold'}
-            color = {textcolor}
+            color = {theme.Text.base}
             >{username ? username : 'Username'}</Text>
             <HStack space = {2} alignItems={'center'}>
                 <Box>
                     <Icon
                     as = {Ionicons}
                     name = 'ios-library'
-                    color = {textcolor}
+                    color = {theme.Icon.base}
                     />
                 </Box>
                 <HStack space = {1}>
                     <Text 
-                    color = {textcolor}
+                    color = {theme.Text.base}
                     fontWeight={'semibold'}
                     >{books ? books : 0}</Text>
-                    <Text color = {textcolor}>
+                    <Text color = {theme.Text.base}>
                         Books in Library
                     </Text>
                 </HStack>

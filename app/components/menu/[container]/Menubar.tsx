@@ -20,7 +20,7 @@ interface MenubarProps {
 const Menubar :React.FC <MenubarProps> = ({theme , setTheme}) => {
   const {colorMode , toggleColorMode} = useColorMode();
   const [isToggle , setisToggle] = useState(colorMode === 'dark' ? true : false);
-  const [darkmode , setdarkmode]  = useState(theme ? theme === 'dark' ? true : false : false);
+  const [darkmode , setdarkmode]  = useState(theme ? theme.themeMode === 'dark' ? true : false : false);
 
   const storeData =  async (item:any) : Promise<void> => {
     try {
@@ -58,8 +58,8 @@ const Menubar :React.FC <MenubarProps> = ({theme , setTheme}) => {
         <Box>
           <Icon
             as={Ionicons}
-            name= {theme === 'dark' ? 'moon' : 'sunny'}
-            color={theme === 'dark' ? 'coolGray.200' : 'coolGray.700'}
+            name= {theme.themeMode === 'dark' ? 'moon' : 'sunny'}
+            color={theme.Icon.base}
             size={'sm'}
           ></Icon>
         </Box>

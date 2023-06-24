@@ -19,7 +19,7 @@ const Appbar : React.FC <AppbarProps> = ({theme}) => {
      <VStack 
      safeAreaTop = {12}
      w = '100%'
-     bg  = {theme.bg}
+     bg  = {theme.Bg.base}
      justifyContent={'flex-end'}
      >
           <HStack
@@ -32,7 +32,7 @@ const Appbar : React.FC <AppbarProps> = ({theme}) => {
                     <Text 
                     fontSize={'2xl'}
                     fontWeight={'bold'}
-                    color = {theme.textcolor}
+                    color = {theme.Text.heading}
                     >Nobelist</Text>
                </VStack>
                <HStack 
@@ -43,7 +43,7 @@ const Appbar : React.FC <AppbarProps> = ({theme}) => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg= {theme.Buttoncolor}
+                    bg= {theme.Button.base}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
 
@@ -51,7 +51,7 @@ const Appbar : React.FC <AppbarProps> = ({theme}) => {
                          <Icon 
                          as = {AntDesign}
                          name = 'search1'
-                         color={theme.Buttonicon}
+                         color={theme.Icon.heading}
                          />
                      
                     </Button>
@@ -59,14 +59,14 @@ const Appbar : React.FC <AppbarProps> = ({theme}) => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg = {theme.Buttoncolor}
+                    bg = {theme.Button.base}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
                     >
                          <Icon 
                          as = {Ionicons}
                          name = {'notifications'}
-                         color={theme.Buttonicon}
+                         color={theme.Icon.heading}
                          />
                     </Button>
                </HStack>

@@ -55,7 +55,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme})
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           <Heading 
           size= 'md'
-          color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+          color = {theme.Text.base}
           >{title}</Heading>
           <Box>
             <IconButton 

@@ -57,7 +57,7 @@ const Optionfield :React.FC <FiledProps> = ({
             h = {60}
             m = {0.3}
             rounded = 'md'
-            bg = {isPressed ? theme === 'dark' ? Themecolor.bgPress.dark : Themecolor.bgPress.light : isHovered ? theme === 'dark' ?  Themecolor.bgPress.dark: Themecolor.bgPress.light : theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}
+            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.base}
             >
                 <HStack 
                 w= '100%'
@@ -74,14 +74,14 @@ const Optionfield :React.FC <FiledProps> = ({
                                 as={OptionIcon ? OptionIcon.type : null}
                                 name= {OptionIcon ? OptionIcon.name : ''}
                                 size={'md'}
-                                color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                                color = {theme.Icon.base}
                                 />
                         </Box>
                     }
                     
                     <VStack justifyContent={'center'} p = {1}  w = {OptionIcon.type ? justifyIcon == 'start' ?  "82%" : '75%' : '90%'}>
-                        <Text color = {fontcolor ? fontcolor : theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light } fontSize={'md'} >{title ? title : 'Options title'}</Text>
-                        {detail && <Text fontSize={'xs'} color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light} >{detail}</Text>}
+                        <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize={'md'} >{title ? title : 'Options title'}</Text>
+                        {detail && <Text fontSize={'xs'} color = {theme.Text.description} >{detail}</Text>}
                     </VStack>
                     {isChevronEnable && 
                         <Box w = '10%' h = '100%' justifyContent={'center'}>
@@ -96,7 +96,7 @@ const Optionfield :React.FC <FiledProps> = ({
                         </Box>
                     }
                 </HStack>
-                {isDividerEnable && <Divider bg = {theme === 'dark' ? 'coolGray.700' : 'coolGray.300'}/>}
+                {isDividerEnable && <Divider bg = {theme.Divider.base}/>}
             </VStack>
         )
     }}

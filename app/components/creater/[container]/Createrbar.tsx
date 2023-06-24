@@ -27,7 +27,7 @@ const Createrbar : React.FC <Createprops> = ({theme}) => {
             <Text
             fontSize={'lg'}
             fontWeight={'semibold'}
-            color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+            color = {theme.Text.heading}
             >   Workspace
             </Text>
             <IconButton 
@@ -38,7 +38,7 @@ const Createrbar : React.FC <Createprops> = ({theme}) => {
               icon = {
                 <Icon 
                 as = {AntDesign} 
-                color = {theme === 'dark' ? Themecolor.icon.Addicon.dark : Themecolor.icon.Addicon.light}
+                color = {theme.Icon.heading}
                 name = 'plus'/>}
                 />
         </HStack>

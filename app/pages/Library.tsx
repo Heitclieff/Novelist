@@ -20,7 +20,7 @@ interface Pageprops {
 
 const Library: React.FC <Pageprops> = ({theme}) => {
   return (
-    <VStack w = '100%' h = '100%' p = {2} bg = {theme === 'dark' ? Themecolor.bg.dark : Themecolor.bg.light}>
+    <VStack w = '100%' h = '100%' p = {2} bg = {theme.Bg.base}>
         <Showcasebar
         theme = {theme}
         books='10'
@@ -40,7 +40,7 @@ const Library: React.FC <Pageprops> = ({theme}) => {
                 <Text
                 fontSize={'md'}
                 fontWeight={'semibold'}
-                color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+                color = {theme.Text.heading}
                 >My Library
                 </Text>
             </HStack>

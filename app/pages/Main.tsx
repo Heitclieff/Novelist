@@ -17,16 +17,10 @@ interface Pageprops {
 
 
 const Main: React.FC <Pageprops> = ({navigation , theme}) => {
-  const bg = theme === 'dark' ? Themecolor.bg.dark: Themecolor.bg.light  
-  const textcolor = theme === 'dark' ? Themecolor.infotext.dark: Themecolor.infotext.light  
-  const Buttoncolor = theme === 'dark' ? 'coolGray.700': 'coolGray.200'  
-  const Buttonicon = theme === 'dark' ? 'coolGray.200': 'coolGray.700'  
-  const themelist = {bg : bg , textcolor : textcolor , Buttoncolor : Buttoncolor , Buttonicon : Buttonicon }
-
   return (
     <Box>
-      <Appbar theme = {themelist} />
-      <Box w = '100%' h= '100%' py={3} bg = {bg}>
+      <Appbar theme = {theme} />
+      <Box w = '100%' h= '100%' py={3} bg = {theme.Bg.base}>
         <TabsControls theme = {theme} />
       </Box>
     </Box>

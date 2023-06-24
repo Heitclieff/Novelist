@@ -25,7 +25,7 @@ const Usershowcase :React.FC <Showcaseprops> = ({username, image , theme}) => {
     w = '100%' 
     h = {130} 
     alignItems={'center'}
-    bg = {theme === 'dark' ? Themecolor.boxbg.dark : Themecolor.boxbg.light}
+    bg = {theme.Bg.container}
     rounded = 'md'
     space = {2}
     p = {3}>
@@ -54,22 +54,22 @@ const Usershowcase :React.FC <Showcaseprops> = ({username, image , theme}) => {
             <Text
             fontSize={'lg'}
             fontWeight={'semibold'}
-            color = {textcolor}
+            color = {theme.Text.base}
             >{username ? username : 'Username'}</Text>
             <VStack justifyContent ={'center'}>
                 <HStack space = {1}>
                     <Text
-                    color = {textcolor}
+                    color = {theme.Text.base}
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = {textcolor}>Project</Text>
+                    <Text color = {theme.Text.base}>Project</Text>
                 </HStack>
                 <HStack space = {1}>
                     <Text
-                    color = {textcolor}
+                    color = {theme.Text.base}
                     fontWeight={'semibold'}
                     >0</Text>
-                    <Text color = {textcolor}>Collaboration</Text>
+                    <Text color = {theme.Text.base}>Collaboration</Text>
                 </HStack>
             </VStack>
         </VStack>
