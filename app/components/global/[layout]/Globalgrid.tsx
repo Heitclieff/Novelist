@@ -1,4 +1,4 @@
-import React,{FC} from 'react'
+import React,{FC , useCallback} from 'react'
 import { 
 Box,
 ScrollView,
@@ -17,6 +17,7 @@ interface LayoutProps {
 }   
 
 interface Collections {
+    id : number,
     title : string,
     images : string [],
     view : number,
@@ -26,9 +27,9 @@ const MemorizedCollectitonsItems = React.memo(CollectionItems);
 
 const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,theme}) => {
 
-
-    const renderItem = ({item}: {item:Collections}) => (
-        <Center>
+    const renderCollectionItem = useCallback(
+        (item :  Collections, round : number) => (
+          <Center>
             <MemorizedCollectitonsItems
                 theme = {theme}
                 title={item.title}
@@ -36,7 +37,9 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,them
                 view = {item.view}
             />
         </Center>
-    )
+        ),[theme]
+      );
+
     return (
     <Box w=  '100%' p = {5} >
             <FlatGrid
@@ -45,7 +48,7 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,them
                 itemDimension={130}
                 data = {collections}
                 spacing={10}
-                renderItem={renderItem}
+                renderItem={({item ,round}:any) => renderCollectionItem(item ,round)}
                 >
             </FlatGrid>        
     </Box>

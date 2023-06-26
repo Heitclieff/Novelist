@@ -1,4 +1,4 @@
-import React,{FC} from 'react'
+import React,{FC, useCallback} from 'react'
 import { 
 Box,
 ScrollView,
@@ -12,7 +12,27 @@ interface LayoutProps {
   theme : any
 }
 
+interface Collections {
+  theme : any,
+  images : string, 
+  title : string
+}
+
+const MemorizedCategoryItems = React.memo(CategoryItems)
+
 const CategoryGrid : React.FC <LayoutProps> = ({category , theme}) => {
+
+  const renderCollectionItem = useCallback(
+    (item : Collections, round : number) => (
+        <MemorizedCategoryItems
+          key = {round}
+          theme = {theme}
+          images = {item.images}
+          title = {item.title}
+        />
+    ),[theme]
+  );
+  
   return (
     <Box w=  '100%' p = {5} >
       <FlatGrid
@@ -20,13 +40,8 @@ const CategoryGrid : React.FC <LayoutProps> = ({category , theme}) => {
       itemDimension={180}
       data = {category}
       spacing={10}
-      renderItem={({item}:any) => (
-        <CategoryItems
-          theme = {theme}
-          images = {item.images}
-          title = {item.title}
-        />
-      )}>
+      renderItem={({item,index}):any => renderCollectionItem(item ,index)}
+      >
       </FlatGrid> 
   </Box>
   )

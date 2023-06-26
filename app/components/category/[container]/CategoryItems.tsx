@@ -4,10 +4,9 @@ Box ,
 VStack ,
 Text ,
 Center,
-Image,
 Pressable,
  } from 'native-base'
-import { Themecolor } from '../../../../systems/theme'
+import { Image } from 'expo-image'
 
 interface Itemsprops {
     images : string 
@@ -33,10 +32,9 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title , theme}) =>{
             overflow={'hidden'}
             >
                 <Image
-                w = '100%'
-                h=  '100%'
-                resizeMode= 'cover'
-                source={{uri : images}}
+                style={{width : '100%' , height : '100%'}}
+                contentFit = 'cover'
+                source={images}
                 alt = "images"/>
             </Box>
             <Box p = {2}>

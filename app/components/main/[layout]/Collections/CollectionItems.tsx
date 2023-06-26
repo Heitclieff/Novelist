@@ -6,11 +6,11 @@ HStack,
 Text,
 Button,
 Icon,
-Image,
 IconButton,
 Pressable,
  } from 'native-base'
 import { FontAwesome5 , Feather , AntDesign} from '@expo/vector-icons'
+import { Image } from 'expo-image'
 import { useColorMode } from 'native-base'
 import { Themecolor } from '../../../../../systems/theme'
 
@@ -45,10 +45,9 @@ const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, image
             h = {200}
             >
               <Image
-              w = '100%'
-              h=  '100%'
-              resizeMode= 'cover'
-              source={{uri : images}}
+              style={{width : '100%', height : '100%'}}
+              contentFit= 'cover'
+              source={images}
               alt = "images"
               />
             </Box>

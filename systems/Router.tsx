@@ -1,16 +1,16 @@
-import React,{FC} from 'react'
+import React,{FC ,lazy, Suspense} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Themecolor } from './theme'
 
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
-import { Icon } from 'native-base'
+import { Box, Icon } from 'native-base'
 //Pages Tabs 
-import Main from '../app/pages/Main'
-import Category from '../app/pages/Category'
-import Menu from '../app/pages/Menu'
-import Library from '../app/pages/Library'
-import Creater from '../app/pages/Creater'
+const Main = lazy(() => import('../app/pages/Main'));
+const Category = lazy(() => import('../app/pages/Category'));
+const Menu = lazy(() => import('../app/pages/Menu'));
+const Library = lazy(() => import('../app/pages/Library'));
+const Creater = lazy(() => import('../app/pages/Creater'));
 
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
@@ -29,7 +29,6 @@ const Router : React.FC <Router> = ({theme , setTheme}) =>  {
 
   return (
     <Stack.Navigator screenOptions={{headerStyle : {
-      
       backgroundColor : theme.Bg.tabbar,
     }, 
       headerTitleStyle : {color : theme.Text.tabbar} ,
@@ -72,7 +71,11 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={FontAwesome5} name = "home" />)
           }}>
-            {(props:any) => <Main {...props} theme =  {theme}/>}
+            {(props:any) => (
+              <Suspense fallback={<Box>Loading...</Box>}>
+                <Main {...props} theme =  {theme}/>
+              </Suspense> 
+            )}
           </Tab.Screen>
         <Tab.Screen
         name = 'TabCategory'
@@ -82,7 +85,10 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
           }}>
-            {(props:any) => <Category {...props} theme =  {theme}/>}
+            {(props:any) => ( 
+            <Suspense fallback={<Box>Loading...</Box>}> 
+              <Category {...props} theme =  {theme}/>
+            </Suspense>)}
         </Tab.Screen>
         <Tab.Screen
         name = 'TabCreater'
@@ -92,7 +98,11 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={Ionicons} name = "create" />),
           }}>
-             {(props:any) => <Creater {...props} theme =  {theme}/>}
+             {(props:any) => (
+             <Suspense fallback={<Box>Loading...</Box>}>
+              <Creater {...props} theme =  {theme}/>
+            </Suspense>
+             ) }
         </Tab.Screen>
         <Tab.Screen
         name = 'TabLibrary'
@@ -102,7 +112,11 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           tabBarIcon :(({size ,color}) => 
           <Icon size = {size} color = {color} as ={Ionicons} name = "ios-library" />)
           }}>
-          {(props:any) => <Library {...props} theme =  {theme}/>}
+          {(props:any) => (
+          <Suspense fallback={<Box>Loading...</Box>}>
+            <Library {...props} theme =  {theme}/>
+          </Suspense>)
+          }
         </Tab.Screen>
          <Tab.Screen
         name = 'TabMenu'
@@ -113,7 +127,11 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           <Icon size = {size} color = {color} as ={EvilIcons} name = "user" />)
           }}
         >
-          {(props:any) => <Menu {...props} theme =  {theme} setTheme = {setTheme} />}
+          {(props:any) => (
+            <Suspense fallback={<Box>Loading...</Box>}>
+              <Menu {...props} theme =  {theme} setTheme = {setTheme} />
+            </Suspense>
+          )}
         </Tab.Screen>
       </Tab.Navigator>
       

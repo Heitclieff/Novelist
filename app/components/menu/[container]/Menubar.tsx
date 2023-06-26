@@ -18,9 +18,7 @@ interface MenubarProps {
  }
 
 const Menubar :React.FC <MenubarProps> = ({theme , setTheme}) => {
-  const {colorMode , toggleColorMode} = useColorMode();
-  const [isToggle , setisToggle] = useState(colorMode === 'dark' ? true : false);
-  const [darkmode , setdarkmode]  = useState(theme ? theme.themeMode === 'dark' ? true : false : false);
+  const [darkmode , setdarkmode]  = useState(theme.themeMode === 'dark' ? true : false);
 
   const storeData =  async (item:any) : Promise<void> => {
     try {

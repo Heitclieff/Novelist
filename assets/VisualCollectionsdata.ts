@@ -1,29 +1,35 @@
 export const Collectionsdata =  [{
+    id : 1,
     title : 'yahari ore no seishun love comedy wa machigatteiru.',
     view : "100,503",
     images : 'https://static.wikia.nocookie.net/yahari/images/8/87/Oregairukan_visual.jpg/revision/latest?cb=20191115235525',
 },
 {
+    id : 2,
     title : 'youkoso jitsuryoku shijou shugi no kyoushitsu e.',
     view : "100,421",
     images : 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/4c62a764e19643510c3878a9329bee78.jpe',
 },
 {
+    id : 3,
     title : 'jigokuraku',
     view : "100,503",
     images : 'https://anime-nani.net/wp-content/uploads/2023/04/Jigokuraku.jpg.webp',
 },
 {
+    id : 4,
     title : 'yahari ore no seishun love comedy wa machigatteiru.',
     view : "100,503",
     images : 'https://static.wikia.nocookie.net/yahari/images/8/87/Oregairukan_visual.jpg/revision/latest?cb=20191115235525',
 },
 {
+    id : 5,
     title : 'youkoso jitsuryoku shijou shugi no kyoushitsu e.',
     view : "100,421",
     images : 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/4c62a764e19643510c3878a9329bee78.jpe',
 },
 {
+    id : 6,
     title : 'jigokuraku',
     view : "100,503",
     images : 'https://anime-nani.net/wp-content/uploads/2023/04/Jigokuraku.jpg.webp',

@@ -8,11 +8,10 @@ Heading,
 Button,
 Icon,
 IconButton,
-ScrollView
 } from 'native-base'
 import CollectionItems from './CollectionItems'
 import { FontAwesome5 ,Entypo } from '@expo/vector-icons'
-import { Themecolor } from '../../../../../systems/theme'
+import { FlatList } from 'native-base'
 
 interface Fieldsprops {
   title : string,
@@ -30,11 +29,9 @@ interface Collections {
 const MemorizedColletionItems = React.memo(CollectionItems)
 
 const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme}) => {
-  const textcolor = theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light
   const renderCollectionItem = useCallback(
     (items : Collections, round : number) => (
       <MemorizedColletionItems
-      key = {round}
       theme= {theme}
       title = {items.title}
       view = {items.view}
@@ -67,20 +64,13 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme})
             }/>
           </Box>
         </HStack>
-        <ScrollView 
-        showsHorizontalScrollIndicator = {false}
-        horizontal = {true}>
-          <HStack 
-          space= {5}
-          w = '100%'
-          >
-            {collections
-            ? collections.map((items: any, round: number) =>
-                renderCollectionItem(items, round)
-              )
-            : null}
-          </HStack>
-        </ScrollView>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          data={collections}
+          renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
+          onEndReachedThreshold={0.5}
+        />
       </VStack> 
     </Box>
   )

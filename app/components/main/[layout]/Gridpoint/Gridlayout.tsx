@@ -1,4 +1,4 @@
-import React,{FC} from 'react'
+import React,{FC , useCallback} from 'react'
 import { 
 Box,
 ScrollView,
@@ -8,8 +8,6 @@ Center,
 } from 'native-base'
 import { FlatGrid } from 'react-native-super-grid'
 import CollectionItems from '../Collections/CollectionItems'
-import { Dimensions, SafeAreaView ,View} from 'react-native'
-import { Themecolor } from '../../../../../systems/theme'
 
 interface LayoutProps {
     collections : any
@@ -26,23 +24,25 @@ interface Collections {
 const MemorizedCollectitonsItems = React.memo(CollectionItems)
 
 const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
+    const renderCollectionItem = useCallback(
+        (item : Collections, round : number) => (
+            <Center>
+                <MemorizedCollectitonsItems
+                    theme  = {theme} 
+                    title={item.title}
+                    images = {item.images}
+                    view = {item.view}
+                />
+            </Center>
+        ),[theme]
+      );
 
-    const renderItem = ({item}: {item:Collections}) => (
-        <Center>
-            <MemorizedCollectitonsItems
-                theme  = {theme} 
-                title={item.title}
-                images = {item.images}
-                view = {item.view}
-            />
-        </Center>
-    )
     return (
     <Box w=  '100%' p = {5} >
             <Text
             fontSize={'md'}
             fontWeight={'semibold'}
-            color = {theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light}
+            color = {theme.Text.base}
 
             >   {title ? title : 'Title'}
             </Text>
@@ -53,7 +53,8 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
                 itemDimension={130}
                 data = {collections}
                 spacing={10}
-                renderItem={renderItem}
+                renderItem={({item , index}):any => renderCollectionItem(item ,index)}
+                onEndReachedThreshold={0.5}
                 >
             </FlatGrid>    
     </Box>
