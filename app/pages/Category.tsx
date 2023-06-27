@@ -1,16 +1,29 @@
-import React,{FC} from 'react'
-import { Box, ScrollView } from 'native-base'
+import React,{FC, useEffect , useCallback} from 'react'
+import { Box, FlatList } from 'native-base'
 import CategoryGrid from '../components/category/[layout]/CategoryGrid'
-import { Categorydata } from '../../assets/VisualCollectionsdata'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../systems/theme'
+
+//redux toolkit
+import { useDispatch, useSelector } from 'react-redux';
+import { getCategoryData } from '../../systems/redux/action';
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
+import { RootState } from '../../systems/redux/reducer';
 
 interface Pageprops {
   theme : any
  }
 
+const MemorizedCategoryGrids = React.memo(CategoryGrid)
+
 const Category: React.FC <Pageprops> = ({theme}) => {
-  const {colorMode} = useColorMode();
+  const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const Categorydata = useSelector((state:any)=> state.categoryData)
+  const isReduxLoaded = useSelector((state: RootState) => state.iscategoryLoaded);
+  
+  useEffect(() => {
+    if(!isReduxLoaded) dispatch(getCategoryData());
+  },[dispatch , isReduxLoaded])
+
   return (
     <Box
     w = '100%'
@@ -18,13 +31,12 @@ const Category: React.FC <Pageprops> = ({theme}) => {
     py = {3}
     bg = {theme.Bg.base}
     >
-      <ScrollView
-      showsVerticalScrollIndicator = {false}
-      />
-      <CategoryGrid
+      {isReduxLoaded &&
+        <MemorizedCategoryGrids
         theme = {theme}
         category={Categorydata}
-        />
+       />
+      }
     </Box>
   )
 }

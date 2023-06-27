@@ -1,4 +1,4 @@
-import React ,{FC , useEffect}from 'react'
+import React ,{FC , useEffect ,lazy , Suspense , useMemo}from 'react'
 import { 
 Box,
 VStack,
@@ -9,7 +9,8 @@ Text,
  // Components
 import Showcasebar from '../components/library/[container]/Showcasebar'
 import { userdata , Collectionsdata } from '../../assets/VisualCollectionsdata'
-import Globalgrid from '../components/global/[layout]/Globalgrid'
+
+const LazyGlobalgrid = lazy(() => import('../components/global/[layout]/Globalgrid'))
 
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,19 +27,31 @@ interface Pageprops {
 const Library: React.FC <Pageprops> = ({theme}) => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state:any)=> state.collectionsData)
+  const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
   
   useEffect(() => {
-    dispatch(getCollectionData());
-  },[dispatch])
+    if(!isReduxLoaded) dispatch(getCollectionData());
+  },[dispatch , isReduxLoaded])
+
+  const MemorizeShowcasebar = React.memo(Showcasebar);
+  const MemorizedGlobalgrid = useMemo(() => 
+    <LazyGlobalgrid 
+    theme =  {theme}  
+    collections={Collectionsdata}
+    bottomSpace={160}
+  />,[theme])
 
   return (
     <VStack w = '100%' h = '100%' p = {2} bg = {theme.Bg.base}>
-        <Showcasebar
-        theme = {theme}
-        books='10'
-        username = {userdata[0].username}
-        image= {userdata[0].image}
-        />
+        {React.useMemo(() => {
+
+          return <MemorizeShowcasebar
+          theme = {theme}
+          books='10'
+          username = {userdata[0].username}
+          image= {userdata[0].image}
+          />
+        }, [theme])}
         
         <Box  w = '100%' pl = {3} >
             <HStack space = {1} alignItems={'center'}>
@@ -58,14 +71,13 @@ const Library: React.FC <Pageprops> = ({theme}) => {
             </HStack>
            
         </Box>
-        <Globalgrid
-          theme =  {theme}  
-          collections={Collectionsdata}
-          bottomSpace={160}
-        />
+        {isReduxLoaded  && 
+          <Suspense fallback = {<Box>Loading...</Box>}>
+             {MemorizedGlobalgrid}
+          </Suspense>
+        }
     </VStack>
   )
 }
-
 
 export default Library;

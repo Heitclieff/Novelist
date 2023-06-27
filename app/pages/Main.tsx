@@ -1,4 +1,4 @@
-import React ,{FC , useState} from 'react'
+import React ,{FC , useState ,lazy ,Suspense , useMemo} from 'react'
 import { 
 Box,
 Button,
@@ -6,22 +6,25 @@ Text,
 VStack
 } from 'native-base'
 import Appbar from '../components/main/[container]/Appbar'
-import TabsControls from './[mainTabs]/TabsControls'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../systems/theme'
+const LazyTabscontrols = lazy(() => import('./[mainTabs]/TabsControls'))
+
 interface Pageprops { 
   navigation :any 
   theme :any
 
 }
 
-
 const Main: React.FC <Pageprops> = ({navigation , theme}) => {
+  const MemorizeAppbar = React.memo(Appbar)
+  const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols theme = {theme} /> ,[theme])
+
   return (
     <Box>
-      <Appbar theme = {theme} />
+      <MemorizeAppbar theme = {theme} />
       <Box w = '100%' h= '100%' py={3} bg = {theme.Bg.base}>
-        <TabsControls theme = {theme} />
+        <Suspense fallback = {<Box>Loading...</Box>}>
+          {MemorizedTabscontrols}
+        </Suspense>
       </Box>
     </Box>
   )

@@ -1,4 +1,4 @@
-import React, {FC} from 'react'
+import React, {FC , useMemo} from 'react'
 import { 
 Box,
 VStack,
@@ -8,9 +8,6 @@ Divider,
 Button,
  } from 'native-base'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
-import { useColorMode , useColorModeValue } from 'native-base'
-import { Themecolor } from '../../systems/theme'
-
  //Components
 import Userfield from '../components/menu/[container]/Userfield'
 import Optionfield from '../components/global/[container]/Optionfield'
@@ -18,6 +15,7 @@ import Menubar from '../components/menu/[container]/Menubar'
 
 //userdata
 import { userdata } from '../../assets/VisualCollectionsdata'
+import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen'
 
 interface Pageprops { 
   navigation :any,
@@ -26,6 +24,10 @@ interface Pageprops {
 }
 
 const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
+  const Memorizeuserfield = React.memo(Userfield)
+  const MemorizeOptionfield = React.memo(Optionfield)
+  const MemorizeMenubar  = React.memo(Menubar);
+  
   const Menuitems = [{
   title : 'Edit Profile',
   direct : '',
@@ -67,26 +69,27 @@ const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
     p = {3}
     bg = {theme.Bg.base}
     >
-      <Menubar  theme = {theme} setTheme = {setTheme} />
+      {React.useMemo(() => {
+        return <MemorizeMenubar  theme = {theme} setTheme = {setTheme} />
+      } , [theme])}
         <VStack paddingY={5}>
           <Box
           id = 'profile-section'
           w = '100%'
           h = {200}
-          >
-            <Userfield
-              data = {userdata}
-              theme = {theme}
-              />
+          >​ 
+            {React.useMemo(() => {
+              return <Memorizeuserfield data = {userdata} theme = {theme} /> 
+            }, [theme])}
           </Box>
           <VStack
           id = 'Options-section'
           w = '100%'
           space=  {1}
           >
-            {Menuitems.map((item, key) => {
-              return (
-                <Optionfield
+            {React.useMemo(() => {
+              return  Menuitems.map((item, key) => (
+                <MemorizeOptionfield
                 key={key}
                 theme = {theme}
                 title  = {item.title}
@@ -94,8 +97,8 @@ const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
                 navigation={navigation}
                 direction = {item.direct}
               />    
-              )
-            })}
+              ))
+            },[theme ,navigation])}
              
           </VStack>
         </VStack>

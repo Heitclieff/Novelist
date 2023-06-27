@@ -46,8 +46,8 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
 
             >   {title ? title : 'Title'}
             </Text>
-
-            <FlatGrid
+            {React.useMemo(() => {
+                return   <FlatGrid
                 contentContainerStyle = {{paddingBottom : 150}}
                 showsVerticalScrollIndicator = {false}
                 itemDimension={130}
@@ -55,8 +55,8 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
                 spacing={10}
                 renderItem={({item , index}):any => renderCollectionItem(item ,index)}
                 onEndReachedThreshold={0.5}
-                >
-            </FlatGrid>    
+                />
+            }, [theme])}
     </Box>
   )
 }

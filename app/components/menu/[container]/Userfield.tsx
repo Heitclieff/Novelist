@@ -20,7 +20,7 @@ interface FiledProps {
 }
 
 const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
-    const Textcolor = theme === 'dark' ? Themecolor.infotext.dark : Themecolor.infotext.light
+    
     return (
         <Pressable >
             {({

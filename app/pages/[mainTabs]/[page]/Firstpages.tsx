@@ -1,13 +1,15 @@
-import React,{FC, useEffect} from 'react'
+import React,{FC, useEffect , useCallback} from 'react'
 import { 
 Box,
 Text,
 VStack,
 HStack,
 Icon,
-ScrollView
+ScrollView,
+FlatList
  } from 'native-base'
- 
+
+
 import Banner from '../../../components/main/[container]/Banner'
 import { AssetImages } from '../../../../systems/ImagesAssets'
 import CollectionFields from '../../../components/main/[layout]/Collections/CollectionFileds'
@@ -23,36 +25,56 @@ interface MainProps {
      theme : any
 }
 
+interface Collections {
+     title : string,
+     images : string[ ];
+     view : number;
+     theme : any,
+   }
+
+const MemorizedColletionFileds = React.memo(CollectionFields)
+
 const Firstpages : React.FC <MainProps> = ({theme}) => {
      const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
      const Collectionsdata = useSelector((state:any)=> state.collectionsDatashowcase)
+     const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
      
      useEffect(() => {
-          dispatch(getCollectionsDataShowcase());
-     },[dispatch])
+          if(!isReduxLoaded) dispatch(getCollectionsDataShowcase());
+     },[dispatch , isReduxLoaded])
      
-  return (
-    <Box w  = '100%' h= '100%'>
-          <ScrollView 
-          contentInset={{bottom: 180}} 
-          showsVerticalScrollIndicator = {false}
-          >
-               <VStack w = '100%'>
+     const renderCollectionField = useCallback(
+          ({item}:any) => {
+               return(
+                    <VStack w = '100%'>
                     <Banner
                          images = {AssetImages}
                     />
-                         <CollectionFields
+                         <MemorizedColletionFileds
                               theme = {theme}
                               title = "Hot New Novels"
                               collections = {Collectionsdata}             
                          />
-                         <CollectionFields
+                         <MemorizedColletionFileds
                          theme = {theme}
                          title = "Top new Novels"
                          collections = {Collectionsdata}    
                          />               
                </VStack>
-          </ScrollView>
+          )}           
+          ,[theme , Collectionsdata]
+     )
+
+  return (
+    <Box w  = '100%' h= '100%'>
+          {isReduxLoaded  && 
+               <FlatList  
+                    contentInset={{bottom: 180}} 
+                    showsVerticalScrollIndicator = {false}
+                    data =  {[0]}
+                    renderItem={renderCollectionField}
+               />
+          }
      </Box>
   )
 }

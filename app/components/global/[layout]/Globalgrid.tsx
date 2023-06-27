@@ -42,15 +42,17 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,them
 
     return (
     <Box w=  '100%' p = {5} >
-            <FlatGrid
-                contentContainerStyle = {{paddingBottom : bottomSpace}}
-                showsVerticalScrollIndicator = {false}
-                itemDimension={130}
-                data = {collections}
-                spacing={10}
-                renderItem={({item ,round}:any) => renderCollectionItem(item ,round)}
-                >
-            </FlatGrid>        
+      {React.useMemo(() => {
+        return <FlatGrid
+        contentContainerStyle = {{paddingBottom : bottomSpace}}
+        showsVerticalScrollIndicator = {false}
+        itemDimension={130}
+        data = {collections}
+        spacing={10}
+        renderItem={({item ,round}:any) => renderCollectionItem(item ,round)}
+        />     
+      } , [theme])}
+           
     </Box>
   )
 }

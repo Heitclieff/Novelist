@@ -1,4 +1,4 @@
-import React,{FC , useEffect} from 'react'
+import React,{FC , useEffect , useMemo} from 'react'
 import { 
 Box,
 VStack,
@@ -19,23 +19,27 @@ interface Pageprops {
 const Allnovelpages : React.FC <Pageprops> = ({theme}) => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state:any)=> state.collectionsData)
+  const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  const MemorizedGridlayout = React.memo(Gridlayout)
   
   useEffect(() => {
-    dispatch(getCollectionData());
-  },[dispatch])
+    if(!isReduxLoaded) dispatch(getCollectionData());
+  },[dispatch , isReduxLoaded])
 
   return (
     <Box 
     w = '100%' 
     h= '100%' 
     >
-      <Gridlayout
-        theme = {theme}
-        collections = {Collectionsdata}
-        title =  'All Novels'
-      />
+      {isReduxLoaded &&
+         <Gridlayout
+          theme = {theme}
+          collections = {Collectionsdata}
+          title =  'All Novels'
+        />
+      
+      }
     </Box>
-    
   )
 }
 

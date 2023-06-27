@@ -64,13 +64,15 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme})
             }/>
           </Box>
         </HStack>
-        <FlatList
+        {React.useMemo(() => {
+          return <FlatList
           showsHorizontalScrollIndicator={false}
           horizontal
           data={collections}
           renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
           onEndReachedThreshold={0.5}
         />
+        } , [theme])}
       </VStack> 
     </Box>
   )
