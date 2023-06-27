@@ -36,6 +36,8 @@ export const Collectionsdata =  [{
 },
 ]
 
+
+
 export const Categorydata = [{
     title : 'Drama',
     images : 'https://cdn.animeukiyo.com/wp-content/uploads/2022/01/Sad-Anime-Characters-min-1520x912.jpeg',
@@ -63,6 +65,24 @@ export const Categorydata = [{
 },
 
 ]
+
+export const CollectionsdataShowcase =  [{
+    title : 'yahari ore no seishun love comedy wa machigatteiru.',
+    view : "100,503",
+    images : 'https://static.wikia.nocookie.net/yahari/images/8/87/Oregairukan_visual.jpg/revision/latest?cb=20191115235525',
+},
+{
+    title : 'youkoso jitsuryoku shijou shugi no kyoushitsu e.',
+    view : "100,421",
+    images : 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/4c62a764e19643510c3878a9329bee78.jpe',
+},
+{
+    title : 'jigokuraku',
+    view : "100,503",
+    images : 'https://anime-nani.net/wp-content/uploads/2023/04/Jigokuraku.jpg.webp',
+},
+]
+
 
 export const userdata = [{
     username : "Heitclieff",

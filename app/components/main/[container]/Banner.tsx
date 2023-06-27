@@ -10,9 +10,7 @@ interface BannerProps {
 }
 
 const Banner : React.FC <BannerProps> = ({images}) => {
-     const uri = images.banner
-     const preview = {uri : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" };
-   
+
   return (
      <Box w = '100%' h  = {250} p = {2} display = 'flex' justifyContent={'center'}>
           <Box w = '100%' bg = 'gray.300' h = {200} rounded= 'sm' overflow={'hidden'}>

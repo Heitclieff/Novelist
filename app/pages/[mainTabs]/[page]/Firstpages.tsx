@@ -1,4 +1,4 @@
-import React,{FC} from 'react'
+import React,{FC, useEffect} from 'react'
 import { 
 Box,
 Text,
@@ -12,30 +12,25 @@ import Banner from '../../../components/main/[container]/Banner'
 import { AssetImages } from '../../../../systems/ImagesAssets'
 import CollectionFields from '../../../components/main/[layout]/Collections/CollectionFileds'
 
+//redux toolkit
+import { useDispatch, useSelector } from 'react-redux';
+import { getCollectionsDataShowcase } from '../../../../systems/redux/action'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
+import { RootState } from '../../../../systems/redux/reducer'
 
- interface MainProps {
+interface MainProps {
      theme : any
- }
+}
 
 const Firstpages : React.FC <MainProps> = ({theme}) => {
-     const Collectionsdata =  [{
-          title : 'yahari ore no seishun love comedy wa machigatteiru.',
-          view : "100,503",
-          images : 'https://static.wikia.nocookie.net/yahari/images/8/87/Oregairukan_visual.jpg/revision/latest?cb=20191115235525',
-     },
-     {
-          title : 'youkoso jitsuryoku shijou shugi no kyoushitsu e.',
-          view : "100,421",
-          images : 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/4c62a764e19643510c3878a9329bee78.jpe',
-     },
-     {
-          title : 'jigokuraku',
-          view : "100,503",
-          images : 'https://anime-nani.net/wp-content/uploads/2023/04/Jigokuraku.jpg.webp',
-     },
-
-]
-
+     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+     const Collectionsdata = useSelector((state:any)=> state.collectionsDatashowcase)
+     
+     useEffect(() => {
+          dispatch(getCollectionsDataShowcase());
+     },[dispatch])
+     
   return (
     <Box w  = '100%' h= '100%'>
           <ScrollView 

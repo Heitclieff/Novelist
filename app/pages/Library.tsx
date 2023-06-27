@@ -1,24 +1,36 @@
-import React ,{FC}from 'react'
+import React ,{FC , useEffect}from 'react'
 import { 
 Box,
 VStack,
 HStack,
 Text,
  } from 'native-base'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../systems/theme'
 
  // Components
 import Showcasebar from '../components/library/[container]/Showcasebar'
-
 import { userdata , Collectionsdata } from '../../assets/VisualCollectionsdata'
 import Globalgrid from '../components/global/[layout]/Globalgrid'
+
+//redux toolkit
+import { useDispatch, useSelector } from 'react-redux';
+import { getCollectionData } from '../../systems/redux/action'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
+import { RootState } from '../../systems/redux/reducer'
+
 
 interface Pageprops {
   theme : any
 }
 
 const Library: React.FC <Pageprops> = ({theme}) => {
+  const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const Collectionsdata = useSelector((state:any)=> state.collectionsData)
+  
+  useEffect(() => {
+    dispatch(getCollectionData());
+  },[dispatch])
+
   return (
     <VStack w = '100%' h = '100%' p = {2} bg = {theme.Bg.base}>
         <Showcasebar
