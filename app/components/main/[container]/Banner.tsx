@@ -10,7 +10,7 @@ interface BannerProps {
 }
 
 const Banner : React.FC <BannerProps> = ({images}) => {
-
+     
   return (
      <Box w = '100%' h  = {250} p = {2} display = 'flex' justifyContent={'center'}>
           <Box w = '100%' bg = 'gray.300' h = {200} rounded= 'sm' overflow={'hidden'}>

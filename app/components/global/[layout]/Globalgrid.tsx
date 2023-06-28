@@ -1,4 +1,4 @@
-import React,{FC , useCallback} from 'react'
+import React,{FC , useCallback , Suspense} from 'react'
 import { 
 Box,
 ScrollView,
@@ -7,13 +7,10 @@ Text,
 Center,
 } from 'native-base'
 import { FlatGrid } from 'react-native-super-grid'
-import CollectionItems from '../../main/[layout]/Collections/CollectionItems'
-import { Dimensions, SafeAreaView ,View} from 'react-native'
-
+const LazyCollectionItems = React.lazy(() => import('../../main/[layout]/Collections/CollectionItems'));
 interface LayoutProps {
     collections : any
     bottomSpace : number,
-    theme :any
 }   
 
 interface Collections {
@@ -23,21 +20,23 @@ interface Collections {
     view : number,
 }
 
-const MemorizedCollectitonsItems = React.memo(CollectionItems);
+const MemorizedCollectitonsItems = React.memo(LazyCollectionItems);
 
-const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,theme}) => {
+const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 }) => {
 
     const renderCollectionItem = useCallback(
         (item :  Collections, round : number) => (
-          <Center>
-            <MemorizedCollectitonsItems
-                theme = {theme}
+          <Suspense fallback={<Box>Loading...</Box>}>
+            <Center>
+              <MemorizedCollectitonsItems
                 title={item.title}
-                images = {item.images}
-                view = {item.view}
-            />
-        </Center>
-        ),[theme]
+                images={item.images}
+                view={item.view}
+              />
+            </Center>
+          </Suspense>
+        
+        ),[]
       );
 
     return (
@@ -51,7 +50,7 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 ,them
         spacing={10}
         renderItem={({item ,round}:any) => renderCollectionItem(item ,round)}
         />     
-      } , [theme])}
+      } , [])}
            
     </Box>
   )

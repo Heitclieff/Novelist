@@ -1,10 +1,10 @@
-import React,{FC ,lazy, Suspense} from 'react'
+import React,{FC ,lazy, Suspense , useEffect} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Themecolor } from './theme'
-
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
 import { Box, Icon } from 'native-base'
+import { useContext } from 'react';
+import { ThemeContext } from './Theme/ThemeProvider';
 //Pages Tabs 
 const Main = lazy(() => import('../app/pages/Main'));
 const Category = lazy(() => import('../app/pages/Category'));
@@ -16,27 +16,27 @@ const Creater = lazy(() => import('../app/pages/Creater'));
 import Settings from '../app/pages/[stack]/settings/Settings'
 
 interface Router {
-  theme : any
-  setTheme : any
- }
+
+}
 
 const Tab =  createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 
-const Router : React.FC <Router> = ({theme , setTheme}) =>  {
-  console.log("Router Props" ,theme.Bg)
+const Router : React.FC <Router> = () =>  {
+  const theme:any = useContext(ThemeContext)
 
-  return (
+  return (theme && 
     <Stack.Navigator screenOptions={{headerStyle : {
       backgroundColor : theme.Bg.tabbar,
-    }, 
+      }, 
       headerTitleStyle : {color : theme.Text.tabbar} ,
+      animation : 'slide_from_left'
       }}>
         <Stack.Screen 
         name = "MainStack"
         options={{headerShown : false }}>
-          {(props:any) => <TabsNavigation {...props} theme = {theme} setTheme={setTheme}/>}
+          {(props:any) => <TabsNavigation {...props} theme = {theme}/>}
         </Stack.Screen>
         <Stack.Screen 
         name = "SettingsStack"
@@ -45,24 +45,25 @@ const Router : React.FC <Router> = ({theme , setTheme}) =>  {
           headerShown : true,
         }}
         >
-          {(props:any) => <Settings {...props} theme = {theme} setTheme = {setTheme}/>}
+          {(props:any) => <Settings {...props} theme = {theme}/>}
         </Stack.Screen>
     </Stack.Navigator>
   )
 }
 
-
 interface Tabprops { 
   theme : any;
-  setTheme : any
 }
-const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
+
+const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
+
     return (
       <Tab.Navigator screenOptions={{
         tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
         headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
         headerTitleStyle : {color : theme.Text.tabbar} ,
-      }}>
+      }}
+      >
         <Tab.Screen
         name = 'TabMain'
         options={{
@@ -73,7 +74,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           }}>
             {(props:any) => (
               <Suspense fallback={<Box>Loading...</Box>}>
-                <Main {...props} theme =  {theme}/>
+                <Main {...props}/>
               </Suspense> 
             )}
           </Tab.Screen>
@@ -87,7 +88,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           }}>
             {(props:any) => ( 
             <Suspense fallback={<Box>Loading...</Box>}> 
-              <Category {...props} theme =  {theme}/>
+              <Category {...props}/>
             </Suspense>)}
         </Tab.Screen>
         <Tab.Screen
@@ -100,7 +101,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           }}>
              {(props:any) => (
              <Suspense fallback={<Box>Loading...</Box>}>
-              <Creater {...props} theme =  {theme}/>
+              <Creater {...props}/>
             </Suspense>
              ) }
         </Tab.Screen>
@@ -114,7 +115,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
           }}>
           {(props:any) => (
           <Suspense fallback={<Box>Loading...</Box>}>
-            <Library {...props} theme =  {theme}/>
+            <Library {...props}/>
           </Suspense>)
           }
         </Tab.Screen>
@@ -129,7 +130,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme , setTheme}) => {
         >
           {(props:any) => (
             <Suspense fallback={<Box>Loading...</Box>}>
-              <Menu {...props} theme =  {theme} setTheme = {setTheme} />
+              <Menu {...props}/>
             </Suspense>
           )}
         </Tab.Screen>

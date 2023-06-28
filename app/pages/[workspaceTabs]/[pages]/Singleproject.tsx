@@ -2,6 +2,8 @@ import React,{FC , useEffect , lazy ,Suspense} from 'react'
 import { Box } from 'native-base'
 //Component && Layout
 const LazyGlobalgrid = lazy(() => import('../../../components/global/[layout]/Globalgrid'))
+import { useContext } from 'react';
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider';
 
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,10 +13,10 @@ import { AnyAction } from 'redux'
 import { RootState } from '../../../../systems/redux/reducer'
 
 interface pageprops {
-  theme : any
 }
 
-const Singleproject : React.FC <pageprops> = ({theme}) => {
+const Singleproject : React.FC <pageprops> = () => {
+  const theme:any = useContext(ThemeContext)
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state:any)=> state.collectionsData)
   const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
@@ -30,7 +32,6 @@ const Singleproject : React.FC <pageprops> = ({theme}) => {
       {isReduxLoaded && 
       <Suspense fallback = {<Box>Loading..</Box>}>
          <LazyGlobalgrid
-          theme = {theme}
           collections ={Collectionsdata}
         />
       </Suspense>

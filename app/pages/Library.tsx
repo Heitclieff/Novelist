@@ -7,51 +7,56 @@ Text,
  } from 'native-base'
 
  // Components
-import Showcasebar from '../components/library/[container]/Showcasebar'
-import { userdata , Collectionsdata } from '../../assets/VisualCollectionsdata'
-
+import { useContext } from 'react'
+import { ThemeContext } from '../../systems/Theme/ThemeProvider'
 const LazyGlobalgrid = lazy(() => import('../components/global/[layout]/Globalgrid'))
+const LazyShowcasebar = lazy(() => import('../components/global/[layout]/Globalgrid'))
 
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionData } from '../../systems/redux/action'
+import { getCollectionData , getuserData} from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
 
 
 interface Pageprops {
-  theme : any
 }
 
-const Library: React.FC <Pageprops> = ({theme}) => {
+const Library: React.FC <Pageprops> = () => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state:any)=> state.collectionsData)
+  const userdata = useSelector((state:any) => state.userData)
+  const theme:any = useContext(ThemeContext);
+
   const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
-  
+  const isuserLoaded = useSelector((state:RootState) =>state.isuserLoaded )
+
   useEffect(() => {
     if(!isReduxLoaded) dispatch(getCollectionData());
   },[dispatch , isReduxLoaded])
 
-  const MemorizeShowcasebar = React.memo(Showcasebar);
+
+  useEffect(() => {
+    if(!isuserLoaded) dispatch(getuserData());
+  },[dispatch , isuserLoaded])
+
+
+  const MemorizeShowcasebar = React.memo(LazyShowcasebar);
   const MemorizedGlobalgrid = useMemo(() => 
     <LazyGlobalgrid 
-    theme =  {theme}  
     collections={Collectionsdata}
     bottomSpace={160}
-  />,[theme])
+  />,[Collectionsdata])
 
   return (
     <VStack w = '100%' h = '100%' p = {2} bg = {theme.Bg.base}>
         {React.useMemo(() => {
-
           return <MemorizeShowcasebar
-          theme = {theme}
-          books='10'
-          username = {userdata[0].username}
-          image= {userdata[0].image}
-          />
-        }, [theme])}
+          books= '10'
+          userdata =  {userdata}
+          /> 
+        }, [userdata])}
         
         <Box  w = '100%' pl = {3} >
             <HStack space = {1} alignItems={'center'}>

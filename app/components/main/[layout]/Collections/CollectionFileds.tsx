@@ -1,4 +1,4 @@
-import React, {FC , useCallback} from 'react'
+import React, {FC , useCallback , Suspense} from 'react'
 import { 
 Box,
 VStack,
@@ -9,9 +9,11 @@ Button,
 Icon,
 IconButton,
 } from 'native-base'
-import CollectionItems from './CollectionItems'
+const LazyCollectionItems = React.lazy(() => import('./CollectionItems'));
 import { FontAwesome5 ,Entypo } from '@expo/vector-icons'
 import { FlatList } from 'native-base'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
 
 interface Fieldsprops {
   title : string,
@@ -23,21 +25,23 @@ interface Collections {
   title : string,
   images : string[ ];
   view : number;
-  theme : any,
 }
 
-const MemorizedColletionItems = React.memo(CollectionItems)
+const MemorizedColletionItems = React.memo(LazyCollectionItems)
 
-const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme}) => {
+const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
+  const theme:any = useContext(ThemeContext)
   const renderCollectionItem = useCallback(
+    
     (items : Collections, round : number) => (
-      <MemorizedColletionItems
-      theme= {theme}
-      title = {items.title}
-      view = {items.view}
-      images = {items.images}
-      />
-    ),[theme]
+      <Suspense fallback = {<Box>Loading...</Box>}>
+        <MemorizedColletionItems
+            title = {items.title}
+            view = {items.view}
+            images = {items.images}
+            />
+      </Suspense>
+    ),[]
   );
   return (
     <Box
@@ -72,7 +76,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections ,theme})
           renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
           onEndReachedThreshold={0.5}
         />
-        } , [theme])}
+        } , [collections])}
       </VStack> 
     </Box>
   )

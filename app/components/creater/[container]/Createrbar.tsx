@@ -8,14 +8,14 @@ Icon,
 IconButton,
 Button, } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../../../systems/theme'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 
 interface Createprops { 
-  theme :any
 }
 
-const Createrbar : React.FC <Createprops> = ({theme}) => {
+const Createrbar : React.FC <Createprops> = () => {
+  const theme:any = useContext(ThemeContext)
   return  (
     <Box
     safeAreaTop

@@ -12,17 +12,18 @@ import {
     Pressable
 } from 'native-base'
 import { Entypo } from '@expo/vector-icons'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../../../systems/theme'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+
 interface FiledProps {
     data: any,
-    theme : any,
 }
 
-const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
-    
-    return (
-        <Pressable >
+const Userfield: React.FC<FiledProps> = ({data}) => {
+    const theme:any = useContext(ThemeContext)
+
+    return ( data.map((item : any , key : number) => 
+    <Pressable key = {key} >
             {({
                 isHovered,
                 isFocused,
@@ -34,7 +35,7 @@ const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
                         h={150}
                         alignItems={'center'}
                         rounded = 'md'
-                        bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.base}
+                        bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : null}
                         p = {1}
                     >
                         <Box w='30%'>
@@ -49,7 +50,7 @@ const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
                                     w='100%'
                                     h='100%'
                                     resizeMode='cover'
-                                    source={{ uri: data[0].image }}
+                                    source={{ uri: item.image }}
                                     alt="images"
                                 />
                             </Box>
@@ -63,18 +64,18 @@ const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
                                 fontWeight={'semibold'}
                                 fontSize={'md'}
                                 color = {theme.Text.base}
-                            >{data[0] ? data[0].username : "undifined username"}
+                            >{item ? item.username : "undifined username"}
                             </Text>
                             <Text
                                 color = {theme.Text.base}
                             >
-                                {data[0] ? data[0].email : "undifined Email"}
+                                {item ? item.email : "undifined Email"}
                             </Text>
                             <HStack space={2}>
-                                <Text fontSize={'xs'} color = {theme.Text.base}>{`${data[0] ? data[0].follower : 0} follower`}</Text>
+                                <Text fontSize={'xs'} color = {theme.Text.base}>{`${item ? item.follower : 0} follower`}</Text>
                                 <Divider
                                     orientation='vertical' />
-                                <Text fontSize={'xs'} color = {theme.Text.base}>{`${data[0] ? data[0].following : 0} following`}</Text>
+                                <Text fontSize={'xs'} color = {theme.Text.base}>{`${item ? item.following : 0} following`}</Text>
                             </HStack>
                         </Box>
                         <Box
@@ -99,6 +100,7 @@ const Userfield: React.FC<FiledProps> = ({ data ,theme}) => {
             }}
         </Pressable>
 
+    )
     )
 }
 

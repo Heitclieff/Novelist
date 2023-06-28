@@ -5,12 +5,12 @@ import { TabView , SceneMap ,TabBar } from 'react-native-tab-view'
 import Singleproject from './[pages]/Singleproject'
 import Multiproject from './[pages]/Multiproject'
 
-const renderScene = (theme: string) => ({ route }: { route: Route }) => {
+const renderScene = () => ({ route }: { route: Route }) => {
      switch (route.key) {
        case 'first':
-         return <Singleproject theme={theme} />;
+         return <Singleproject/>;
        case 'second':
-         return <Multiproject theme={theme} />;
+         return <Multiproject />;
        default:
          return null;
      }
@@ -28,10 +28,9 @@ const renderTabBar = (props:any) => (
 
 );
 interface Tabprops { 
-     theme : any
 }
 
-const TabsControls : React.FC <Tabprops> = ({theme}) => {
+const TabsControls : React.FC <Tabprops> = () => {
      const layout = useWindowDimensions();
      const [index , setIndex] = useState<number>(0);
      const [routes] = useState([
@@ -39,7 +38,7 @@ const TabsControls : React.FC <Tabprops> = ({theme}) => {
      {key  : 'second', title : "Collaboration"},
      ])
 
-     const renderSceneWithTheme = renderScene(theme)
+     const renderSceneWithTheme = renderScene()
 
   return (
      <TabView

@@ -1,4 +1,4 @@
-import React, {FC , useMemo} from 'react'
+import React, {FC , useMemo , useEffect , Suspense , lazy} from 'react'
 import { 
 Box,
 VStack,
@@ -12,21 +12,36 @@ import { Feather, MaterialIcons } from '@expo/vector-icons'
 import Userfield from '../components/menu/[container]/Userfield'
 import Optionfield from '../components/global/[container]/Optionfield'
 import Menubar from '../components/menu/[container]/Menubar'
+import { useContext } from 'react'
+import { ThemeContext } from '../../systems/Theme/ThemeProvider'
+const LazyMenubar = React.lazy(() => import('../components/menu/[container]/Menubar'));
+const LazyOptionfield = React.lazy(() => import('../components/global/[container]/Optionfield'));
 
-//userdata
-import { userdata } from '../../assets/VisualCollectionsdata'
-import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen'
+//redux toolkit
+import { useDispatch, useSelector } from 'react-redux';
+import { getuserData , setTheme} from '../../systems/redux/action'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
+import { RootState } from '../../systems/redux/reducer'
 
 interface Pageprops { 
   navigation :any,
-  theme :  any,
-  setTheme: any,
 }
 
-const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
+const Menu :React.FC <Pageprops> = ({navigation}) => {
   const Memorizeuserfield = React.memo(Userfield)
-  const MemorizeOptionfield = React.memo(Optionfield)
-  const MemorizeMenubar  = React.memo(Menubar);
+  const MemorizeOptionfield = React.memo(LazyOptionfield)
+  const MemorizeMenubar  = React.memo(LazyMenubar);
+
+  const theme:any =  useContext(ThemeContext)
+  const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const userdata = useSelector((state:any) => state.userData)
+
+  const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
+
+  useEffect(() => {
+    if(!isReduxLoaded) dispatch(getuserData());
+  },[dispatch , isReduxLoaded])
   
   const Menuitems = [{
   title : 'Edit Profile',
@@ -70,7 +85,9 @@ const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
     bg = {theme.Bg.base}
     >
       {React.useMemo(() => {
-        return <MemorizeMenubar  theme = {theme} setTheme = {setTheme} />
+        return <Suspense fallback = {<Box>Loading..</Box>}>
+            <MemorizeMenubar/>
+        </Suspense> 
       } , [theme])}
         <VStack paddingY={5}>
           <Box
@@ -79,30 +96,29 @@ const Menu :React.FC <Pageprops> = ({navigation ,theme , setTheme}) => {
           h = {200}
           >​ 
             {React.useMemo(() => {
-              return <Memorizeuserfield data = {userdata} theme = {theme} /> 
-            }, [theme])}
+              return <Memorizeuserfield data = {userdata}/> 
+            }, [userdata])}
           </Box>
           <VStack
           id = 'Options-section'
           w = '100%'
-          space=  {1}
+          space=  {1}  
           >
-            {React.useMemo(() => {
-              return  Menuitems.map((item, key) => (
-                <MemorizeOptionfield
-                key={key}
-                theme = {theme}
-                title  = {item.title}
-                OptionIcon = {item.IconProperty}
-                navigation={navigation}
-                direction = {item.direct}
-              />    
-              ))
-            },[theme ,navigation])}
-             
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              {React.useMemo(() => {
+                return  Menuitems.map((item, key) => (
+                  <MemorizeOptionfield
+                  key={key}
+                  title  = {item.title}
+                  OptionIcon = {item.IconProperty}
+                  navigation={navigation}
+                  direction = {item.direct}
+                />    
+                ))
+              },[navigation])}
+            </Suspense>
           </VStack>
         </VStack>
-
     </Box>
   )
 }

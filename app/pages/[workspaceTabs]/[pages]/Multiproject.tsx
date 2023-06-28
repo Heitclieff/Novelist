@@ -8,12 +8,15 @@ import { getCollectionData } from '../../../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../../../systems/redux/reducer'
+//Theme
+import { useContext } from 'react';
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider';
 
 interface pageprops {
-  theme : any
 }
 
-const Multiproject : React.FC <pageprops> = ({theme}) => {
+const Multiproject : React.FC <pageprops> = () => {
+  const theme:any = useContext(ThemeContext)
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state:any)=> state.collectionsData)
   const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
@@ -21,6 +24,7 @@ const Multiproject : React.FC <pageprops> = ({theme}) => {
   useEffect(() => {
     if(!isReduxLoaded) dispatch(getCollectionData());
   },[dispatch , isReduxLoaded])
+  
   return (
     <Box
     w =  '100%'
@@ -30,7 +34,6 @@ const Multiproject : React.FC <pageprops> = ({theme}) => {
         <Suspense fallback={<Box>Loading..</Box>}>
           <LazyGlobalgrid
             collections={Collectionsdata}
-            theme={theme}
           />
         </Suspense>
     }

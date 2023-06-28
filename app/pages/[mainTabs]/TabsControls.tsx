@@ -8,16 +8,16 @@ import Hotnovelpages from './[page]/Hotnovelpages'
 import Allnovelpages from './[page]/Allnovelpages'
 
 
-const renderScene = (theme: string) => ({ route }: { route: Route }) => {
+const renderScene = () => ({ route }: { route: Route }) => {
      switch (route.key) {
      case 'first':
-          return <Firstpages theme={theme} />;
+          return <Firstpages/>;
      case 'second':
-          return <Topnovelpages theme={theme} />;
+          return <Topnovelpages/>;
      case 'third':
-          return <Hotnovelpages theme={theme} />;
+          return <Hotnovelpages/>;
      case 'fourth':
-          return <Allnovelpages theme={theme} />;
+          return <Allnovelpages/>;
        default:
          return null;
      }
@@ -35,10 +35,10 @@ const renderTabBar = (props:any) => (
 );
 
 interface Tabprops { 
-     theme : any
+
 }
 
-const TabsControls : React.FC <Tabprops> = ({theme}) => {
+const TabsControls : React.FC <Tabprops> = () => {
      const layout = useWindowDimensions();
      const [index , setIndex] = useState<number>(0);
      const [routes] = useState([
@@ -48,7 +48,7 @@ const TabsControls : React.FC <Tabprops> = ({theme}) => {
      {key  : 'fourth',  title : "All Novels"},
      ])
 
-     const renderSceneWithTheme = renderScene(theme)
+     const renderSceneWithTheme = renderScene()
   return (
      <TabView
             navigationState={{index, routes}}

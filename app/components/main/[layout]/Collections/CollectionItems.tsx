@@ -11,18 +11,19 @@ Pressable,
  } from 'native-base'
 import { FontAwesome5 , Feather , AntDesign} from '@expo/vector-icons'
 import { Image } from 'expo-image'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../../../../systems/theme'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
+
 
 interface CollectionProps { 
   title : string,
   view : string,
   images : string,
   avatar : any,
-  theme :any,
 }
 
-const CollectionItems :React.FC <CollectionProps> = ({theme, title , view, images ,avatar = null }) => {
+const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null }) => {
+  const theme:any = useContext(ThemeContext)
   return (
     <Pressable >
       {({

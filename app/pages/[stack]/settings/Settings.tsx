@@ -1,21 +1,23 @@
-import React,{FC} from 'react'
+import React,{FC , Suspense} from 'react'
 import { 
 Box,
 VStack,
 HStack,
 Text, } from 'native-base'
-import Optionfield from '../../../components/global/[container]/Optionfield'
+const LazyOptionfield = React.lazy(() => import('../../../components/global/[container]/Optionfield'));
 import { Settingmenu } from '../../../../assets/VisualCollectionsdata'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../../../systems/theme'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 
 interface Pageprops {
-    theme : any ,
     setTheme :any ,
 }
 
-const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
-    const {colorMode} = useColorMode();
+const MemorizedOptionfield = React.memo(LazyOptionfield)
+
+const Settings : React.FC <Pageprops> = ({setTheme})  => {
+    const theme:any = useContext(ThemeContext);
+
     const SettingsCategory = [{
         title : 'Account And Privacy',
         tag : 'account',
@@ -29,7 +31,7 @@ const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
         tag : 'system'
     }
 ]
-
+    
   return (
 
     <Box w  = '100%' h=  '100%' bg = {theme.Bg.base}>
@@ -42,27 +44,29 @@ const Settings : React.FC <Pageprops> = ({theme ,setTheme})  => {
                         fontWeight={'semibold'}
                         color = {theme.Text.heading}
                         >{item.title}</Text>
-                        {option.map((optionitem , key) => {
-                            return( 
-                                <Box mb = {1} key = {key}>
-                                    <Optionfield
-                                        theme =  {theme}
-                                        title = {optionitem.title}
-                                        isDividerEnable = {false}
-                                        justifyIcon  = 'start'
-                                        detail = {optionitem.detail}
-                                        fontcolor = {optionitem.color}
-                                        OptionIcon={{
-                                            type : optionitem.icon,
-                                            name : optionitem.name,
-                                        }
-                                        }
-                                        
-                                    />
-                                </Box>
-                                
-                            )
-                        })}
+                        <Suspense fallback = {<Box>Loading..</Box>}>
+                            {option.map((optionitem , key) => {
+                                return( 
+                                    <Box mb = {1} key = {key}>
+                                        <MemorizedOptionfield
+                                            title = {optionitem.title}
+                                            isDividerEnable = {false}
+                                            justifyIcon  = 'start'
+                                            detail = {optionitem.detail}
+                                            fontcolor = {optionitem.color}
+                                            OptionIcon={{
+                                                type : optionitem.icon,
+                                                name : optionitem.name,
+                                            }
+                                            }
+                                            
+                                        />
+                                    </Box>
+                                    
+                                )
+                            })}
+                        </Suspense>
+                       
                         
                     </VStack>
                 )

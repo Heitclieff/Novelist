@@ -7,14 +7,16 @@ Center,
 Pressable,
  } from 'native-base'
 import { Image } from 'expo-image'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 
 interface Itemsprops {
     images : string 
     title : string 
-    theme : any
 }
 
-const CategoryItems : React.FC <Itemsprops> = ({images , title , theme}) =>{
+const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
+  const theme:any = useContext(ThemeContext)
   return (
     <Pressable >
     {({

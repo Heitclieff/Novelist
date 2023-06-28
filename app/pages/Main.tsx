@@ -1,32 +1,33 @@
-import React ,{FC , useState ,lazy ,Suspense , useMemo} from 'react'
-import { 
-Box,
-Button,
-Text,
-VStack
+import React, { FC, useState, lazy, Suspense, useMemo , useEffect } from 'react'
+import {
+  Box,
 } from 'native-base'
 import Appbar from '../components/main/[container]/Appbar'
+import { useContext } from 'react'
+import { ThemeContext } from '../../systems/Theme/ThemeProvider'
+
 const LazyTabscontrols = lazy(() => import('./[mainTabs]/TabsControls'))
 
-interface Pageprops { 
-  navigation :any 
-  theme :any
 
+interface Pageprops {
+  navigation: any
 }
 
-const Main: React.FC <Pageprops> = ({navigation , theme}) => {
+const Main: React.FC<Pageprops> = ({navigation}) => {
+  const theme:any = useContext(ThemeContext)
   const MemorizeAppbar = React.memo(Appbar)
-  const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols theme = {theme} /> ,[theme])
+  const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols/>, [])
 
   return (
     <Box>
-      <MemorizeAppbar theme = {theme} />
-      <Box w = '100%' h= '100%' py={3} bg = {theme.Bg.base}>
-        <Suspense fallback = {<Box>Loading...</Box>}>
+      <MemorizeAppbar/>
+      <Box w='100%' h='100%' py={3} bg={theme.Bg.base}>
+        <Suspense fallback={<Box>Loading...</Box>}>
           {MemorizedTabscontrols}
         </Suspense>
       </Box>
     </Box>
+
   )
 }
 

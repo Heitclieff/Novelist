@@ -10,14 +10,12 @@ IconButton,
 Pressable
 } from 'native-base'
 import { Entypo } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import { useColorMode } from 'native-base'
-import { Themecolor } from '../../../../systems/theme'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 
 interface FiledProps {
     isDividerEnable : boolean,
     isChevronEnable : any ,
-    theme : any,
     justifyIcon : string,
     fontcolor : string,
     title :string,
@@ -34,7 +32,6 @@ interface FiledProps {
 const Optionfield :React.FC <FiledProps> = ({
     isDividerEnable = true , 
     isChevronEnable =  true, 
-    theme,
     justifyIcon = 'center',
     fontcolor,
     title , 
@@ -42,8 +39,8 @@ const Optionfield :React.FC <FiledProps> = ({
     OptionIcon, 
     direction , 
     navigation}) => {
-
-        const {colorMode} = useColorMode();
+    
+    const theme:any = useContext(ThemeContext)
   return (
     <Pressable onPress={()=> navigation.navigate(direction)}>
     {({
@@ -57,7 +54,7 @@ const Optionfield :React.FC <FiledProps> = ({
             h = {60}
             m = {0.3}
             rounded = 'md'
-            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.base}
+            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : null}
             >
                 <HStack 
                 w= '100%'

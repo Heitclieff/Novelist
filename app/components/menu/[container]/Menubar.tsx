@@ -8,44 +8,32 @@ Switch,
 Button,
 Icon,
 } from 'native-base'
-import { useColorMode } from 'native-base'
 import { Feather ,Ionicons } from '@expo/vector-icons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+
+import { setTheme , saveThemetoStorage  } from '../../../../systems/redux/action'
+import { Themedark , Themelight } from '../../../../systems/theme'
+import { useDispatch } from 'react-redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { RootState } from '../../../../systems/redux/reducer'
+import { AnyAction } from 'redux'
 
 interface MenubarProps {
-  theme : any ,
-  setTheme : any,
  }
 
-const Menubar :React.FC <MenubarProps> = ({theme , setTheme}) => {
-  const [darkmode , setdarkmode]  = useState(theme.themeMode === 'dark' ? true : false);
+const Menubar :React.FC <MenubarProps> = () => {
+  const theme:any = useContext(ThemeContext)
+  const [darkmode , setdarkmode]  = useState(theme.themeMode === 'dark');
+  const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
 
-  const storeData =  async (item:any) : Promise<void> => {
-    try {
-      await AsyncStorage.setItem('theme' , item ? 'dark' : 'light')
-    } catch(e){ 
-      console.log(e)
-    }
-  }
-  const getData = async () : Promise <any> => {
-    try {
-      const items = await AsyncStorage.getItem('theme');
-      return items
-    } catch(e){
-      console.log(e)
-    }
+  const toggleSwitch = async () => { 
+      const selectedTheme = darkmode ? Themelight : Themedark;
+      dispatch(setTheme(selectedTheme))
+      dispatch(saveThemetoStorage(selectedTheme))
+      setdarkmode(!darkmode);
   }
 
-
-  const toggleSwitch = async () => {
-    storeData(!darkmode);
-    setTheme(!darkmode)
-    setdarkmode(!darkmode);
-  }
-
-  useEffect(() => {
-      getData();
-  },[])
   return (
     <HStack
     safeAreaTop = {12}

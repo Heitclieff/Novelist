@@ -9,12 +9,15 @@ Button,
 Icon
 } from 'native-base'
 import { AntDesign,FontAwesome , Ionicons} from '@expo/vector-icons'
-     
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+
 interface AppbarProps {
-    theme : any
+
 }
 
-const Appbar : React.FC <AppbarProps> = ({theme}) => {
+const Appbar : React.FC <AppbarProps> = () => {
+     const theme:any = useContext(ThemeContext);
   return (
      <VStack 
      safeAreaTop = {12}

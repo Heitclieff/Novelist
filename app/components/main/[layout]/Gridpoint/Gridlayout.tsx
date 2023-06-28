@@ -1,4 +1,4 @@
-import React,{FC , useCallback} from 'react'
+import React,{FC , Suspense, useCallback} from 'react'
 import { 
 Box,
 ScrollView,
@@ -7,12 +7,14 @@ Text,
 Center,
 } from 'native-base'
 import { FlatGrid } from 'react-native-super-grid'
-import CollectionItems from '../Collections/CollectionItems'
+const LazyCollectionItems = React.lazy(() => import('../Collections/CollectionItems'));
+import { useContext } from 'react'
+import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
+
 
 interface LayoutProps {
     collections : any
     title : string
-    theme : any
 }   
 
 interface Collections {
@@ -21,20 +23,23 @@ interface Collections {
     view : number,
 }
 
-const MemorizedCollectitonsItems = React.memo(CollectionItems)
+const MemorizedCollectitonsItems = React.memo(LazyCollectionItems)
 
-const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
+const Gridlayout : React.FC <LayoutProps>= ({collections ,title }) => {
+    const theme:any = useContext(ThemeContext)
     const renderCollectionItem = useCallback(
         (item : Collections, round : number) => (
-            <Center>
-                <MemorizedCollectitonsItems
-                    theme  = {theme} 
-                    title={item.title}
-                    images = {item.images}
-                    view = {item.view}
-                />
-            </Center>
-        ),[theme]
+            <Suspense fallback = {<Box>Loading...</Box>}>
+                <Center>
+                    <MemorizedCollectitonsItems
+                        title={item.title}
+                        images = {item.images}
+                        view = {item.view}
+                    />
+                </Center>
+            </Suspense>
+           
+        ),[]
       );
 
     return (
@@ -56,7 +61,7 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title , theme}) => {
                 renderItem={({item , index}):any => renderCollectionItem(item ,index)}
                 onEndReachedThreshold={0.5}
                 />
-            }, [theme])}
+            }, [collections])}
     </Box>
   )
 }

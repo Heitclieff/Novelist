@@ -1,36 +1,37 @@
-import React,{FC, useCallback} from 'react'
+import React,{FC, useCallback , Suspense} from 'react'
 import { 
 Box,
 ScrollView,
 Text,
 } from 'native-base';
-import CategoryItems from '../[container]/CategoryItems';
 import { FlatGrid } from 'react-native-super-grid';
+const LazyCategoryItems = React.lazy(() => import('../[container]/CategoryItems'));
+
 
 interface LayoutProps {
   category : any , 
-  theme : any
 }
 
 interface Collections {
-  theme : any,
   images : string, 
   title : string
 }
 
-const MemorizedCategoryItems = React.memo(CategoryItems)
+const MemorizedCategoryItems = React.memo(LazyCategoryItems)
 
-const CategoryGrid : React.FC <LayoutProps> = ({category , theme}) => {
+const CategoryGrid : React.FC <LayoutProps> = ({category}) => {
 
   const renderCollectionItem = useCallback(
     (item : Collections, round : number) => (
-        <MemorizedCategoryItems
-          key = {round}
-          theme = {theme}
-          images = {item.images}
-          title = {item.title}
-        />
-    ),[theme]
+        <Suspense fallback = {<Box>Loading...</Box>}>
+          <MemorizedCategoryItems
+            key = {round}
+            images = {item.images}
+            title = {item.title}
+          />
+        </Suspense>
+      
+    ),[]
   );
   
   return (

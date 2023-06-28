@@ -1,6 +1,8 @@
-import React,{FC, useEffect , useCallback} from 'react'
+import React,{FC, useEffect , useCallback , Suspense} from 'react'
 import { Box, FlatList } from 'native-base'
-import CategoryGrid from '../components/category/[layout]/CategoryGrid'
+const LazyCategoryGrid = React.lazy(() => import('../components/category/[layout]/CategoryGrid'));
+import { useContext } from 'react';
+import { ThemeContext } from '../../systems/Theme/ThemeProvider';
 
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,12 +12,12 @@ import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer';
 
 interface Pageprops {
-  theme : any
- }
+}
 
-const MemorizedCategoryGrids = React.memo(CategoryGrid)
+const MemorizedCategoryGrids = React.memo(LazyCategoryGrid)
 
-const Category: React.FC <Pageprops> = ({theme}) => {
+const Category: React.FC <Pageprops> = () => {
+  const theme: any = useContext(ThemeContext);
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Categorydata = useSelector((state:any)=> state.categoryData)
   const isReduxLoaded = useSelector((state: RootState) => state.iscategoryLoaded);
@@ -31,12 +33,13 @@ const Category: React.FC <Pageprops> = ({theme}) => {
     py = {3}
     bg = {theme.Bg.base}
     >
+    <Suspense fallback = {<Box>Loading...</Box>}>
       {isReduxLoaded &&
-        <MemorizedCategoryGrids
-        theme = {theme}
-        category={Categorydata}
-       />
-      }
+          <MemorizedCategoryGrids
+          category={Categorydata}
+        />
+        }
+    </Suspense>
     </Box>
   )
 }
