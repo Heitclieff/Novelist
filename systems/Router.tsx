@@ -62,6 +62,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
         headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
         headerTitleStyle : {color : theme.Text.tabbar} ,
+        
       }}
       >
         <Tab.Screen
@@ -69,8 +70,11 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         options={{
           title : 'Home',
           headerShown: false,
-          tabBarIcon :(({size ,color}) => 
-          <Icon size = {size} color = {color} as ={FontAwesome5} name = "home" />)
+          tabBarActiveTintColor : theme.Text.bottomtab.focused,
+          tabBarInactiveTintColor: theme.Text.bottomtab.base,
+          tabBarIcon :(({size ,color ,focused}) => 
+          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={FontAwesome5} name = "home" />)
+          
           }}>
             {(props:any) => (
               <Suspense fallback={<Box>Loading...</Box>}>
@@ -83,8 +87,10 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         options={{
           title : 'Category',
           headerShown: true,
-          tabBarIcon :(({size ,color}) => 
-          <Icon size = {size} color = {color} as ={MaterialIcons} name = "category" />)
+          tabBarActiveTintColor : theme.Text.bottomtab.focused,
+          tabBarInactiveTintColor: theme.Text.bottomtab.base,
+          tabBarIcon :(({size ,color , focused}) => 
+          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={MaterialIcons} name = "category" />)
           }}>
             {(props:any) => ( 
             <Suspense fallback={<Box>Loading...</Box>}> 
@@ -96,8 +102,10 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         options={{
           title : 'Create',
           headerShown: false,
-          tabBarIcon :(({size ,color}) => 
-          <Icon size = {size} color = {color} as ={Ionicons} name = "create" />),
+          tabBarActiveTintColor : theme.Text.bottomtab.focused,
+          tabBarInactiveTintColor: theme.Text.bottomtab.base,
+          tabBarIcon :(({size ,color ,focused}) => 
+          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "create" />),
           }}>
              {(props:any) => (
              <Suspense fallback={<Box>Loading...</Box>}>
@@ -110,8 +118,10 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         options={{
           title : 'Library',
           headerShown: true,
-          tabBarIcon :(({size ,color}) => 
-          <Icon size = {size} color = {color} as ={Ionicons} name = "ios-library" />)
+          tabBarActiveTintColor : theme.Text.bottomtab.focused,
+          tabBarInactiveTintColor: theme.Text.bottomtab.base,
+          tabBarIcon :(({size ,color , focused}) => 
+          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "ios-library" />)
           }}>
           {(props:any) => (
           <Suspense fallback={<Box>Loading...</Box>}>
@@ -124,8 +134,10 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
         options={{
           title : 'Menu',
           headerShown: false,
-          tabBarIcon :(({size ,color}) => 
-          <Icon size = {size} color = {color} as ={EvilIcons} name = "user" />)
+          tabBarActiveTintColor : theme.Text.bottomtab.focused,
+          tabBarInactiveTintColor: theme.Text.bottomtab.base,
+          tabBarIcon :(({size ,color , focused}) => 
+          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={EvilIcons} name = "user" />)
           }}
         >
           {(props:any) => (

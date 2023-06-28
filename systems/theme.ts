@@ -83,7 +83,6 @@ export const Themecolor = ({
     
 })
 
-
 export const Themedark = ({
   themeMode : 'dark',
   Bg : {
@@ -96,10 +95,18 @@ export const Themedark = ({
     heading : 'coolGray.200',
     base : 'coolGray.300',
     tabbar : 'white',
+    bottomtab : {
+      focused : '#0891b2' ,
+      base : '#d1d5db',
+    },
     description : 'coolGray.400'
   },
   Icon : {
     base : 'coolGray.300',
+    bottomtab : {
+      focused : '#0891b2' ,
+      base : '#d1d5db',
+    },
     heading : 'lightText'
   },
   Divider : {
@@ -123,11 +130,19 @@ export const Themelight = ({
   Text : {
     heading : 'coolGray.800',
     tabbar : 'black',
+    bottomtab : {
+      focused : '#0891b2' ,
+      base : '#4b5563',
+    },
     base : 'coolGray.700',
     description : 'coolGray.500'
   },
   Icon : {
     base : 'coolGray.600',
+    bottomtab : {
+      focused : '#0891b2' ,
+      base : '#4b5563',
+    },
     heading : 'coolGray.800'
   },
   Divider : {
