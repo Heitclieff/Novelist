@@ -10,7 +10,7 @@ Text,
 import { useContext } from 'react'
 import { ThemeContext } from '../../systems/Theme/ThemeProvider'
 const LazyGlobalgrid = lazy(() => import('../components/global/[layout]/Globalgrid'))
-const LazyShowcasebar = lazy(() => import('../components/global/[layout]/Globalgrid'))
+const LazyShowcasebar = lazy(() => import('../components/library/[container]/Showcasebar'))
 
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,10 +52,10 @@ const Library: React.FC <Pageprops> = () => {
   return (
     <VStack w = '100%' h = '100%' p = {2} bg = {theme.Bg.base}>
         {React.useMemo(() => {
-          return <MemorizeShowcasebar
+          return( <MemorizeShowcasebar
           books= '10'
           userdata =  {userdata}
-          /> 
+          /> )
         }, [userdata])}
         
         <Box  w = '100%' pl = {3} >

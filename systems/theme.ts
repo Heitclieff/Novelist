@@ -29,60 +29,6 @@ const theme = extendTheme({
 export default theme;
 
 
-
-export const Themecolor = ({
-    tabbar : {
-      light : '#f9fafb',
-      dark : '#1f2937',
-      border : {
-        light: 'white',
-        dark : '#475569',
-      }
-    },
-
-    bg : {
-        light : 'coolGray.100',
-        dark : 'coolGray.800'
-    },
-    boxbg : {
-      light : "coolGray.100",
-      dark : 'coolGray.700'
-    },
-    bgPress : {
-        light : 'coolGray.200',
-        dark : 'coolGray.700',
-    },
-    infotext : {
-        light : 'coolGray.700',
-        dark : 'coolGray.300'
-    },
-    collection : {
-      viewtext : {
-        dark : 'coolGray.400',
-        light : 'coolGray.500'
-      },
-      Filedtitle : {
-        dark : 'gray.200',
-        light: 'gray.800',
-      }
-    },
-    icon : {
-      library :  {
-        light : 'coolGray.600',
-        dark : 'coolGray.300',
-      },
-      global : {
-        light : 'coolGray.600',
-        dark : 'coolGray.300',
-      },
-      Addicon : {
-        light : "coolGray.700",
-        dark : 'lightText',
-      }
-    },
-    
-})
-
 export const Themedark = ({
   themeMode : 'dark',
   Bg : {
@@ -94,6 +40,11 @@ export const Themedark = ({
   Text : {
     heading : 'coolGray.200',
     base : 'coolGray.300',
+    skelton : 'coolGray.600',
+    tab : {
+      active : '#0891b2',
+      inactive :'#d1d5db'
+    },
     tabbar : 'white',
     bottomtab : {
       focused : '#0891b2' ,
@@ -116,6 +67,7 @@ export const Themedark = ({
   },
   Button: {
     base : 'coolGray.700',
+    outline : 'coolGray.200',
   },
 })
 
@@ -129,6 +81,11 @@ export const Themelight = ({
   },
   Text : {
     heading : 'coolGray.800',
+    skelton : 'coolGray.300',
+    tab : {
+      active :'#0891b2',
+      inactive : '#374151'
+    },
     tabbar : 'black',
     bottomtab : {
       focused : '#0891b2' ,
@@ -152,5 +109,6 @@ export const Themelight = ({
   },
   Button: {
     base : 'coolGray.200',
+    outline : 'coolGray.400',
   },
 })

@@ -14,6 +14,7 @@ import {
 import { Entypo } from '@expo/vector-icons'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native'
 
 interface FiledProps {
     data: any,
@@ -21,9 +22,9 @@ interface FiledProps {
 
 const Userfield: React.FC<FiledProps> = ({data}) => {
     const theme:any = useContext(ThemeContext)
-
+    const navigation = useNavigation();
     return ( data.map((item : any , key : number) => 
-    <Pressable key = {key} >
+    <Pressable key = {key} onPress={()=> navigation.navigate("ProfileStack")}>
             {({
                 isHovered,
                 isFocused,

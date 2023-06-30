@@ -90,6 +90,7 @@ export const userdata = [{
     follower : '100',
     following : '200',
     image : 'https://thicc-af.mywaifulist.moe/waifus/kiyotaka-ayanokoji-classroom-of-the-elite/F8ZuqDJpbyBprRJmQ3g7dvL6bdo89QUV4aovJ1Qz.jpg?class=thumbnail',
+    background : 'https://wallpapers.com/images/hd/kiyotaka-ayanokoji-in-pink-qs33qgqm79ccsq7n.jpg',
 }]
 
 import { FontAwesome5 , EvilIcons , Ionicons , Feather} from "@expo/vector-icons"

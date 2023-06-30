@@ -14,6 +14,8 @@ const Creater = lazy(() => import('../app/pages/Creater'));
 
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
+const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
+
 
 interface Router {
 
@@ -40,13 +42,24 @@ const Router : React.FC <Router> = () =>  {
         </Stack.Screen>
         <Stack.Screen 
         name = "SettingsStack"
+        component = {Settings}
         options={{
           title : 'Settings',
           headerShown : true,
-        }}
-        >
-          {(props:any) => <Settings {...props} theme = {theme}/>}
+        }}/>
+        <Stack.Screen 
+        name = "ProfileStack"
+        options={{
+          title : 'Profile',
+          headerShown : true,
+        }}>
+          {(props:any) => 
+          <Suspense fallback ={<Box>Loading...</Box>}>
+            <LazyProfile {...props}/>
+          </Suspense>
+          }
         </Stack.Screen>
+
     </Stack.Navigator>
   )
 }
