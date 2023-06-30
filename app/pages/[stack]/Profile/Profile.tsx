@@ -20,7 +20,7 @@ import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 
 //Component && Layouts;
-import Profilelayout from './[layout]/Profilelayout'
+import Tabcontrols from './[ProfileTabs]/Tabcontrols'
 
 interface StackProps {
     Profiledata : any
@@ -71,7 +71,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         React.useMemo(() => {
             return(
                 <Box bg={theme.Bg.base} flex={1}>
-                    <Profilelayout currentProfile={currentProfile} />
+                    <Tabcontrols currentProfile={currentProfile} />
                 </Box>
             )
         },[currentProfile])

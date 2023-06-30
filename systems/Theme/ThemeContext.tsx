@@ -7,6 +7,7 @@ import { RootState } from '../redux/reducer'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { loadThemefromStorage } from '../redux/action'
+import { Box } from 'native-base'
 
 interface ThemeContext { }
 
@@ -21,7 +22,7 @@ const ThemeContext : React.FC <ThemeContext> = () => {
 
   return (
    <ThemeProvider theme = {theme}>
-       {isReduxLoaded &&  <Router />}
+        {isReduxLoaded &&  <Router />}
    </ThemeProvider>
   )
 }

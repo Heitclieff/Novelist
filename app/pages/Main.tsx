@@ -19,15 +19,14 @@ const Main: React.FC<Pageprops> = ({navigation}) => {
   const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols/>, [])
 
   return (
-    <Box>
+    <>
       <MemorizeAppbar/>
-      <Box w='100%' h='100%' py={3} bg={theme.Bg.base}>
+      <Box bg = {theme.Bg.base} flex = {1} py={3}>
         <Suspense fallback={<Box>Loading...</Box>}>
           {MemorizedTabscontrols}
         </Suspense>
       </Box>
-    </Box>
-
+    </>
   )
 }
 

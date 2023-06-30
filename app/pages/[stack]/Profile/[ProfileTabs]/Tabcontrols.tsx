@@ -30,10 +30,10 @@ const renderTabBar = (props:any) => {
   )
 };
 
-const LazyCareerpage = React.lazy(() => import('../[ProfileTabs]/[pages]/Careerpage'));
+const LazyCareerpage = React.lazy(() => import('./[pages]/Careerpage'));
 
 
-const Profilelayout: React.FC <layoutProps>  =  ({currentProfile}) => {
+const Tabcontrols: React.FC <layoutProps>  =  ({currentProfile}) => {
   const theme:any = useContext(ThemeContext)
   const [isLoading, setIsLoading] = useState(true);
 
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Profilelayout;
+export default Tabcontrols;

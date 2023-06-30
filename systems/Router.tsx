@@ -71,96 +71,95 @@ interface Tabprops {
 const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
 
     return (
-      <Tab.Navigator screenOptions={{
-        tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
-        headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
-        headerTitleStyle : {color : theme.Text.tabbar} ,
-        
-      }}
-      >
-        <Tab.Screen
-        name = 'TabMain'
-        options={{
-          title : 'Home',
-          headerShown: false,
-          tabBarActiveTintColor : theme.Text.bottomtab.focused,
-          tabBarInactiveTintColor: theme.Text.bottomtab.base,
-          tabBarIcon :(({size ,color ,focused}) => 
-          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={FontAwesome5} name = "home" />)
+        <Tab.Navigator screenOptions={{
+          tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
+          headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
+          headerTitleStyle : {color : theme.Text.tabbar} ,
           
-          }}>
+        }}
+        >
+          <Tab.Screen
+          name = 'TabMain'
+          options={{
+            title : 'Home',
+            headerShown: false,
+            tabBarActiveTintColor : theme.Text.bottomtab.focused,
+            tabBarInactiveTintColor: theme.Text.bottomtab.base,
+            tabBarIcon :(({size ,color ,focused}) => 
+            <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={FontAwesome5} name = "home" />)
+            
+            }}>
+              {(props:any) => (
+                <Suspense fallback={<Box>Loading...</Box>}>
+                  <Main {...props}/>
+                </Suspense> 
+              )}
+            </Tab.Screen>
+          <Tab.Screen
+          name = 'TabCategory'
+          options={{
+            title : 'Category',
+            headerShown: true,
+            tabBarActiveTintColor : theme.Text.bottomtab.focused,
+            tabBarInactiveTintColor: theme.Text.bottomtab.base,
+            tabBarIcon :(({size ,color , focused}) => 
+            <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={MaterialIcons} name = "category" />)
+            }}>
+              {(props:any) => ( 
+              <Suspense fallback={<Box>Loading...</Box>}> 
+                <Category {...props}/>
+              </Suspense>)}
+          </Tab.Screen>
+          <Tab.Screen
+          name = 'TabCreater'
+          options={{
+            title : 'Create',
+            headerShown: false,
+            tabBarActiveTintColor : theme.Text.bottomtab.focused,
+            tabBarInactiveTintColor: theme.Text.bottomtab.base,
+            tabBarIcon :(({size ,color ,focused}) => 
+            <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "create" />),
+            }}>
+              {(props:any) => (
+              <Suspense fallback={<Box>Loading...</Box>}>
+                <Creater {...props}/>
+              </Suspense>
+              ) }
+          </Tab.Screen>
+          <Tab.Screen
+          name = 'TabLibrary'
+          options={{
+            title : 'Library',
+            headerShown: true,
+            tabBarActiveTintColor : theme.Text.bottomtab.focused,
+            tabBarInactiveTintColor: theme.Text.bottomtab.base,
+            tabBarIcon :(({size ,color , focused}) => 
+            <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "ios-library" />)
+            }}>
+            {(props:any) => (
+            <Suspense fallback={<Box>Loading...</Box>}>
+              <Library {...props}/>
+            </Suspense>)
+            }
+          </Tab.Screen>
+          <Tab.Screen
+          name = 'TabMenu'
+          options={{
+            title : 'Menu',
+            headerShown: false,
+            tabBarActiveTintColor : theme.Text.bottomtab.focused,
+            tabBarInactiveTintColor: theme.Text.bottomtab.base,
+            tabBarIcon :(({size ,color , focused}) => 
+            <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={EvilIcons} name = "user" />)
+            }}
+          >
             {(props:any) => (
               <Suspense fallback={<Box>Loading...</Box>}>
-                <Main {...props}/>
-              </Suspense> 
+                <Menu {...props}/>
+              </Suspense>
             )}
           </Tab.Screen>
-        <Tab.Screen
-        name = 'TabCategory'
-        options={{
-          title : 'Category',
-          headerShown: true,
-          tabBarActiveTintColor : theme.Text.bottomtab.focused,
-          tabBarInactiveTintColor: theme.Text.bottomtab.base,
-          tabBarIcon :(({size ,color , focused}) => 
-          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={MaterialIcons} name = "category" />)
-          }}>
-            {(props:any) => ( 
-            <Suspense fallback={<Box>Loading...</Box>}> 
-              <Category {...props}/>
-            </Suspense>)}
-        </Tab.Screen>
-        <Tab.Screen
-        name = 'TabCreater'
-        options={{
-          title : 'Create',
-          headerShown: false,
-          tabBarActiveTintColor : theme.Text.bottomtab.focused,
-          tabBarInactiveTintColor: theme.Text.bottomtab.base,
-          tabBarIcon :(({size ,color ,focused}) => 
-          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "create" />),
-          }}>
-             {(props:any) => (
-             <Suspense fallback={<Box>Loading...</Box>}>
-              <Creater {...props}/>
-            </Suspense>
-             ) }
-        </Tab.Screen>
-        <Tab.Screen
-        name = 'TabLibrary'
-        options={{
-          title : 'Library',
-          headerShown: true,
-          tabBarActiveTintColor : theme.Text.bottomtab.focused,
-          tabBarInactiveTintColor: theme.Text.bottomtab.base,
-          tabBarIcon :(({size ,color , focused}) => 
-          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={Ionicons} name = "ios-library" />)
-          }}>
-          {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
-            <Library {...props}/>
-          </Suspense>)
-          }
-        </Tab.Screen>
-         <Tab.Screen
-        name = 'TabMenu'
-        options={{
-          title : 'Menu',
-          headerShown: false,
-          tabBarActiveTintColor : theme.Text.bottomtab.focused,
-          tabBarInactiveTintColor: theme.Text.bottomtab.base,
-          tabBarIcon :(({size ,color , focused}) => 
-          <Icon size = {size} color = {focused ? theme.Icon.bottomtab.focused : theme.Icon.bottomtab.base} as ={EvilIcons} name = "user" />)
-          }}
-        >
-          {(props:any) => (
-            <Suspense fallback={<Box>Loading...</Box>}>
-              <Menu {...props}/>
-            </Suspense>
-          )}
-        </Tab.Screen>
       </Tab.Navigator>
-      
     )
 }
 
