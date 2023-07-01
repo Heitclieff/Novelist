@@ -2,7 +2,7 @@ import React,{FC ,lazy, Suspense , useEffect} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
-import { Box, Icon } from 'native-base'
+import { Box, Icon, IconButton} from 'native-base'
 import { useContext } from 'react';
 import { ThemeContext } from './Theme/ThemeProvider';
 //Pages Tabs 
@@ -11,12 +11,12 @@ const Category = lazy(() => import('../app/pages/Category'));
 const Menu = lazy(() => import('../app/pages/Menu'));
 const Library = lazy(() => import('../app/pages/Library'));
 const Creater = lazy(() => import('../app/pages/Creater'));
-
+import { HeaderBackButton } from '@react-navigation/elements';
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
 const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
-
-
+import { useNavigation } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons';
 interface Router {
 
 }
@@ -27,6 +27,7 @@ const Stack = createNativeStackNavigator();
 
 const Router : React.FC <Router> = () =>  {
   const theme:any = useContext(ThemeContext)
+  const navigation = useNavigation();
 
   return (theme && 
     <Stack.Navigator screenOptions={{headerStyle : {
@@ -52,6 +53,25 @@ const Router : React.FC <Router> = () =>  {
         options={{
           title : 'Profile',
           headerShown : true,
+          headerTintColor: 'white',
+          headerLeft : (props) => (
+            <IconButton
+            ml = {2}
+            {...props}
+            icon={
+              <Icon
+                  as={Entypo}
+                  name='chevron-left'
+                  size={'xl'}
+                  color = {theme.Icon.back}
+              ></Icon>
+            }
+            w = '5'
+            h = '5'
+            onPress={() => {
+              navigation.goBack();
+            }}/>
+          )
         }}>
           {(props:any) => 
           <Suspense fallback ={<Box>Loading...</Box>}>
@@ -147,6 +167,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
           options={{
             title : 'Menu',
             headerShown: false,
+            
             tabBarActiveTintColor : theme.Text.bottomtab.focused,
             tabBarInactiveTintColor: theme.Text.bottomtab.base,
             tabBarIcon :(({size ,color , focused}) => 

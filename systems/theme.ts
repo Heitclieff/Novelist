@@ -58,7 +58,8 @@ export const Themedark = ({
       focused : '#0891b2' ,
       base : '#d1d5db',
     },
-    heading : 'lightText'
+    heading : 'lightText',
+    back : 'coolGray.300',
   },
   Divider : {
     base : 'coolGray.700',
@@ -67,7 +68,11 @@ export const Themedark = ({
   },
   Button: {
     base : 'coolGray.700',
-    outline : 'coolGray.200',
+    outline : 'coolGray.500',
+    follow : { 
+      base :'coolGray.200',
+      focused : 'coolGray.300',
+    },
   },
 })
 
@@ -100,7 +105,8 @@ export const Themelight = ({
       focused : '#0891b2' ,
       base : '#4b5563',
     },
-    heading : 'coolGray.800'
+    heading : 'coolGray.800',
+    back : 'black',
   },
   Divider : {
     base : 'coolGray.300',
@@ -110,5 +116,9 @@ export const Themelight = ({
   Button: {
     base : 'coolGray.200',
     outline : 'coolGray.400',
+    follow : { 
+      base :'coolGray.800',
+      focused : 'coolGray.700',
+    },
   },
 })

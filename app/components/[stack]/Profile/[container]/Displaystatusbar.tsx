@@ -9,30 +9,33 @@ Center,
 import { useContext } from "react";
 import { ThemeContext } from "../../../../../systems/Theme/ThemeProvider";
 
-interface containerProps { }
+interface containerProps { 
+    follower : string | number,
+    following : string | number,
+    career : string | number,
+}
 
-const MenuVariant = ['follower' , 'following' , 'Careers']
+const Displaystatusbar : React.FC <containerProps> = ({follower, following , career}) => {
+    const theme:any = useContext(ThemeContext);    
+    const MenuVariant = {  follower : follower , following :following , Career : career}
 
-const Displaystatusbar : React.FC <containerProps> = () => {
-    const theme:any = useContext(ThemeContext);
     return(
-        <Box w = '100%' h=  {50} justifyContent={'flex-end'}>
-            <HStack justifyContent = 'center' alignItems={'flex-end'} space = {1}>
-                {MenuVariant.map((item, key) => {
+        <Box justifyContent={'flex-end'}>
+            <HStack  alignItems={'flex-end'} space = {4}>
+                {Object.keys(MenuVariant).map((key) => {
+                    const item = MenuVariant[key];
                     return (
-                        <VStack w='30%' key = {key}>
-                            <Center>
-                                <Text 
-                                fontWeight={'semibold'}
-                                color={theme.Text.base}>
-                                    0
-                                </Text>
-                                <Text
-                                color={theme.Text.base}>
-                                    {item}
-                                </Text>
-                            </Center>
-                        </VStack>
+                        <HStack key = {key} space = {1}>
+                            <Text 
+                            fontWeight={'semibold'}
+                            color={theme.Text.base}>
+                                {item}
+                            </Text>
+                            <Text
+                            color={theme.Text.description}>
+                               {key}
+                            </Text>  
+                        </HStack>
                     )
                 })}
             </HStack>

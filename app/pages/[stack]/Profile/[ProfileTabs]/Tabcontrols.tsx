@@ -31,7 +31,7 @@ const renderTabBar = (props:any) => {
 };
 
 const LazyCareerpage = React.lazy(() => import('./[pages]/Careerpage'));
-
+const MemorizedCareerpage = React.memo(LazyCareerpage);
 
 const Tabcontrols: React.FC <layoutProps>  =  ({currentProfile}) => {
   const theme:any = useContext(ThemeContext)
@@ -61,7 +61,7 @@ const Tabcontrols: React.FC <layoutProps>  =  ({currentProfile}) => {
         {isLoading ? 
             <Center w = '100%' h= '100%'>
               <VStack  w = '100%' rounded="md">
-                    <VStack w = '100%' flex=  {1} pt = {120} alignItems={'center'}>
+                    <VStack w = '100%' flex=  {1}  pb = {60} alignItems={'center'}>
                         <Skeleton w = '90%' h = '150' rounded = 'md' startColor= {theme.Bg.container}/>
                         <Skeleton.Text  lines={2} alignItems="start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
                         <Skeleton w = '90%' h = '150' rounded = 'md'  mt = {50} startColor= {theme.Bg.container}/>
@@ -70,9 +70,8 @@ const Tabcontrols: React.FC <layoutProps>  =  ({currentProfile}) => {
                 </VStack>
             </Center>
 
-        
        
-       : <LazyCareerpage/>}
+       : <MemorizedCareerpage/>}
       </Tabs.Tab>
       <Tabs.Tab name="Library">
         <Tabs.ScrollView>
