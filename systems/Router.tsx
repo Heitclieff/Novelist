@@ -2,7 +2,7 @@ import React,{FC ,lazy, Suspense , useEffect} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
-import { Box, Icon, IconButton} from 'native-base'
+import { Box, Icon, IconButton , Button , Text} from 'native-base'
 import { useContext } from 'react';
 import { ThemeContext } from './Theme/ThemeProvider';
 //Pages Tabs 
@@ -11,10 +11,11 @@ const Category = lazy(() => import('../app/pages/Category'));
 const Menu = lazy(() => import('../app/pages/Menu'));
 const Library = lazy(() => import('../app/pages/Library'));
 const Creater = lazy(() => import('../app/pages/Creater'));
-import { HeaderBackButton } from '@react-navigation/elements';
+
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
 const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
+const LazyEditProfile = lazy(() => import('../app/pages/[stack]/Profile/Editprofile'));
 import { useNavigation } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 interface Router {
@@ -79,6 +80,30 @@ const Router : React.FC <Router> = () =>  {
           </Suspense>
           }
         </Stack.Screen>
+        <Stack.Screen
+          name = 'Editprofile'
+          options={{
+            title :'Edit Profile',
+            headerShown : true,       
+            headerLeft : (props) => (
+              <Text 
+              ml = {2} 
+              fontSize={'md'}
+              fontWeight={'medium'}
+              color = {theme.Text.heading}
+              {...props}
+              onPress={() => {
+                navigation.goBack();
+              }}>Cancel</Text>
+            )
+          }}>
+            {(props:any) => 
+              <Suspense fallback = {<Box>Loading..</Box>}>
+                <LazyEditProfile {...props}/>
+              </Suspense>
+            }
+          </Stack.Screen>
+
 
     </Stack.Navigator>
   )

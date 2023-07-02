@@ -12,6 +12,8 @@ IconButton,
 import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../../../../../systems/Theme/ThemeProvider";
 import { useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 const LazyProfilebackground  = React.lazy(() =>import('./Profilebackground'));
 const LazyAvatarfield  = React.lazy(() =>import('./Avatarfield'));
 const LazyDisplaystatusbar = React.lazy(() =>import('./Displaystatusbar'));
@@ -21,7 +23,12 @@ interface containerProps {
     currentProfile : any,
 }
 
-const EditProfileButton  = ({theme}:any) => {
+interface ProfileButtonprops {
+    theme : any,
+    navigation : any
+}
+
+const EditProfileButton : React.FC <ProfileButtonprops> = ({theme , navigation}) => {
     console.log(theme)
     const EditProfile = () => {
         console.log("Edit Functions.")
@@ -33,6 +40,7 @@ const EditProfileButton  = ({theme}:any) => {
             rounded={'2xl'}
             borderColor={theme.Button.outline}
             colorScheme={'coolGray'}
+            onPress={() => navigation.navigate('Editprofile')}
             size='xs'>
             <Center>
                 <Text fontSize={'11'} fontWeight={'semibold'} color = {theme.Text.base}>
@@ -67,6 +75,7 @@ const FollowButton = ({theme}:any) => {
 
 const InfoBox : React.FC <containerProps> =({Profiledata = [] , currentProfile}) => {
     const theme:any = useContext(ThemeContext)
+    const navigation = useNavigation();
     return (
         <VStack pt = {3} bg = {theme.Bg.base}>
             <Box w='100%' height={230} position={'relative'}>
@@ -79,7 +88,7 @@ const InfoBox : React.FC <containerProps> =({Profiledata = [] , currentProfile})
                     <Box w = '100%' alignItems={'flex-end'} paddingX = {6}>
                         <Box w = '25%'>
                             {/* Validate Profile for use Button between Follow&&Followed and Edit profile. */}
-                            <FollowButton theme = {theme}/>
+                            <EditProfileButton theme = {theme} navigation = {navigation}/>
                         </Box>
                     </Box>
                 </VStack>   
@@ -100,7 +109,6 @@ const InfoBox : React.FC <containerProps> =({Profiledata = [] , currentProfile})
                         fontWeight={'semibold'}
                     >{currentProfile.username}</Text>
                     <Text
-                        fontWeight={'md'}
                         color={theme.Text.description}
                     >description
                     </Text>
