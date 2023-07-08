@@ -11,6 +11,7 @@ Icon
 import { AntDesign,FontAwesome , Ionicons} from '@expo/vector-icons'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native'
 
 interface AppbarProps {
 
@@ -18,6 +19,7 @@ interface AppbarProps {
 
 const Appbar : React.FC <AppbarProps> = () => {
      const theme:any = useContext(ThemeContext);
+     const navigation = useNavigation();
   return (
      <VStack 
      safeAreaTop = {12}
@@ -65,11 +67,13 @@ const Appbar : React.FC <AppbarProps> = () => {
                     bg = {theme.Button.base}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
+                    onPress={() => navigation.navigate('Notification')}
                     >
                          <Icon 
                          as = {Ionicons}
                          name = {'notifications'}
                          color={theme.Icon.heading}
+                         
                          />
                     </Button>
                </HStack>
