@@ -22,6 +22,7 @@ interface Fieldsprops {
  }
 
 interface Collections {
+  id : string  | number,
   title : string,
   images : string[ ];
   view : number;
@@ -36,6 +37,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
     (items : Collections, round : number) => (
       <Suspense fallback = {<Box>Loading...</Box>}>
         <MemorizedColletionItems
+            id = {items.id}
             title = {items.title}
             view = {items.view}
             images = {items.images}

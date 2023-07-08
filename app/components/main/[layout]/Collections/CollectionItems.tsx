@@ -13,19 +13,22 @@ import { FontAwesome5 , Feather , AntDesign} from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native'
 
 
 interface CollectionProps { 
+  id : number | string,
   title : string,
   view : string,
   images : string,
   avatar : any,
 }
 
-const CollectionItems :React.FC <CollectionProps> = ({title , view, images ,avatar = null }) => {
+const CollectionItems :React.FC <CollectionProps> = ({id, title , view, images ,avatar = null }) => {
   const theme:any = useContext(ThemeContext)
+  const navigation = useNavigation();
   return (
-    <Pressable >
+    <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>
       {({
         isHovered,
         isFocused,

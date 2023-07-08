@@ -29,6 +29,7 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 }) =>
           <Suspense fallback={<Box>Loading...</Box>}>
             <Center>
               <MemorizedCollectitonsItems
+                id = {item.id}
                 title={item.title}
                 images={item.images}
                 view={item.view}

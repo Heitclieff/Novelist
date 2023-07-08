@@ -45,7 +45,7 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
   
   const Menuitems = [{
   title : 'Edit Profile',
-  direct : '',
+  direct : 'Editprofile',
   IconProperty : {
     type : Feather,
     name : 'edit'

@@ -32,6 +32,7 @@ const Gridlayout : React.FC <LayoutProps>= ({collections ,title }) => {
             <Suspense fallback = {<Box>Loading...</Box>}>
                 <Center>
                     <MemorizedCollectitonsItems
+                        id = {item.id}
                         title={item.title}
                         images = {item.images}
                         view = {item.view}

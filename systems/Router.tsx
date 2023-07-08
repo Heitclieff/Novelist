@@ -16,6 +16,7 @@ const Creater = lazy(() => import('../app/pages/Creater'));
 import Settings from '../app/pages/[stack]/settings/Settings'
 const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
 const LazyEditProfile = lazy(() => import('../app/pages/[stack]/Profile/Editprofile'));
+const LazyNovelmain = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Novelmain'));
 import { useNavigation } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 interface Router {
@@ -103,7 +104,17 @@ const Router : React.FC <Router> = () =>  {
               </Suspense>
             }
           </Stack.Screen>
-
+          <Stack.Screen 
+          name = "Novelmain"
+          options={{
+            headerShown : false ,
+            }}>
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <LazyNovelmain {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
 
     </Stack.Navigator>
   )

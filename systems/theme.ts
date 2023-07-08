@@ -1,6 +1,16 @@
 import { ColorMode, extendTheme } from "native-base";
 import { useColorMode } from "native-base";
 
+export const config = {
+  dependencies: {
+    // For Expo projects (Bare or managed workflow)
+    "linear-gradient": require("expo-linear-gradient").LinearGradient,
+    // For non expo projects
+    // 'linear-gradient': require('react-native-linear-gradient').default,
+  },
+};
+
+
 
 const theme = extendTheme({
     components: {
@@ -36,6 +46,7 @@ export const Themedark = ({
     base : 'coolGray.800',
     container : 'coolGray.700',
     action : 'coolGray.700',
+    containeraction : 'coolGray.600',
   },
   Text : {
     heading : 'coolGray.200',
@@ -67,6 +78,7 @@ export const Themedark = ({
     stackbar : '#18181b',
   },
   Button: {
+    heading : 'coolGray.300',
     base : 'coolGray.700',
     outline : 'coolGray.500',
     follow : { 
@@ -83,6 +95,7 @@ export const Themelight = ({
     base : 'coolGray.100',
     container : 'coolGray.200',
     action : 'coolGray.200',
+    containeraction : 'coolGray.300',
   },
   Text : {
     heading : 'coolGray.800',
@@ -114,6 +127,7 @@ export const Themelight = ({
     stackbar : '#d4d4d8',
   },
   Button: {
+    heading : 'coolGray.800',
     base : 'coolGray.200',
     outline : 'coolGray.400',
     follow : { 
