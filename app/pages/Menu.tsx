@@ -53,7 +53,7 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
 },
 {
   title : 'Leaderboard',
-  direct : '',
+  direct : 'Leaderboard',
   IconProperty : {
     type : MaterialIcons,
     name : 'leaderboard'

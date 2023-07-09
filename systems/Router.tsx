@@ -18,6 +18,8 @@ const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
 const LazyEditProfile = lazy(() => import('../app/pages/[stack]/Profile/Editprofile'));
 const LazyNovelmain = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Novelmain'));
 const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Notification'));
+const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
+
 import { useNavigation } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 interface Router {
@@ -124,6 +126,22 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
+          <Stack.Screen 
+          options={({route}) =>({
+            headerBackTitleVisible:false,
+            headerTitle : false,
+            headerTransparent:true,
+            headerTintColor : '#fff',
+            headerStyle : {backgroundColor : 'transparent'}
+          })}
+          name = "Leaderboard">
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <LazyLeaderboard {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
 
     </Stack.Navigator>
   )

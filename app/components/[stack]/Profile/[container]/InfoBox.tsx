@@ -29,7 +29,6 @@ interface ProfileButtonprops {
 }
 
 const EditProfileButton : React.FC <ProfileButtonprops> = ({theme , navigation}) => {
-    console.log(theme)
     const EditProfile = () => {
         console.log("Edit Functions.")
     }
