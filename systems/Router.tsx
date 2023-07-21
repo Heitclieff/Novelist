@@ -16,7 +16,8 @@ const Creater = lazy(() => import('../app/pages/Creater'));
 import Settings from '../app/pages/[stack]/settings/Settings'
 const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
 const LazyEditProfile = lazy(() => import('../app/pages/[stack]/Profile/Editprofile'));
-const LazyNovelmain = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Novelmain'));
+const LazyNovelContent = lazy(() => import('../app/pages/[stack]/Novel/[pages]/NovelContent'));
+
 const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Notification'));
 const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
 
@@ -114,7 +115,7 @@ const Router : React.FC <Router> = () =>  {
             }}>
             {(props:any) => 
             <Suspense fallback = {<Box>Loading..</Box>}>
-              <LazyNovelmain {...props}/>
+              <LazyNovelContent {...props}/>
             </Suspense>
             }
           </Stack.Screen>
@@ -141,8 +142,6 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
-
-
     </Stack.Navigator>
   )
 }

@@ -18,32 +18,17 @@ interface contianerProps {
     isMarks : boolean, 
     setisMarks : any,
     showNavigate : any,
-    translateY : any,
 }
 
-const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNavigate ,translateY}) => {
+const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNavigate}) => {
     const navigation:any  = useNavigation();
-    
-    const actionBarStyle = useAnimatedStyle(() => {
-      return {
-        transform: [
-          {
-            translateY: withTiming(translateY.value, {
-              duration: 100,
-              easing: Easing.inOut(Easing.ease),
-            }),
-          },
-        ],
-      };
-  });
   return (
     <Animated.View
       style={[{
       width : '100%', 
       height : 100 , 
       position : 'absolute', 
-      zIndex: 10 },
-      actionBarStyle]
+      zIndex: 10 }]
     }>
     <HStack w = '100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5}> 
             <Box>
