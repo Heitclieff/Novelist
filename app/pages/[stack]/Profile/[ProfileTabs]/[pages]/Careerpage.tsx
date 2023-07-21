@@ -14,6 +14,7 @@ const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
       <Box pl={4} pr={4} pb={3}>
         <CollectionItems
           key={item.id}
+          id = {item.id}
           title={item.title}
           view={item.view}
           images={item.images}

@@ -37,7 +37,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
+    const Collectionsdata = useSelector((state: any) => state.collectionsData)
     const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
     const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
 
