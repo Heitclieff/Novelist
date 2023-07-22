@@ -42,11 +42,11 @@ export default theme;
 export const Themedark = ({
   themeMode : 'dark',
   Bg : {
-    tabbar : '#1f2937',
-    base : 'coolGray.800',
-    container : 'coolGray.700',
-    action : 'coolGray.700',
-    containeraction : 'coolGray.600',
+    tabbar : '#171717',
+    base : 'trueGray.900',
+    container : 'trueGray.800',
+    action : 'trueGray.700',
+    containeraction : 'trueGray.700',
   },
   Text : {
     heading : 'coolGray.200',
@@ -73,8 +73,8 @@ export const Themedark = ({
     back : 'coolGray.300',
   },
   Divider : {
-    base : 'coolGray.700',
-    tabbar : '#475569',
+    base : 'trueGray.800',
+    tabbar : '#262626',
     stackbar : '#18181b',
   },
   Button: {
