@@ -6,7 +6,7 @@ VStack,
 Text,
 Center,
 } from 'native-base'
-import { FlatGrid } from 'react-native-super-grid'
+import { FlatList ,View } from 'react-native';
 const LazyCollectionItems = React.lazy(() => import('../../main/[layout]/Collections/CollectionItems'));
 interface LayoutProps {
     collections : any
@@ -27,32 +27,31 @@ const Globalgrid : React.FC <LayoutProps>= ({collections , bottomSpace = 0 }) =>
     const renderCollectionItem = useCallback(
         (item :  Collections, round : number) => (
           <Suspense fallback={<Box>Loading...</Box>}>
-            <Center>
+            <Box paddingX={3}>
               <MemorizedCollectitonsItems
                 id = {item.id}
                 title={item.title}
                 images={item.images}
                 view={item.view}
               />
-            </Center>
+            </Box>
           </Suspense>
         
         ),[]
       );
 
     return (
-    <Box w=  '100%' p = {5} >
+    <Box w=  '100%' p = {5} alignItems={'center'} >
       {React.useMemo(() => {
-        return <FlatGrid
+        return <FlatList
         contentContainerStyle = {{paddingBottom : bottomSpace}}
         showsVerticalScrollIndicator = {false}
-        itemDimension={130}
+        numColumns={2}
         data = {collections}
-        spacing={10}
         renderItem={({item ,round}:any) => renderCollectionItem(item ,round)}
+        ItemSeparatorComponent={() => <View style={{width: 20}} />}
         />     
-      } , [])}
-           
+      } , [])}         
     </Box>
   )
 }
