@@ -41,7 +41,7 @@ const CollectionItems :React.FC <CollectionProps> = ({id, title , view, images ,
         space=  {3}
         bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}
         rounded={'md'}
-        alignItems={'center'}
+        
         >
             <Box 
             id = "Displaycase"

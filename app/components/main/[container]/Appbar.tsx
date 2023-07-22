@@ -48,7 +48,7 @@ const Appbar : React.FC <AppbarProps> = () => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg= {theme.Button.base}
+                    bg = {'transparent'}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
 
@@ -64,7 +64,7 @@ const Appbar : React.FC <AppbarProps> = () => {
                     rounded={'full'}
                     w = {35}
                     h = {35}
-                    bg = {theme.Button.base}
+                    bg = {'transparent'}
                     _hover={{bg :'gray.300'}}
                     _pressed={{backgroundColor :'gray.300'}}
                     onPress={() => navigation.navigate('Notification')}

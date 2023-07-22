@@ -10,6 +10,7 @@ Icon,
 IconButton,
 } from 'native-base'
 const LazyCollectionItems = React.lazy(() => import('./CollectionItems'));
+import { View } from 'react-native';
 import { FontAwesome5 ,Entypo } from '@expo/vector-icons'
 import { FlatList } from 'native-base'
 import { useContext } from 'react'
@@ -49,8 +50,6 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
     <Box
     w =  '100%'
     h =  {350}
-    p = {5}
-    overflow = 'auto'
     >
       <VStack
       space= {3}
@@ -76,6 +75,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
           horizontal
           data={collections}
           renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
+          ItemSeparatorComponent={() => <View style={{width: 5}} />}
           onEndReachedThreshold={0.5}
         />
         } , [collections])}
