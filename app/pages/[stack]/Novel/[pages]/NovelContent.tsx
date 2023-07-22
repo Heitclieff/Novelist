@@ -30,6 +30,7 @@ import Navigationbar from '../../../../components/[stack]/Novel/[container]/Navi
 interface Pageprops {}
 
 const NovelContent : React.FC <Pageprops> = () => {
+  
     const theme:any = useContext(ThemeContext);
     const route = useRoute()
     const {id}:any = route.params
@@ -38,10 +39,8 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const Collectionsdata = useSelector((state: any) => state.collectionsData)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
+    const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
     const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
-
-   
 
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
@@ -63,7 +62,9 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisMarks={setisMarks}
         showNavigate = {showNavigate}
         />
-            <Box w = '100%' h=  {MAX_HEIGHT} position={'absolute'} >
+        {selectedcollection.length > 0 && isReduxLoaded &&
+            <Box>
+                <Box w = '100%' h=  {MAX_HEIGHT} position={'absolute'} >
                 <VStack   alignItems={'center'} position=  'relative' overflow= 'hidden'>
                 <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [
                   {
@@ -180,6 +181,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                         </VStack>
                     </VStack>
             </Animated.ScrollView>
+            </Box>
+            }
   
     </Box>
 

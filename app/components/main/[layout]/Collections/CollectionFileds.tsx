@@ -35,13 +35,13 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
   const theme:any = useContext(ThemeContext)
   const renderCollectionItem = useCallback(
     
-    (items : Collections, round : number) => (
+    (item : Collections, round : number) => (
       <Suspense fallback = {<Box>Loading...</Box>}>
         <MemorizedColletionItems
-            id = {items.id}
-            title = {items.title}
-            view = {items.view}
-            images = {items.images}
+            id = {item.id}
+            title = {item.title}
+            view = {item.view}
+            images = {item.images}
             />
       </Suspense>
     ),[]

@@ -35,6 +35,7 @@ const Main: React.FC<Pageprops> = ({navigation}) => {
       if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
   }, [dispatch, isReduxLoaded])
 
+  console.log("CollectionsData"  , Collectionsdata)
 
   return (
     <>
@@ -43,24 +44,24 @@ const Main: React.FC<Pageprops> = ({navigation}) => {
         {/* <Suspense fallback={<Box>Loading...</Box>}>
           {MemorizedTabscontrols}
         </Suspense> */}
-        {isReduxLoaded &&
+        {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
             <Flatlist>
-            <MemorizeHeaderField
-              collections={Collectionsdata}
-            />
-            <VStack mt = {4}>
-              <MemorizedColletionFileds
-                title="Hot New Novels"
+              <MemorizeHeaderField
                 collections={Collectionsdata}
               />
-              <MemorizedColletionFileds
-                title="Top new Novels"
-                collections={Collectionsdata}
-              />
-            </VStack>
+              <VStack mt = {4}>
+                <MemorizedColletionFileds
+                  title="Hot New Novels"
+                  collections={Collectionsdata}
+                />
+                <MemorizedColletionFileds
+                  title="Top new Novels"
+                  collections={Collectionsdata}
+                />
+              </VStack>
             
           </Flatlist>
-        }
+         : null}
         
       </Box>
     </>
