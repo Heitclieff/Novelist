@@ -78,7 +78,7 @@ export const Themedark = ({
   },
   Divider : {
     base : 'trueGray.800',
-    comment : 'trueGray.700',
+    comment : '#404040',
     tabbar : '#262626',
     stackbar : '#18181b',
   },

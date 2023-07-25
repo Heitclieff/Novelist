@@ -8,8 +8,9 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../../../systems/redux/reducer';
 import { Image } from 'expo-image';
-import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
-
+import { BottomSheetModalProvider, BottomSheetModal , BottomSheetTextInput} from '@gorhom/bottom-sheet';
+import { Keyboard } from 'react-native';
+import { Platform } from 'react-native';
 //Comment Components
 import Commentfield from '../[container]/Commentfield';
 
@@ -35,12 +36,12 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
         bottomSheetModalRef.current?.present();
     }, []);
     
-    const handleSheetChanges = useCallback((index: number) => {
-        
+    const handleSheetChanges = useCallback((index: number) => {        
     }, []);
 
+
     return (
-            <View style = {{flex : 1}}>
+        <View style = {{flex : 1}}>
                 <BottomSheetModal
                     ref={BottomRef}
                     index={1}
@@ -49,6 +50,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
                     backgroundStyle = {{backgroundColor : theme.Bg.comment}}
                     handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
                 >
+                   
                     <VStack flex=  {1} space = {2}>
                         <VStack alignItems={'center'} space = {2}>
                             <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Comment</Text>
@@ -65,24 +67,28 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
                                     <Image source={userdata[0].image} style={{width:'100%' ,height :'100%'}}></Image>
                                 </Box>
                             </Box>
-                           
                             <HStack w = '75%'>
                                 <Box w=  '100%'>
-                                    <Input 
+                                    {/* <Input 
                                     rounded={'full'}
                                     height={39}
                                     placeholder='Write a Comment'
                                     borderColor={theme.Divider.comment}
+                                    /> */}
+                                    <BottomSheetTextInput 
+                                    style ={{borderWidth : 1, borderRadius : 100 , height : 35 , borderColor : theme.Divider.comment,  color :'white', paddingLeft : 10 }}
+                                    placeholder='Enter Comment'
+                                    placeholderTextColor={theme.Divider.comment}
                                     />
+                                 
                                 </Box> 
                             </HStack>
                         </HStack>
                         }
                     </VStack>
-                    
                 </BottomSheetModal>
-            </View>
- 
+        </View>
+    
     )
 }
 
