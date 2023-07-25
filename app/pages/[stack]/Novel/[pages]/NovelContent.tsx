@@ -1,4 +1,4 @@
-import React,{useRef, useEffect , useContext , useState} from 'react'
+import React,{useRef, useEffect , useContext , useState , useMemo , useCallback} from 'react'
 import { Box , VStack , Button ,HStack ,Text , Icon , Divider } from 'native-base'
 import { Image } from 'expo-image'
 import Animated from 'react-native-reanimated'
@@ -8,13 +8,14 @@ import { Ionicons } from '@expo/vector-icons'
 import { ImageBackground } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 
+import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
+
 //Redux with Collectiondata
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../../../../systems/redux/reducer'
 import { getCollectionData } from '../../../../../systems/redux/action'
-
 
 //Device Theme.
 import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
@@ -26,6 +27,7 @@ import CreaterSection from '../../../../components/[stack]/Novel/[container]/con
 import TagsSection from '../../../../components/[stack]/Novel/[container]/content/TagsSection'
 import TitleSection from '../../../../components/[stack]/Novel/[container]/content/TitleSection'
 import Navigationbar from '../../../../components/[stack]/Novel/[container]/Navigationbar'
+import CommentModal from '../../../../components/global/[modal]/CommentModal'
 
 interface Pageprops {}
 
@@ -55,7 +57,14 @@ const NovelContent : React.FC <Pageprops> = () => {
     const HEADER_HEIGHT_EXPANDED = 320; 
    
     const scrollY = useRef(new Animated.Value(0)).current;
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  
+    const handlePresentModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.present();
+    }, []);
+
   return (
+    <BottomSheetModalProvider>
     <Box flex = {1} bg = {theme.Bg.base}>
         <Navigationbar
         isMarks = {isMarks}
@@ -177,14 +186,15 @@ const NovelContent : React.FC <Pageprops> = () => {
                         <OverviewSection/>
                         <TagsSection/>
                         <VStack flex = {1} pt = {7}>
-                            <EpisodeList/>
+                            <EpisodeList handleCommentButton =  {handlePresentModalPress}/>
                         </VStack>
+                        <CommentModal BottomRef = {bottomSheetModalRef}></CommentModal>
                     </VStack>
             </Animated.ScrollView>
             </Box>
             }
-  
     </Box>
+    </BottomSheetModalProvider>
 
   )
 }

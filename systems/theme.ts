@@ -45,6 +45,7 @@ export const Themedark = ({
     tabbar : '#171717',
     base : 'trueGray.900',
     container : 'trueGray.800',
+    comment : '#262626',
     action : 'trueGray.700',
     containeraction : 'trueGray.700',
   },
@@ -72,8 +73,12 @@ export const Themedark = ({
     heading : 'lightText',
     back : 'coolGray.300',
   },
+  Indicator : {
+    base : '#e5e7eb'
+  },
   Divider : {
     base : 'trueGray.800',
+    comment : 'trueGray.700',
     tabbar : '#262626',
     stackbar : '#18181b',
   },
@@ -93,6 +98,7 @@ export const Themelight = ({
   Bg : {
     tabbar : 'white',
     base : 'coolGray.100',
+    comment : '#f5f5f5',
     container : 'coolGray.200',
     action : 'coolGray.200',
     containeraction : 'coolGray.300',
@@ -121,6 +127,9 @@ export const Themelight = ({
     heading : 'coolGray.800',
     back : 'black',
   },
+  Indicator : {
+    base : '#1f2937'
+  },
   Divider : {
     base : 'coolGray.300',
     tabbar : '#e4e4e7',
@@ -129,6 +138,7 @@ export const Themelight = ({
   Button: {
     heading : 'coolGray.800',
     base : 'coolGray.200',
+    comment : 'coolGray.200',
     outline : 'coolGray.400',
     follow : { 
       base :'coolGray.800',

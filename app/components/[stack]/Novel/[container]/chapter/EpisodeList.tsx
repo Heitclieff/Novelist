@@ -4,21 +4,26 @@ import { ThemeContext } from '../../../../../../systems/Theme/ThemeProvider';
 import { useContext } from 'react';
 import { Octicons } from '@expo/vector-icons';
 import Chapterfield from './Chapterfield';
+import CommentModal from '../../../../global/[modal]/CommentModal';
 
-interface containerProps { }
+interface containerProps { 
+    handleCommentButton  : any
+}
 
-const EpisodeList : React.FC <containerProps> = () => {
+const EpisodeList : React.FC <containerProps> = ({handleCommentButton}) => {
     const theme:any = useContext(ThemeContext);
   return (
-    <VStack space = {1}>
+    <VStack space = {1} position={'relative'} >
         <Box w = '100%' h = {10}  justifyContent={'center'} >
             <HStack justifyContent={'space-between'}  pl = {6}  pr = {6} alignItems={'center'}>
                 <Text color = {theme.Text.base} fontWeight={'semibold'}>Chapter</Text>
+                
                 <IconButton 
                         size = 'sm'
                         w = '30'
                         h = {30}
                         rounded={'full'}
+                        onPress={handleCommentButton}
                         icon = {
                             <Icon 
                             size = 'md'
