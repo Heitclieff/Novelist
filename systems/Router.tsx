@@ -58,8 +58,7 @@ const Router : React.FC <Router> = () =>  {
         name = "ProfileStack"
         options={{
           title : 'Profile',
-          headerShown : true,
-          headerTintColor: 'white',
+          headerShown :false,
           headerLeft : (props) => (
             <IconButton
             ml = {2}

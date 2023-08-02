@@ -69,12 +69,6 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
                             </Box>
                             <HStack w = '75%'>
                                 <Box w=  '100%'>
-                                    {/* <Input 
-                                    rounded={'full'}
-                                    height={39}
-                                    placeholder='Write a Comment'
-                                    borderColor={theme.Divider.comment}
-                                    /> */}
                                     <BottomSheetTextInput 
                                     style ={{borderWidth : 1, borderRadius : 100 , height : 35 , borderColor : theme.Divider.comment,  color :'white', paddingLeft : 10 }}
                                     placeholder='Enter Comment'

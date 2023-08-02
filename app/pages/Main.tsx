@@ -35,8 +35,6 @@ const Main: React.FC<Pageprops> = ({navigation}) => {
       if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
   }, [dispatch, isReduxLoaded])
 
-  console.log("CollectionsData"  , Collectionsdata)
-
   return (
     <>
       <MemorizeAppbar/>

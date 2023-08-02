@@ -5,7 +5,7 @@ import { RootState } from "../../../../../../systems/redux/reducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { getCollectionData } from "../../../../../../systems/redux/action";
-import { Tabs } from "react-native-collapsible-tab-view";
+import { FlatList } from "react-native";
 import CollectionItems from "../../../../../components/main/[layout]/Collections/CollectionItems";
 interface Pageprops {}
 
@@ -38,23 +38,25 @@ const Careerpage : React.FC <Pageprops> = () => {
   
     const renderItem = React.useCallback(
         ({ item, index }: any) => {
-          return <MemorizedCollectionItems item={item} index={index} />;
+           return <MemorizedCollectionItems item={item} index={index} />;
+         
         },[]
     );
     return (
         <>
-        {isReduxLoaded &&          
-          <Center pt = {6}>
-            <Tabs.FlatList
-            showsVerticalScrollIndicator = {false}
-            data={collectionsData}
-            renderItem={renderItem}
-            keyExtractor={(item:any) => item.id}
-            numColumns={2}
-            style = {{width : 'auto' }}
-            ItemSeparatorComponent={() => <Box w = '20'/>}
-            />
-          </Center>
+        {isReduxLoaded &&    
+  
+          <Center>
+              <FlatList
+              showsVerticalScrollIndicator = {false}
+              data={collectionsData}
+              renderItem={renderItem}
+              keyExtractor={(item:any) => item.id}
+              numColumns={2}
+              style = {{width : 'auto' }}
+              ItemSeparatorComponent={() => <Box w = '20'/>}
+              />
+          </Center>   
       }
       </>
     )

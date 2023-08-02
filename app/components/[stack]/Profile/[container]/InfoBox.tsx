@@ -1,4 +1,4 @@
-import React,{Suspense , useMemo , useEffect , useState} from "react";
+import React,{Suspense , useMemo , useEffect , useState , useRef} from "react";
 import { 
 Box,
 VStack,
@@ -13,6 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../../../../../systems/Theme/ThemeProvider";
 import { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { ScrollView } from "react-native";
+import Animated from "react-native-reanimated";
 
 const LazyProfilebackground  = React.lazy(() =>import('./Profilebackground'));
 const LazyAvatarfield  = React.lazy(() =>import('./Avatarfield'));
@@ -75,18 +77,24 @@ const FollowButton = ({theme}:any) => {
 const InfoBox : React.FC <containerProps> =({Profiledata = [] , currentProfile}) => {
     const theme:any = useContext(ThemeContext)
     const navigation = useNavigation();
+
+    const MAX_HEIGHT  = 500;
+    const HEADER_HEIGHT_NARROWED = 90;
+    const HEADER_HEIGHT_EXPANDED = 320; 
+   
+    const scrollY = useRef(new Animated.Value(0)).current;
     return (
         <VStack pt = {3} bg = {theme.Bg.base}>
             <Box w='100%' height={230} position={'relative'}>
                 <VStack w = '100%' h=  '100%' alignItems={'center'} space = {2}>
                     <Suspense fallback={<Box>Loading..</Box>}>
                         {currentProfile &&
-                            <LazyProfilebackground background={currentProfile.background} />
+                            <LazyProfilebackground background={currentProfile.background} scrollY={scrollY}/>
                         }
                     </Suspense>
                     <Box w = '100%' alignItems={'flex-end'} paddingX = {6}>
                         <Box w = '25%'>
-                            {/* Validate Profile for use Button between Follow&&Followed and Edit profile. */}
+                            {/* Validate Profile for use Button between Follow && Followed and Edit profile. */}
                             <EditProfileButton theme = {theme} navigation = {navigation}/>
                         </Box>
                     </Box>
