@@ -15,7 +15,7 @@ import { RootState } from '../../../../systems/redux/reducer'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { getuserData } from '../../../../systems/redux/action'
-
+import { Image } from 'expo-image'
 //Import pages and components
 const LazyProfilebackground  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Profilebackground'));
 const LazyAvatarfield  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Avatarfield'));
@@ -61,7 +61,14 @@ const Editprofile : React.FC <Pageprops> = () => {
       <VStack safeArea space = {2}> 
           <Box id = 'Picture-edit' h = '220' position={'relative'}>
             <Center>
-              <MemorizeProfilebackground background = {userdata[0].background}/>
+              <Box w = '98%' h = {180} rounded={'md'} overflow={'hidden'} >
+                  <Image 
+                  style={{width : '100%' ,height : '100%'}}
+                  source={userdata[0].background}
+                  />
+
+              </Box>
+              {/* <MemorizeProfilebackground background = {userdata[0].background}/> */}
             </Center>
             <Box pl = {6} position = 'absolute' bottom = {0} >
               <MemorizeAvatarfield image = {userdata[0].image}/>
