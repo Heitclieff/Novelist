@@ -20,6 +20,7 @@ const LazyNovelContent = lazy(() => import('../app/pages/[stack]/Novel/[pages]/N
 
 const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Notification'));
 const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
+const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmarks'))
 
 import { useNavigation } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
@@ -141,6 +142,15 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
+          <Stack.Screen 
+          name = "Bookmarks">
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <LazyBookmarks {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
     </Stack.Navigator>
   )
 }

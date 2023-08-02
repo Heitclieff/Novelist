@@ -61,7 +61,7 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
 },
 {
   title : 'Bookmarks',
-  direct : '',
+  direct : 'Bookmarks',
   IconProperty : {
     type : Feather,
     name : 'bookmark'
