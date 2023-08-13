@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "584220135965",
+    "project_id": "novel-app-test",
+    "storage_bucket": "novel-app-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584220135965:android:23e2a4a4b33ac89b6f6cf4",
+        "android_client_info": {
+          "package_name": "com.novelistapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584220135965-73vo83i1hcghqo87haek001cjj66a521.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.novelistapp",
+            "certificate_hash": "81764e713df0acaf2704337042ad4ac0b7f49c61"
+          }
+        },
+        {
+          "client_id": "584220135965-23d8t3k3pome8hmps79pog8ln6jr2ak1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmHcha-C9DfQ-YoVq5Xir3lUVTO5r0OjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584220135965-23d8t3k3pome8hmps79pog8ln6jr2ak1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "584220135965-i7qvtk5a9sa6lv1g9pnt4nuntfd54rba.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pktest.appfire"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
