@@ -121,7 +121,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             }}
             renderItem={React.useCallback(
                 ({ item, index }: any) => {
-                   
                   return (
                     <VStack flex = {1} bg = {theme.Bg.base}>
                     <ProfileHeader currentProfile={currentProfile}/>
