@@ -12,6 +12,7 @@ import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { getCollectionsDataShowcase } from '../../systems/redux/action'
 import { AnyAction } from 'redux'
+import Animated , { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimated'
 
 const LazyCollectionFields = lazy(() => import('../components/main/[layout]/Collections/CollectionFileds'))
 const LazyTabscontrols = lazy(() => import('./[mainTabs]/TabsControls'))
@@ -26,6 +27,11 @@ const MemorizedColletionFileds = React.memo(LazyCollectionFields)
 const Main: React.FC<Pageprops> = ({navigation}) => {
   const theme:any = useContext(ThemeContext)
   const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols/>, [])
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+  })
 
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
@@ -37,17 +43,19 @@ const Main: React.FC<Pageprops> = ({navigation}) => {
 
   return (
     <>
-      <MemorizeAppbar/>
-      <Box bg = {theme.Bg.base} flex = {1} py={3} pl = {4}>
+      <Box bg = {theme.Bg.base} flex = {1} position={'relative'}>
+        <MemorizeAppbar scrollY = {scrollY}/>
         {/* <Suspense fallback={<Box>Loading...</Box>}>
           {MemorizedTabscontrols}
         </Suspense> */}
         {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-            <Flatlist>
-              <MemorizeHeaderField
-                collections={Collectionsdata}
-              />
-              <VStack mt = {4}>
+            <Flatlist onScroll = {scrollHandler}>
+              <Box flex= {1} >
+                <MemorizeHeaderField
+                  collections={Collectionsdata}
+                />
+              </Box>
+              <VStack  pl = {3} mt = {4}>
                 <MemorizedColletionFileds
                   title="Hot New Novels"
                   collections={Collectionsdata}

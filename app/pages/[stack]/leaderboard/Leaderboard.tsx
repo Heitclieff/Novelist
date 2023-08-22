@@ -133,4 +133,5 @@ const Leaderboard: React.FC <pageProps> = () => {
   )
 }
 
+
 export default Leaderboard

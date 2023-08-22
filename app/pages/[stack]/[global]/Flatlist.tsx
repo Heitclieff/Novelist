@@ -4,13 +4,11 @@ import Animated from "react-native-reanimated"
 
 interface Provider {
     children : any,
-    scroll : any,
+    onScroll : any,
     horizontal : any,
  }
 
-
- 
-const Flatlist :React.FC <Provider> = ({children , scroll = null , horizontal = false}) => {
+const Flatlist :React.FC <Provider> = ({children , onScroll = null , horizontal = false}) => {
     const renderChildren = useCallback(({ item }: any) => {
         return (
         <Suspense fallback = {<Box>Loading...</Box>}>     
@@ -18,15 +16,14 @@ const Flatlist :React.FC <Provider> = ({children , scroll = null , horizontal = 
         </Suspense>
         )
     }
-    , [children]
-   )
+    , [children])
     return(
         <Animated.FlatList
                 contentInset={{ bottom: 10}}
                 showsVerticalScrollIndicator={false}
                 data={[0]}
                 scrollEventThrottle={16}
-                onScroll= {scroll}
+                onScroll= {onScroll}
                 renderItem={renderChildren}
         /> 
     )
