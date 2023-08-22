@@ -79,7 +79,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                         },
                     }}>
                     </Box>
-                    <AnimatedBlurView
+                    {/* <AnimatedBlurView
                     tint="dark"
                     intensity={96}
                     style = {{
@@ -90,7 +90,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                             outputRange : [1,0,0,1]
                         })
                     }}
-                    />
+                    /> */}
                 </AnimatedBackground>   
             </Animated.View>
          </Box>
