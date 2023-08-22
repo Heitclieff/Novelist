@@ -122,31 +122,33 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             renderItem={React.useCallback(
                 ({ item, index }: any) => {
                   return (
-                    <VStack flex = {1} bg = {theme.Bg.base}>
-                    <ProfileHeader currentProfile={currentProfile}/>
-                    <HStack pl = {8} h = {10} space=  {1} alignItems={'center'}>
-                        <Text fontWeight={'semibold'} color = {theme.Text.base}>{currentProfile.username}</Text>
-                        <Text color = {theme.Text.base}>Careers</Text>
-                    </HStack>
-                    <VStack mb = {HEADER_HEIGHT_EXPANDED}>
-                        {isLoading ? 
-                        <Center w = '100%' h= '100%' justifyContent={'flex-start'} mt = {10}>
-                        <VStack  w = '100%'rounded="md">
-                            <VStack w = '100%' flex=  {1}  pb = {1} alignItems={'center'}>
-                                <Skeleton w = '90%' h = '150' rounded = 'md' startColor= {theme.Bg.container}/>
-                                <Skeleton.Text  lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
-                                <Skeleton w = '90%' h = '150' rounded = 'md'  mt = {50} startColor= {theme.Bg.container}/>
-                                <Skeleton.Text lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
-                            </VStack>    
-                            </VStack>
-                        </Center> : 
-                        <Careerpage/> }
+                    <VStack flex = {1}>
+                        <ProfileHeader currentProfile={currentProfile}/>
+                    <VStack bg = {theme.Bg.base}>                    
+                        <HStack pl = {8} h = {10} space=  {1} alignItems={'center'}>
+                            <Text fontWeight={'semibold'} color = {theme.Text.base}>{currentProfile.username}</Text>
+                            <Text color = {theme.Text.base}>Careers</Text>
+                        </HStack>
+                        <VStack mb = {HEADER_HEIGHT_EXPANDED}>
+                            {isLoading ? 
+                            <Center w = '100%' h= '100%' justifyContent={'flex-start'} mt = {10}>
+                            <VStack  w = '100%'rounded="md">
+                                <VStack w = '100%' flex=  {1}  pb = {1} alignItems={'center'}>
+                                    <Skeleton w = '90%' h = '150' rounded = 'md' startColor= {theme.Bg.container}/>
+                                    <Skeleton.Text  lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
+                                    <Skeleton w = '90%' h = '150' rounded = 'md'  mt = {50} startColor= {theme.Bg.container}/>
+                                    <Skeleton.Text lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
+                                </VStack>    
+                                </VStack>
+                            </Center> : 
+                            <Careerpage/> }
 
-                    {/* <Box w  = '100%' h = '100%' bg = {theme.Bg.base} justifyContent={'center'} alignItems={'center'}>
-                        <Text color = {theme.Text.description}>Nothing Career.</Text>
-                    </Box> */}
+                        {/* <Box w  = '100%' h = '100%' bg = {theme.Bg.base} justifyContent={'center'} alignItems={'center'}>
+                            <Text color = {theme.Text.description}>Nothing Career.</Text>
+                        </Box> */}
+                        </VStack>
+                        </VStack>
                     </VStack>
-                 </VStack>
                   )
                 },[isLoading])}
             >   

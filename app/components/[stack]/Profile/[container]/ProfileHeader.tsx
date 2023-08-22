@@ -42,6 +42,10 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
     const navigation = useNavigation();
   return (
     <VStack w = '100%'>
+        <Box w = '100%' h = {5} bg = {'transparent'}></Box>
+        <VStack  bg = {theme.Bg.base}>
+
+    
         <Box h = {100}>
             <HStack position={'relative'} justifyContent={'space-between'}>
                 <VStack paddingX= {7} position={'absolute'} alignItems={'flex-start'}  left = {0} top={-15} >
@@ -84,6 +88,7 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
                         },[currentProfile])}
                     </Suspense>
                 </Box>
+        </VStack>
         <Divider bg = {theme.Divider.base}/>
     </VStack>
   )
