@@ -28,16 +28,14 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
     }) => {
       return(
           <Box  w = {ScreenWidth}  h = {ScreenHeight / 1.7}  overflow={'hidden'} alignItems={'center'}  position='relative'>
-          <Box  w ={ScreenWidth} h = '100%'  overflow={'hidden'} position={'absolute'}>
+          <Box  w ={ScreenWidth} h = '100%'  overflow={'hidden'} position={'absolute'} bg = {theme.Bg.base}>
               <ImageBackground
               id  = 'Backdrop-image'
-              style={{width : '100%', height : '100%',  position : 'relative'}}
+              style={{width : '100%', height : '100%',  position : 'relative',  opacity : 0.6}}
               source={{uri : data.images}}
               alt = "images"
+              blurRadius={3}
               >
-                <BlurView  intensity={25} tint= {theme.themeMode} style = {{zIndex : 2}}>
-                    <Box w = '100%' h = {'100%'}></Box>
-                </BlurView>
               </ImageBackground> 
               </Box>
               <Box w='100%' h = '100%' position= 'absolute' zIndex={10}
