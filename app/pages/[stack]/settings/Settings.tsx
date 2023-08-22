@@ -28,7 +28,7 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
     },
     {
         title : 'Systems',
-        tag : 'system'
+        tag : 'system',
     }
 ]
     
@@ -51,7 +51,8 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
                                         <MemorizedOptionfield
                                             title = {optionitem.title}
                                             isDividerEnable = {false}
-                                            justifyIcon  = 'start'
+                                            justifyIcon  = 'flex-start'
+                                            direction={optionitem.direct}
                                             detail = {optionitem.detail}
                                             fontcolor = {optionitem.color}
                                             OptionIcon={{

@@ -112,12 +112,14 @@ export const Settingmenu = [{
     title : 'Account',
     detail : 'Password, Privacy, your personal detail.',
     icon : EvilIcons,
+    direct : '',
     name : 'user',
     tag : 'account',
 },{
     title : 'Notification',
     detail : null,
     icon : Ionicons,
+    direct : '',
     name : 'notifications-outline',
     tag : 'notification'
 },
@@ -125,12 +127,14 @@ export const Settingmenu = [{
     title : "Dark mode",
     detail : null,
     icon : Feather,
+    direct : '',
     name : 'moon',
     tag : 'system',
 },
 {
     title : 'Log out',
     detail : null ,
+    direct : '',
     color : 'blue.600',
     tag : 'system',
 }]
