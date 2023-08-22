@@ -43,6 +43,7 @@ export const Themedark = ({
   themeMode : 'dark',
   Bg : {
     tabbar : '#171717',
+    header : '#171717',
     base : 'trueGray.900',
     container : 'trueGray.800',
     comment : '#262626',
@@ -98,6 +99,7 @@ export const Themelight = ({
   Bg : {
     tabbar : 'white',
     base : 'coolGray.100',
+    header : '#f3f4f6',
     comment : '#f5f5f5',
     container : 'coolGray.200',
     action : 'coolGray.200',

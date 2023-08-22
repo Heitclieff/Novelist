@@ -27,7 +27,7 @@ const Appbar : React.FC <AppbarProps> = ({scrollY}) => {
      const navigation = useNavigation();
      const animatedNavbarStyle = useAnimatedStyle(() => {
           const backgroundColor = interpolateColor(scrollY.value, [0,100], 
-          ['transparent', theme.Bg.tabbar]);
+          ['transparent', theme.Bg.header]);
           return { 
                backgroundColor,
           };

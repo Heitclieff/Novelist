@@ -1,13 +1,15 @@
-import React,{useContext} from 'react'
+import React,{useContext , useRef} from 'react'
 import { Box , Text, VStack ,HStack , Icon, View, theme} from 'native-base'
 import { ImageBackground } from 'react-native'
-import { Dimensions  , Animated} from 'react-native'
+import { Dimensions} from 'react-native'
 import { Image } from 'expo-image'
 import { BlurView } from 'expo-blur'
 import { AntDesign } from '@expo/vector-icons'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import { useNavigation } from '@react-navigation/native'
 import { Pressable } from 'native-base'
+import Animated from 'react-native-reanimated'
+
 interface containerProps {
     data : any
     id : number,
@@ -18,7 +20,8 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
   const ScreenWidth = Dimensions.get('window').width
   const ScreenHeight = Dimensions.get('window').height
   const navigation = useNavigation();
-
+  
+  const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
   return (
     <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>
     {({
@@ -29,14 +32,17 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
       return(
           <Box  w = {ScreenWidth}  h = {ScreenHeight / 1.7}  overflow={'hidden'} alignItems={'center'}  position='relative'>
           <Box  w ={ScreenWidth} h = '100%'  overflow={'hidden'} position={'absolute'} bg = {theme.Bg.base}>
-              <ImageBackground
-              id  = 'Backdrop-image'
-              style={{width : '100%', height : '100%',  position : 'relative',  opacity : 0.6}}
-              source={{uri : data.images}}
-              alt = "images"
-              blurRadius={3}
-              >
-              </ImageBackground> 
+                <AnimatedBackground
+                  id='background-images'
+                  source={{ uri: data.images}}
+                  alt="images"
+                  blurRadius={3}
+                  style={{
+                      width: '100%',
+                      height: '100%',
+                      opacity: 0.6,                
+                      position: 'relative',
+                }}/>
               </Box>
               <Box w='100%' h = '100%' position= 'absolute' zIndex={10}
                         bg={{
@@ -80,9 +86,7 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
                 
               </VStack>
               </VStack>
-              
-              
-        
+            
           </Box>
       </Box>
       )}
