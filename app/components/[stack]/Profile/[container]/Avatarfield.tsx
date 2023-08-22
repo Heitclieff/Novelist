@@ -8,12 +8,12 @@ interface containerProps {
 
 const Avatarfield : React.FC <containerProps> = ({image}) => {
   return (
-    <Box alignItems={'center'}>
+    <Box w= '100%' h = '100%' alignItems={'center'}>
       <Box 
-        w = {110} 
-        h = {110} 
+        w = '100%' 
+        h = '100%' 
         borderWidth={1}
-        rounded = 'full'
+        rounded={'full'}
         bg = 'gray.200' 
         overflow={'hidden'}>
             <Image

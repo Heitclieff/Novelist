@@ -45,10 +45,9 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
         <Box w = '100%' h = {5} bg = {'transparent'}></Box>
         <VStack  bg = {theme.Bg.base}>
 
-    
         <Box h = {100}>
-            <HStack position={'relative'} justifyContent={'space-between'}>
-                <VStack paddingX= {7} position={'absolute'} alignItems={'flex-start'}  left = {0} top={-15} >
+            <HStack w = '100%' h = '100%' position={'relative'} justifyContent={'space-between'}>
+                <VStack w = {100} h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >
                     <Suspense fallback={<Box>Loading..</Box>}>
                         {currentProfile &&
                             <LazyAvatarfield image={currentProfile.image} />
@@ -56,7 +55,7 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
                     </Suspense>
                 </VStack>
                
-                <Box w = '100%' h = {50} justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>
+                <Box w = '100%' h = '50%' justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>
                     <Box w = '25%'>
                         {/* Validate Profile for use Button between Follow && Followed and Edit profile. */}
                         <EditProfileButton theme = {theme} navigation = {navigation}/>
@@ -64,7 +63,7 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
                 </Box>
             </HStack>
         </Box>
-        <VStack flex = {1} paddingY={1} paddingX={9} justifyContent={'flex-start'} >
+        <VStack flex = {1} paddingY={-5} paddingX={9} justifyContent={'flex-start'} >
                     <Text
                         color={theme.Text.base}
                         fontSize={'xl'}
