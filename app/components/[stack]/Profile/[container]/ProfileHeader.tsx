@@ -60,7 +60,7 @@ const ProfileHeader : React.FC <contianerProps> = ({currentProfile}) =>{
                 </Box>
             </HStack>
         </Box>
-        <VStack flex = {1} paddingY={1} paddingX={9} justifyContent={'start'} >
+        <VStack flex = {1} paddingY={1} paddingX={9} justifyContent={'flex-start'} >
                     <Text
                         color={theme.Text.base}
                         fontSize={'xl'}
