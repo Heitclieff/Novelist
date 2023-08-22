@@ -68,26 +68,11 @@ const Creater : React.FC <Pageprops> = () => {
                 <VStack space = {1} m ={5} mt = {5}>
                 {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
                     Collectionsdata.map((item:any , index:number) => ( 
-                        React.useMemo(() => {
-                            return(
-                                <Pressable key = {index}>
-                                {({
-                                    isHovered,
-                                    isFocused,
-                                    isPressed
-                                }) => {
-                                    return (
-                                    <Box w = '100%' bg=  'red.200' pt = {2} pb = {2} pl = {2} pr = {4}  bg = {isPressed ? theme.Bg.action  : null}>
-                                        <CreateContainer key = {index} data= {item}/>
-                                    </Box>
-                                    )
-                                }}
-                                </Pressable>
-                            )
-                        
-                    } ,[])    
-                ))
-                        :null
+                        React.useMemo(() => (
+                                        <CreateContainer key = {index} data= {item}/>        
+                        ),[]
+                        ))) 
+                    : null
                 }
                 </VStack> 
             </Flatlist>
