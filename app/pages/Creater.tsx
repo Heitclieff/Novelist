@@ -8,7 +8,6 @@ VStack,
 //components
 import Createrbar from '../components/creater/[container]/Createrbar'
 const LazyUsershowcase = React.lazy(() => import('../components/global/[container]/Usershowcase'));
-const LazyTabscontrols = lazy(() => import('./[workspaceTabs]/TabsControls'))
 import CreateContainer from '../components/creater/[container]/CreateContainer';
 
 import { useContext } from 'react'
@@ -31,9 +30,7 @@ interface Pageprops {
 const Creater : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeContext);
     const MemorizeCreaterbar = React.memo(Createrbar)
-    const MemorizeUsershowcase = React.memo(LazyUsershowcase)
-    const MemorizedTabscontrols = useMemo(() => <LazyTabscontrols/> , [] )
-    
+ 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
     const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);

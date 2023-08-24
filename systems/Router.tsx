@@ -5,6 +5,9 @@ import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@ex
 import { Box, Icon, IconButton , Button , Text} from 'native-base'
 import { View } from 'react-native';
 import { useContext } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ThemeContext } from './Theme/ThemeProvider';
 //Pages Tabs 
 const Main = lazy(() => import('../app/pages/Main'));
@@ -24,10 +27,10 @@ const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/N
 const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
 const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmarks'))
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Entypo } from '@expo/vector-icons';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+// Page Drawer
+const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
+
 interface Router {
 
 }
@@ -291,7 +294,7 @@ const DrawerNavigation : React.FC <DrawerProps> = () => {
         options={{headerShown : false}} />
         
       <Drawer.Screen name="Teams" 
-        component={LazyCreatorcontent} 
+        component={LazyTeam} 
         initialParams={{id}}
         options={{headerShown : false}} />
        
