@@ -1,7 +1,7 @@
 import React,{FC ,lazy, Suspense , useEffect} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
+import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons, Feather} from '@expo/vector-icons';
 import { Box, Icon, IconButton , Button , Text} from 'native-base'
 import { View } from 'react-native';
 import { useContext } from 'react';
@@ -293,29 +293,69 @@ const DrawerNavigation : React.FC <DrawerProps> = () => {
       <Drawer.Screen name="Dashboard" 
         component={LazyCreatorcontent} 
         initialParams={{id}}
-        options={{headerShown : false}} />
+        options={{headerShown : false , 
+          drawerIcon : ({focused , size}) => (
+            <Icon
+              as={MaterialIcons}
+              name='dashboard'
+              size={4}
+              color = {focused ? 'teal.600':'coolGray.300'}
+              />
+        )}} />
       
       <Drawer.Screen name="Chapters" 
         component={LazyChapter} 
         initialParams={{id}}
-        options={{headerShown : false}} />
+        options={{headerShown : false , 
+          drawerIcon : ({focused , size}) => (
+          <Icon
+            as={Entypo}
+            name='list'
+            size={4}
+            color = {focused ? 'teal.600':'coolGray.300'}
+            />
+          )}} />
 
       <Drawer.Screen name="Commit" 
         component={LazyCommit} 
         initialParams={{id}}
-        options={{headerShown : false}} />
+        options={{headerShown : false , 
+          drawerIcon : ({focused , size}) => (
+          <Icon
+            as={Feather}
+            name='git-commit'
+            size={4}
+            color = {focused ? 'teal.600':'coolGray.300'}
+            />
+          )}} />
       
 
       <Drawer.Screen name="Teams" 
         component={LazyTeam} 
         initialParams={{id}}
-        options={{headerShown : false}} />
+        options={{headerShown : false , 
+          drawerIcon : ({focused , size}) => (
+          <Icon
+            as={Ionicons}
+            name='people'
+            size={4}
+            color = {focused ? 'teal.600':'coolGray.300'}
+            />
+          )}} />
        
  
       <Drawer.Screen name="Project setting" 
         component={LazyCreatorcontent} 
         initialParams={{id}}
-        options={{headerShown : false}} />
+        options={{headerShown : false , 
+          drawerIcon : ({focused , size}) => (
+          <Icon
+            as={AntDesign}
+            name='setting'
+            size={4}
+            color = {focused ? 'teal.600':'coolGray.300'}
+            />
+          )}} />
     </Drawer.Navigator>
   )
 }
