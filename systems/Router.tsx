@@ -30,6 +30,7 @@ const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmark
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
+const LazyChapter= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Chapter'))
 import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
 
 interface Router {
@@ -293,17 +294,24 @@ const DrawerNavigation : React.FC <DrawerProps> = () => {
         component={LazyCreatorcontent} 
         initialParams={{id}}
         options={{headerShown : false}} />
-        
-      <Drawer.Screen name="Teams" 
-        component={LazyTeam} 
+      
+      <Drawer.Screen name="Chapters" 
+        component={LazyChapter} 
         initialParams={{id}}
         options={{headerShown : false}} />
-       
+
       <Drawer.Screen name="Commit" 
         component={LazyCommit} 
         initialParams={{id}}
         options={{headerShown : false}} />
       
+
+      <Drawer.Screen name="Teams" 
+        component={LazyTeam} 
+        initialParams={{id}}
+        options={{headerShown : false}} />
+       
+ 
       <Drawer.Screen name="Project setting" 
         component={LazyCreatorcontent} 
         initialParams={{id}}
