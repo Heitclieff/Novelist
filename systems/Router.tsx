@@ -236,7 +236,7 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
           name = 'TabLibrary'
           options={{
             title : 'Library',
-            headerShown: true,
+            headerShown: false,
             tabBarActiveTintColor : theme.Text.bottomtab.focused,
             tabBarInactiveTintColor: theme.Text.bottomtab.base,
             tabBarIcon :(({size ,color , focused}) => 

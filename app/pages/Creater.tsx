@@ -43,7 +43,7 @@ const Creater : React.FC <Pageprops> = () => {
     }, [dispatch, isReduxLoaded])
 
   return (
-    <VStack w = '100%' h = '100%' bg = {theme.Bg.base} space = {2}>
+    <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
         <Box h = '12%'>
             <Suspense fallback = {<Box>Loading...</Box>}>
                 <MemorizeCreaterbar/>
