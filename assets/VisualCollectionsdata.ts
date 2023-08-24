@@ -8,19 +8,24 @@ export const Collectionsdata =  [{
         username : 'Heitclieff',
         image : 'https://thicc-af.mywaifulist.moe/waifus/kiyotaka-ayanokoji-classroom-of-the-elite/F8ZuqDJpbyBprRJmQ3g7dvL6bdo89QUV4aovJ1Qz.jpg?class=thumbnail',
     }
-    ]
+    ],
+    owner : {id :  1,
+        username : 'Heitclieff',
+        image : 'https://thicc-af.mywaifulist.moe/waifus/kiyotaka-ayanokoji-classroom-of-the-elite/F8ZuqDJpbyBprRJmQ3g7dvL6bdo89QUV4aovJ1Qz.jpg?class=thumbnail',}
 },
 {
     id : 2,
     title : 'youkoso jitsuryoku shijou shugi no kyoushitsu e.',
     view : "100,421",
     images : 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/4c62a764e19643510c3878a9329bee78.jpe',
+    owner : ''
 },
 {
     id : 3,
     title : 'jigokuraku',
     view : "100,503",
     images : 'https://anime-nani.net/wp-content/uploads/2023/04/Jigokuraku.jpg.webp',
+    owner : '',
 },
 {
     id : 4,

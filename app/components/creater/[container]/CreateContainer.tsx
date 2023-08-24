@@ -5,14 +5,19 @@ import MemberAvatar from './MemberAvatar'
 import { AntDesign } from '@expo/vector-icons'
 import { Image } from 'expo-image'
 import { Pressable } from 'native-base'
+import { useNavigation } from '@react-navigation/native'
+
 interface containerProps {
+     id : number,
      data : any
 }
-const  CreateContainer : React.FC <containerProps> =({data})=> {
+const  CreateContainer : React.FC <containerProps> =({id,data})=> {
      const theme:any = useContext(ThemeContext)
+     const navigation = useNavigation();
+
 
   return (
-     <Pressable>
+     <Pressable onPress = {() => navigation.navigate('Creatorcontent',{id})}>
      {({
          isHovered,
          isFocused,
@@ -39,7 +44,6 @@ const  CreateContainer : React.FC <containerProps> =({data})=> {
                          <Divider bg=  {theme.Divider.comment}/>
                     </Box>
           
-                    
                          {data.creater &&
                               <HStack w = '100%' justifyContent={'flex-end'}>
                                    {data.creater.length >= 2 ? 

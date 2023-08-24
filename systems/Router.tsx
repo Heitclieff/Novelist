@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesome5, Ionicons , AntDesign ,MaterialIcons ,EvilIcons} from '@expo/vector-icons';
 import { Box, Icon, IconButton , Button , Text} from 'native-base'
+import { View } from 'react-native';
 import { useContext } from 'react';
 import { ThemeContext } from './Theme/ThemeProvider';
 //Pages Tabs 
@@ -14,23 +15,26 @@ const Creater = lazy(() => import('../app/pages/Creater'));
 
 // Pages Stack
 import Settings from '../app/pages/[stack]/settings/Settings'
+import Customdrawer from '../app/pages/[workspaceTabs]/Customdrawer';
 const LazyProfile = lazy(() => import('../app/pages/[stack]/Profile/Profile'));
 const LazyEditProfile = lazy(() => import('../app/pages/[stack]/Profile/Editprofile'));
 const LazyNovelContent = lazy(() => import('../app/pages/[stack]/Novel/[pages]/NovelContent'));
-
+const LazyCreatorcontent = lazy(() => import('../app/pages/[workspaceTabs]/Creatorcontent'))
 const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Notification'));
 const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
 const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmarks'))
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
 interface Router {
 
 }
 
 const Tab =  createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+const Drawer =  createDrawerNavigator();
 
 const Router : React.FC <Router> = () =>  {
   const theme:any = useContext(ThemeContext)
@@ -150,6 +154,17 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
+          <Stack.Screen 
+          name = "Creatorcontent"
+          options={{
+            headerShown : false ,
+          }}>
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <DrawerNavigation {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
 
     </Stack.Navigator>
   )
@@ -255,4 +270,44 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
     )
 }
 
+interface DrawerProps {
+
+}
+
+const DrawerNavigation : React.FC <DrawerProps> = () => {
+  const route = useRoute();
+  const {id}:any = route.params;
+  const theme:any = useContext(ThemeContext)
+
+  //change data fetching here.
+  return(
+    <Drawer.Navigator 
+    initialRouteName="Home" 
+    drawerContent={props => <Customdrawer {...props}/>}
+    screenOptions={{drawerActiveTintColor : theme.Text.tab.active, drawerInactiveTintColor : theme.Text.tab.inactive}}>
+      <Drawer.Screen name="Dashboard" 
+        component={LazyCreatorcontent} 
+        initialParams={{id}}
+        options={{headerShown : false}} />
+        
+      <Drawer.Screen name="Teams" 
+        component={LazyCreatorcontent} 
+        initialParams={{id}}
+        options={{headerShown : false}} />
+       
+      <Drawer.Screen name="Commit" 
+        component={LazyCreatorcontent} 
+        initialParams={{id}}
+        options={{headerShown : false}} />
+      
+      <Drawer.Screen name="Project setting" 
+        component={LazyCreatorcontent} 
+        initialParams={{id}}
+        options={{headerShown : false}} />
+    </Drawer.Navigator>
+  )
+}
+
+
 export default Router;
+

@@ -49,8 +49,8 @@ const Creater : React.FC <Pageprops> = () => {
                 <MemorizeCreaterbar/>
             </Suspense>
         </Box>
-      
-        <Box flex = {1} >
+
+        <Box flex = {1}>
                 <Flatlist>
                     <Box w= '100%' mt = {2}>
                     <Box pl = {6} pr = {6}>
@@ -69,7 +69,7 @@ const Creater : React.FC <Pageprops> = () => {
                 {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
                     Collectionsdata.map((item:any , index:number) => ( 
                         React.useMemo(() => (
-                                        <CreateContainer key = {index} data= {item}/>        
+                                <CreateContainer key = {index} id = {item.id} data= {item}/>        
                         ),[]
                         ))) 
                     : null
