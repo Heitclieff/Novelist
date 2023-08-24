@@ -53,12 +53,13 @@ const Optionfield :React.FC <FiledProps> = ({
             w = '100%'
             h = {60}
             m = {0.3}
-            rounded = 'md'
-            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : null}
+            rounded={'full'}
+            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.container}
             >
                 <HStack 
                 w= '100%'
                 h = '100%'
+                justifyContent={'center'}
                 >
                     {OptionIcon.type &&
                         <Box 
@@ -76,7 +77,7 @@ const Optionfield :React.FC <FiledProps> = ({
                         </Box>
                     }
                     
-                    <VStack justifyContent={'center'} p = {1}  w = {OptionIcon.type ? justifyIcon == 'start' ?  "82%" : '75%' : '90%'}>
+                    <VStack justifyContent={'center'}  p = {1}  w = {OptionIcon.type ? justifyIcon == 'start' ?  "82%" : '75%' : '90%'}>
                         <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize={'md'} >{title ? title : 'Options title'}</Text>
                         {detail && <Text fontSize={'xs'} color = {theme.Text.description} >{detail}</Text>}
                     </VStack>
@@ -85,6 +86,7 @@ const Optionfield :React.FC <FiledProps> = ({
                             <IconButton
                                 icon={
                                     <Icon
+                                        color = {theme.Text.description}
                                         as={Entypo}
                                         name='chevron-right'
                                         size={'xl'}

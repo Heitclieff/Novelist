@@ -144,10 +144,4 @@ export const Settingmenu = [{
     name : 'moon',
     tag : 'system',
 },
-{
-    title : 'Log out',
-    detail : null ,
-    direct : '',
-    color : 'blue.600',
-    tag : 'system',
-}]
+]

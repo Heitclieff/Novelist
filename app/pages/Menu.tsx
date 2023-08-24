@@ -102,21 +102,24 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
           <VStack
           id = 'Options-section'
           w = '100%'
-          space=  {1}  
+          space=  {2}  
+          pl = {2}
+          pr = {2}
           >
-            <Suspense fallback = {<Box>Loading..</Box>}>
-              {React.useMemo(() => {
+               {React.useMemo(() => {
                 return  Menuitems.map((item, key) => (
                   <MemorizeOptionfield
                   key={key}
                   title  = {item.title}
                   OptionIcon = {item.IconProperty}
                   navigation={navigation}
+                  isDividerEnable = {false}
+                  isChevronEnable={false}
                   direction = {item.direct}
                 />    
                 ))
               },[navigation])}
-            </Suspense>
+   
           </VStack>
         </VStack>
     </Box>

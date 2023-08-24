@@ -35,23 +35,25 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
   return (
 
     <Box w  = '100%' h=  '100%' bg = {theme.Bg.base}>
-        <VStack p = {5} >
+        <VStack p = {2}>
             {SettingsCategory.map((item ,key) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
                 return (
-                    <VStack key = {key}>
+                    <VStack key = {key} space  ={3} mt = {3}>
                         <Text
+                        pl = {5}
                         fontWeight={'semibold'}
                         color = {theme.Text.heading}
                         >{item.title}</Text>
-                        <Suspense fallback = {<Box>Loading..</Box>}>
+                        <VStack   pl = {2} pr = {2}>
                             {option.map((optionitem , key) => {
                                 return( 
                                     <Box mb = {1} key = {key}>
                                         <MemorizedOptionfield
                                             title = {optionitem.title}
                                             isDividerEnable = {false}
-                                            justifyIcon  = 'flex-start'
+                                            isChevronEnable={false}
+                                            justifyIcon  = 'center'
                                             direction={optionitem.direct}
                                             detail = {optionitem.detail}
                                             fontcolor = {optionitem.color}
@@ -62,11 +64,11 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
                                             }
                                             
                                         />
-                                    </Box>
-                                    
+                                    </Box> 
                                 )
                             })}
-                        </Suspense>
+                        </VStack>
+                       
                        
                         
                     </VStack>
