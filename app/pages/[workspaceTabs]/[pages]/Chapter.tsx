@@ -29,7 +29,12 @@ const Chapter : React.FC <Pageprops> = () => {
               </Box> 
             </Box> 
                <VStack space = {2} m ={5} mt = {6}>
+                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'}  fontSize={'xs'}>Draft</Text>
                     <VStack mb = {4} space = {2}>
+                         <Chaptercontainer data = {teamsdata[0]}/>
+                    </VStack>
+                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
+                    <VStack mb = {4} space = {2} >
                          <Chaptercontainer data = {teamsdata[0]}/>
                          <Chaptercontainer data = {teamsdata[0]}/>
                          

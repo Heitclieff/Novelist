@@ -17,6 +17,21 @@ const Chapterbar : React.FC <containerProps> = () => {
                </Box>
                <HStack space = {2}>
                     <IconButton 
+                         size = 'md'
+                         w = {7}
+                         h = {7}
+                         onPress={()=> navigation.openDrawer()}
+                         rounded={'full'}
+                         icon = {
+                              <Icon
+                              as={AntDesign}
+                              name='plus'
+                              size={5}
+                              color = {'coolGray.300'}
+                              ></Icon>
+                         }
+                    />
+                    <IconButton 
                          bg = 'gray.300'
                          size = 'md'
                          w = {7}
