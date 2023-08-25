@@ -32,7 +32,7 @@ const Dashboardbar : React.FC <containerProps> = ({}) => {
                     size = 'md'
                     w = {7}
                     h = {7}
-                    onPress={()=> navigation.openDrawer()}
+                    onPress={()=> navigation.navigate('Project Settings')}
                     rounded={'full'}
                     icon = {
                         <Icon
