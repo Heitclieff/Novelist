@@ -32,6 +32,8 @@ const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
 const LazyChapter= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Chapter'))
 const LazyProjectsettings= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Projectsettings'))
+const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpage'))
+
 import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
 
 interface Router {
@@ -171,6 +173,20 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
+          
+          <Stack.Screen 
+          name = "Search"
+          options={{
+            headerShown : false ,
+          }}>
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <LazySearchpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+
 
     </Stack.Navigator>
   )

@@ -20,7 +20,7 @@ const Teambar : React.FC <containerProps> = () => {
                          size = 'md'
                          w = {7}
                          h = {7}
-                         onPress={()=> navigation.openDrawer()}
+                         onPress={()=> navigation.navigate('Search')}
                          rounded={'full'}
                          icon = {
                               <Icon
@@ -32,7 +32,7 @@ const Teambar : React.FC <containerProps> = () => {
                          }
                     />
                     <IconButton 
-                         bg = 'gray.300'
+                         bg = {theme.Bg.container}
                          size = 'md'
                          w = {7}
                          h = {7}
@@ -43,7 +43,7 @@ const Teambar : React.FC <containerProps> = () => {
                               as={AntDesign}
                               name='appstore-o'
                               size={4}
-                              color = {'coolGray.800'}
+                              color = {theme.Text.base}
                               ></Icon>
                          }
                     />

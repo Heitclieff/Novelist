@@ -1,13 +1,15 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import { Box , IconButton ,Icon , HStack } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { Entypo , AntDesign } from '@expo/vector-icons';
+import { ThemeContext } from '../../../../systems/Theme/ThemeProvider';
 
 interface containerProps {
 }
 
 const Dashboardbar : React.FC <containerProps> = ({}) => {
      const navigation = useNavigation();
+     const theme:any = useContext(ThemeContext);
   return (
     <HStack safeAreaTop w = '100%' position={'absolute'} zIndex={1} justifyContent={'space-between'} pl = {3} pr = {3}>
          <Box>
@@ -44,7 +46,7 @@ const Dashboardbar : React.FC <containerProps> = ({}) => {
                     }
                 />
                  <IconButton 
-                    bg = 'gray.300'
+                    bg = {'coolGray.200'}
                     size = 'md'
                     w = {7}
                     h = {7}
@@ -55,7 +57,8 @@ const Dashboardbar : React.FC <containerProps> = ({}) => {
                         as={AntDesign}
                         name='appstore-o'
                         size={4}
-                        color = {'coolGray.800'}
+                        color = {'gray.800'}
+
                         ></Icon>
                     }
                 />

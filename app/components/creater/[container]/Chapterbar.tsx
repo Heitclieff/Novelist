@@ -32,7 +32,7 @@ const Chapterbar : React.FC <containerProps> = () => {
                          }
                     />
                     <IconButton 
-                         bg = 'gray.300'
+                         bg = {theme.Bg.container}
                          size = 'md'
                          w = {7}
                          h = {7}
@@ -43,7 +43,7 @@ const Chapterbar : React.FC <containerProps> = () => {
                               as={AntDesign}
                               name='appstore-o'
                               size={4}
-                              color = {'coolGray.800'}
+                              color = {theme.Text.base}
                               ></Icon>
                          }
                     />

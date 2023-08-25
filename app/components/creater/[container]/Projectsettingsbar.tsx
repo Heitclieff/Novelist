@@ -29,7 +29,7 @@ const Projectsettingsbar : React.FC <containerProps> = ({isMenuhidden}) => {
                </Text>
                {!isMenuhidden ?
                     <IconButton  
-                    bg = 'gray.300'
+                    bg = {theme.Bg.container}
                     size = 'md'
                     w = {7}
                     h = {7}
@@ -40,7 +40,7 @@ const Projectsettingsbar : React.FC <containerProps> = ({isMenuhidden}) => {
                          as={AntDesign}
                          name='appstore-o'
                          size={4}
-                         color = {'coolGray.800'}
+                         color = {theme.Text.base}
                          ></Icon>
                               }
                          />

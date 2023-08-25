@@ -26,7 +26,7 @@ const Commitbar : React.FC <containerProps> = () => {
                >Commits
                </Text>
                <IconButton 
-               bg = 'gray.300'
+               bg = {theme.Bg.container}
                size = 'md'
                w = {7}
                h = {7}
@@ -37,7 +37,7 @@ const Commitbar : React.FC <containerProps> = () => {
                     as={AntDesign}
                     name='appstore-o'
                     size={4}
-                    color = {'coolGray.800'}
+                    color = {theme.Text.base}
                     ></Icon>
                          }
                     />
