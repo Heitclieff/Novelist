@@ -84,6 +84,7 @@ export const Themedark = ({
     stackbar : '#18181b',
   },
   Button: {
+    backbutton : 'white',
     heading : 'coolGray.300',
     base : 'coolGray.700',
     outline : 'coolGray.500',
@@ -138,6 +139,7 @@ export const Themelight = ({
     stackbar : '#d4d4d8',
   },
   Button: {
+    backbutton : '#0f766e',
     heading : 'coolGray.800',
     base : 'coolGray.200',
     comment : 'coolGray.200',

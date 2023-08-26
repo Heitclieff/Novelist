@@ -9,9 +9,9 @@ interface containerProps {}
 const DefaultNotify : React.FC <containerProps> = () => {
     const theme:any = useContext(ThemeContext)
   return (
-    <HStack w = '100%' h = {70} pl = {5} mt  = {5}>
-        <Box w = '20%' h = '100%'>
-            <Box w = '70' h = '70'>
+    <HStack w = '100%'  h= {70}   mt  = {2} bg = {theme.Bg.container} rounded={'full'} justifyContent={'center'}>
+        <Box w = '20%' h = '100%' justifyContent={'center'} alignItems={'center'}>
+            <Box w = '50' h = '50'>
                 <Image
                         id='background-images'
                         style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
@@ -21,28 +21,12 @@ const DefaultNotify : React.FC <containerProps> = () => {
                 />
             </Box>
         </Box>
-        <VStack w=  '70%' justifyContent={'center'}>
-            <HStack space = {1}>
-                <Text color = {theme.Text.base}>Name Change Project Permission to public.</Text>
+        <VStack w=  '80%' justifyContent={'center'}>
+            <HStack w = '100%' space = {1}>
+                <Text color = {theme.Text.base} >Name Change Project Permission to public.</Text>
             </HStack>
-            <Text color = {theme.Text.base}>Today</Text>
+            <Text color = {theme.Text.description} fontSize={'xs'}>Today</Text>
         </VStack>
-        <Box w = '10%'  justifyContent={'center'} alignItems={'center'}>
-        <IconButton 
-                    size = 'sm'
-                    w = '30'
-                    h = {30}
-                    rounded={'full'}
-                    icon = {
-                        <Icon
-                        as={Feather}
-                        name='more-horizontal'
-                        size={'xl'}
-                        color = {'coolGray.300'}
-                        ></Icon>
-                    }
-                />
-        </Box> 
     </HStack>
   )
 }

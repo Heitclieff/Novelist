@@ -54,7 +54,8 @@ const Router : React.FC <Router> = () =>  {
       }, 
       headerTitleStyle : {color : theme.Text.tabbar} ,
       animation : 'slide_from_left'
-      }}>
+      , headerTintColor : theme.Button.backbutton}
+      }>
         <Stack.Screen 
         name = "MainStack"
         options={{headerShown : false }}>
@@ -132,7 +133,9 @@ const Router : React.FC <Router> = () =>  {
             }
           </Stack.Screen>
           <Stack.Screen 
-          name = "Notification">
+          name = "Notification"
+
+          >
             {(props:any) => 
             <Suspense fallback = {<Box>Loading..</Box>}>
               <LazyNotification {...props}/>
