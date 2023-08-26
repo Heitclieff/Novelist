@@ -139,7 +139,7 @@ export const Themelight = ({
     stackbar : '#e4e4e7',
   },
   Button: {
-    backbutton : '#0f766e',
+    backbutton : '#0d9488',
     heading : 'coolGray.800',
     base : 'coolGray.200',
     comment : 'coolGray.200',

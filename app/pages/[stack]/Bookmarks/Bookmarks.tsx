@@ -24,9 +24,11 @@ const Bookmarks : React.FC <Pageprops> = () => {
 
     const renderItem = React.useCallback(
         ({ item, index }: any) => {
-           return <Center>
-            <MemorizedBookmarkfields key = {index} data = {item} id = {item.id}/>
-           </Center>
+           return (
+            <Center key = {index}>
+              <MemorizedBookmarkfields  data = {item} id = {item.id}/>
+            </Center>
+           )
            ;
         },[]
     );
