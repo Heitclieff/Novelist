@@ -74,7 +74,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
                                     placeholder='Enter Comment'
                                     placeholderTextColor={theme.Divider.comment}
                                     />
-                                 
+
                                 </Box> 
                             </HStack>
                         </HStack>

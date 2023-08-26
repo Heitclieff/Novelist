@@ -4,8 +4,10 @@ import { useNavigation } from '@react-navigation/native'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import { Entypo , AntDesign , MaterialCommunityIcons } from '@expo/vector-icons'
 
-interface containerProps  {}
-const Chapterbar : React.FC <containerProps> = () => {
+interface containerProps  {
+     onOpen : any
+}
+const Chapterbar : React.FC <containerProps> = ({onOpen}) => {
      const navigation = useNavigation();
      const theme:any = useContext(ThemeContext)
 
@@ -20,7 +22,7 @@ const Chapterbar : React.FC <containerProps> = () => {
                          size = 'md'
                          w = {7}
                          h = {7}
-                         onPress={()=> navigation.openDrawer()}
+                         onPress={onOpen}
                          rounded={'full'}
                          icon = {
                               <Icon
