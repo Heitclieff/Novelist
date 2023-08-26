@@ -134,9 +134,9 @@ export const Themelight = ({
     base : '#1f2937'
   },
   Divider : {
-    base : 'coolGray.300',
+    base : 'trueGray.200',
     tabbar : '#e4e4e7',
-    stackbar : '#d4d4d8',
+    stackbar : '#e4e4e7',
   },
   Button: {
     backbutton : '#0f766e',
