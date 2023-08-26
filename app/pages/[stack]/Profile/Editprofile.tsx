@@ -16,6 +16,7 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { getuserData } from '../../../../systems/redux/action'
 import { Image } from 'expo-image'
+import { Flatlist } from '../[global]/Flatlist'
 //Import pages and components
 const LazyProfilebackground  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Profilebackground'));
 const LazyAvatarfield  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Avatarfield'));
@@ -37,7 +38,6 @@ const Editprofile : React.FC <Pageprops> = () => {
   const MenuOptions = [{
     title : 'Username' , 
     value : userdata[0].username,
-    height : '10',
   },
   {
     title : 'description',
@@ -47,7 +47,6 @@ const Editprofile : React.FC <Pageprops> = () => {
   {
     title : 'Birthdate',
     value : '25 December 2002',
-    height : '10',
   },
 
   ]
@@ -58,38 +57,39 @@ const Editprofile : React.FC <Pageprops> = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-      <VStack safeArea space = {2}> 
-          <Box id = 'Picture-edit' h = '220' position={'relative'}>
-            <Center>
-              <Box w = '98%' h = {180} rounded={'md'} overflow={'hidden'} >
-                  <Image 
-                  style={{width : '100%' ,height : '100%'}}
-                  source={userdata[0].background}
-                  />
-
-              </Box>
-              {/* <MemorizeProfilebackground background = {userdata[0].background}/> */}
-            </Center>
-            <Box pl = {6} position = 'absolute' bottom = {0} >
-              <MemorizeAvatarfield image = {userdata[0].image}/>
+      <Flatlist>
+        <VStack flex = {1} mt = {1}  space = {2}> 
+            <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>
+              <Center>
+                <Box w = '100%' h = {160} overflow={'hidden'}>
+                    <Image 
+                    style={{width : '100%' ,height : '100%'}}
+                    source={userdata[0].background}
+                    />
+                </Box>
+              </Center>
+              <Box ml = {5} position={'absolute'} bottom={0}   w = '85' h = '85' zIndex={10}>
+                  <MemorizeAvatarfield image = {userdata[0].image}/>
+                </Box>
             </Box>
-          </Box>
-          <Divider bg = {theme.Divider.base}/>
-          <VStack mt = {2}>          
-              <Suspense  fallback = {<Box>Loading..</Box>}>       
-                {MenuOptions.map((items , key) => 
-                  <VStack space = {1}  key=  {key}>
-                    <LazyEditoptionfield options = {items}/>
-                    <Divider mb = {1} bg = {theme.Divider.base}/>
-                  </VStack>
-                )}
-              </Suspense>    
-          </VStack>
-          <Box pl = {6}>
-            <Text color = 'blue.500'>Account Settings</Text>
-          </Box>
-
-      </VStack>
+            
+            <VStack >          
+            <Divider bg = {theme.Divider.base}/>
+                <Suspense  fallback = {<Box>Loading..</Box>}>       
+                  {MenuOptions.map((items , key) => 
+                    <VStack space = {1}  key=  {key}>
+                      <LazyEditoptionfield options = {items}/>
+                      <Divider bg = {theme.Divider.base}/>
+                    </VStack>
+                  )}
+                </Suspense>    
+            </VStack>
+            <Box pl = {6}>
+              <Text color = 'blue.500'>Account Settings</Text>
+            </Box>
+        </VStack>
+      </Flatlist>
+      
     </Box>
   )
 }
