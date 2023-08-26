@@ -3,12 +3,14 @@ import { HStack, Box, VStack, Text , Divider } from 'native-base'
 import { ThemeContext } from '../../../../../../systems/Theme/ThemeProvider'
 import { useContext } from 'react'
 import { Pressable } from 'native-base'
+import { useNavigation } from '@react-navigation/native'
 
 interface Fieldprops {
     id : number,
 }
 const Chapterfield : React.FC <Fieldprops> = ({id}) => {
     const theme:any = useContext(ThemeContext);
+    const navigation = useNavigation();
   return (
     <Pressable>
       {({
