@@ -1,6 +1,6 @@
 import React,{useContext , useEffect , useState , useRef , useMemo , useCallback} from 'react'
 import { Platform , Keyboard , KeyboardEvent } from 'react-native'
-import { Box , VStack ,HStack,Input , Icon , Text, useDisclose, Button ,Divider} from 'native-base'
+import { Box , VStack ,HStack,Input, Text, useDisclose, Button ,Divider , IconButton , Icon} from 'native-base'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import Chapterbar from '../../../components/creater/[container]/Chapterbar'
 import { EvilIcons } from '@expo/vector-icons'
@@ -9,6 +9,9 @@ import Chaptercontainer from '../../../components/creater/[container]/Chaptercon
 import { teamsdata } from '../../../../assets/VisualCollectionsdata'
 import { Actionsheet , FormControl } from 'native-base'
 import { BottomSheetModalProvider , BottomSheetModal ,BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import {SwipeListView }from 'react-native-swipe-list-view'
+import { TouchableOpacity } from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
 interface Pageprops {}
 
 const Chapter : React.FC <Pageprops> = () => {
@@ -49,10 +52,41 @@ const Chapter : React.FC <Pageprops> = () => {
                <VStack space = {2} m ={5} mt = {6}>
                     <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'}  fontSize={'xs'}>Draft</Text>
                     <VStack mb = {4} space = {2}>
-                         <Chaptercontainer data = {teamsdata[0]}/>
+                        <SwipeListView 
+                          disableRightSwipe
+                          data={[0]}
+                          renderItem={(item:any , index:number) => (
+                            <Chaptercontainer data = {teamsdata[0]}/>
+                          )}
+                          renderHiddenItem={ (data, rowMap) => (
+                            <HStack  flex = {1} m = {1}  space = {1} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-end'} rounded={'full'} overflow={'hidden'}>
+                              <IconButton 
+                                bg = {'rose.600'}
+                                colorScheme={'rose'}
+                                size = 'md'
+                                w = {50}
+                                h = {50}    
+                               
+                                rounded={'full'}
+                                icon = {
+                                      <Icon
+                                      as={AntDesign}
+                                      name='delete'
+                                      size={4}
+                                      color = {theme.Text.base}
+                                      ></Icon>
+                                }
+                            />
+                            </HStack>
+                          )}
+                          leftOpenValue={60}
+                          rightOpenValue={-60}
+
+                        />
                     </VStack>
                     <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
                     <VStack mb = {4} space = {2} >
+                      
                          <Chaptercontainer data = {teamsdata[0]}/>
                          <Chaptercontainer data = {teamsdata[0]}/>
                     </VStack>
