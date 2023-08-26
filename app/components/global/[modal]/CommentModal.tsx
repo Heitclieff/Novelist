@@ -39,6 +39,10 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
     const handleSheetChanges = useCallback((index: number) => {        
     }, []);
 
+    const handleReturnChange = () => {
+        BottomRef.current?.snapToIndex(1);
+    }
+  
 
     return (
         <View style = {{flex : 1}}>
@@ -70,6 +74,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef}) => {
                             <HStack w = '75%'>
                                 <Box w=  '100%'>
                                     <BottomSheetTextInput 
+                                    onSubmitEditing={handleReturnChange}
                                     style ={{borderWidth : 1, borderRadius : 100 , height : 35 , borderColor : theme.Divider.comment,  color :'white', paddingLeft : 10 }}
                                     placeholder='Enter Comment'
                                     placeholderTextColor={theme.Divider.comment}
