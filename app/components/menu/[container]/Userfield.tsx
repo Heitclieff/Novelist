@@ -32,17 +32,15 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
             }) => {
                 return (
                     <HStack
-                        w='100%'
-                        h={150}
                         alignItems={'center'}
                         rounded = 'md'
                         bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : null}
-                        p = {1}
+                        p = {2}
                     >
-                        <Box w='30%'>
+                        <Box >
                             <Box id='img-profile-box'
-                                w={110}
-                                h={110}
+                                w={85}
+                                h={85}
                                 rounded='full'
                                 bg='gray.200'
                                 overflow='hidden'
@@ -57,7 +55,7 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                             </Box>
                         </Box>
                         <Box
-                            w='60%'
+                            w='70%'
                             h='100%'
                             pl={5}
                             justifyContent={'center'}>
@@ -80,7 +78,7 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                             </HStack>
                         </Box>
                         <Box
-                            w='10%'
+                            w='0%'
                             h='100%'
                             justifyContent={'center'}
 

@@ -94,6 +94,7 @@ const Menu :React.FC <Pageprops> = ({navigation}) => {
           id = 'profile-section'
           w = '100%'
           h = {200}
+          justifyContent={'center'}
           >​ 
             {React.useMemo(() => {
               return <Memorizeuserfield data = {userdata}/> 
