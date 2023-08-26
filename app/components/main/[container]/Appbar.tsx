@@ -66,6 +66,7 @@ const Appbar : React.FC <AppbarProps> = ({scrollY}) => {
                          bg = {'transparent'}
                          _hover={{bg :'gray.300'}}
                          _pressed={{backgroundColor :'gray.300'}}
+                         onPress = {() => navigation.navigate('Search')}
 
                          >
                               <Icon 
