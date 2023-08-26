@@ -12,6 +12,8 @@ import { BottomSheetModalProvider , BottomSheetModal ,BottomSheetTextInput } fro
 import {SwipeListView }from 'react-native-swipe-list-view'
 import { TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
+import DeleteButton from '../../../components/global/[container]/DeleteButton'
+
 interface Pageprops {}
 
 const Chapter : React.FC <Pageprops> = () => {
@@ -58,37 +60,25 @@ const Chapter : React.FC <Pageprops> = () => {
                           renderItem={(item:any , index:number) => (
                             <Chaptercontainer data = {teamsdata[0]}/>
                           )}
-                          renderHiddenItem={ (data, rowMap) => (
-                            <HStack  flex = {1} m = {1}  space = {1} flexDirection={'row'} alignItems={'center'} justifyContent={'flex-end'} rounded={'full'} overflow={'hidden'}>
-                              <IconButton 
-                                bg = {'rose.600'}
-                                colorScheme={'rose'}
-                                size = 'md'
-                                w = {50}
-                                h = {50}    
-                               
-                                rounded={'full'}
-                                icon = {
-                                      <Icon
-                                      as={AntDesign}
-                                      name='delete'
-                                      size={4}
-                                      color = {theme.Text.base}
-                                      ></Icon>
-                                }
-                            />
-                            </HStack>
-                          )}
+                          renderHiddenItem={ (data, rowMap) => (<DeleteButton/>)}
                           leftOpenValue={60}
                           rightOpenValue={-60}
 
                         />
                     </VStack>
                     <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
-                    <VStack mb = {4} space = {2} >
-                      
-                         <Chaptercontainer data = {teamsdata[0]}/>
-                         <Chaptercontainer data = {teamsdata[0]}/>
+                    <VStack mb = {4} space = {3} >
+                      <SwipeListView 
+                          disableRightSwipe
+                          data={[0,1]}
+                          ItemSeparatorComponent={<Box h=  '2'/>}
+                          renderItem={(item:any , index:number) => (
+                            <Chaptercontainer data = {teamsdata[0]}/>
+                          )}
+                          renderHiddenItem={ (data, rowMap) => (<DeleteButton/>)}
+                          leftOpenValue={60}
+                          rightOpenValue={-60}
+                        />
                     </VStack>
                </VStack>
               
