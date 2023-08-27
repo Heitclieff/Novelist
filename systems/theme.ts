@@ -51,6 +51,7 @@ export const Themedark = ({
     containeraction : 'trueGray.700',
   },
   Text : {
+    between : 'coolGray.800',
     action : 'coolGray.700',
     heading : 'coolGray.200',
     base : 'coolGray.300',
@@ -108,6 +109,7 @@ export const Themelight = ({
     containeraction : 'coolGray.300',
   },
   Text : {
+    between : 'coolGray.700',
     action : 'coolGray.400',
     heading : 'coolGray.800',
     skelton : 'coolGray.300',

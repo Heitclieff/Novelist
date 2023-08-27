@@ -8,7 +8,7 @@ const LazyOptionfield = React.lazy(() => import('../../../components/global/[con
 import { Settingmenu } from '../../../../assets/VisualCollectionsdata'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
-
+import DarkmodeButton from '../../../components/global/[container]/DarkmodeButton';
 interface Pageprops {
     setTheme :any ,
 }
@@ -48,34 +48,36 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
                         >{item.title}</Text>
                         <VStack  pl = {2} pr = {2}>
                             {option.map((optionitem , key) => {
-                                return( 
-                                    <Box mb = {1} key = {key}>
-                                        <MemorizedOptionfield
-                                            title = {optionitem.title}
-                                            isDividerEnable = {false}
-                                            isChevronEnable={false}
-                                            justifyIcon  = 'center'
-                                            direction={optionitem.direct}
-                                            detail = {optionitem.detail}
-                                            fontcolor = {optionitem.color}
-                                            OptionIcon={{
-                                                type : optionitem.icon,
-                                                name : optionitem.name,
-                                            }
-                                            }
-                                            
-                                        />
-                                    </Box> 
+                            return( 
+                                <Box mb = {1} key = {key}>
+                                    <MemorizedOptionfield
+                                        title = {optionitem.title}
+                                        isDividerEnable = {false}
+                                        isChevronEnable={false}
+                                        justifyIcon  = 'center'
+                                        direction={optionitem.direct}
+                                        detail = {optionitem.detail}
+                                        fontcolor = {optionitem.color}
+                                        OptionIcon={{
+                                            type : optionitem.icon,
+                                            name : optionitem.name,
+                                        }
+                                        }
+                                        
+                                    />
+                                </Box> 
                                 )
                             })}
                         </VStack>
-                       
-                       
                         
                     </VStack>
                 )
             })}
+            <Box p = {2}>
+                <DarkmodeButton/>
+            </Box>
             
+
         </VStack>
     </Box>
   )

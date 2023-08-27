@@ -165,13 +165,5 @@ export const Settingmenu = [{
     direct : '',
     name : 'notifications-outline',
     tag : 'notification'
-},
-{
-    title : "Dark mode",
-    detail : null,
-    icon : Feather,
-    direct : '',
-    name : 'moon',
-    tag : 'system',
-},
+}
 ]
