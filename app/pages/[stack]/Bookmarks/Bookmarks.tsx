@@ -7,7 +7,10 @@ import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { RootState } from '../../../../systems/redux/reducer'
 import { ThunkDispatch } from 'redux-thunk'
+import { SwipeListView } from 'react-native-swipe-list-view'
 import { getCollectionData } from '../../../../systems/redux/action'
+import BookmarkRemoveButton from '../../../components/global/[container]/BookmarkRemoveButton'
+
 interface Pageprops {}
 
 const MemorizedBookmarkfields = React.memo(Bookmarkfields);
@@ -24,11 +27,25 @@ const Bookmarks : React.FC <Pageprops> = () => {
 
     const renderItem = React.useCallback(
         ({ item, index }:any) => {
-           return <Center key = {index}>
-              <MemorizedBookmarkfields  data = {item} id = {item.id}/>
-            </Center>
+           return( 
+            <SwipeListView 
+              key = {index}
+              disableRightSwipe
+              data={[0]}
+              ItemSeparatorComponent={<Box h=  '2'/>}
+              renderItem={(itemdisable:any , index:number) => (
+                <Center>
+                   <MemorizedBookmarkfields key  = {index}  data = {item} id = {item.id}/>
+                </Center>
+              )}
+              renderHiddenItem={ (data, rowMap) => (<BookmarkRemoveButton/>)}
+              leftOpenValue={60}
+              rightOpenValue={-60}
+              />
+          )
         },[]
-    );
+    ); 
+  
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
