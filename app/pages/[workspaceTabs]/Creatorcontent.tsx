@@ -24,7 +24,6 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeContext);
   const {id}:any =  route.params
 
-  console.log("ID" ,id)
   const MAX_HEIGHT  = 220;
   const HEADER_HEIGHT_NARROWED = 90;
   const HEADER_HEIGHT_EXPANDED = 120; 

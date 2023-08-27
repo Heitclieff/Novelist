@@ -33,7 +33,7 @@ const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit
 const LazyChapter= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Chapter'))
 const LazyProjectsettings= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Projectsettings'))
 const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpage'))
-
+const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[ProfileTabs]/[pages]/Edittingtemplete'))
 import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
 
 interface Router {
@@ -110,7 +110,7 @@ const Router : React.FC <Router> = () =>  {
               <LazyEditProfile {...props} />
             </Suspense>
           )}
-</Stack.Screen>
+        </Stack.Screen>
           <Stack.Screen 
           name = "Novelmain"
           options={{
@@ -178,8 +178,20 @@ const Router : React.FC <Router> = () =>  {
             </Suspense>
             }
           </Stack.Screen>
-
-
+          
+          <Stack.Screen
+            name='Edittingtemplete'
+            options={{
+              title: 'Editting templete',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyEdittingtemplete {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
 
     </Stack.Navigator>
   )

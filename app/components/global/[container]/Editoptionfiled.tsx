@@ -10,7 +10,7 @@ Pressable
 } from 'native-base'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import { useContext } from 'react'
-
+import { useNavigation } from '@react-navigation/native'
 interface containerProps {
     options  : any
     height : number
@@ -18,8 +18,9 @@ interface containerProps {
 
 const Editoptionfiled : React.FC <containerProps> = ({options}) => {
     const theme:any = useContext(ThemeContext);
+    const navigation = useNavigation();
   return (
-    <Pressable>
+    <Pressable onPress={() => navigation.navigate('Edittingtemplete',{options})}>
     {({
       isHovered,
       isFocused,
