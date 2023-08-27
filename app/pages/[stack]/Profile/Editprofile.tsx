@@ -21,6 +21,7 @@ import { Flatlist } from '../[global]/Flatlist'
 const LazyProfilebackground  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Profilebackground'));
 const LazyAvatarfield  = React.lazy(() =>import('../../../components/[stack]/Profile/[container]/Avatarfield'));
 const LazyEditoptionfield = React.lazy(() => import ('../../../components/global/[container]/Editoptionfiled'))
+import EditProfilebar from '../../../components/[stack]/Profile/[container]/EditProfilebar'
 
 interface Pageprops {}
 
@@ -57,6 +58,7 @@ const Editprofile : React.FC <Pageprops> = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
+      <EditProfilebar/>
       <Flatlist>
         <VStack flex = {1} mt = {1}  space = {2}> 
             <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>

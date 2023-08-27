@@ -102,7 +102,7 @@ const Router : React.FC <Router> = () =>  {
           name='Editprofile'
           options={{
             title: 'Edit Profile',
-            headerShown: true,
+            headerShown: false,
             headerLeft: (props: any) => (
               <Text
                 {...props}
