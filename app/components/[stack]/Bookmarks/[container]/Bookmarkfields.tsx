@@ -28,7 +28,7 @@ const Bookmarkfields : React.FC <containerProps> = ({data ,id}) => {
                 <Text color = {theme.Text.base} numberOfLines={2} fontWeight={'semibold'}>{data.title}</Text>
                 <HStack>
                     {data.creater && data.creater.map((items :any, key:number) => (
-                        <Text color = {theme.Text.description} fontSize={'xs'}>{items.username}</Text>
+                        <Text key={key} color = {theme.Text.description} fontSize={'xs'}>{items.username}</Text>
                     ))}
                 </HStack>
                 <Text color = {theme.Text.base} fontSize={'xs'}>30/12/2023</Text>

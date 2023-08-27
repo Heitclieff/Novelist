@@ -23,26 +23,23 @@ const Bookmarks : React.FC <Pageprops> = () => {
     }, [dispatch, isReduxLoaded])
 
     const renderItem = React.useCallback(
-        ({ item, index }: any) => {
-           return (
-            <Center key = {index}>
+        ({ item, index }:any) => {
+           return <Center key = {index}>
               <MemorizedBookmarkfields  data = {item} id = {item.id}/>
             </Center>
-           )
-           ;
         },[]
     );
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
-            <FlatList
-                showsVerticalScrollIndicator = {false}
-                data={Collectionsdata}
-                renderItem={renderItem}
-                keyExtractor={(item:any) => item.id}
-                style = {{width : 'auto' }}
-                ItemSeparatorComponent={() => <Box h = '2'/>}
-                />
+        <FlatList
+            showsVerticalScrollIndicator = {false}
+            data={Collectionsdata}
+            renderItem={renderItem}
+            keyExtractor={(item:any) => item.id}
+            style = {{flex:1}}
+            ItemSeparatorComponent={() => <Box h = '2'/>}
+            />
     </VStack>
   )
 }
