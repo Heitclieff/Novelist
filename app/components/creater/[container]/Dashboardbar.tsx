@@ -46,7 +46,6 @@ const Dashboardbar : React.FC <containerProps> = ({}) => {
                     }
                 />
                  <IconButton 
-                    bg = {'coolGray.200'}
                     size = 'md'
                     w = {7}
                     h = {7}
@@ -57,7 +56,7 @@ const Dashboardbar : React.FC <containerProps> = ({}) => {
                         as={AntDesign}
                         name='appstore-o'
                         size={4}
-                        color = {'gray.800'}
+                        color = {'gray.200'}
 
                         ></Icon>
                     }

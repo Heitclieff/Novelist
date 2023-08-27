@@ -99,28 +99,30 @@ const Router : React.FC <Router> = () =>  {
           }
         </Stack.Screen>
         <Stack.Screen
-          name = 'Editprofile'
+          name='Editprofile'
           options={{
-            title :'Edit Profile',
-            headerShown : true,       
-            headerLeft : (props) => (
-              <Text 
-              ml = {2} 
-              fontSize={'md'}
-              fontWeight={'medium'}
-              color = {theme.Text.heading}
-              {...props}
-              onPress={() => {
-                navigation.goBack();
-              }}>Cancel</Text>
-            )
+            title: 'Edit Profile',
+            headerShown: true,
+            headerLeft: (props: any) => (
+              <Text
+                {...props}
+                ml={2}
+                fontSize={'md'}
+                fontWeight={'medium'}
+                color={theme.Text.heading}
+                onPress={() => {
+                  navigation.goBack();
+                }}>
+                Cancel
+              </Text>
+            ),
           }}>
-            {(props:any) => 
-              <Suspense fallback = {<Box>Loading..</Box>}>
-                <LazyEditProfile {...props}/>
-              </Suspense>
-            }
-          </Stack.Screen>
+          {(props: any) => (
+            <Suspense fallback={<Box>Loading..</Box>}>
+              <LazyEditProfile {...props} />
+            </Suspense>
+          )}
+</Stack.Screen>
           <Stack.Screen 
           name = "Novelmain"
           options={{

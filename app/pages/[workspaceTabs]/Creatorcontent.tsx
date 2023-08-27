@@ -1,4 +1,4 @@
-import React,{useContext , useRef , useEffect} from 'react'
+import React,{useContext , useRef , useEffect , useCallback} from 'react'
 import { Box , VStack} from 'native-base'
 import { ImageBackground, ScrollView } from 'react-native'
 import { ThemeContext } from '../../../systems/Theme/ThemeProvider'
@@ -6,6 +6,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Dashboardbar from '../../components/creater/[container]/Dashboardbar'
 import Headercontent from '../../components/creater/[container]/Headercontent';
 import EpisodeList_Edit from '../../components/[stack]/Novel/[container]/chapter/EpisodeList_Edit';
+import { View } from 'react-native';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from '../../../systems/redux/reducer';
@@ -13,10 +14,12 @@ import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { getCollectionData } from '../../../systems/redux/action';
 import { useRoute } from '@react-navigation/native';
+import { FlatList } from 'react-native';
 
 interface Pageprops {
   route : any
 }
+
 const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeContext);
   const {id}:any =  route.params
@@ -50,33 +53,27 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
                 height: '100%',
                 opacity: 1,
                 position: 'relative',
-                // transform: [{
-                //   scale: scrollY.interpolate({
-                //     inputRange: [-500, 0],
-                //     outputRange: [5, 1],
-                //     extrapolateLeft: 'extend',
-                //     extrapolateRight: 'clamp',
-                //   })
-                // }]
               }}>
               <Box width='100%' h={MAX_HEIGHT} bg='black' opacity={0.4} />
             </ImageBackground>
           </Box>
-            <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={{
-              zIndex :1,
-              position: 'relative',
-              marginTop : HEADER_HEIGHT_NARROWED,
-              paddingTop : HEADER_HEIGHT_EXPANDED
-            }}
-            >
-            <VStack flex ={1} bg= {theme.Bg.base}  pb={HEADER_HEIGHT_EXPANDED}>
-                <Headercontent data = {selectedcollection[0]}/>
-                <EpisodeList_Edit/>
-            </VStack>
 
-            </ScrollView>
+          <FlatList
+            data={[0]}
+            style={{
+              zIndex: 1,
+              position: 'relative',
+              marginTop: HEADER_HEIGHT_NARROWED,
+              paddingTop: HEADER_HEIGHT_EXPANDED
+            }}
+            ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
+            renderItem={({ item, index }) => (
+              <VStack flex={1} bg={theme.Bg.base}>
+                <Headercontent data={selectedcollection[0]} />
+                <EpisodeList_Edit />
+              </VStack>
+            )}
+          />
         </>
         }
       </Box>
