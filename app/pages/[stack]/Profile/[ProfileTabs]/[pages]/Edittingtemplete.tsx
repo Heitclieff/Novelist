@@ -15,7 +15,7 @@ const Edittingtemplete : React.FC <Pageprops> =() => {
   
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-          <Edittingbar title ={options.title}/>
+          <Edittingbar title ={options.title} rightButtonEnable = {true}/>
           <VStack p ={4} space = {2}>
                <Text pl = {2} color={theme.Text.description} fontSize={'xs'} fontWeight={'semibold'}>{options.title}</Text>
                <Input

@@ -26,15 +26,15 @@ const LazyCreatorcontent = lazy(() => import('../app/pages/[workspaceTabs]/Creat
 const LazyNotification = lazy(() => import('../app/pages/[stack]/Novel/[pages]/Notification'));
 const LazyLeaderboard = lazy(() => import('../app/pages/[stack]/leaderboard/Leaderboard'));
 const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmarks'))
+const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpage'))
+const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[ProfileTabs]/[pages]/Edittingtemplete'))
+const LazyAccountSettings = lazy(() => import('../app/pages/[stack]/settings/AccountSettings'))
 
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
 const LazyChapter= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Chapter'))
 const LazyProjectsettings= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Projectsettings'))
-const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpage'))
-const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[ProfileTabs]/[pages]/Edittingtemplete'))
-import Creatorcontent from '../app/pages/[workspaceTabs]/Creatorcontent';
 
 interface Router {
 
@@ -192,6 +192,21 @@ const Router : React.FC <Router> = () =>  {
               </Suspense>
             )}
           </Stack.Screen>
+
+          <Stack.Screen
+            name='AccountSettings'
+            options={{
+              title: 'AccountSettings',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyAccountSettings {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
+
 
     </Stack.Navigator>
   )

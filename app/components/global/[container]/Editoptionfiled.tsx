@@ -14,9 +14,11 @@ import { useNavigation } from '@react-navigation/native'
 interface containerProps {
     options  : any
     height : number
+    inputStyle : string
+    inputColor : string
  }
 
-const Editoptionfiled : React.FC <containerProps> = ({options}) => {
+const Editoptionfiled : React.FC <containerProps> = ({options , inputStyle = 'flex-start' , inputColor = 'blue.500'}) => {
     const theme:any = useContext(ThemeContext);
     const navigation = useNavigation();
   return (
@@ -27,16 +29,16 @@ const Editoptionfiled : React.FC <containerProps> = ({options}) => {
       isPressed
     }) => {
     return(
-        <Box justifyContent ={options.height ? 'flex-start' : 'center'}  h = {options.height ? options.height : '10'}  bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null} >
-        <HStack  pl={6} alignItems={'center'} pt = {1} space = {2}>
-            <Box w = '20%' >
+        <Box pl = {2} justifyContent ={options.height ? 'flex-start' : 'center'}  h = {options.height ? options.height : '10'}  bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null} >
+        <HStack pl={4} mr = {4} alignItems={'center'} justifyContent={inputStyle} pt = {1} space = {2}>
+            <Box w = '22%' >
                 <Text
                 fontWeight={'semibold'}
                 color = {theme.Text.base}
                 >{options.title}</Text>
             </Box>
             <Box>
-                <Text color={'blue.500'}>{options.value}</Text>
+                <Text color={inputColor}>{options.value}</Text>
             </Box>
             
         </HStack>

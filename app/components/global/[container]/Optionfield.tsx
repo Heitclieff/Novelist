@@ -12,6 +12,7 @@ Pressable
 import { Entypo } from '@expo/vector-icons'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native'
 
 interface FiledProps {
     isDividerEnable : boolean,
@@ -24,9 +25,7 @@ interface FiledProps {
         type : any
         name : any
     },
-    direction : any,
-    navigation : any,
-
+    direction : never,
 }
 
 const Optionfield :React.FC <FiledProps> = ({
@@ -38,9 +37,11 @@ const Optionfield :React.FC <FiledProps> = ({
     detail , 
     OptionIcon, 
     direction , 
-    navigation}) => {
+    }) => {
     
     const theme:any = useContext(ThemeContext)
+    const navigation = useNavigation();
+
   return (
     <Pressable onPress={()=> navigation.navigate(direction)}>
     {({

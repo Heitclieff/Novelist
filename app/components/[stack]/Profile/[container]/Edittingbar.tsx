@@ -6,10 +6,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Pressable } from 'native-base';
 interface containerProps {
   title : string
+  rightButtonEnable : boolean
 }
 
 
-const Edittingbar : React.FC <containerProps> = ({title}) => {
+const Edittingbar : React.FC <containerProps> = ({title , rightButtonEnable = true}) => {
   const theme:any = useContext(ThemeContext);
   const navigation = useNavigation();
   return (
@@ -45,22 +46,26 @@ const Edittingbar : React.FC <containerProps> = ({title}) => {
               >{title}
               </Text>
           </Box>
+         
           <Box w = '15%' justifyContent={'center'}  alignItems = 'center' >
-          <Pressable>
-              {({
-              isHovered,
-              isFocused,
-              isPressed
-            }) => {
-              return(
-              <Text
-                fontSize={'md'}
-                fontWeight={'medium'}
-                color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
-                >save
-                </Text>
-            )}}
-            </Pressable>
+          {rightButtonEnable && 
+            <Pressable>
+            {({
+            isHovered,
+            isFocused,
+            isPressed
+          }) => {
+            return(
+            <Text
+              fontSize={'md'}
+              fontWeight={'medium'}
+              color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
+              >save
+              </Text>
+          )}}
+          </Pressable>
+          }
+         
         </Box>
         </HStack>
        

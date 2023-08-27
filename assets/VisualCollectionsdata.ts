@@ -155,7 +155,7 @@ export const Settingmenu = [{
     title : 'Account',
     detail : 'Password, Privacy, your personal detail.',
     icon : EvilIcons,
-    direct : '',
+    direct : 'AccountSettings',
     name : 'user',
     tag : 'account',
 },{
