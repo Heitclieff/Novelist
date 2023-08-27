@@ -103,19 +103,7 @@ const Router : React.FC <Router> = () =>  {
           options={{
             title: 'Edit Profile',
             headerShown: false,
-            headerLeft: (props: any) => (
-              <Text
-                {...props}
-                ml={2}
-                fontSize={'md'}
-                fontWeight={'medium'}
-                color={theme.Text.heading}
-                onPress={() => {
-                  navigation.goBack();
-                }}>
-                Cancel
-              </Text>
-            ),
+            
           }}>
           {(props: any) => (
             <Suspense fallback={<Box>Loading..</Box>}>
