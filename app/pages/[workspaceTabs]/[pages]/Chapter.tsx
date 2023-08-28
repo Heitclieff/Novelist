@@ -33,7 +33,6 @@ const Chapter : React.FC <Pageprops> = () => {
     }
 
   return (
-    <BottomSheetModalProvider>
      <VStack flex=  {1} bg=  {theme.Bg.base}>
           <Chapterbar onOpen = {handlePresentModalPress}/>
           <Box flex = {1}>
@@ -84,8 +83,7 @@ const Chapter : React.FC <Pageprops> = () => {
               
             </Flatlist>
         </Box>
-     </VStack>
-      <BottomSheetModal
+        <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
         snapPoints={snapPoints}
@@ -107,8 +105,9 @@ const Chapter : React.FC <Pageprops> = () => {
       </VStack>
         </VStack>
     </BottomSheetModal>
-     </BottomSheetModalProvider>
   
+     </VStack>
+
   )
 }
 

@@ -8,16 +8,18 @@ import store from "./systems/redux/store";
 import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ThemeContext from "./systems/Theme/ThemeContext";
-
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function App() {
   return (
     <NavigationContainer>
       <NativeBaseProvider colorModeManager={colorModeManager} theme={theme} config={config}>
         <Provider store=  {store}>
-          <GestureHandlerRootView style = {{flex : 1}}>
-            <ThemeContext/>
-          </GestureHandlerRootView>
+            <GestureHandlerRootView style = {{flex : 1}}>
+              <BottomSheetModalProvider>
+                <ThemeContext/>
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
         </Provider>
       </NativeBaseProvider>
     </NavigationContainer>

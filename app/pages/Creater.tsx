@@ -1,8 +1,13 @@
-import React,{FC , lazy , Suspense, useMemo , useEffect} from 'react'
+import React,{FC , lazy , Suspense, useMemo , useEffect, useState , useRef, useCallback} from 'react'
 import { 
 Box,
-    Icon,
+Icon,
 VStack,
+FormControl,
+Input,
+Text,
+Button,
+HStack,
 } from 'native-base'
 
 //components
@@ -20,9 +25,10 @@ import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
 import { Flatlist } from './[stack]/[global]/Flatlist';
 import { Pressable } from 'native-base';
-import { Input } from 'native-base';
 import { EvilIcons , AntDesign } from '@expo/vector-icons';
 import { Fab } from 'native-base';
+import { BottomSheetModalProvider , BottomSheetModal , BottomSheetTextInput} from '@gorhom/bottom-sheet';
+
 interface Pageprops { 
     theme : any
 }
@@ -30,7 +36,8 @@ interface Pageprops {
 const Creater : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeContext);
     const MemorizeCreaterbar = React.memo(Createrbar)
- 
+    const [Projectype , setProjectype] = useState<string>('');
+    
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
     const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
@@ -38,6 +45,28 @@ const Creater : React.FC <Pageprops> = () => {
     useEffect(() => {
         if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
     }, [dispatch, isReduxLoaded])
+
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const snapPoints = useMemo(() => ['45%', '45%'], []);
+
+    const handlePresentModalPress = useCallback(() => {
+       bottomSheetModalRef.current?.present();
+    }, []);
+    const handleSheetChanges = useCallback((index: number) => {        
+   }, []);
+
+   const handleReturnChange = () => {
+     bottomSheetModalRef.current?.snapToIndex(1);
+   }
+
+   const ProjectType = [{
+        title : 'Single Project',
+        type : 'single',
+   },   
+    {
+        title : "Multi Project",
+        type : 'multiple',
+}]
 
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
@@ -74,7 +103,57 @@ const Creater : React.FC <Pageprops> = () => {
                 </VStack> 
             </Flatlist>
         </Box>
-        <Fab renderInPortal={false} shadow={2} bg ={'teal.600'} size="sm" icon={<Icon color="white" as={AntDesign} name="plus" size="sm" />} />
+        <Fab 
+        renderInPortal={false} 
+        shadow={2} bg ={'teal.600'} 
+        size="sm" 
+        onPress={handlePresentModalPress}
+        icon={<Icon color="white" as={AntDesign} name="plus" size="sm" />} />
+        
+        <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        
+        onChange={handleSheetChanges}
+        backgroundStyle = {{backgroundColor : theme.Bg.comment}}
+        handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
+    >
+        
+        <VStack flex=  {1} space = {2}>
+        <Box justifyContent={'center'} alignItems={'center'}>
+                <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Create Project</Text>
+        </Box>
+        <HStack space = {3} p = {4}>
+                {ProjectType.map((item:any ,index:number) => {
+                    return(
+                        <Pressable flex = {1} key=  {index}  onPress={() => setProjectype(item.type)}>
+                        {({
+                            isHovered,
+                            isFocused,
+                            isPressed
+                        }) => {
+                             return(
+                                <Box w= '100%'  h= '50' borderWidth={Projectype == item.type ? 2 : 1} borderColor={Projectype == item.type ? 'teal.600' :theme.Divider.comment} rounded={'full'} justifyContent={'center'} alignItems={'center'}>
+                                    <Text color = {theme.Text.base} fontWeight={'semibold'}>{item.title}</Text>
+                                </Box>
+                             )}}
+                        </Pressable>
+                    )
+                })}
+            </HStack>
+        <VStack w = '100%' p = {4} space = {5}>
+            <FormControl mb="5" >
+                <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
+                <BottomSheetTextInput onSubmitEditing={handleReturnChange} style ={{width : '100%' , height :35, borderWidth : 1 , borderRadius : 100 ,borderColor : theme.Divider.comment,color : 'white', backgroundColor : theme.Divider.comment , paddingLeft : 10}}/>
+                <FormControl.HelperText>
+                  Give your a Project title.
+                </FormControl.HelperText>
+            </FormControl>
+        <Button rounded={'full'} colorScheme={'teal'}>Create</Button>
+      </VStack>
+        </VStack>
+    </BottomSheetModal>
     </VStack>
   )
 }
