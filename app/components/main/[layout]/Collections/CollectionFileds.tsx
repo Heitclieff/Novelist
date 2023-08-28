@@ -15,6 +15,7 @@ import { FontAwesome5 ,Entypo } from '@expo/vector-icons'
 import { FlatList } from 'native-base'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native';
 
 interface Fieldsprops {
   title : string,
@@ -33,6 +34,7 @@ const MemorizedColletionItems = React.memo(LazyCollectionItems)
 
 const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
   const theme:any = useContext(ThemeContext)
+  const navigation = useNavigation();
   const renderCollectionItem = useCallback(
     
     (item : Collections, round : number) => (
@@ -61,6 +63,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
           >{title}</Heading>
           <Box>
             <IconButton 
+            onPress={() => navigation.navigate('ItemlistTemplete',{title})}
             icon = {
                 <Icon 
                 as = {Entypo}
