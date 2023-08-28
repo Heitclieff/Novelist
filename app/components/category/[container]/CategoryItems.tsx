@@ -9,7 +9,7 @@ Pressable,
 import { Image } from 'expo-image'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
-
+import { useNavigation } from '@react-navigation/native'
 interface Itemsprops {
     images : string 
     title : string 
@@ -17,8 +17,10 @@ interface Itemsprops {
 
 const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
   const theme:any = useContext(ThemeContext)
+  const navigation = useNavigation();
+
   return (
-    <Pressable >
+    <Pressable onPress={()=> navigation.navigate('ItemlistTemplete',{title})}>
     {({
       isHovered,
       isFocused,
@@ -28,22 +30,26 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
             <VStack>
             <Box
             w = '100%'
-            h = {180}
-            bg = 'gray.200'
-            rounded= 'md'
+
+            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}
+            
             overflow={'hidden'}
+            p = {2}
             >
+              <Box overflow={'hidden'} h = {180}>
                 <Image
-                style={{width : '100%' , height : '100%'}}
-                contentFit = 'cover'
-                source={images}
-                alt = "images"/>
-            </Box>
-            <Box p = {2}>
+                  style={{width : '100%' , height : '100%'}}
+                  contentFit = 'cover'
+                  source={images}
+                  alt = "images"/>
+              </Box>
+              <Box p = {2}>
                 <Center>
                     <Text color = {theme.Text.base}>{title ? title : "Title"}</Text>
                 </Center>
             </Box>
+            </Box>
+          
         
         </VStack>
       )
@@ -54,4 +60,4 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
   )
 }
 
-export default CategoryItems;
+export default CategoryItems; 

@@ -30,6 +30,7 @@ const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpa
 const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[ProfileTabs]/[pages]/Edittingtemplete'))
 const LazyAccountSettings = lazy(() => import('../app/pages/[stack]/settings/AccountSettings'))
 const LazyNotificationSettings = lazy(() => import('../app/pages/[stack]/settings/NotificationSettings'))
+const LazyItemlistTemplete = lazy(() => import('../app/pages/[stack]/[global]/ItemlistTemplete'))
 
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
@@ -222,7 +223,19 @@ const Router : React.FC <Router> = () =>  {
             )}
           </Stack.Screen>
 
-
+          <Stack.Screen
+            name='ItemlistTemplete'
+            options={{
+              title: 'ItemlistTemplete',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyItemlistTemplete {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
     </Stack.Navigator>
   )
 }
