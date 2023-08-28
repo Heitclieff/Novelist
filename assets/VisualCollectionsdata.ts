@@ -162,7 +162,7 @@ export const Settingmenu = [{
     title : 'Notification',
     detail : null,
     icon : Ionicons,
-    direct : '',
+    direct : 'NotificationSettings',
     name : 'notifications-outline',
     tag : 'notification'
 }

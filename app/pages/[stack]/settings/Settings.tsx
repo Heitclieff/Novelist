@@ -38,7 +38,7 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
         <VStack p = {2}>
             {SettingsCategory.map((item ,key) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
-                console.log(option)
+
                 return (
                     <VStack key = {key} space  ={3} mt = {3}>
                         <Text

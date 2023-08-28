@@ -29,6 +29,7 @@ const LazyBookmarks = lazy(() => import('../app/pages/[stack]/Bookmarks/Bookmark
 const LazySearchpage = lazy(() => import('../app/pages/[stack]/[global]/Searchpage'))
 const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[ProfileTabs]/[pages]/Edittingtemplete'))
 const LazyAccountSettings = lazy(() => import('../app/pages/[stack]/settings/AccountSettings'))
+const LazyNotificationSettings = lazy(() => import('../app/pages/[stack]/settings/NotificationSettings'))
 
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
@@ -203,6 +204,20 @@ const Router : React.FC <Router> = () =>  {
             {(props: any) => (
               <Suspense fallback={<Box>Loading..</Box>}>
                 <LazyAccountSettings {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
+
+          <Stack.Screen
+            name='NotificationSettings'
+            options={{
+              title: 'NotificationSettings',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyNotificationSettings {...props} />
               </Suspense>
             )}
           </Stack.Screen>
