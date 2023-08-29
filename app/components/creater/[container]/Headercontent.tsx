@@ -4,13 +4,14 @@ import { Box , Text ,VStack , HStack ,Button , TextArea , IconButton , Icon} fro
 import { Divider } from 'native-base'
 import { Image } from 'expo-image'
 import { AntDesign } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 interface containerProps {
   data : any
 }
 
 const Headercontent : React.FC <containerProps> = ({data})=> {
   const theme:any = useContext(ThemeContext)
-
+  const navigation = useNavigation();
   return (
     <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
@@ -61,18 +62,19 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
           <HStack justifyContent={'space-between'}>
           <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
           <IconButton 
-                    size = 'md'
-                    w = {7}
-                    h = {7}
-                    rounded={'full'}
-                    icon = {
-                        <Icon
-                        as={AntDesign}
-                        name='plus'
-                        size={4}
-                        color = {theme.Text.base}
-                        ></Icon>
-                    }
+            onPress={() => navigation.navigate('Tags')}
+            size = 'md'
+            w = {7}
+            h = {7}
+            rounded={'full'}
+            icon = {
+                <Icon
+                as={AntDesign}
+                name='plus'
+                size={4}
+                color = {theme.Text.base}
+                ></Icon>
+            }
             />
           </HStack>
        

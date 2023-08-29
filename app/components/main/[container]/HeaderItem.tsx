@@ -85,7 +85,6 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
                               color = {theme.Text.description}
                               >{data.view}
                               </Text>
-                         
                         </HStack>
                         
                         <HStack

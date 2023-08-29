@@ -32,6 +32,7 @@ const LazyAccountSettings = lazy(() => import('../app/pages/[stack]/settings/Acc
 const LazyNotificationSettings = lazy(() => import('../app/pages/[stack]/settings/NotificationSettings'))
 const LazyItemlistTemplete = lazy(() => import('../app/pages/[stack]/[global]/ItemlistTemplete'))
 const LazyCreateProject = lazy(() => import('../app/pages/[workspaceTabs]/CreateProject'))
+const LazyTagpage = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Tagpage'))
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
@@ -251,6 +252,22 @@ const Router : React.FC <Router> = () =>  {
             )}
           </Stack.Screen>
 
+          <Stack.Screen
+            name='Tags'
+            options={{
+              title: 'Tags',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyTagpage {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
+
+
+
     </Stack.Navigator>
   )
 }
@@ -351,6 +368,8 @@ const TabsNavigation: React.FC <Tabprops> = ({theme}) => {
               </Suspense>
             )}
           </Tab.Screen>
+
+          
       </Tab.Navigator>
     )
 }
