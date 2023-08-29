@@ -6,7 +6,8 @@ import { Flatlist } from '../../[stack]/[global]/Flatlist';
 import { EvilIcons } from '@expo/vector-icons';
 import TeamMember from '../../../components/creater/[container]/TeamMember';
 import { teamsdata } from '../../../../assets/VisualCollectionsdata';
-
+import { SwipeListView } from 'react-native-swipe-list-view';
+import DeleteButton from '../../../components/global/[container]/DeleteButton';
 const Team : React.FC = () => {
      const theme:any = useContext(ThemeContext)
   return (
@@ -30,10 +31,40 @@ const Team : React.FC = () => {
             <VStack space = {2} m ={5} mt = {6}>
                <VStack mb = {4} space = {1}>
                     <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
-                    <TeamMember data= {teamsdata[1]}/>       
+     
+                    <SwipeListView 
+                         disableRightSwipe
+                         data={[0]}
+                         ItemSeparatorComponent={<Box h=  '2'/>}
+                         renderItem={(item:any , index:number) => {
+                              return(
+                                   <TeamMember key = {index} id = {item.id} data= {teamsdata[1]}/>
+                              )
+                         }}
+                         renderHiddenItem={ (data, rowMap) => (<DeleteButton/>)}
+                         leftOpenValue={60}
+                         rightOpenValue={-60}
+                    />
                </VStack>
                <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
-            {teamsdata.length > 0 || teamsdata ?
+               {teamsdata.length > 0 || teamsdata ?
+                    <SwipeListView 
+                         disableRightSwipe
+                         data={teamsdata}
+                         ItemSeparatorComponent={<Box h=  '2'/>}
+                         renderItem={(item:any , index:number) => {
+                              const isleader = item.username == 'Heitclieff' ? true : false
+                              return(
+                                   <TeamMember key = {index} id = {item.id} data= {item.item} isleader = {isleader}/>
+                              )
+                              
+                         }}
+                         renderHiddenItem={ (data, rowMap) => (<DeleteButton/>)}
+                         leftOpenValue={60}
+                         rightOpenValue={-60}
+                    />
+               :null }
+            {/* {teamsdata.length > 0 || teamsdata ?
                     teamsdata.map((item:any , index:number) => { 
                          const isleader = item.username == 'Heitclieff' ? true : false
                          return(
@@ -42,7 +73,7 @@ const Team : React.FC = () => {
                                   
                     }) 
                     : null
-                }   
+                }    */}
             </VStack>
             </Flatlist>
         </Box>
