@@ -36,17 +36,15 @@ const CollectionItems :React.FC <CollectionProps> = ({id, title , view, images ,
       }) => {
         return (
         <VStack
-        w = {160}
-        h = {280}
-        space=  {3}
-        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}
-        rounded={'md'}
-        
+        w = {165}
+        h = {290}
+        p = {1}
+        space= {3}
+        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}      
         >
             <Box 
             id = "Displaycase"
-            w = {150}
-            h = {200}
+            h = {210}
             >
               <Image
               style={{width : '100%', height : '100%'}}
@@ -56,7 +54,7 @@ const CollectionItems :React.FC <CollectionProps> = ({id, title , view, images ,
               />
             </Box>
             <HStack justifyContent={'space-between'} w = '100%'>
-              <VStack  w = '90%'>
+              <VStack  w = '95%'>
                   <Text
                   fontWeight={'semibold'}
                   color = {theme.Text.base}
@@ -66,30 +64,40 @@ const CollectionItems :React.FC <CollectionProps> = ({id, title , view, images ,
                   alignItems={'center'}
                   space = {1}
                   >
-
-                    <Text 
-                    fontSize={'xs'}
-                    color={theme.Text.description}
-                    >{view}
-                    </Text>
-                    <Icon
-                    size = 'xs'
-                    color = {theme.Text.description}
-                    as = {AntDesign}
-                    name = 'eyeo'
-                    />
+                  <HStack alignItems={'center'} space = {2}>
+                    <HStack alignItems={'center'} space = {1}>
+                     <Icon
+                        size = 'xs'
+                        color = {theme.Text.description}
+                        as = {AntDesign}
+                        name = 'eyeo'
+                        />
+                      <Text 
+                        fontSize={'xs'}
+                        color={theme.Text.description}
+                        >{view}
+                        </Text>
+                   
+                    </HStack>
+                    <HStack alignItems={'center'} space = {1}>
+                      <Icon
+                        size = 'xs'
+                        color = {theme.Text.description}
+                        as = {AntDesign}
+                        name = 'heart'
+                        />
+                      <Text 
+                        fontSize={'xs'}
+                        color={theme.Text.description}
+                        >4.7k
+                        </Text>
+                       
+                    </HStack>
+                  </HStack>
+                   
                   </HStack>
               </VStack>
-              <IconButton 
-              size = 'sm'
-              w = '10%'
-              h = {25}
-              icon = {
-                <Icon 
-                as = {Feather} 
-                color = {theme.Text.description}
-                name = 'more-vertical'/>}
-                />
+              
             </HStack>
            
         </VStack>

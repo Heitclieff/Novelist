@@ -71,17 +71,38 @@ const HeaderItem : React.FC <containerProps> = ({data , id, translateX}) => {
                       alignItems={'center'}
                       space = {1}
                       >
-                        <Text 
-                        fontSize={'sm'}
-                        color = 'white'
-                        >{data.view}
-                        </Text>
-                        <Icon
-                        size = 'sm'
-                        color = 'white'
-                        as = {AntDesign}
-                        name = 'eyeo'
-                        />
+                        <HStack
+                        alignItems={'center'}
+                        space = {2}>
+                            <Icon
+                            size = 'sm'
+                            color = {theme.Text.description}
+                            as = {AntDesign}
+                            name = 'eyeo'
+                            />
+                              <Text 
+                              fontSize={'sm'}
+                              color = {theme.Text.description}
+                              >{data.view}
+                              </Text>
+                         
+                        </HStack>
+                        
+                        <HStack
+                          alignItems={'center'}
+                          space = {1}>
+                            <Icon
+                              size = 'sm'
+                              color = {theme.Text.description}
+                              as = {AntDesign}
+                              name = 'heart'/>
+                            <Text 
+                              fontSize={'sm'}
+                              color = {theme.Text.description}>
+                                4.7k
+                            </Text>
+
+                        </HStack>
                       </HStack>
                 
               </VStack>

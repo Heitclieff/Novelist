@@ -79,7 +79,7 @@ const CollectionFields : React.FC <Fieldsprops> = ({title , collections}) => {
           horizontal
           data={collections}
           renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
-          ItemSeparatorComponent={() => <View style={{width: 5}} />}
+          ItemSeparatorComponent={() => <View style={{width: 0}} />}
           onEndReachedThreshold={0.5}
         />
         } , [collections])}
