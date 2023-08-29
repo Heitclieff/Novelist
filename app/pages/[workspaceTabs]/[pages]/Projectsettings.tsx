@@ -1,8 +1,10 @@
 import React,{useContext, useState} from 'react'
-import { VStack  , Text ,Box, HStack , Input , TextArea , Checkbox , Button} from 'native-base'
+import { VStack  , Text ,Box, HStack , Input , TextArea , Checkbox , Button , Switch , IconButton , Icon} from 'native-base'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import Projectsettingsbar from '../../../components/creater/[container]/Projectsettingsbar'
 import { Flatlist } from '../../[stack]/[global]/Flatlist'
+import { AntDesign } from '@expo/vector-icons'
+
 import { Pressable } from 'native-base'
 interface Pageprops {}
 
@@ -40,34 +42,52 @@ const Projectsettings : React.FC = () => {
                                           color={theme.Text.base}
                                           placeholder="Enter your project Overview" />
                                 </VStack>
-
                                 <VStack space={2} >
-                                     <Text color={theme.Text.description} fontWeight={'semibold'}>Project Status</Text>
-                                     <HStack   justifyContent={'center'} space={3} >
-                                          {Checkboxlist.map((item: any, index: number) => {
-                                               return (
-                                                  <Pressable flex = {1} key = {index}>
-                                                  {({
-                                                  isHovered,
-                                                  isFocused,
-                                                  isPressed
-                                                  }) => {
-                                                       return(
-                                                            <Box w='100%' h={90} bg={isPressed ? item.color : isHovered ? item.color  : theme.Bg.container} justifyContent={'center'} alignItems='center' rounded={'md'}>
-                                                                 <Text color={theme.Text.base} fontWeight={'semibold'}>
-                                                                      {item.status}
-                                                                 </Text>
-                                                            </Box>
-                                                       )
-                                                   
-                                                  }}
-                                                  </Pressable>
-                                                  
-                                               )
-                                          }
-                                          )}
-
-                                     </HStack>
+                                   <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                        <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
+                                        <IconButton 
+                                        size = 'md'
+                                        w = {7}
+                                        h = {7}
+                                        rounded={'full'}
+                                        icon = {
+                                        <Icon
+                                        as={AntDesign}
+                                        name='plus'
+                                        size={4}
+                                        color = {theme.Text.base}
+                                        ></Icon>
+                                        }
+                              />
+                                   </HStack>
+                                     
+                                   <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
+                              </VStack>
+                                <VStack space={2} >
+                                   <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                             <VStack>
+                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Enable Comment</Text>           
+                                                  <Text color = {theme.Text.description} fontSize={'xs'}>for people can comment your Novel</Text>                    
+                                             </VStack>
+                                             <Switch size={'sm'}/>                                        
+                                             
+                                        </HStack>
+                                        <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                             <VStack>
+                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Public Project</Text>
+                                                  <Text color = {theme.Text.description} fontSize={'xs'}>for people can see your project</Text>
+                                             </VStack>
+                                        
+                                             <Switch size={'sm'}/>
+                                        </HStack>
+                                        <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                             <VStack>
+                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Commit</Text>
+                                                  <Text color = {theme.Text.description} fontSize={'xs'}>this feature for single creator to commited your project</Text>
+                                             </VStack>
+                                        
+                                             <Switch size={'sm'}/>
+                                        </HStack>
                                      <VStack space={2} mt =  {2}>
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Delete Project</Text>
                                         <Button w= {120} size={'sm'} rounded={'full'}  variant={'outline'} borderColor={'red.500'}>

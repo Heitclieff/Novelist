@@ -27,7 +27,8 @@ import { Flatlist } from './[stack]/[global]/Flatlist';
 import { Pressable } from 'native-base';
 import { EvilIcons , AntDesign } from '@expo/vector-icons';
 import { Fab } from 'native-base';
-import { BottomSheetModalProvider , BottomSheetModal , BottomSheetTextInput} from '@gorhom/bottom-sheet';
+import { BottomSheetModalProvider , BottomSheetModal , BottomSheetTextInput , useBottomSheetModal} from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
 
 interface Pageprops { 
     theme : any
@@ -36,11 +37,14 @@ interface Pageprops {
 const Creater : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeContext);
     const MemorizeCreaterbar = React.memo(Createrbar)
+    const navigation = useNavigation();
+
     const [Projectype , setProjectype] = useState<string>('');
     
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
     const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
+    const {dismiss} = useBottomSheetModal();
   
     useEffect(() => {
         if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
@@ -72,7 +76,7 @@ const Creater : React.FC <Pageprops> = () => {
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
         <Box h = '12%'>
             <Suspense fallback = {<Box>Loading...</Box>}>
-                <MemorizeCreaterbar/>
+                <MemorizeCreaterbar onRightButtonpress= {handlePresentModalPress}/>
             </Suspense>
         </Box>
 
@@ -145,12 +149,24 @@ const Creater : React.FC <Pageprops> = () => {
         <VStack w = '100%' p = {4} space = {5}>
             <FormControl mb="5" >
                 <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
-                <BottomSheetTextInput onSubmitEditing={handleReturnChange} style ={{width : '100%' , height :35, borderWidth : 1 , borderRadius : 100 ,borderColor : theme.Divider.comment,color : 'white', backgroundColor : theme.Divider.comment , paddingLeft : 10}}/>
+                <BottomSheetTextInput 
+                onSubmitEditing={handleReturnChange} 
+                
+                placeholder='Enter your Project title'
+                placeholderTextColor={'#a3a3a3'}
+                style ={{
+                    width : '100%' , 
+                    height :35, 
+                    
+                    borderRadius : 100 ,
+                    color : 'white', 
+                    backgroundColor : theme.Divider.comment , 
+                    paddingLeft : 10}}/>
                 <FormControl.HelperText>
                   Give your a Project title.
                 </FormControl.HelperText>
             </FormControl>
-        <Button rounded={'full'} colorScheme={'teal'}>Create</Button>
+        <Button rounded={'full'} colorScheme={'teal'} onPress={() => {navigation.navigate('CreateProject'); dismiss();}}>Create</Button>
       </VStack>
         </VStack>
     </BottomSheetModal>

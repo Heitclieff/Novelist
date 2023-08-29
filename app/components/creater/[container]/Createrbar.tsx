@@ -10,11 +10,13 @@ Button, } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
 import { useContext } from 'react'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
+import { useNavigation } from '@react-navigation/native'
 
 interface Createprops { 
+  onRightButtonpress : any
 }
 
-const Createrbar : React.FC <Createprops> = () => {
+const Createrbar : React.FC <Createprops> = ({onRightButtonpress}) => {
   const theme:any = useContext(ThemeContext)
   return  (
     <Box
@@ -31,6 +33,7 @@ const Createrbar : React.FC <Createprops> = () => {
             >   Workspace
             </Text>
             <IconButton 
+              onPress={onRightButtonpress}
               size = 'sm'
               colorScheme={'cyan'}
               w = {30}

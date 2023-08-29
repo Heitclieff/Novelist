@@ -31,7 +31,7 @@ const LazyEdittingtemplete = lazy(() => import('../app/pages/[stack]/Profile/[Pr
 const LazyAccountSettings = lazy(() => import('../app/pages/[stack]/settings/AccountSettings'))
 const LazyNotificationSettings = lazy(() => import('../app/pages/[stack]/settings/NotificationSettings'))
 const LazyItemlistTemplete = lazy(() => import('../app/pages/[stack]/[global]/ItemlistTemplete'))
-
+const LazyCreateProject = lazy(() => import('../app/pages/[workspaceTabs]/CreateProject'))
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
@@ -236,6 +236,21 @@ const Router : React.FC <Router> = () =>  {
               </Suspense>
             )}
           </Stack.Screen>
+
+          <Stack.Screen
+            name='CreateProject'
+            options={{
+              title: 'CreateProject',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyCreateProject {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
+
     </Stack.Navigator>
   )
 }
