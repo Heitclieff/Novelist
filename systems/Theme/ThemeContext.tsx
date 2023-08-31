@@ -7,6 +7,7 @@ import { RootState } from '../redux/reducer'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { loadThemefromStorage } from '../redux/action'
+import { StatusBar } from 'react-native'
 import { Box } from 'native-base'
 
 interface ThemeContext { }
@@ -22,7 +23,15 @@ const ThemeContext : React.FC <ThemeContext> = () => {
 
   return (
    <ThemeProvider theme = {theme}>
+    <Box flex= {1} position={'relative'}> 
+      <StatusBar translucent backgroundColor={'transparent'} barStyle={theme.themeMode == 'dark' ?'light-content' : 'dark-content'}/>
+      <Box flex= {1}>
         {isReduxLoaded &&  <Router />}
+      </Box>
+     
+    </Box>
+     
+        
    </ThemeProvider>
   )
 }
