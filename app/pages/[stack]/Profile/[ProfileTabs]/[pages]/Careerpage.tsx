@@ -7,18 +7,15 @@ import { AnyAction } from "redux";
 import { getCollectionData } from "../../../../../../systems/redux/action";
 import { FlatList } from "react-native";
 import CollectionItems from "../../../../../components/main/[layout]/Collections/CollectionItems";
+import Itemfields from "../../../../../components/global/[container]/Itemfields";
 interface Pageprops {}
 
 const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
     return (
-      <Box pl={4} pr={4} pb={3}>
-        <CollectionItems
-          key={item.id}
-          id = {item.id}
-          title={item.title}
-          view={item.view}
-          images={item.images}
-        />
+      <Box pl = {6} pr = {6}>
+          <Itemfields 
+            id = {item.id} 
+            data= {item}/>
       </Box>
     );
   });
@@ -52,7 +49,6 @@ const Careerpage : React.FC <Pageprops> = () => {
               data={collectionsData}
               renderItem={renderItem}
               keyExtractor={(item:any) => item.id}
-              numColumns={2}
               style = {{width : 'auto' }}
               ItemSeparatorComponent={() => <Box w = '20'/>}
               />

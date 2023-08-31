@@ -7,10 +7,12 @@ import Chapterfield from './Chapterfield';
 import CommentModal from '../../../../global/[modal]/CommentModal';
 
 interface containerProps { 
+    id : string| number
     handleCommentButton  : any
+
 }
 
-const EpisodeList : React.FC <containerProps> = ({handleCommentButton}) => {
+const EpisodeList : React.FC <containerProps> = ({id ,handleCommentButton}) => {
     const theme:any = useContext(ThemeContext);
   return (
     <VStack space = {1} position={'relative'} >
@@ -38,6 +40,7 @@ const EpisodeList : React.FC <containerProps> = ({handleCommentButton}) => {
          {[0,0,0,0].map((item:any , key:number) => 
             <Chapterfield
                 key = {key}
+                p_id = {id}
                 id = {key + 1}
             />
          )}

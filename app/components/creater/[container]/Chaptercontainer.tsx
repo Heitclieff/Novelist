@@ -3,14 +3,16 @@ import { Box, HStack , Text, VStack } from 'native-base'
 import { ThemeContext } from '../../../../systems/Theme/ThemeProvider'
 import { Pressable } from 'native-base'
 import { Image } from 'expo-image'
-
+import { useNavigation } from '@react-navigation/native'
 interface containerProps {
      data : any
 }
 const Chaptercontainer : React.FC <containerProps> = ({data}) => {
      const theme:any = useContext(ThemeContext)
+     const navigation  = useNavigation();
+     const p_id = data.id
   return (
-     <Pressable>
+     <Pressable onPress={() => navigation.navigate('NovelReadContent',{p_id})}>
      {({
          isHovered,
          isFocused,

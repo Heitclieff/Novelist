@@ -29,7 +29,8 @@ import { EvilIcons , AntDesign } from '@expo/vector-icons';
 import { Fab } from 'native-base';
 import { BottomSheetModalProvider , BottomSheetModal , BottomSheetTextInput , useBottomSheetModal} from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
-
+import { SafeAreaView, ScrollView , Platform , Dimensions } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 interface Pageprops { 
     theme : any
 }
@@ -50,8 +51,9 @@ const Creater : React.FC <Pageprops> = () => {
         if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
     }, [dispatch, isReduxLoaded])
 
+    const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const snapPoints = useMemo(() => ['45%', '45%'], []);
+    const snapPoints = useMemo(() => ['20%', '45%'], [windowHeight]);
 
     const handlePresentModalPress = useCallback(() => {
        bottomSheetModalRef.current?.present();
@@ -113,63 +115,64 @@ const Creater : React.FC <Pageprops> = () => {
         size="sm" 
         onPress={handlePresentModalPress}
         icon={<Icon color="white" as={AntDesign} name="plus" size="sm" />} />
-        
-        <BottomSheetModal
-        ref={bottomSheetModalRef}
-        index={1}
-        snapPoints={snapPoints}
-        
-        onChange={handleSheetChanges}
-        backgroundStyle = {{backgroundColor : theme.Bg.comment}}
-        handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
-    >
-        
-        <VStack flex=  {1} space = {2}>
-        <Box justifyContent={'center'} alignItems={'center'}>
-                <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Create Project</Text>
-        </Box>
-        <HStack space = {3} p = {4}>
-                {ProjectType.map((item:any ,index:number) => {
-                    return(
-                        <Pressable flex = {1} key=  {index}  onPress={() => setProjectype(item.type)}>
-                        {({
-                            isHovered,
-                            isFocused,
-                            isPressed
-                        }) => {
-                             return(
-                                <Box w= '100%'  h= '50' borderWidth={Projectype == item.type ? 2 : 1} borderColor={Projectype == item.type ? 'teal.600' :theme.Divider.comment} rounded={'full'} justifyContent={'center'} alignItems={'center'}>
-                                    <Text color = {theme.Text.base} fontWeight={'semibold'}>{item.title}</Text>
-                                </Box>
-                             )}}
-                        </Pressable>
-                    )
-                })}
-            </HStack>
-        <VStack w = '100%' p = {4} space = {5}>
-            <FormControl mb="5" >
-                <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
-                <BottomSheetTextInput 
-                onSubmitEditing={handleReturnChange} 
-                
-                placeholder='Enter your Project title'
-                placeholderTextColor={'#a3a3a3'}
-                style ={{
-                    width : '100%' , 
-                    height :35, 
-                    
-                    borderRadius : 100 ,
-                    color : 'white', 
-                    backgroundColor : theme.Divider.comment , 
-                    paddingLeft : 10}}/>
-                <FormControl.HelperText>
-                  Give your a Project title.
-                </FormControl.HelperText>
-            </FormControl>
-        <Button rounded={'full'} colorScheme={'teal'} onPress={() => {navigation.navigate('CreateProject'); dismiss();}}>Create</Button>
-      </VStack>
-        </VStack>
-    </BottomSheetModal>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+            <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            enablePanDownToClose = {true}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            backgroundStyle = {{backgroundColor : theme.Bg.comment}}
+            handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
+            >
+                <VStack flex=  {1} space = {2}>
+                <Box justifyContent={'center'} alignItems={'center'}>
+                        <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Create Project</Text>
+                </Box>
+                <HStack space = {3} p = {4}>
+                        {ProjectType.map((item:any ,index:number) => {
+                            return(
+                                <Pressable flex = {1} key=  {index}  onPress={() => setProjectype(item.type)}>
+                                {({
+                                    isHovered,
+                                    isFocused,
+                                    isPressed
+                                }) => {
+                                    return(
+                                        <Box w= '100%'  h= '50' borderWidth={Projectype == item.type ? 2 : 1} borderColor={Projectype == item.type ? 'teal.600' :theme.Divider.comment} rounded={'full'} justifyContent={'center'} alignItems={'center'}>
+                                            <Text color = {theme.Text.base} fontWeight={'semibold'}>{item.title}</Text>
+                                        </Box>
+                                    )}}
+                                </Pressable>
+                            )
+                        })}
+                    </HStack>
+                <VStack w = '100%' p = {4} space = {5}>
+                    <FormControl mb="5" >
+                        <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
+                        <BottomSheetTextInput 
+                        onSubmitEditing={handleReturnChange} 
+                        
+                        placeholder='Enter your Project title'
+                        placeholderTextColor={'#a3a3a3'}
+                        style ={{
+                            width : '100%' , 
+                            height :35, 
+                            borderRadius : 100 ,
+                            color : 'white', 
+                            backgroundColor : theme.Divider.comment , 
+                            paddingLeft : 10}}/>
+                        <FormControl.HelperText>
+                        Give your a Project title.
+                        </FormControl.HelperText>
+                    </FormControl>
+                <Button rounded={'full'} colorScheme={'teal'} onPress={() => {navigation.navigate('CreateProject'); dismiss();}}>Create</Button>
+            </VStack>
+                </VStack>
+        </BottomSheetModal>
+    </KeyboardAvoidingView>
     </VStack>
   )
 }

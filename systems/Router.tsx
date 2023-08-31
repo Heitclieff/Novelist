@@ -33,6 +33,7 @@ const LazyNotificationSettings = lazy(() => import('../app/pages/[stack]/setting
 const LazyItemlistTemplete = lazy(() => import('../app/pages/[stack]/[global]/ItemlistTemplete'))
 const LazyCreateProject = lazy(() => import('../app/pages/[workspaceTabs]/CreateProject'))
 const LazyTagpage = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Tagpage'))
+const LazyNovelReadContent = lazy(() => import('../app/pages/[stack]/Novel/[pages]/NovelReadContent'))
 // Page Drawer
 const LazyTeam = lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Team'))
 const LazyCommit= lazy(() => import('../app/pages/[workspaceTabs]/[pages]/Commit'))
@@ -265,6 +266,22 @@ const Router : React.FC <Router> = () =>  {
               </Suspense>
             )}
           </Stack.Screen>
+          
+          <Stack.Screen
+            name='NovelReadContent'
+            options={{
+              title: 'NovelReadContent',
+              headerShown: false,
+              
+            }}>
+            {(props: any) => (
+              <Suspense fallback={<Box>Loading..</Box>}>
+                <LazyNovelReadContent {...props} />
+              </Suspense>
+            )}
+          </Stack.Screen>
+
+
 
 
 

@@ -225,7 +225,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                               <OverviewSection />
                               <TagsSection />
                               <VStack flex={1} pt={7}>
-                                  <EpisodeList handleCommentButton={handlePresentModalPress} />
+                                  <EpisodeList id = {id} handleCommentButton={handlePresentModalPress} />
                               </VStack>
                               <CommentModal BottomRef={bottomSheetModalRef}></CommentModal>
                           </VStack>

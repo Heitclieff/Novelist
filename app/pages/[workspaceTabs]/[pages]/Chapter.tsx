@@ -13,6 +13,7 @@ import {SwipeListView }from 'react-native-swipe-list-view'
 import { TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import DeleteButton from '../../../components/global/[container]/DeleteButton'
+import { KeyboardAvoidingView } from 'react-native'
 
 interface Pageprops {}
 
@@ -20,7 +21,7 @@ const Chapter : React.FC <Pageprops> = () => {
      const theme:any = useContext(ThemeContext)
      const {isOpen , onOpen , onClose} = useDisclose();
      const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-     const snapPoints = useMemo(() => ['30%', '30%'], []);
+     const snapPoints = useMemo(() => [150, 250], []);
 
      const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
@@ -83,6 +84,7 @@ const Chapter : React.FC <Pageprops> = () => {
               
             </Flatlist>
         </Box>
+        <KeyboardAvoidingView style = {{flex : 1}} behavior="position">
         <BottomSheetModal
         ref={bottomSheetModalRef}
         index={1}
@@ -105,7 +107,7 @@ const Chapter : React.FC <Pageprops> = () => {
       </VStack>
         </VStack>
     </BottomSheetModal>
-  
+    </KeyboardAvoidingView>
      </VStack>
 
   )
