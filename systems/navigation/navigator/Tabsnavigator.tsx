@@ -26,12 +26,13 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
       tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
       headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
       headerTitleStyle : {color : theme.Text.tabbar} ,
-      
+      lazy : true,
     }}
     >
       <Tab.Screen
         name = 'Index'
         options={{
+          
           title : 'Home',
           headerShown: false,
           tabBarActiveTintColor : theme.Text.bottomtab.focused,

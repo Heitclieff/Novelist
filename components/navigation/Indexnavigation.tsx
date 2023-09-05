@@ -11,6 +11,10 @@ Button,
 Icon
 }   from 'native-base'
 // import { AntDesign,FontAwesome , Ionicons} from '@expo/vector-icons'
+import AntdesignIcon from 'react-native-vector-icons/AntDesign'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
 import Animated, {
@@ -70,11 +74,10 @@ const Indexnavigation: React.FC<AppbarProps> = ({ scrollY }) => {
                             onPress={() => navigation.navigate('Search')}
 
                         >
-                            {/* <Icon
-                                as={AntDesign}
+                            <AntdesignIcon
                                 name='search1'
                                 color={theme.Icon.heading}
-                            /> */}
+                            />
 
                         </Button>
                         <Button
@@ -86,12 +89,11 @@ const Indexnavigation: React.FC<AppbarProps> = ({ scrollY }) => {
                             _pressed={{ backgroundColor: 'gray.300' }}
                             onPress={() => navigation.navigate('Notification')}
                         >
-                            {/* <Icon
-                                as={Ionicons}
+                            <IonIcon
                                 name={'notifications'}
                                 color={theme.Icon.heading}
 
-                            /> */}
+                            />
                         </Button>
                     </HStack>
                 </HStack>

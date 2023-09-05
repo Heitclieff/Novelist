@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 
 const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
   return (
-    <Stack.Navigator screenOptions={{headerStyle : {
+    <Stack.Navigator  screenOptions={{headerStyle : {
         backgroundColor : theme.Bg.tabbar,
         }, 
         headerTitleStyle : {color : theme.Text.tabbar} ,
