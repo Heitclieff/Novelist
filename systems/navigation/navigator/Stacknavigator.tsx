@@ -6,6 +6,11 @@ import Tabsnavigator from './Tabsnavigator';
 const NovelContent = lazy(() => import('../../../features/content'));
 const Notification = lazy(() => import('../../../features/notification'));
 const Search = lazy(() => import('../../../features/search'));
+const Leaderboard = lazy(() => import('../../../features/leaderboard'));
+const Profile = lazy(() => import('../../../features/profile'));
+const Bookmarks = lazy(() => import('../../../features/bookmarks'));
+const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
+
 interface navigatorProps {
     theme:any
 }
@@ -61,6 +66,49 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             }
           </Stack.Screen>
 
+          <Stack.Screen 
+          name = "ProfileStack"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Profile {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Editprofile"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Editprofile {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Leaderboard"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Leaderboard {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Bookmarks"
+          options={{headerShown : true}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Bookmarks {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
 
 
     </Stack.Navigator>

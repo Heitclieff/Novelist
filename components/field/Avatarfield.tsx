@@ -4,10 +4,11 @@ import { Image } from 'react-native'
 
 interface containerProps {
      image : string
+     size  : number | string
 }
-const Avatarfield : React.FC <containerProps> =({image}) => {
+const Avatarfield : React.FC <containerProps> =({image , size = 25}) => {
   return (
-    <Box w=  '25' h = '25' bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
+    <Box w=  {size} h = {size} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
           <Image
           id ='Avatar-image'
           style={{width : '100%' , height : '100%'}}
