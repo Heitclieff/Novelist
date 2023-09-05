@@ -106,29 +106,3 @@ export const userdata = [{
     background : 'https://wallpapers.com/images/hd/kiyotaka-ayanokoji-in-pink-qs33qgqm79ccsq7n.jpg',
 }]
 
-// export const Settingmenu = [{
-//     title : 'Account',
-//     detail : 'Password, Privacy, your personal detail.',
-//     icon : EvilIcons,
-//     name : 'user',
-//     tag : 'account',
-// },{
-//     title : 'Notification',
-//     detail : null,
-//     icon : Ionicons,
-//     name : 'notifications-outline',
-//     tag : 'notification'
-// },
-// {
-//     title : "Dark mode",
-//     detail : null,
-//     icon : Feather,
-//     name : 'moon',
-//     tag : 'system',
-// },
-// {
-//     title : 'Log out',
-//     detail : null ,
-//     color : 'blue.600',
-//     tag : 'system',
-// }]

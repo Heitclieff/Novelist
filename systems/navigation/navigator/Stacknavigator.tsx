@@ -10,7 +10,8 @@ const Leaderboard = lazy(() => import('../../../features/leaderboard'));
 const Profile = lazy(() => import('../../../features/profile'));
 const Bookmarks = lazy(() => import('../../../features/bookmarks'));
 const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
-
+const Settings = lazy(() => import('../../../features/settings'));
+const AccountSettings = lazy(() => import('../../../features/settings/account'));
 interface navigatorProps {
     theme:any
 }
@@ -110,6 +111,27 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             }
           </Stack.Screen>
 
+          <Stack.Screen 
+          name = "Settings"
+          options={{headerShown : true}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Settings {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "AccountSettings"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <AccountSettings {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
 
     </Stack.Navigator>
   )

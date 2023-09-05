@@ -65,7 +65,7 @@ const Menu :React.FC <Pageprops> = () => {
 },
 {
   title : 'Settings',
-  direct : 'SettingsStack',
+  direct : 'Settings',
   IconProperty : {
     name : 'settings'
   }
