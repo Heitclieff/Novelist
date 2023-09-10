@@ -14,6 +14,7 @@ import { FlatList } from '../../components/layout/Flatlist/FlatList';
 //@Components
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import Librarynavigation from '../../components/navigation/Librarynaviation';
+import Elementnavigation from '../../components/navigation/Elementnavigation';
 import Libraryitem from './components/Libraryitem';
 
 //@Redux toolkit
@@ -26,7 +27,7 @@ import { RootState } from '../../systems/redux/reducer'
 interface Pageprops {
 }
 
-const MemorizedLibrarynavigation = React.memo(Librarynavigation)
+const MemorizedElementnavigation = React.memo(Elementnavigation)
 const MemorizedLibraryitem = React.memo(Libraryitem)
 
 const Library: React.FC <Pageprops> = () => {
@@ -43,7 +44,7 @@ const Library: React.FC <Pageprops> = () => {
 
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
-        <MemorizedLibrarynavigation/>
+        <MemorizedElementnavigation title = 'Library'/>
         <Box flex = {1}>
           <FlatList>
             <Box w= '100%' mt = {2}>

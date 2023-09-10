@@ -12,6 +12,8 @@ const Bookmarks = lazy(() => import('../../../features/bookmarks'));
 const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
 const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
+const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
+const Template = lazy(() => import('../../../features/_template'));
 interface navigatorProps {
     theme:any
 }
@@ -133,6 +135,27 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             }
           </Stack.Screen>
 
+          <Stack.Screen 
+          name = "NotificationSettings"
+          options={{headerShown : true , headerTitle : "Notification"}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <NotificationSettings {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Template"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Template {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
     </Stack.Navigator>
   )
 }

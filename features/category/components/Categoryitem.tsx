@@ -21,7 +21,7 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={()=> navigation.navigate('ItemlistTemplete',{title})}>
+    <Pressable onPress={()=> navigation.navigate('Template',{title})}>
     {({
       isHovered,
       isFocused,

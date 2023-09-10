@@ -8,7 +8,8 @@ export const Settingmenu = [{
     title : 'Notification',
     detail : null,
     name : 'notifications-outline',
-    tag : 'notification'
+    tag : 'notification',
+    direct : 'NotificationSettings',
 },
 ]
 
@@ -25,3 +26,11 @@ export const SettingsCategory = [{
     tag : 'system',
 }
 ]
+
+
+export const MenuOptions = [{
+    title : 'Notification' , 
+    description : 'Notification on your device when something has update.',
+  },
+]
+

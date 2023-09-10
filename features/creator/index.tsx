@@ -16,7 +16,7 @@ import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
-
+import Elementnavigation from '../../components/navigation/Elementnavigation';
 //@BottomSheetModal
 import { 
 BottomSheetModal , 
@@ -86,7 +86,10 @@ const Creator : React.FC <Pageprops> = () => {
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
         <Box h = '12%'>
             <Suspense fallback = {<Box>Loading...</Box>}>
-                <MemorizedCreatornavigation onRightButtonpress= {handlePresentModalPress}/>
+                {/* <MemorizedCreatornavigation onRightButtonpress= {handlePresentModalPress}/> */}
+                <Elementnavigation title = "Workspace"
+                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : handlePresentModalPress}]}
+                />
             </Suspense>
         </Box>
 
