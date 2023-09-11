@@ -24,11 +24,11 @@ import { getuserData } from '../../systems/redux/action'
 
 //@Components
 const LazyAvatarfield  = React.lazy(() =>import('../../components/field/Avatarfield'));
-import Editprofilenavigation from '../../components/navigation/Editprofilenavigation'
+import Centernavigation from '../../components/navigation/Centernavigation'
 import Editfield from '../../components/field/Editfiled'
 interface Pageprops {}
 
-const MemorizedEditprofilenavigation = React.memo(Editprofilenavigation);
+const Memorizednavigation = React.memo(Centernavigation);
 const MemorizedAvatarfield = React.memo(LazyAvatarfield);
 const MemorizedEditfield = React.memo(Editfield);
 
@@ -61,7 +61,7 @@ const Editprofile : React.FC <Pageprops> = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-      <MemorizedEditprofilenavigation/>
+      <Memorizednavigation title = "Edit Profile"  onEditcontent = {true}/>
       <FlatList>
         <VStack flex = {1} mt = {1}  space = {2}> 
             <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>

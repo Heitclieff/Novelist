@@ -1,9 +1,11 @@
 import React,{lazy , Suspense} from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Box } from 'native-base';
-//@Navigate Pages
+
 import Tabsnavigator from './Tabsnavigator';
-const NovelContent = lazy(() => import('../../../features/content'));
+import Drawernavigator from './Drawernavigator';
+
+//@Navigate Pages
 const Notification = lazy(() => import('../../../features/notification'));
 const Search = lazy(() => import('../../../features/search'));
 const Leaderboard = lazy(() => import('../../../features/leaderboard'));
@@ -14,6 +16,13 @@ const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
 const Template = lazy(() => import('../../../features/_template'));
+
+const NovelContent = lazy(() => import('../../../features/content/reader'));
+const Creatorcontent = lazy(() => import('../../../features/content/creator'));
+const Createproject = lazy(() => import('../../../features/creator/Createproject'));
+const Tag = lazy(() => import('../../../features/content/creator/Tag'));
+const Readcontent = lazy(() => import('../../../features/content/reader/content'));
+
 interface navigatorProps {
     theme:any
 }
@@ -156,6 +165,40 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             </Suspense>
             }
           </Stack.Screen>
+
+          <Stack.Screen 
+          name = "CreateProject"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Createproject {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "CreatorContent"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Drawernavigator {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Readcontent"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Readcontent {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
     </Stack.Navigator>
   )
 }

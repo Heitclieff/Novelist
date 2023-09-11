@@ -26,7 +26,7 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
         return(
             <HStack w = '90%' h = {110} bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeractionaction  : theme.Bg.container} rounded={'md'} overflow = 'hidden'>
             <Box w = '23%' h = '100%' bg = 'gray.200' overflow={'hidden'}>
-                <Image style={{width : '100%' , height : '100%'}} source={data.images}/>
+                <Image style={{width : '100%' , height : '100%'}} source={{uri :data.images}}/>
     
             </Box>
             <VStack w = '77%' h = '100%' pl = {2} justifyContent={'center'}>

@@ -6,16 +6,17 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { RollInLeft } from 'react-native-reanimated';
 
 interface containerProps {
-    title : null
+    title : string
     rightElement : any
     children :any
+    Contentfixed : boolean
 }
 
-const Elementnavigation : React.FC <containerProps> = ({title = null , rightElement = []}) => {
+const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElement = [] , Contentfixed = true}) => {
     const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
-    <HStack safeAreaTop w = '100%'  zIndex={1} justifyContent={'space-between'} p = {4}>
+    <HStack safeAreaTop w = '100%' position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {4} pl = {4} pr = {4}>
          <Box>
             {title ? 
                 <Text
@@ -28,14 +29,13 @@ const Elementnavigation : React.FC <containerProps> = ({title = null , rightElem
             
             <IconButton 
             size = 'sm'
-            w = {30}
-            h = {30}
+           
             rounded={'full'}
             onPress={() =>  navigation.goBack()}
             icon = {
                 <EntypoIcon
                 name='chevron-left'
-                size={30}
+                size = {20}
                 />
             }
         />
@@ -46,8 +46,9 @@ const Elementnavigation : React.FC <containerProps> = ({title = null , rightElem
                     return(
                         <IconButton
                         key = {index} 
-                        onPress={item.navigate}
+                        onPress={() => item.navigate()}
                         size = 'sm'
+                        rounded={'full'}
                         colorScheme={'cyan'}
                         w = {30}
                         h = {30}

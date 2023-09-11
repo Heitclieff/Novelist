@@ -7,7 +7,7 @@ VStack } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { Animated } from 'react-native'
 import { ImageBackground } from 'react-native'
-import Profilenavigation from '../../components/navigation/Profilenavigation'
+import Centernavigation from '../../components/navigation/Centernavigation'
 //@Components
 import Leadheader from './section/header'
 import LeaderItem from './components/LeaderItem'
@@ -23,6 +23,7 @@ import { getuserData } from '../../systems/redux/action'
 interface pageProps {}
 
 const MemorizedLeadheader = React.memo(Leadheader);
+const Memorizednavigation = React.memo(Centernavigation);
 
 const Leaderboard: React.FC <pageProps> = () => {
     const theme:any = useContext(ThemeWrapper);
@@ -44,7 +45,7 @@ const Leaderboard: React.FC <pageProps> = () => {
 
   return (
     <Box flex = {1} >
-        <Profilenavigation Title = "Leaderboard"/>
+        <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
         <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'}>
          <Box w = '100%' h = '100%'  position = 'absolute' top = {0}>
             <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [

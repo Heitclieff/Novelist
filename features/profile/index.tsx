@@ -12,7 +12,6 @@ Skeleton,
 HStack,
  } from 'native-base'
 import { Animated } from 'react-native'
-// import Animated from 'react-native-reanimated'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 
 //@Redux Toolkits
@@ -24,7 +23,7 @@ import { getuserData } from '../../systems/redux/action'
 
 //@Components && Sections;
 import Headersection from './section/Headersection'
-import Profilenavigation from '../../components/navigation/Profilenavigation'
+import Centernavigation from '../../components/navigation/Centernavigation'
 import Careersection from './section/Careersection'
 interface StackProps {
     Profiledata : any
@@ -85,8 +84,10 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
 
     return ( 
         <Box bg={theme.Bg.base} flex={1}>
-            <Profilenavigation
-            Title =  {HeaderTitle}
+            <Centernavigation
+            title =  {HeaderTitle}
+            transparent = {true}
+            Contentfixed = {false}
             />
             <Box w = '100%' h = {MAX_HEIGHT} position={'absolute'}>
                 <ParallaxBackground background={currentProfile.background} scrollY={scrollY}/>

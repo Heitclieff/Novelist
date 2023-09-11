@@ -16,7 +16,7 @@ import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
-import Elementnavigation from '../../components/navigation/Elementnavigation';
+
 //@BottomSheetModal
 import { 
 BottomSheetModal , 
@@ -28,7 +28,7 @@ KeyboardAvoidingView,
 Dimensions } from 'react-native';
 
 //@components
-import Creatornavigation from '../../components/navigation/Creatornavigation';
+import Elementnavigation from '../../components/navigation/Elementnavigation';
 import CreatorItemfield from './components/Creator.itemfield';
 
 //@Redux toolkit
@@ -42,7 +42,7 @@ interface Pageprops {
     theme : any
 }
 
-const MemorizedCreatornavigation = React.memo(Creatornavigation)
+const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
@@ -84,12 +84,11 @@ const Creator : React.FC <Pageprops> = () => {
 
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
-        <Box h = '12%'>
+        <Box >
             <Suspense fallback = {<Box>Loading...</Box>}>
-                {/* <MemorizedCreatornavigation onRightButtonpress= {handlePresentModalPress}/> */}
-                <Elementnavigation title = "Workspace"
+                <Memorizednavigation title = "Create"
                     rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : handlePresentModalPress}]}
-                />
+            />
             </Suspense>
         </Box>
 

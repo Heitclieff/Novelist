@@ -6,7 +6,7 @@ VStack,
 Text , 
 Divider , 
 Pressable} from 'native-base'
-import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
 
 interface Fieldprops {
@@ -17,7 +17,7 @@ const ChapterItem : React.FC <Fieldprops> = ({p_id ,id}) => {
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
   return (
-    <Pressable onPress={() => navigation.navigate('NovelReadContent',{p_id})}>
+    <Pressable onPress={() => navigation.navigate('Readcontent',{p_id})}>
       {({
         isHovered,
         isFocused,

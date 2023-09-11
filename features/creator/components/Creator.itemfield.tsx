@@ -24,8 +24,8 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
      const navigation = useNavigation();
 
 
-  return (
-     <Pressable onPress = {() => navigation.navigate('Creatorcontent',{id})}>
+  return ( 
+     <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>
      {({
          isHovered,
          isFocused,

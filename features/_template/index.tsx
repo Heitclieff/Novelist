@@ -9,7 +9,7 @@ import { useRoute } from '@react-navigation/native'
 
 //@Components
 import Itemfield from '../../components/field/Itemfield'
-import Profilenavigation from '../../components/navigation/Profilenavigation'
+import Centernavigation from '../../components/navigation/Centernavigation'
 
 //@Redux Toolkits
 import { getCollectionData } from '../../systems/redux/action'
@@ -22,6 +22,7 @@ interface Pageprops {
      collections : any,
 }
 
+const Memorizednavigation = React.memo(Centernavigation);
 const MemorizedItemfields = React.memo(Itemfield);
 
 const Template : React.FC <Pageprops> = ({collections}) => {
@@ -39,7 +40,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
      },[dispatch , isReduxLoaded])
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
-          <Profilenavigation Title = {title} rightButtonEnable = {false}/>
+          <Memorizednavigation title = {title} fixed/>
           <VStack flex={1} >
                 <ItemList collection={Collectionsdata}>
                     {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }

@@ -22,11 +22,10 @@ import { getuserData } from '../../systems/redux/action'
 
 //@Components
 import Editfield from '../../components/field/Editfiled'
-import Editprofilenavigation from '../../components/navigation/Editprofilenavigation'
+import Centernavigation from '../../components/navigation/Centernavigation'
 interface Pageprops {}
 
-
-const MemorizedEditprofilenavigation = React.memo(Editprofilenavigation);
+const Memorizednavigation = React.memo(Centernavigation);
 const MemoriedEditfield = React.memo(Editfield);
 
 const AccountSettings : React.FC <Pageprops> = () => {
@@ -60,7 +59,7 @@ const AccountSettings : React.FC <Pageprops> = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-      <MemorizedEditprofilenavigation title= 'Account' rightButtonEnable = {false}/>
+      <Memorizednavigation title= 'Account' onEditcontent = {true} />
       <FlatList>
         <VStack flex = {1} mt = {1}  space = {3}> 
             <VStack >          
