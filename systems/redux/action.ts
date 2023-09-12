@@ -3,8 +3,8 @@ import {ThunkAction } from "redux-thunk";
 import { RootState } from "./reducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //Data for prepair fast loading
-import { CollectionsdataShowcase , Collectionsdata , Categorydata, userdata} from "../../assets/VisualCollectionsdata";
-import { Themedark , Themelight } from "../theme";
+import { CollectionsdataShowcase , Collectionsdata , Categorydata, userdata} from "../../assets/content/VisualCollectionsdata";
+import { Themedark , Themelight } from "../theme/theme";
 
 export const SET_THEME = 'SET_THEME';
 export const LOAD_THEME_FROM_STORAGE = 'LOAD_THEME_FROM_STORAGE';
