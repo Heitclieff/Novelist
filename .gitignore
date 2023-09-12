@@ -1,5 +1,7 @@
 node_modules/
 ios/Pods/
+android/.gradle/
+android/app/build/
 .expo/
 dist/
 npm-debug.*

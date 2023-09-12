@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "211004688841",
+    "project_id": "nobelist-bc4dc",
+    "storage_bucket": "nobelist-bc4dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211004688841:android:ffa120d3798e1665f68018",
+        "android_client_info": {
+          "package_name": "com.nobelist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARO9aa0g_LVgHFvZRLqtsb7u1_uR_wOV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
