@@ -25,11 +25,10 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
     <Animated.View
       style={[{
       width : '100%', 
-      height : 60 , 
       position : Contentfixed ? 'relative' : 'absolute', 
       zIndex: 10 }]
     }>
-    <HStack w = '100%' h = '100%' safeAreaTop position = 'relative' justifyContent={'center'} pr = {4}  pl = {4}  bg = {transparent ? 'transparent' : theme.Bg.base }> 
+    <HStack w = '100%'  safeAreaTop position = 'relative' justifyContent={'center'} pl = {4} pr = {4}  pt = {3} pb ={3} bg = {transparent ? 'transparent' : theme.Bg.base }> 
             <Box w = '15%' justifyContent='center' alignItems={'center'}>
                 {onEditcontent ? 
                     <Pressable onPress={() => navigation.goBack()}>

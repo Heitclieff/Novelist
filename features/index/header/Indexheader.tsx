@@ -4,7 +4,7 @@ import { FlatList } from 'native-base';
 import { View , Animated , Dimensions } from 'react-native';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import Collectionheader from '../components/Collection.header';
-
+import LinearGradient from 'react-native-linear-gradient';
 interface layoutProps {
     collections : any,
 }
@@ -33,8 +33,8 @@ const Indexheader : React.FC <layoutProps> = ({collections}) => {
       );
 
   return (
-    <VStack flex = {1} justifyContent={'center'}>
-        <VStack space = {1} >
+    <VStack flex = {1} justifyContent={'center'} >
+        <VStack space = {1} position = 'relative'>
             {React.useMemo(() => {
                 return(
                     <FlatList

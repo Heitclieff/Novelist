@@ -59,6 +59,8 @@ const Editprofile : React.FC <Pageprops> = () => {
     if(!isReduxLoaded) dispatch(getuserData());
   },[dispatch , isReduxLoaded])
 
+  
+
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
       <Memorizednavigation title = "Edit Profile"  onEditcontent = {true}/>

@@ -94,7 +94,7 @@ const Creator : React.FC <Pageprops> = () => {
 
         <Box flex = {1}>
                 <FlatList>
-                    <Box w= '100%' mt = {2}>
+                    <Box w= '100%' mt = {3}>
                     <Box pl = {6} pr = {6}>
                         <Input 
                         rounded={'full'} 

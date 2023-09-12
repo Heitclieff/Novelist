@@ -41,27 +41,10 @@ const Template : React.FC <Pageprops> = ({collections}) => {
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title = {title} fixed/>
-          <VStack flex={1} >
+          <VStack flex={1} pl = {4} pr = {4}>
                 <ItemList collection={Collectionsdata}>
                     {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
                 </ItemList>
-               {/* <FlatList>
-                    <VStack pl  = {4} pr = {4} space= {4}>
-                    <Box pl = {2} w = '100%' h = '30' justifyContent={'center'}>
-                         <Button w  = '60'  size={'xs'}  rounded={'full'} bg = {theme.Bg.container}>filter</Button>
-                    </Box>
-                    <VStack>
-                         {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                              Collectionsdata.map((item:any , index:number) => (       
-                                   <MemorizedItemfields key = {index} id = {item.id} data= {item}/>        
-                                   )) 
-                              : null
-                         }
-                    </VStack>
-                       
-                    </VStack>
-                   
-               </FlatList> */}
           </VStack>
          
      </VStack>

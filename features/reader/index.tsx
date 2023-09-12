@@ -8,17 +8,21 @@ useCallback} from 'react'
 import { 
 Box , 
 VStack , 
+Text,
 Divider } from 'native-base'
 import { 
 ImageBackground , 
 Image , 
 Animated,
+Dimensions,
+View,
 Platform } from 'react-native'
 
 import { useRoute } from '@react-navigation/native'
 import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import LinearGradient from 'react-native-linear-gradient';
 
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
@@ -49,8 +53,9 @@ const NovelContent : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
     const {id}:any = route.params
-
+    const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+
 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const Collectionsdata = useSelector((state: any) => state.collectionsData)
@@ -65,9 +70,9 @@ const NovelContent : React.FC <Pageprops> = () => {
         if (!isReduxLoaded) dispatch(getCollectionData());
     }, [dispatch, isReduxLoaded])
 
-    const MAX_HEIGHT  = 500;
+    const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
-    const HEADER_HEIGHT_EXPANDED = 320; 
+    const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 1.5; 
     const BOTTOM_SPACE = Platform.OS == 'android' ? 70 : 0
 
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -125,12 +130,13 @@ const NovelContent : React.FC <Pageprops> = () => {
                                                   })
                                               }]
                                           }}>
-                                          <Box width =  '100%' h = {MAX_HEIGHT} bg='black' opacity={0.2} />
+                                          <Box width =  '100%' h = {MAX_HEIGHT} bg='black' opacity={0.35} />
                                       </AnimatedBackground>
                                       <Animated.View
                                           style={{
                                               width: '100%',
                                               height: '100%',
+                                              
                                               position: 'absolute',
                                               transform: [{
                                                   scale: scrollY.interpolate({
@@ -141,14 +147,9 @@ const NovelContent : React.FC <Pageprops> = () => {
                                                   })
                                               }]
                                           }}>
-                                          <Box w='100%' h='100%' position='absolute' zIndex={2} top={'-18%'}
-                                              bg={{
-                                                  linearGradient: {
-                                                      colors: ['transparent', theme.Bg.base],
-                                                      start: [0, 0, 0, 0.5],
-                                                      end: [0, 0, 0, 0],
-                                                  },
-                                              }}></Box>
+                                            <LinearGradient colors={['transparent',theme.Bg.header]} style = {{width : '100%' , height : (HEADER_HEIGHT_EXPANDED + HEADER_HEIGHT_NARROWED)}}>
+                                   
+                                        </LinearGradient>
                                       </Animated.View>
                                   </Animated.View>
                               </VStack>
@@ -189,7 +190,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                           }}
                       >
                         {Platform.OS == 'ios' && 
-                        <Animated.View style={{position: 'absolute' , zIndex : 99 ,top : -MAX_HEIGHT /3 , left: '50%', transform: [{ translateX: 0}], 
+                        <Animated.View style={{position: 'absolute' , zIndex : 99 ,top : -MAX_HEIGHT / 2.8, left: '50%', transform: [{ translateX: 0}], 
                             opacity : scrollY.interpolate({
                                 inputRange: [0, 100],
                                 outputRange: [1, 0], 
@@ -202,8 +203,12 @@ const NovelContent : React.FC <Pageprops> = () => {
                            
                         </Animated.View>
                         }
+                      
                           <VStack w='100%' bg={theme.Bg.base} position='relative' pb={HEADER_HEIGHT_EXPANDED + BOTTOM_SPACE} zIndex={0}>
-
+                               
+                           
+                             
+                                
                               <VStack w='100%'>
                                   <Mainsection
                                       isLiked={isLiked}

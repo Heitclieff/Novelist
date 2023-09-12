@@ -26,7 +26,6 @@ const Chapternavigation : React.FC <contianerProps> = () => {
     <Animated.View
       style={[{
       width : '100%', 
-      height : 60 , 
       zIndex: 10 }]
     }>
     <HStack w = '100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5}> 

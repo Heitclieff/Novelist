@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Pressable } from 'native-base'
 import Animated from 'react-native-reanimated'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
+import LinearGradient from 'react-native-linear-gradient'
 interface containerProps {
     data: any
     id: number,
@@ -16,6 +17,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height
+    const HEADER_HEIGHT = ScreenHeight / 1.7
     const navigation = useNavigation();
 
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
@@ -27,7 +29,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                 isPressed
             }) => {
                 return (
-                    <Box w={ScreenWidth} h={ScreenHeight / 1.7} overflow={'hidden'} alignItems={'center'} position='relative'>
+                    <Box w={ScreenWidth} h={HEADER_HEIGHT} overflow={'hidden'} alignItems={'center'} position='relative'>
                         <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={'trueGray.800'}>
                             <AnimatedBackground
                                 id='background-images'
@@ -41,14 +43,9 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                     position: 'relative',
                                 }} />
                         </Box>
-                        <Box w='100%' h='100%' position='absolute' zIndex={10}
-                            bg={{
-                                linearGradient: {
-                                    colors: ['transparent', theme.Bg.base],
-                                    start: [0, 0, 0, 0.5],
-                                    end: [0, 0, 0, 0],
-                                },
-                            }}></Box>
+                        <Box w='100%' h='100%' position='absolute' zIndex={10}>
+                            <LinearGradient colors={['transparent',theme.Bg.header]} style = {{width : '100%' , height : HEADER_HEIGHT}}/>           
+                        </Box>
 
                         {/* <Box w = '100%' h=  '100%' bg= 'black' position={'absolute'} opacity={0.4} zIndex={2}/> */}
                         <Box safeAreaTop w='100%' h='100%' position={'absolute'} mt={2} zIndex={10}>

@@ -16,7 +16,7 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
     const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
-    <HStack safeAreaTop w = '100%' position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {3} pl = {4} pr = {4}>
+    <HStack safeAreaTop w = '100%'  position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {3} pl = {4} pr = {4}>
          <Box >
             {title ? 
                 <Text

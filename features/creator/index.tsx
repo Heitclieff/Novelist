@@ -1,6 +1,6 @@
 import React,{useContext , useRef , useEffect , useCallback} from 'react'
 import { Box , VStack} from 'native-base'
-import { ImageBackground, ScrollView ,View } from 'react-native'
+import { ImageBackground, ScrollView ,View ,Dimensions } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ThemeWrapper } from'../../systems/theme/Themeprovider';
@@ -30,11 +30,12 @@ const Memorizednavigation = React.memo(Elementnavigation);
 const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
+  const Screenheight = Dimensions.get('window').height;
   const {id}:any =  route.params
 
-  const MAX_HEIGHT  = 220;
+  const MAX_HEIGHT  = Screenheight / 2.5;
   const HEADER_HEIGHT_NARROWED = 90;
-  const HEADER_HEIGHT_EXPANDED = 120; 
+  const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
 
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Collectionsdata = useSelector((state: any) => state.collectionsData)

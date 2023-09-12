@@ -11,7 +11,7 @@ Icon,
 Skeleton,
 HStack,
  } from 'native-base'
-import { Animated } from 'react-native'
+import { Animated , Dimensions } from 'react-native'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 
 //@Redux Toolkits
@@ -40,15 +40,16 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const navigation = useNavigation();
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     
+    const Screenheight = Dimensions.get('window').height
     const userdata = useSelector((state:any) => state.userData)
     const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
     const [currentProfile , setCurrentProfile] = useState<any>(userdata[0]);
     
         
     const scrollY = useRef(new Animated.Value(0)).current;
-    const MAX_HEIGHT  = 250;
+    const MAX_HEIGHT  = Screenheight / 3.5;
     const HEADER_HEIGHT_NARROWED = 90;
-    const HEADER_HEIGHT_EXPANDED = 100; 
+    const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
 
     useEffect(() => {
         dispatch(getuserData());

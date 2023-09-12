@@ -66,6 +66,7 @@ const Menu :React.FC <Pageprops> = () => {
           <Box
           id = 'profile-section'
           w = '100%'
+          p = {2}
           h = {200}
           justifyContent={'center'}
           >​ 
