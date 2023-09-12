@@ -1,189 +1,102 @@
-import React,{Suspense, useMemo , useEffect, useState , useRef, useCallback , useContext} from 'react'
-import { 
-Box,
-Icon,
-VStack,
-FormControl,
-Input,
-Text,
-Button,
-Pressable,
-HStack,
-Fab
-} from 'native-base'
-import { ThemeWrapper } from '../../systems/theme/Themeprovider';
-import { FlatList } from '../../components/layout/Flatlist/FlatList';
-import EvilIcon from 'react-native-vector-icons/EvilIcons'
+import React,{useContext , useRef , useEffect , useCallback} from 'react'
+import { Box , VStack} from 'native-base'
+import { ImageBackground, ScrollView ,View } from 'react-native'
+import { useRoute } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { ThemeWrapper } from'../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
-
-//@BottomSheetModal
-import { 
-BottomSheetModal , 
-BottomSheetTextInput , 
-useBottomSheetModal} from '@gorhom/bottom-sheet';
-import { 
-Platform , 
-KeyboardAvoidingView,
-Dimensions } from 'react-native';
-
-//@components
+//@Components
+import { FlatList } from 'react-native';
+import Headercontent from './header';
 import Elementnavigation from '../../components/navigation/Elementnavigation';
-import CreatorItemfield from './components/Creator.itemfield';
 
-//@Redux toolkit
-import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionsDataShowcase} from '../../systems/redux/action'
-import { ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
-import { RootState } from '../../systems/redux/reducer'
+//@Sections
+import EpisodeSection from './section/Episode';
 
-interface Pageprops { 
-    theme : any
+//@Redux Toolkits
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { useSelector , useDispatch } from 'react-redux';
+import { RootState } from '../../systems/redux/reducer';
+import { getCollectionData } from '../../systems/redux/action';
+
+interface Pageprops {
+  route : any
 }
 
-const Memorizednavigation = React.memo(Elementnavigation)
-const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
+const Memorizednavigation = React.memo(Elementnavigation);
 
-const Creator : React.FC <Pageprops> = () => {
-    const theme:any = useContext(ThemeWrapper);
-    const navigation = useNavigation();
-    const [Projectype , setProjectype] = useState<string>('');
-    
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
-    const {dismiss} = useBottomSheetModal();
-  
-    useEffect(() => {
-        if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
-    }, [dispatch, isReduxLoaded])
+const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
+  const theme:any = useContext(ThemeWrapper);
+  const navigation = useNavigation();
+  const {id}:any =  route.params
 
-    const windowHeight = Dimensions.get('window').height;
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const snapPoints = useMemo(() => ['20%', '45%'], [windowHeight]);
+  const MAX_HEIGHT  = 220;
+  const HEADER_HEIGHT_NARROWED = 90;
+  const HEADER_HEIGHT_EXPANDED = 120; 
 
-    const handlePresentModalPress = useCallback(() => {
-       bottomSheetModalRef.current?.present();
-    }, []);
-    const handleSheetChanges = useCallback((index: number) => {        
-   }, []);
+  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+  const Collectionsdata = useSelector((state: any) => state.collectionsData)
+  const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
 
-   const handleReturnChange = () => {
-     bottomSheetModalRef.current?.snapToIndex(1);
-   }
 
-   const ProjectType = [{
-        title : 'Single Project',
-        type : 'single',
-   },   
-    {
-        title : "Multi Project",
-        type : 'multiple',
-}]
+  const Redirectnavigation = (direction:never) => {
+        navigation.navigate(direction);
+  }
+
+  useEffect(() => {
+    if (!isReduxLoaded) dispatch(getCollectionData());
+  }, [dispatch, isReduxLoaded])
 
   return (
-    <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
-        <Box >
-            <Suspense fallback = {<Box>Loading...</Box>}>
-                <Memorizednavigation title = "Create"
-                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : handlePresentModalPress}]}
-            />
-            </Suspense>
-        </Box>
+      <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
+        {/* <Dashboardbar/> */}
+        <Memorizednavigation 
+            Contentfixed = {false}
+            rightElement={[
+            {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
+            {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+        />
+        {selectedcollection.length > 0 && isReduxLoaded && 
+        <>
+          <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
+            <ImageBackground
+              id='background-images'
+              source={{ uri: selectedcollection[0].images }}
+              alt="images"
+              style={{
+                width: '100%',
+                height: '100%',
+                opacity: 1,
+                position: 'relative',
+              }}>
+              <Box width='100%' h={MAX_HEIGHT} bg='black' opacity={0.4} />
+            </ImageBackground>
+          </Box>
 
-        <Box flex = {1}>
-                <FlatList>
-                    <Box w= '100%' mt = {2}>
-                    <Box pl = {6} pr = {6}>
-                        <Input 
-                        rounded={'full'} 
-                        bg = {theme.Bg.container} 
-                        borderColor={theme.Bg.comment} 
-                        color={theme.Text.base}
-                        h  = {9}
-                        InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
-                        placeholder='Enter your Project name'
-                        />
-                    </Box>   
-            </Box> 
-                <VStack space = {1} m ={5} mt = {5}>
-                {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                    Collectionsdata.map((item:any , index:number) => ( 
-                        React.useMemo(() => (
-                                <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
-                        ),[]
-                        ))) 
-                    : null
-                }
-                </VStack> 
-            </FlatList>
-        </Box>
-        <Fab 
-        renderInPortal={false} 
-        shadow={2} bg ={'teal.600'} 
-        size="sm" 
-        onPress={handlePresentModalPress}
-        icon={<AntdesignIcon color="white" name="plus" size= {15} />} />
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            enablePanDownToClose = {true}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            backgroundStyle = {{backgroundColor : theme.Bg.comment}}
-            handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
-            >
-                <VStack flex=  {1} space = {2}>
-                <Box justifyContent={'center'} alignItems={'center'}>
-                        <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Create Project</Text>
-                </Box>
-                <HStack space = {3} p = {4}>
-                        {ProjectType.map((item:any ,index:number) => {
-                            return(
-                                <Pressable flex = {1} key=  {index}  onPress={() => setProjectype(item.type)}>
-                                {({
-                                    isHovered,
-                                    isFocused,
-                                    isPressed
-                                }) => {
-                                    return(
-                                        <Box w= '100%'  h= '50' borderWidth={Projectype == item.type ? 2 : 1} borderColor={Projectype == item.type ? 'teal.600' :theme.Divider.comment} rounded={'full'} justifyContent={'center'} alignItems={'center'}>
-                                            <Text color = {theme.Text.base} fontWeight={'semibold'}>{item.title}</Text>
-                                        </Box>
-                                    )}}
-                                </Pressable>
-                            )
-                        })}
-                    </HStack>
-                <VStack w = '100%' p = {4} space = {5}>
-                    <FormControl mb="5" >
-                        <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
-                        <BottomSheetTextInput 
-                        onSubmitEditing={handleReturnChange}     
-                        placeholder='Enter your Project title'
-                        placeholderTextColor={'#a3a3a3'}
-                        style ={{
-                            width : '100%' , 
-                            height :35, 
-                            borderRadius : 100 ,
-                            color : 'white', 
-                            backgroundColor : theme.Divider.comment , 
-                            paddingLeft : 10}}/>
-                        <FormControl.HelperText>
-                        Give your a Project title.
-                        </FormControl.HelperText>
-                    </FormControl>
-                <Button rounded={'full'} colorScheme={'teal'} onPress={() => {navigation.navigate('CreateProject'); dismiss();}}>Create</Button>
-            </VStack>
-                </VStack>
-        </BottomSheetModal>
-    </KeyboardAvoidingView>
-    </VStack>
+          <FlatList
+            data={[0]}
+            showsVerticalScrollIndicator = {false}
+            style={{
+              zIndex: 1,
+              position: 'relative',
+              marginTop: HEADER_HEIGHT_NARROWED,
+              paddingTop: HEADER_HEIGHT_EXPANDED
+            }}
+            ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
+            renderItem={({ item, index }) => (
+              <VStack flex={1} bg={theme.Bg.base}>
+                <Headercontent data={selectedcollection[0]} />
+                <EpisodeSection/>
+              </VStack>
+            )}
+          />
+        </>
+        }
+      </Box>
   )
 }
 
-export default Creator;
+export default Creatorcontent; 

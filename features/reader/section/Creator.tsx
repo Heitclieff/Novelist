@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import { Image } from 'react-native'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { 
 HStack , 
 Box , 

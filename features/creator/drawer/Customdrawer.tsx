@@ -5,7 +5,7 @@ HStack,
 VStack,
 Text, 
 Icon } from 'native-base'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { DrawerContentScrollView , DrawerItemList } from '@react-navigation/drawer'
 
 interface Pageprops {}

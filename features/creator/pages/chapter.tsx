@@ -21,7 +21,7 @@ import {SwipeListView }from 'react-native-swipe-list-view'
 //@Components
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
-import ChapterItem from './components/ChapterItem'
+import ChapterItem from '../components/ChapterItem'
 import Deletebutton from '../../../components/button/Deletebutton'
 
 import EvilIcon from 'react-native-vector-icons/EvilIcons'

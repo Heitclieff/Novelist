@@ -6,7 +6,7 @@ Text ,
 VStack , 
 Pressable} from 'native-base'
 import { Image } from 'react-native'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
 interface containerProps {
      data : any

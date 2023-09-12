@@ -14,7 +14,7 @@ import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
 //@Components
 // import Teambar from '../../../components/creater/[container]/Teambar';
-import TeamItem from './components/TeamItem';
+import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 

@@ -5,7 +5,7 @@ HStack,
 VStack , 
 Text, 
 Pressable } from 'native-base';
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider';
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { Image } from 'react-native';
 
 interface containerProps {

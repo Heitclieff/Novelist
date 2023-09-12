@@ -17,11 +17,11 @@ const AccountSettings = lazy(() => import('../../../features/settings/account'))
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
 const Template = lazy(() => import('../../../features/_template'));
 
-const NovelContent = lazy(() => import('../../../features/content/reader'));
-const Creatorcontent = lazy(() => import('../../../features/content/creator'));
-const Createproject = lazy(() => import('../../../features/creator/Createproject'));
-const Tag = lazy(() => import('../../../features/content/creator/Tag'));
-const Readcontent = lazy(() => import('../../../features/content/reader/content'));
+const NovelContent = lazy(() => import('../../../features/reader'));
+const Creatorcontent = lazy(() => import('../../../features/creator'));
+const Createproject = lazy(() => import('../../../features/project/Createproject'));
+const Tag = lazy(() => import('../../../features/creator/pages/Tag'));
+const Readcontent = lazy(() => import('../../../features/reader/content'));
 
 interface navigatorProps {
     theme:any

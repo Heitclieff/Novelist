@@ -12,7 +12,7 @@ Icon} from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
 interface containerProps {
   data : any

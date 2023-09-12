@@ -1,5 +1,5 @@
 import React , {useContext} from 'react'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider';
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import OctIcon from 'react-native-vector-icons/Octicons'
 import { 
 Box , 

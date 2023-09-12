@@ -13,7 +13,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 //@Components
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
-import CommitItem from './components/CommitItem';
+import CommitItem from '../components/CommitItem';
 interface Pageprops {}
 
 const Memorizednavigation = React.memo(Elementnavigation);

@@ -7,13 +7,13 @@ IconButton ,
 Box, 
 Icon } from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { useNavigation } from '@react-navigation/native'
-import { teamsdata } from '../../assets/config'
+import { teamsdata } from '../assets/config'
 
 //@Components
-import Deletebutton from '../../../../components/button/Deletebutton'
+import Deletebutton from '../../../components/button/Deletebutton'
 import ChapterItem from '../components/ChapterItem'
 
 const MemorizedChapterItem = React.memo(ChapterItem);

@@ -4,17 +4,17 @@ import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 //@page
-import Creatorcontent from '../../../features/content/creator';
-import Projectsettings from '../../../features/content/creator/Projectsettings';
-import Team from '../../../features/content/creator/teams';
-import Commit from '../../../features/content/creator/commit';
-import Chapter from '../../../features/content/creator/chapter';
+import Creatorcontent from '../../../features/creator';
+import Projectsettings from '../../../features/creator/pages/Projectsettings';
+import Team from '../../../features/creator/pages/teams';
+import Commit from '../../../features/creator/pages/commit';
+import Chapter from '../../../features/creator/pages/chapter';
 
 //@Icons
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
-import Customdrawer from '../../../features/content/creator/drawer/Customdrawer';
+import Customdrawer from '../../../features/creator/drawer/Customdrawer';
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 

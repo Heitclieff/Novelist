@@ -1,5 +1,5 @@
 import React from 'react'
-import Creator from '../features/creator';
+import Creator from '../features/project';
 const Creatorpage :React.FC = () => {
   return (
     <Creator/>

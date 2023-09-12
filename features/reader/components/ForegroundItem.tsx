@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Box , VStack , Button, Text , Icon } from 'native-base'
 import { Image , Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'

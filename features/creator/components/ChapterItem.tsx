@@ -7,7 +7,7 @@ Pressable,
 VStack } from 'native-base'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
 interface containerProps {
      data : any

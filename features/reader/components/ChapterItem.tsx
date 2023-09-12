@@ -6,7 +6,7 @@ VStack,
 Text , 
 Divider , 
 Pressable} from 'native-base'
-import { ThemeWrapper } from '../../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
 
 interface Fieldprops {

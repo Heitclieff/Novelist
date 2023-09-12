@@ -17,22 +17,22 @@ Platform } from 'react-native'
 
 import { useRoute } from '@react-navigation/native'
 import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
-import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { RootState } from '../../../systems/redux/reducer'
-import { getCollectionData } from '../../../systems/redux/action'
+import { RootState } from '../../systems/redux/reducer'
+import { getCollectionData } from '../../systems/redux/action'
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
-import Contentnavigation from '../../../components/navigation/Contentnavigation'
+import Contentnavigation from '../../components/navigation/Contentnavigation'
 import ForegroundItem from './components/ForegroundItem'
 import Chapterfield from './components/Chapterfield'
-import CommentModal from '../../../components/layout/Modal/Comment'
+import CommentModal from '../../components/layout/Modal/Comment'
 
 //@Sections
 import Mainsection from './section/Main'

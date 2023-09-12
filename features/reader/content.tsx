@@ -4,18 +4,18 @@ Box ,
 VStack , 
 Text , 
 HStack } from 'native-base'
-import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-import { FlatList } from '../../../components/layout/Flatlist/FlatList'
+import { ThemeWrapper } from '../../systems/theme/Themeprovider'
+import { FlatList } from '../../components/layout/Flatlist/FlatList'
 // import ContentNavigation from '../../../../components/[stack]/Novel/[container]/ContentNavigation'
 
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { RootState } from '../../../systems/redux/reducer'
+import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
 import { useRoute } from '@react-navigation/native'
-import { getCollectionData } from '../../../systems/redux/action'
-import Chapternavigation from '../../../components/navigation/Chapternavigation'
+import { getCollectionData } from '../../systems/redux/action'
+import Chapternavigation from '../../components/navigation/Chapternavigation'
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
