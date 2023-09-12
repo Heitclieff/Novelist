@@ -6,6 +6,7 @@ Center ,
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { FlatList } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view'
+
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
@@ -15,8 +16,7 @@ import { getCollectionData } from '../../systems/redux/action'
 
 //@Compoenents
 import Bookmarkfield from './components/Bookmarkfield'
-import Deletebutton from '../../components/button/Deletebutton'
-// import BookmarkRemoveButton from '../../../components/global/[container]/BookmarkRemoveButton'
+import Bookmarkbutton from '../../components/button/Bookmarkbutton'
 
 interface Pageprops {}
 
@@ -45,7 +45,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
                    <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.id}/>
                 </Center>
               )}
-              renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
+              renderHiddenItem={ (data, rowMap) => (<Bookmarkbutton/>)}
               leftOpenValue={60}
               rightOpenValue={-60}
               />

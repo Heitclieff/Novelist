@@ -199,6 +199,17 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             }
           </Stack.Screen>
 
+          <Stack.Screen 
+          name = "Tags"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Tag {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
     </Stack.Navigator>
   )
 }

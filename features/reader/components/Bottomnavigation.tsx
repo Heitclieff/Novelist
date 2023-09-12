@@ -49,7 +49,7 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                leftIcon={
                     <IonIcon
                         size={15}
-                        color={theme.themeMode === 'dark' ? 'amber.400' : theme.Text.base}
+                        color={theme.themeMode === 'dark' ? '#fbbf24' : theme.Text.base}
                         name= 'library-outline' 
                     />}
           >

@@ -39,7 +39,7 @@ const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
                         leftIcon={
                         <IonIcon
                             size= {15}
-                            color={theme.themeMode === 'dark' ? 'amber.400' : theme.Text.base}
+                            color={theme.themeMode === 'dark' ? '#fbbf24' : theme.Icon.base}
                             name={'library-outline'} />}
                     >
                         <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? 'amber.400' : null}>Add to library</Text>
