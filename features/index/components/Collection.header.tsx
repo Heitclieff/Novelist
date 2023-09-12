@@ -28,7 +28,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
             }) => {
                 return (
                     <Box w={ScreenWidth} h={ScreenHeight / 1.7} overflow={'hidden'} alignItems={'center'} position='relative'>
-                        <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={theme.Bg.base}>
+                        <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={'trueGray.800'}>
                             <AnimatedBackground
                                 id='background-images'
                                 source={{ uri: data.images }}
@@ -65,40 +65,36 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                     <Text fontWeight={'semibold'} fontSize={'lg'} numberOfLines={1} color='white'>{data.title}</Text>
                                     <HStack
                                         alignItems={'center'}
-                                        space={1}
+                                        space={2}
                                     >
                                         <HStack
-                                            alignItems={'center'}
-                                            space={2}>
+                                        alignItems={'center'}
+                                        space={2}
+                                        >
                                             <AntdesignIcon
                                               name = 'eyeo'
-                                              color = {'gray'}
-                                              size = {30}
+                                              color = {theme.Icon.static}
+                                              size = {15}
                                             />
-                                            {/* <Icon
-                                                size='sm'
-                                                color={theme.Text.description}
-                                                as={AntDesign}
-                                                name='eyeo'
-                                            /> */}
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.description}
+                                                color={theme.Text.static}
                                             >{data.view}
                                             </Text>
                                         </HStack>
 
                                         <HStack
-                                            alignItems={'center'}
-                                            space={1}>
-                                            {/* <Icon
-                                                size='sm'
-                                                color={theme.Text.description}
-                                                as={AntDesign}
-                                                name='heart' /> */}
+                                        alignItems={'center'}
+                                        space={2}
+                                        >
+                                            <AntdesignIcon
+                                              name = 'heart'
+                                              color = {theme.Icon.static}
+                                              size = {12}
+                                            />
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.description}>
+                                                color={theme.Text.static}>
                                                 4.7k
                                             </Text>
 

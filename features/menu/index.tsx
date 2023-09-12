@@ -11,6 +11,7 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { Menuitems } from './assets/config'
  //@Components
 
 import Userfield from './components/Userfield'
@@ -41,37 +42,14 @@ const Menu :React.FC <Pageprops> = () => {
   useEffect(() => {
     if(!isReduxLoaded) dispatch(getuserData());
   },[dispatch , isReduxLoaded])
-  
-  const Menuitems = [{
-  title : 'Edit Profile',
-  direct : 'Editprofile',
-  IconProperty : {
-    name : 'edit'
-  }
-},
-{
-  title : 'Leaderboard',
-  direct : 'Leaderboard',
-  IconProperty : {
-    name : 'leaderboard'
-  }
-},
-{
-  title : 'Bookmarks',
-  direct : 'Bookmarks',
-  IconProperty : {
-    name : 'bookmark'
-  }
-},
-{
-  title : 'Settings',
-  direct : 'Settings',
-  IconProperty : {
-    name : 'settings'
-  }
-},
-]
 
+  const iconList = [
+      <FeatherIcon name = "edit" size = {15} color = {theme.Icon.base}/>,
+      <MaterialIcon name = "leaderboard" size = {15} color = {theme.Icon.base}/>,
+      <FeatherIcon name = "bookmark" size = {15} color = {theme.Icon.base}/>,
+      <FeatherIcon name = "settings" size = {15} color = {theme.Icon.base}/>,
+  ]
+  
   return (
     <Box 
     w=  '100%'
@@ -107,7 +85,7 @@ const Menu :React.FC <Pageprops> = () => {
                   <MemorizeOptionfield
                   key={key}
                   title  = {item.title}
-                  OptionIcon = {item.IconProperty}
+                  icon = {iconList[key]}
                   navigation={navigation}
                   isDividerEnable = {false}
                   isChevronEnable={false}

@@ -59,7 +59,7 @@ const DarkmodeButton : React.FC <containerProps> = () => {
                         >         
                             <FeatherIcon
                                 name= {'moon'}
-                                size={30}
+                                size={20}
                                 color = {theme.Text.between}
                                 />
                     </Box>

@@ -7,6 +7,7 @@ VStack,
 Box,
 Text,
 Divider,
+IconButton,
 Button,
 Icon
 }   from 'native-base'
@@ -62,20 +63,16 @@ const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,
                     >   
 
                 {
-                    rightElement.length > 0 && rightElement.map((item: any, index: number) => {
+                    rightElement.length > 0 && rightElement.map((item: never, index: number) => {
                         return (
-                            <Button
-                            key = {index}
-                            rounded={'full'}
-                            w={35}
-                            h={35}
-                            bg={'transparent'}
-                            _hover={{ bg: 'gray.300' }}
-                            _pressed={{ backgroundColor: 'gray.300' }}
+                            <IconButton
+                            key = {index} 
                             onPress={() => navigation.navigate(item.navigate)}
-                            >
-                                {item.icon}
-                            </Button>
+                            size = 'sm'
+                            rounded={'full'}
+                            colorScheme={'cyan'}
+                            icon = {item.icon}
+                            />
                         );
                     })
                 }

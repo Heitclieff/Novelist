@@ -71,14 +71,12 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
           <IconButton 
             onPress={() => navigation.navigate('Tags')}
             size = 'md'
-            w = {7}
-            h = {7}
             rounded={'full'}
             icon = {
                 <AntdesignIcon
                     name='plus'
                     size={15}
-                    color = {theme.Text.base}
+                    color = {theme.Icon.base}
                 />
             }
             />

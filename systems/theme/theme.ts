@@ -12,7 +12,8 @@ export const Themedark = ({
   },
   Text : {
     placeholder : '#a3a3a3',
-    between : 'coolGray.800',
+    static : '#f3f4f6',
+    between : '#1f2937',
     action : 'coolGray.700',
     heading : 'coolGray.200',
     base : 'coolGray.300',
@@ -29,7 +30,9 @@ export const Themedark = ({
     description : '#9ca3af'
   },
   Icon : {
-    base : 'coolGray.300',
+    base : '#e5e7eb',
+    static : '#f3f4f6',
+    drawer : '#0d9488',
     bottomtab : {
       focused : '#0891b2' ,
       base : '#d1d5db',
@@ -71,7 +74,8 @@ export const Themelight = ({
   },
   Text : {
     placeholder : '#a3a3a3',
-    between : 'coolGray.700',
+    static : '#f3f4f6',
+    between : '#374151',
     action : 'coolGray.400',
     heading : 'coolGray.800',
     skelton : 'coolGray.300',
@@ -88,7 +92,9 @@ export const Themelight = ({
     description : '#6b7280'
   },
   Icon : {
-    base : 'coolGray.600',
+    base : '#4b5563',
+    drawer : '#0d9488',
+    static : '#f3f4f6',
     bottomtab : {
       focused : '#0891b2' ,
       base : '#4b5563',

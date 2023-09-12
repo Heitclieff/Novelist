@@ -26,7 +26,7 @@ const Chapternavigation : React.FC <contianerProps> = () => {
     <Animated.View
       style={[{
       width : '100%', 
-      height : 80 , 
+      height : 60 , 
       zIndex: 10 }]
     }>
     <HStack w = '100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5}> 
@@ -40,11 +40,11 @@ const Chapternavigation : React.FC <contianerProps> = () => {
                             <EntypoIcon
                                 name='chevron-left'
                                 size={20}
-                                color = {'coolGray.300'}
+                                color = {theme.Icon.base}
                             />
                          }
                     />
-                    <Text color = {theme.Text.base}>Chapter Name</Text>
+                    <Text color = {theme.Text.heading}>Chapter Name</Text>
                </HStack>
               
             </Box>
@@ -55,7 +55,7 @@ const Chapternavigation : React.FC <contianerProps> = () => {
                     icon = {
                          <FeatherIcon 
                             size = {20}
-                            color = {'coolGray.300'}
+                            color = {theme.Icon.base}
                             name = 'moon'/>}
                     />
                     
@@ -65,7 +65,7 @@ const Chapternavigation : React.FC <contianerProps> = () => {
                icon = {
                     <IonIcon
                     size = {20}
-                    color = {'coolGray.300'}
+                    color = {theme.Icon.base}
                     name = 'list'
                     />}
                />

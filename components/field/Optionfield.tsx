@@ -21,10 +21,7 @@ interface FiledProps {
     fontcolor : string,
     title :string,
     detail : any,
-    OptionIcon : {
-        type : any
-        name : any
-    },
+    icon :any,
     direction : never,
 }
 
@@ -35,7 +32,7 @@ const Optionfield :React.FC <FiledProps> = ({
     fontcolor,
     title , 
     detail , 
-    OptionIcon, 
+    icon,
     direction , 
     }) => {
     
@@ -61,30 +58,18 @@ const Optionfield :React.FC <FiledProps> = ({
                 w= '100%'
                 h = '100%'
                 justifyContent={'center'}
+                alignItems={'center'}
+                space = {2}
                 >
-                    {OptionIcon.type &&
-                        <Box 
-                        w = {justifyIcon == 'start' ? '8%' : '15%'} 
-                        h = '100%'
-                        justifyContent={'center'}
-                        alignItems={justifyIcon}
-                        >         
-                            <EntypoIcon
-                                name= {OptionIcon ? OptionIcon.name : null}
-                                size = {30}
-                                color = {theme.Icon.base}
-                                />
-                        </Box>
-                    }
+                    {icon}
                     
-                    <VStack justifyContent={'center'}  p = {1}  w = {OptionIcon.type ? justifyIcon == 'start' ?  "82%" : '75%' : '90%'}>
+                    <VStack justifyContent={'center'}  p = {1}  w = {'75%'} pl = {2}>
                         <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize='md' >{title ? title : 'Options title'}</Text>
                         {detail && <Text fontSize='xs' color = {theme.Text.description} >{detail}</Text>}
                     </VStack>
                     {isChevronEnable && 
                         <Box w = '10%' h = '100%' justifyContent={'center'}>
                             <EntypoIcon
-                                // color = {theme.Text.description}
                                 name='chevron-right'
                                 size= {30}
                             />

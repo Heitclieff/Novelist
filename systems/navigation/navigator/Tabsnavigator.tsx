@@ -76,7 +76,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
       <Tab.Screen
         name = 'Creator'
         options={{
-          title : 'Creator',
+          title : 'Create',
           headerShown: false,
           
           tabBarActiveTintColor : theme.Text.bottomtab.focused,

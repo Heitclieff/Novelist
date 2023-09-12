@@ -45,14 +45,14 @@ const Index : React.FC = () => {
           <Text
           fontSize={'2xl'}
           fontWeight={'bold'}
-          color={theme.Text.heading}
+          color={theme.Icon.static}
           >Nobelist
           </Text>     
          }
 
          rightElement = {[
-          {icon: <AntdesignIcon name = 'search1'/> , navigate : 'Search'} ,
-          {icon: <IonIcon name = 'notifications'/> , navigate : 'Notification'}
+          {icon: <AntdesignIcon name = 'search1' color = {theme.Icon.static} size = {15} /> , navigate : 'Search'} ,
+          {icon: <IonIcon name = 'notifications' color = {theme.Icon.static} size = {15} /> , navigate : 'Notification'}
         ]}
         />
         {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?

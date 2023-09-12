@@ -31,7 +31,7 @@ const Projectsettings : React.FC = () => {
   return (
        <VStack flex={1} bg={theme.Bg.base}>
             <Memorizednavigation title = "Project Settings" 
-            rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+            rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
             />
             <Box flex={1}>
                  <FlatList>

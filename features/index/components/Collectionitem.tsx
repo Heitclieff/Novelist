@@ -12,7 +12,7 @@ Pressable,
 import { Image } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
-
+import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
 interface CollectionProps { 
   id : number | string,
@@ -64,12 +64,10 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,a
                   >
                   <HStack alignItems={'center'} space = {2}>
                     <HStack alignItems={'center'} space = {1}>
-                     {/* <Icon
-                        size = 'xs'
+                     <AntdesignIcon
                         color = {theme.Text.description}
-                        as = {AntDesign}
                         name = 'eyeo'
-                        /> */}
+                        />
                       <Text 
                         fontSize={'xs'}
                         color={theme.Text.description}
@@ -78,12 +76,10 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,a
                    
                     </HStack>
                     <HStack alignItems={'center'} space = {1}>
-                      {/* <Icon
-                        size = 'xs'
+                    <AntdesignIcon
                         color = {theme.Text.description}
-                        as = {AntDesign}
                         name = 'heart'
-                        /> */}
+                        />
                       <Text 
                         fontSize={'xs'}
                         color={theme.Text.description}

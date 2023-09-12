@@ -1,4 +1,4 @@
-import React,{useEffect, useRef , useState} from 'react'
+import React,{useEffect, useRef , useState, useContext} from 'react'
 import { 
 Box,
 HStack,
@@ -21,6 +21,7 @@ interface contianerProps {
 
 const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNavigate}) => {
     const navigation:any  = useNavigation();
+    const theme:any = useContext(ThemeWrapper);
   return (
     <Animated.View
       style={[{
@@ -33,29 +34,25 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
             <Box>
                 <IconButton 
                     size = 'sm'
-                    w = '30'
-                    h = {30}
                     rounded={'full'}
                     onPress={() =>  navigation.goBack()}
                     icon = {
                         <EntypoIcon
                         name='chevron-left'
-                        size= {15}
-                        color = {'coolGray.300'}
+                        size= {20}
+                        color = {theme.Icon.static}
                         />
                     }
                 />
             </Box>
             <IconButton 
                 size = 'sm'
-                w = '30'
-                h = {30}
                 rounded={'full'}
                 // onPress={() => {setisMarks(!isMarks);  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}}
                 icon = {
                     <IonIcon 
                     size = {15}
-                    color = {isMarks ? 'amber.400': 'coolGray.300'}
+                    color = {isMarks ? 'amber.400': theme.Icon.static}
                     name = {isMarks ? 'bookmark' : 'bookmark-outline'}/>}
                 />
         </HStack>

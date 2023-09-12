@@ -84,6 +84,7 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                         <EntypoIcon
                             name='chevron-right'
                             size = {20}
+                            color = {theme.Icon.base}
                         />
     
                         </Box>

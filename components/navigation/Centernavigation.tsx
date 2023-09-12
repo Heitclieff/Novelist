@@ -57,14 +57,14 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
                             <EntypoIcon
                             name='chevron-left'
                             size={20}
-                            color = 'white'
+                            color = {theme.Icon.static}
                             />
                         }
                     />
                 }
             </Box>
             <Box w = '70%'  alignItems='center' justifyContent='center'>
-                <Text fontSize={'md'} fontWeight={'semibold'} color = 'white'>{title}</Text>
+                <Text fontSize={'md'} fontWeight={'semibold'} color = {transparent ? theme.Text.static : theme.Text.heading}>{title}</Text>
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
             {onEditcontent &&

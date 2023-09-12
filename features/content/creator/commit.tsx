@@ -26,7 +26,7 @@ const Commit : React.FC <Pageprops> =  () => {
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
         <Memorizednavigation title = "Commits" 
-            rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+            rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
      <VStack pl ={6} pt = {5} pr = {6} flex= {1}>
           <Box w = '100%' h= {8}>

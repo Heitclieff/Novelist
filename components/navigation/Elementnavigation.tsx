@@ -16,8 +16,8 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
     const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
-    <HStack safeAreaTop w = '100%' position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {4} pl = {4} pr = {4}>
-         <Box>
+    <HStack safeAreaTop w = '100%' position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {3} pl = {4} pr = {4}>
+         <Box >
             {title ? 
                 <Text
                     fontSize={'lg'}
@@ -29,17 +29,17 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
             
             <IconButton 
             size = 'sm'
-           
             rounded={'full'}
             onPress={() =>  navigation.goBack()}
             icon = {
                 <EntypoIcon
                 name='chevron-left'
                 size = {20}
+                color = {theme.Icon.static}
                 />
-            }
-        />
-        }  
+                }
+            />
+            }  
             </Box>
             <HStack space = {2}>
                 {rightElement.length > 0 && rightElement.map((item:any , index:number) =>{
@@ -50,48 +50,12 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
                         size = 'sm'
                         rounded={'full'}
                         colorScheme={'cyan'}
-                        w = {30}
-                        h = {30}
                         icon = {item.icon}
                         />
                     )
-                })
-                    
-                       
-                        
+                })         
                 }
            </HStack>
-               {/* <IconButton 
-                    size = 'md'
-                    w = {7}
-                    h = {7}
-                    onPress={()=> navigation.navigate('Project Settings')}
-                    rounded={'full'}
-                    icon = {
-                        <Icon
-                        as={AntDesign}
-                        name='setting'
-                        size={5}
-                        color = {'coolGray.300'}
-                        ></Icon>
-                    }
-                />
-                 <IconButton 
-                    size = 'md'
-                    w = {7}
-                    h = {7}
-                    onPress={()=> navigation.openDrawer()}
-                    rounded={'full'}
-                    icon = {
-                        <Icon
-                        as={AntDesign}
-                        name='appstore-o'
-                        size={4}
-                        color = {'gray.200'}
-
-                        ></Icon>
-                    }
-                /> */}
      </HStack>
   )
 }

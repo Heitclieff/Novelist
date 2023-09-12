@@ -1,3 +1,4 @@
+
 export const Settingmenu = [{
     title : 'Account',
     detail : 'Password, Privacy, your personal detail.',
@@ -26,7 +27,6 @@ export const SettingsCategory = [{
     tag : 'system',
 }
 ]
-
 
 export const MenuOptions = [{
     title : 'Notification' , 

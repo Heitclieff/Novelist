@@ -14,6 +14,7 @@ import { FlatList } from 'native-base'
 import { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 const LazyCollectionItems = React.lazy(() => import('./Collectionitem'));
 
@@ -65,12 +66,13 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
             <IconButton 
             onPress={() => navigation.navigate('Template',{title})}
             rounded={'full'}
-            // icon = {
-            //     <Icon 
-            //     as = {Entypo}
-            //     name = 'chevron-right'
-            //     ></Icon>
-            // }
+            icon = {
+                <EntypoIcon 
+                name = 'chevron-right'
+                size=  {20}
+                color = {theme.Icon.base}
+                />
+            }
             />
           </Box>
         </HStack>

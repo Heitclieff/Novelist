@@ -29,14 +29,12 @@ const EpisodeSection : React.FC <containerProps> = ()=> {
           <IconButton 
                     onPress={() => navigation.navigate('Chapters')}
                     size = 'md'
-                    w = {7}
-                    h = {7}
                     rounded={'full'}
                     icon = {
                     <AntdesignIcon
                     name='plus'
                     size={15}
-                    color = {theme.Text.base}
+                    color = {theme.Icon.base}
                     />
                     }
           />
