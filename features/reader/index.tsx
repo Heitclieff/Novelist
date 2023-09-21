@@ -29,7 +29,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
-import { getCollectionData } from '../../systems/redux/action'
+// import { getCollectionData } from '../../systems/redux/action'
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -44,6 +44,9 @@ import Overviewsection from './section/Overview'
 import Creatorsection from './section/Creator'
 import Tagsection from './section/Tag'
 
+//firebase
+import firestore from '@react-native-firebase/firestore'
+
 interface Pageprops {}
 
 const MemorizedBottomnavigation = React.memo(Bottomnavigation);
@@ -53,22 +56,48 @@ const NovelContent : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
     const {id}:any = route.params
+    console.log('id',id)
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsData)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
-    const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
+    const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
+    const [selectedcollection, setselectedcollection] = useState<any[]>([]);
 
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
 
+    const getReaderNovel = async () => {
+        const novelSnap = await firestore().collection('Novels').orderBy('view', 'desc').get();
+        const novel_Data = [];
+
+        for (const doc of novelSnap.docs) {
+          const createdAt = doc.data().createAt.toDate();
+          const creater = [];
+
+          const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
+          for (const projectDoc of projectSnapshot.docs) {
+            const userDocs = projectDoc.data().creater;
+            for (const user of userDocs) {
+              await firestore().collection('Users').doc(user).get().then((uData) => {
+                const data = uData.data()
+                creater.push({ id: user, username: data.username, image: data.image });
+              })
+            }
+            const image = projectDoc.data().image;
+            novel_Data.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image });
+          }
+        }
+        setselectedcollection(novel_Data)
+        setisReduxLoaded(true)
+    }
     useEffect(() => {
-        if (!isReduxLoaded) dispatch(getCollectionData());
-    }, [dispatch, isReduxLoaded])
+        if (!isReduxLoaded) {
+            getReaderNovel()
+        }
+    }, [isReduxLoaded])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -114,7 +143,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   }]}>
                                       <AnimatedBackground
                                           id='background-images'
-                                          source={{ uri: selectedcollection[0].images }}
+                                          source={{ uri: selectedcollection[0].image }}
                                           alt="images"
                                           style={{
                                               width: '100%',

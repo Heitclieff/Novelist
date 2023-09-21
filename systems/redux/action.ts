@@ -2,38 +2,12 @@ import { AnyAction ,Dispatch } from "redux";
 import {ThunkAction } from "redux-thunk";
 import { RootState } from "./reducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//Data for prepair fast loading
-import { CollectionsdataShowcase , Collectionsdata , Categorydata, userdata} from "../../assets/content/VisualCollectionsdata";
 import { Themedark , Themelight } from "../theme/theme";
 
 export const SET_THEME = 'SET_THEME';
 export const LOAD_THEME_FROM_STORAGE = 'LOAD_THEME_FROM_STORAGE';
 export const SAVE_THEME_FROM_STORAGE = 'SAVE_THEME_FROM_STORAGE';
 
-export const getCollectionsDataShowcase = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
-    return (dispatch: Dispatch <AnyAction>) => {
-      dispatch({ type: 'FETCH_COLLECTIONS_DATASHOWCASE_SUCCESS', payload: CollectionsdataShowcase , iscollecitonDatashowcaseLoaded : true });
-    };
-};
-
-export const getCollectionData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
-  return (dispatch: Dispatch <AnyAction>) => {
-    dispatch({ type: 'FETCH_COLLECTIONS_DATA_SUCCESS', payload: Collectionsdata , iscollectionLoaded : true});
-  };
-};
-
-export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
-  return (dispatch: Dispatch <AnyAction>) => {
-    dispatch({ type: 'FETCH_USERDATA_SUCCESS', payload: userdata , isuserLoaded : true });
-  };
-};
-
-
-export const getCategoryData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
-  return (dispatch: Dispatch <AnyAction>) => {
-    dispatch({ type: 'FETCH_CATEGORY_SUCCESS', payload: Categorydata , iscategoryLoaded : true });
-  };
-};
 
 
 export const setTheme = (theme:any) : ThunkAction <void ,RootState, unknown , AnyAction> => {
@@ -69,3 +43,82 @@ export const saveThemetoStorage = (theme:any) : ThunkAction <void , RootState , 
       }
     }
 }
+
+
+export const fetchTopNew = (topnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (topnew) {
+        dispatch({ type: 'FETCH_TOP_NEW', payload: topnew})
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const fetchHotNew = (hotnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (hotnew) {
+        dispatch({ type: 'FETCH_HOT_NEW', payload: hotnew})
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const fetchMostview = (mostview:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (mostview) {
+        dispatch({ type: 'FETCH_MOST_VIEW', payload: mostview})
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getCategoryData = (Cate:any) : ThunkAction <void ,RootState, unknown , AnyAction> => {
+  return (dispatch: Dispatch <AnyAction>) => {
+    dispatch({ type: 'FETCH_CATEGORY_SUCCESS', payload: Cate, iscategoryLoaded : true });
+  };
+};
+
+export const fetchLibraryData = (libra:any) : ThunkAction <void ,RootState, unknown , AnyAction> => {
+  return (dispatch: Dispatch <AnyAction>) => {
+    dispatch({ type: 'FETCH_LIBRARY_SUCCESS', payload: libra, iscategoryLoaded : true });
+  };
+};
+
+export const fetchCreaterData = (creater:any) : ThunkAction <void ,RootState, unknown , AnyAction> => {
+  return (dispatch: Dispatch <AnyAction>) => {
+    dispatch({ type: 'FETCH_CREATER_SUCCESS', payload: creater, iscategoryLoaded : true });
+  };
+};
+
+export const setUser = (user:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (user) {
+        dispatch({ type: 'SET_USER', payload: user , isuserLoaded : true})
+        console.log('002')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ type: 'CLEAR_USER', isuserLoaded : false});
+      console.log('001')
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

@@ -22,6 +22,7 @@ interface containerProps {
 const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
+     console.log(data)
 
 
   return ( 
@@ -62,8 +63,8 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
                                              </Box>
                                    
                                         <HStack>
-                                             <Avatarfield image = {data.creater[0].image}/>
-                                             <Avatarfield image = {data.creater[1].image}/>
+                                             <Avatarfield image = {data.creater[0].images}/>
+                                             <Avatarfield image = {data.creater[1].images}/>
                                              {data.creater.length > 2 &&
                                                        <Box w = '25' h = '25' rounded={'full'} bg = {theme.Bg.action} justifyContent={'center'} alignItems={'center'}>
                                                        <AntdesignIcon 
@@ -82,7 +83,7 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
                                                   </Text>
                                              </Box>
                                              {data.creater.map((item:any , index:number) =>
-                                             <Avatarfield key = {index} image = {item.image}/>
+                                             <Avatarfield key = {index} image = {item.images}/>
                                              )}
                                         </HStack>
                               }

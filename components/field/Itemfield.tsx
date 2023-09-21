@@ -30,7 +30,7 @@ const Itemfield : React.FC <containerProps>= ({id, data}) => {
                     <Image 
                     id = "Background-image"
                     style={{width : '100%' ,height : '100%'}}
-                    source={{uri : data.images}}
+                    source={{uri : data.image}}
                     />
                </Box>
                <VStack w= '75%'  pl = {2} pr = {2}  ml = {2}  rounded={'md'} space = {1}>

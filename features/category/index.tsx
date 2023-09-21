@@ -10,6 +10,10 @@ import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer';
 import { ItemList } from '../../components/layout/Flatlist/ItemList';
 import CategoryItems from './components/Categoryitem';
+
+//firebase
+import firestore from '@react-native-firebase/firestore'
+
 interface Pageprops {
 }
 
@@ -21,8 +25,27 @@ const Category: React.FC <Pageprops> = () => {
   const Categorydata = useSelector((state:any)=> state.categoryData)
   const isReduxLoaded = useSelector((state: RootState) => state.iscategoryLoaded);
   
+  const getCategoryAndDispatch = async () => {
+      try {
+          const fetchCate = await firestore().collection('Categories').get()
+          const Catearray = []
+          for (const doc of fetchCate.docs) {
+            const dataDoc = doc.data()
+            // console.log(dataDoc)
+            Catearray.push({ title: doc.id, images: dataDoc.image })
+          }
+          // console.log('this is category',Catearray)
+          dispatch(getCategoryData(Catearray));  
+
+        } catch (error) {
+          console.error('Error fetching Category', error);
+      }
+  };
+
   useEffect(() => {
-    if(!isReduxLoaded) dispatch(getCategoryData());
+    if(!isReduxLoaded) {
+      getCategoryAndDispatch()
+    };
   },[dispatch , isReduxLoaded])
 
   return (
