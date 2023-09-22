@@ -116,7 +116,7 @@ const Index : React.FC = () => {
                 })
               }
               const image = projectDoc.data().image;
-              mostviewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, images: image });
+              mostviewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image });
             }
           }
           dispatch(fetchMostview(mostviewData));  
@@ -126,6 +126,7 @@ const Index : React.FC = () => {
       };
       
       const allData = async () => {
+        test()
         const email = ['testData1@gmail.com','testData2@gmail.com','testData3@gmail.com']
         const pass = 'testData'
         const userName = ['PK1','PK2','PK3']
@@ -153,14 +154,10 @@ const Index : React.FC = () => {
         const commit_status = ['Yes', 'No']
         const novelDoc_list = []
         const chapter_status = ['Draft', 'All']
-        for (let i=0; i < cate.length; i++){
-          await firestore().collection('Categories').doc(cate[i]).set(
-            {
-              image: cate_link[i]
-            }
-          )
-        }
-        
+        const tag_list = ['ระบบ','เกิดใหม่','คลั่งรัก','ซอมบี้','ย้อนเวลา']
+        const rating_list = ['12+', 'เด็ก', 'ผู้ใหญ่']
+        const project_list = []
+
         // add 3 users
         for (let i=0; i < email.length; i++) {
           await auth().createUserWithEmailAndPassword(email[i], pass).then((user) => {
@@ -174,12 +171,23 @@ const Index : React.FC = () => {
               phone: '033235131',
               birthDate: new Date(),
               createAt: new Date(),
-              description: `descrip ${i}`
+              description: `descrip ${i+1}`
             };
             firestore().collection('Users').doc(user.user.uid).set(data)
           })
         }
 
+        for (let i=0; i < cate.length; i++){
+          await firestore().collection('Categories').doc(cate[i]).set(
+            {
+              image: cate_link[i]
+            }
+          )
+        }
+
+        for (let i=0; i < tag_list.length; i++) {
+          await firestore().collection('Tags').doc(tag_list[i]).set({})
+        }
         // add novel and 4 chapters each for each user
         for (let j=0; j < 3; j++) {
           await firestore().collection('Novels').add(
@@ -194,30 +202,45 @@ const Index : React.FC = () => {
               lastUpdate: new Date()
             }
           ).then((novelDoc) => {
-            let spl = novelDoc.split('/')
+            let spl = novelDoc.id
             novelDoc_list.push(spl)
             let proData = {
-              name: `Project name ${j}`,
-              overview: `Project overview ${j}`,
+              cateDoc: cate[j],
+              name: `Project name ${j+1}`,
+              overview: `Project overview ${j+1}`,
               image: novelImage[j],
-              rating: "12+",
+              rating: rating_list[j%3],
               comment_status: 'Public',
               project_status: project_status[j%2],
               commit_status: commit_status[j%2],
               creater: [userDoc[j]],
               owner: userDoc[j],
-              novelDoc: spl
+              novelDoc: spl,
+              tagDoc: [tag_list[j%3], tag_list[j%2]]
             }
-            firestore().collection('Projects').add(proData)
+            firestore().collection('Projects').add(proData).then((proId) => {
+              let spl = proId.id
+              project_list.push(spl)
+            })
             for (let i=0; i < 4; i++) {
+              let spl = novelDoc.id
               let chapData = {
-                novelDoc: novelDoc,
-                title: `Chapter title ${i}`,
+                chap_id: i+1,
+                novelDoc: spl,
+                title: `Chapter title ${i+1}`,
                 image: userImage[j],
                 status: chapter_status[j%2],
                 updateAt: new Date()
               }
               firestore().collection('Chapters').add(chapData)
+            }
+            for (let i=0; i < project_list; i++) {
+              let data = {
+                userDoc: userDoc[i],
+                data_add: new Date(),
+                projectRef: project_list[i]
+              }
+              firestore().collection('Libraries').add(data)
             }
           })
         }
@@ -232,17 +255,30 @@ const Index : React.FC = () => {
         }
       }
       const test = async () => {
-        auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
-        
+        // auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
+        const collection_list = ['Users','Tags','Projects','Novels','Libraries','Chapters','Categories']
+        for (let colList of collection_list) {
+          console.log(colList)
+          const colSnap = firestore().collection(colList)
+          const querySnapshot = await colSnap.get();
+          querySnapshot.forEach((doc) => {
+            try {
+              doc.ref.delete();
+            } catch(e) {
+              console.log(e)
+            }
+            
+          });
+        }
       }
       useEffect(() => {
         if (!isReduxLoaded) {
           // Fetch data from Firestore and dispatch the action
+          // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
-          // allData()
-          // test()
+         
         }
       }, [dispatch, isReduxLoaded]);
 

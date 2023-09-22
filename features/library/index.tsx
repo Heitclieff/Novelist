@@ -19,10 +19,15 @@ import Libraryitem from './components/Libraryitem';
 
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionData , getuserData} from '../../systems/redux/action'
+// import { getCollectionData , getuserData} from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
+import { fetchLibraryData } from '../../systems/redux/action';
+
+//firebase
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
 
 interface Pageprops {
 }
@@ -32,14 +37,62 @@ const MemorizedLibraryitem = React.memo(Libraryitem)
 
 const Library: React.FC <Pageprops> = () => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const Collectionsdata = useSelector((state:any)=> state.collectionsData)
+  const Librarydata = useSelector((state:any)=> state.libraryData)
   const theme:any = useContext(ThemeWrapper);
+  const userdata = useSelector((state:any) => state.userData)
 
-
-  const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  const isReduxLoaded = useSelector((state: RootState) => state.islibraryLoaded);
+  const getLibraryAndDispatch = async () => {
+    try {
+      const uid = auth().currentUser.uid;
+      const snapshot = await firestore().collection('Librarys').doc(uid).get();
+      if (snapshot.exists) {
+        const data = snapshot.data();
+        console.log(data);
+  
+        const novelLibrary = data.novel_library || [];
+        console.log(novelLibrary);
+  
+        // Create an array to store the updated data
+        const updatedData = [];
+  
+        for (const docId of novelLibrary) {
+          // Fetch additional data from the 'Projects' collection
+          const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', docId).get();
+  
+          for (const projectDoc of projectSnapshot.docs) {
+            const userDocs = projectDoc.data().userDoc;
+            const creater = [];
+  
+            for (const user of userDocs) {
+              const uData = await firestore().collection('Users').doc(user).get();
+              const userData = uData.data();
+              creater.push({ id: user, username: userData.username, image: userData.image });
+            }
+  
+            const imagePro = projectDoc.data().imagePro;
+  
+            // Push the combined data to the 'updatedData' array
+            updatedData.push({ id: docId, ...projectDoc.data(), creater, imagePro });
+          }
+        }
+  
+        // Dispatch the updated data to Redux
+        dispatch(fetchLibraryData(updatedData));
+      } else {
+        console.log('Document does not exist.');
+      }
+    } catch (error) {
+      console.error('Error fetching Library', error);
+    }
+  };
+  
+  
 
   useEffect(() => {
-    if(!isReduxLoaded) dispatch(getCollectionData());
+    if(!isReduxLoaded) {
+      getLibraryAndDispatch()
+    };
   },[dispatch , isReduxLoaded])
 
   return (
@@ -61,8 +114,8 @@ const Library: React.FC <Pageprops> = () => {
               </Box> 
             </Box> 
             <VStack space = {1} m ={5} mt = {6}>
-              {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                      Collectionsdata.map((item:any , index:number) => (       
+              {isReduxLoaded && Librarydata.length > 0 || Librarydata ?
+                      Librarydata.map((item:any , index:number) => (       
                           <MemorizedLibraryitem key = {index} id = {item.id} data= {item}/>        
                           )) 
                       : null

@@ -14,6 +14,7 @@ interface containerProps {
     translateX: any
 }
 const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) => {
+    console.log('colection header', data)
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height
@@ -33,7 +34,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                         <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={'trueGray.800'}>
                             <AnimatedBackground
                                 id='background-images'
-                                source={{ uri: data.images }}
+                                source={{ uri: data.image }}
                                 alt="images"
                                 blurRadius={3}
                                 style={{
@@ -54,7 +55,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                     <Image
                                         id='Item-image'
                                         style={{ width: '100%', height: '100%' }}
-                                        source={{uri : data.images}}
+                                        source={{uri : data.image}}
                                         alt="images"
                                     />
                                 </Box>

@@ -29,6 +29,7 @@ const Memorizednavigation = React.memo(Centernavigation);
 const MemorizedItemfields = React.memo(Itemfield);
 
 const Template : React.FC <Pageprops> = ({collections}) => {
+  // console.log('_template index', collections)
   const theme:any = useContext(ThemeWrapper);
   const route = useRoute()
   const {title}:any = route.params
@@ -50,27 +51,6 @@ const Template : React.FC <Pageprops> = ({collections}) => {
       cateItem_Data.push({ id: cateDoc.id, ...cateDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate })
     }
     setCateItemData(cateItem_Data);
-    // console.log(cateItem_Data)
-    // cateItem_Data.map(item => {
-    //   console.log("Category Document:", item.cateDoc);
-    //   console.log("Comment Status:", item.comment_status);
-    //   console.log("Commit Status:", item.commit_status);
-    //   console.log("Create At:", item.createAt);
-    //   console.log("Creators:", item.creater);
-    //   console.log("ID:", item.id);
-    //   console.log("Image URL:", item.image);
-    //   console.log("Last Update:", item.lastUpdate);
-    //   console.log("Like:", item.like);
-    //   console.log("Name:", item.name);
-    //   console.log("Novel Document:", item.novelDoc);
-    //   console.log("Overview:", item.overview);
-    //   console.log("Owner:", item.owner);
-    //   console.log("Project Status:", item.project_status);
-    //   console.log("Rating:", item.rating);
-    //   console.log("Status:", item.status);
-    //   console.log("Title:", item.title);
-    //   console.log("View:", item.view);
-    // });
   }
      useEffect(() => {
        if(!isReduxLoaded) {
@@ -82,7 +62,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
           <Memorizednavigation title = {title} fixed/>
           <VStack flex={1} pl = {4} pr = {4}>
                 <ItemList collection={cateItemData}>
-                    {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
+                    {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.novelDoc} data= {item}/> }
                 </ItemList>
           </VStack>
          

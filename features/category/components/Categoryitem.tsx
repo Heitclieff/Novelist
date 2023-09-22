@@ -16,9 +16,10 @@ interface Itemsprops {
     title : string 
 }
 
-const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
+const CategoryItems : React.FC <Itemsprops> = ({images , title, proDoc}) =>{
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+  console.log('cate item',title)
 
   return (
     <Pressable onPress={()=> navigation.navigate('Template',{title})}>

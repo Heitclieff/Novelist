@@ -29,12 +29,19 @@ const Category: React.FC <Pageprops> = () => {
       try {
           const fetchCate = await firestore().collection('Categories').get()
           const Catearray = []
+          
           for (const doc of fetchCate.docs) {
+            const proJect = await firestore().collection('Projects').where('cateDoc','==',doc.id).get()
+            const projectItem = []
+            for (let proData of proJect.docs) {
+              projectItem.push({id: proData.id})
+            }
             const dataDoc = doc.data()
             // console.log(dataDoc)
-            Catearray.push({ title: doc.id, images: dataDoc.image })
+            Catearray.push({ title: doc.id, images: dataDoc.image, proDoc: projectItem })
           }
           // console.log('this is category',Catearray)
+
           dispatch(getCategoryData(Catearray));  
 
         } catch (error) {
@@ -62,7 +69,8 @@ const Category: React.FC <Pageprops> = () => {
                 <MemorizedCategoryItems 
                     key = {index} 
                     images={item.images} 
-                    title ={item.title}/> 
+                    title ={item.title}
+                    proDoc={item.proDoc}/> 
             )}
           </ItemList>       
         }

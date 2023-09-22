@@ -21,6 +21,7 @@ interface containerProps {
 const MemorizedChapterItem = React.memo(ChapterItem)
 
 const Chapterfield : React.FC <containerProps> = ({id ,handleCommentButton}) => {
+    // console.log('chapfield',id)
     const theme:any = useContext(ThemeWrapper);
   return (
     <VStack space = {1} position={'relative'} >
@@ -43,11 +44,13 @@ const Chapterfield : React.FC <containerProps> = ({id ,handleCommentButton}) => 
             <Divider mt = {2} bg = {theme.Divider.base}/>
         </Box>
         <VStack pt = {6}  pl = {4}  pr = {4}  space=  {2}>
-         {[0,0,0,0].map((item:any , key:number) => 
+         {id.map((item:any , key:number) => 
             <MemorizedChapterItem
                 key = {key}
-                p_id = {id}
-                id = {key + 1}
+                p_id = {item.novelDoc}
+                id = {item.chap_id}
+                title = {item.title}
+                date = {item.updateAt}
             />
          )}
         </VStack>

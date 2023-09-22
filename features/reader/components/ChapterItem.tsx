@@ -12,12 +12,15 @@ import { useNavigation } from '@react-navigation/native'
 interface Fieldprops {
     id : number,
     p_id : number | string
+    title : string
 }
-const ChapterItem : React.FC <Fieldprops> = ({p_id ,id}) => {
+const ChapterItem : React.FC <Fieldprops> = ({p_id ,id, title, date}) => {
+    // console.log('chapterIterm p_id',p_id)
+    // console.log('chapterIterm id',id)
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
   return (
-    <Pressable onPress={() => navigation.navigate('Readcontent',{p_id})}>
+    <Pressable onPress={() => navigation.navigate('Readcontent',{p_id,title})}>
       {({
         isHovered,
         isFocused,
@@ -30,8 +33,8 @@ const ChapterItem : React.FC <Fieldprops> = ({p_id ,id}) => {
             </Box>
         
             <VStack>
-                <Text fontWeight={'medium'} color = {theme.Text.base}>Chapter Name</Text>
-                <Text color = {theme.Text.description}>Last updated</Text>
+                <Text fontWeight={'medium'} color = {theme.Text.base}>{`${title}`}</Text>
+                <Text color = {theme.Text.description}>Last updated {`${date}`}</Text>
             </VStack>      
         </HStack>
     )}

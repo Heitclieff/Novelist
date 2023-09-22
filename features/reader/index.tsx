@@ -56,48 +56,64 @@ const NovelContent : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
     const {id}:any = route.params
-    console.log('id',id)
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
 
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
-    const [selectedcollection, setselectedcollection] = useState<any[]>([]);
+    const [novelItem, setnovelItem] = useState([]); //<any[]>
+    const [chapterItem, setchapterItem] = useState([])
 
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
 
-    const getReaderNovel = async () => {
-        const novelSnap = await firestore().collection('Novels').orderBy('view', 'desc').get();
-        const novel_Data = [];
-
-        for (const doc of novelSnap.docs) {
-          const createdAt = doc.data().createAt.toDate();
-          const creater = [];
-
-          const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
-          for (const projectDoc of projectSnapshot.docs) {
-            const userDocs = projectDoc.data().creater;
-            for (const user of userDocs) {
-              await firestore().collection('Users').doc(user).get().then((uData) => {
-                const data = uData.data()
-                creater.push({ id: user, username: data.username, image: data.image });
-              })
-            }
-            const image = projectDoc.data().image;
-            novel_Data.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image });
-          }
+    const getNovelItem = async () => {
+        const novelItemSnap = await firestore().collection('Projects').where('novelDoc', '==', id).get()
+        const novelItem_Data = []
+        const creater = [];
+        const chapter_Item = []
+        for (const novelDoc of novelItemSnap.docs) {
+            let docId = novelDoc.data().novelDoc
+            const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
+                console.log('chap',chap)
+                chap.forEach((doc) => {
+                    console.log('chap doc',doc)
+                    const updateAt = doc.data().updateAt.toDate();
+                    chapter_Item.push({ id: doc.id, ...doc.data(), updateAt: updateAt })
+                })
+            })
+            const data = novelDoc.data().novelDoc
+            const userDocs = novelDoc.data().creater;
+                for (const user of userDocs) {
+                    await firestore().collection('Users').doc(user).get().then((uData) => {
+                        const data = uData.data()
+                        creater.push({ id: user, username: data.username, image: data.pf_image });
+                    })
+                }
+            const novelSnap = await firestore().collection('Novels').doc(id).get()
+            const createdAt = novelSnap.data().createAt.toDate();
+            const lastUpdate = novelSnap.data().lastUpdate.toDate();
+            
+            // console.log('template',novelSnap)
+            novelItem_Data.push({ id: novelDoc.id, ...novelDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate, creater: creater })
         }
-        setselectedcollection(novel_Data)
+        // console.log('reader index', novelItem_Data)
+        // console.log('reader index useState', chapter_Item)
+        chapter_Item.sort((a, b) => a.chap_id - b.chap_id);
+        console.log(chapter_Item)
+        setnovelItem(novelItem_Data);
+        setchapterItem(chapter_Item)
         setisReduxLoaded(true)
     }
+
     useEffect(() => {
         if (!isReduxLoaded) {
-            getReaderNovel()
+            getNovelItem()
+            // console.log('reader index useeffect',chapterItem)
         }
-    }, [isReduxLoaded])
+    }, [isReduxLoaded,novelItem,chapterItem])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -106,6 +122,7 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const scrollY = useRef(new Animated.Value(0)).current;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    console.log('reader index')
   
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
@@ -126,7 +143,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 bottomspace = {BOTTOM_SPACE}
               />
               }
-              {selectedcollection.length > 0 && isReduxLoaded &&
+              {novelItem.length > 0 && isReduxLoaded &&
                   <Box>
                           <Box w='100%' h={MAX_HEIGHT} position={'absolute'}>
                               <VStack alignItems={'center'} position='relative' overflow='hidden'>
@@ -143,7 +160,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   }]}>
                                       <AnimatedBackground
                                           id='background-images'
-                                          source={{ uri: selectedcollection[0].image }}
+                                          source={{ uri: novelItem[0].image }}
                                           alt="images"
                                           style={{
                                               width: '100%',
@@ -191,7 +208,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 })}}>
                 
                                 <ForegroundItem
-                                        collection={selectedcollection[0]}
+                                        collection={novelItem[0]}
                                     />
                             </Animated.View>}
                         </Box>
@@ -227,7 +244,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                             })}}>
                     
                                 <ForegroundItem
-                                        collection={selectedcollection[0]}
+                                        collection={novelItem[0]}
                                     />
                            
                         </Animated.View>
@@ -242,17 +259,17 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   <Mainsection
                                       isLiked={isLiked}
                                       setisLiked={setisLiked}
-                                      collection={selectedcollection[0]}
+                                      collection={novelItem[0]}
                                   />
                               </VStack>
                               <VStack w='100%' pl={6} space={2}>
-                                  <Creatorsection collection={selectedcollection[0]} />
+                                  <Creatorsection collection={novelItem[0]} />
                               </VStack>
                               <Divider bg={theme.Divider.base} mt={3} />
-                              <Overviewsection/>
-                              <Tagsection/>
+                              <Overviewsection overview = {novelItem[0].overview}/>
+                              <Tagsection tag = {novelItem[0].tagDoc}/>
                               <VStack flex={1} pt={7}>
-                                  <Chapterfield id = {id} handleCommentButton={handlePresentModalPress} />
+                                  <Chapterfield id = {chapterItem} handleCommentButton={handlePresentModalPress} />
                               </VStack>
                               <CommentModal BottomRef={bottomSheetModalRef}></CommentModal>
                           </VStack>

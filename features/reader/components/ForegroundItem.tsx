@@ -24,7 +24,7 @@ const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
             <Box w='150' h='220' bg='gray.300' overflow='hidden'>
                 <Image
                     style={{ width: '100%', height: '100%'}}
-                    source={{uri :collection.images}}
+                    source={{uri :collection.image}}
                     alt="images"
                 />
             </Box>

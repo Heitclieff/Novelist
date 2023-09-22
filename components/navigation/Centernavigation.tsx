@@ -19,8 +19,8 @@ interface contianerProps {
 }
 
 const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true}) => {
-    const navigation:any  = useNavigation();
-    const theme:any = useContext(ThemeWrapper);
+  const navigation:any  = useNavigation();
+  const theme:any = useContext(ThemeWrapper);
   return (
     <Animated.View
       style={[{
