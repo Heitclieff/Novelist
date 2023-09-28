@@ -271,7 +271,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                               <VStack flex={1} pt={7}>
                                   <Chapterfield id = {chapterItem} handleCommentButton={handlePresentModalPress} />
                               </VStack>
-                              <CommentModal BottomRef={bottomSheetModalRef}></CommentModal>
+                              {/* <CommentModal BottomRef={bottomSheetModalRef}></CommentModal> */}
                           </VStack>
                       </Animated.ScrollView>
                       </Box>

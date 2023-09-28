@@ -1,4 +1,5 @@
 # Xcode
+ios/Pods/
 !**/*.xcodeproj
 !**/*.pbxproj
 !**/*.xcworkspacedata
