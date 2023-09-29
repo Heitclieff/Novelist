@@ -7,6 +7,7 @@ useMemo ,
 useCallback} from 'react'
 import { 
 Box , 
+Button,
 VStack , 
 Text,
 Divider } from 'native-base'
@@ -23,7 +24,7 @@ import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
-
+import { useNavigation } from '@react-navigation/native';
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
@@ -56,6 +57,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
     const {id}:any = route.params
+    const navigation = useNavigation();
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
@@ -70,11 +72,11 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
 
     const getNovelItem = async () => {
-        const novelItemSnap = await firestore().collection('Projects').where('novelDoc', '==', id).get()
+        const novelItemSnapshort = await firestore().collection('Novels').where('novelDoc', '==', id).get()
         const novelItem_Data = []
         const creater = [];
         const chapter_Item = []
-        for (const novelDoc of novelItemSnap.docs) {
+        for (const novelDoc of novelItemSnapshort.docs) {
             let docId = novelDoc.data().novelDoc
             const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
                 console.log('chap',chap)
@@ -143,7 +145,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 bottomspace = {BOTTOM_SPACE}
               />
               }
-              {novelItem.length > 0 && isReduxLoaded &&
+              {novelItem.length > 0  &&
                   <Box>
                           <Box w='100%' h={MAX_HEIGHT} position={'absolute'}>
                               <VStack alignItems={'center'} position='relative' overflow='hidden'>
@@ -253,7 +255,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                           <VStack w='100%' bg={theme.Bg.base} position='relative' pb={HEADER_HEIGHT_EXPANDED + BOTTOM_SPACE} zIndex={0}>
                                
                            
-                             
+                             <Button onPress = {() => navigation.navigate('Readcontent',1,"hello")}>Content Test</Button>
                                 
                               <VStack w='100%'>
                                   <Mainsection

@@ -2,9 +2,10 @@ import React,{useContext, useEffect, useState} from 'react'
 import { 
 Box , 
 VStack , 
-Text , 
+Button,
 HStack } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
+import { TextInput , Text } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
 // import ContentNavigation from '../../../../components/[stack]/Novel/[container]/ContentNavigation'
 
@@ -22,17 +23,21 @@ import Chapter from '../creator/pages/chapter';
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
+     const DOC_ID = "7xV6Am2tw5bII2xsHunR";
      const theme:any = useContext(ThemeWrapper)
+
      const route = useRoute();
      const {p_id}:any = route.params
      const {title}:any = route.params
+     // https://console.firebase.google.com/?_gl=1*1o1iavl*_ga*NTEyNTkwNjc3LjE2OTQ1MzAzNjU.*_ga_CW55HF8NVT*MTY5NTkwNDA1OC41LjAuMTY5NTkwNDA1OC42MC4wLjA.
 
-
-     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-     const [novelItem, setnovelItem] = useState<any[]>([]);
-     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false);
+     // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+     const [novelItem, setnovelItem] = useState<{}>({});
+     const [inputValue ,setinputValue] = useState("");
+     // const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false);
      const [chapterItem, setchapterItem] = useState([])
 
+     console.log("Value", inputValue);
      const getNovelItem = async () => {
           const novelItemSnap = await firestore().collection('Projects').where('novelDoc', '==', p_id).get()
           const novelItem_Data = []
@@ -81,38 +86,84 @@ const Readcontent : React.FC <pageProps> = () => {
             console.log("View:", item.view);
           });
         }
- 
-     useEffect(() => {
-          if (!isReduxLoaded) {
-               getNovelItem()
+
+     const HandleChange = (text:string) => {
+          setinputValue(text)
+          console.log(inputValue)
+     }
+
+     const getFirestoreData = async () : Promise <void> => {
+          const maincollection = await firestore().collection('Novels').doc('4K3XjVb6m18Lb7Zwhy2R');
+          const subcollection =  maincollection.collection('chapter');
+
+          subcollection.get().then(querySnapshort => {
+               querySnapshort.forEach(documentSnapshort => {
+                    if(documentSnapshort.id === DOC_ID) {
+                         setnovelItem(documentSnapshort.data())
+                         setinputValue(documentSnapshort.data().content);
+                         return
+                    }
+               })
+          }).catch(error => {
+               console.error("get Collections data Problem ",error )
+          })
+     }
+
+     const uploadtoFirestore = async () : Promise <void> => {
+          const maincollection = await firestore().collection('Novels').doc('4K3XjVb6m18Lb7Zwhy2R');
+          const subcollection =  maincollection.collection('chapter');
+
+          try {
+               await subcollection.doc(DOC_ID).update({content : inputValue});
+               console.log("Updated Content Successfull.")
+          }catch(error) {
+               console.error("Update Content Problem ", error);
           }
-      }, [isReduxLoaded, chapterItem, novelItem])
+     }
+
+     useEffect(() => {
+          getFirestoreData();
+      }, [DOC_ID]);
+
   
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation/>
           <FlatList>
-          {novelItem.length > 0 && isReduxLoaded &&
+          {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
                     <HStack id = "story-heading-wrap" justifyContent={'center'} >
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {1}>
-                              <Text color={theme.Text.description} textAlign={'center'}>{`${novelItem[0].title}`}</Text>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} fontSize={'md'}>{`${title}`}</Text>
+                              {/* <Text color={theme.Text.description} textAlign={'center'}>{`${novelItem[0].title}`}</Text>
+                              <Text color = {theme.Text.base} fontWeight={'semibold'} fontSize={'md'}>{`${title}`}</Text> */}
+                              <Text color = {theme.Text.base}>Hello worlds</Text>
                          </VStack>
                     </HStack>
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>
-                              {`${novelItem[0].overview}`}
+                              {/* {`${novelItem[0].overview}`} */}
                          </Text>
+                         <TextInput        
+                         style = {{color : 'white'} }
+                         multiline={true}
+                         textAlignVertical="top"
+                         placeholder="พิมพ์ข้อความที่นี่..."
+                         placeholderTextColor={'white'}
+                         onChangeText={HandleChange}
+                         // onChangeText={handleInputChange} // เรียกใช้งานเมื่อมีการเปลี่ยนแปลงข้อความ
+                         value={inputValue} // กำหนดค่าของ TextInput จาก State
+                         
+                         />
                     </VStack>
-
+                    <Button colorScheme={'teal'} onPress = {uploadtoFirestore}>Test Save</Button>
                </VStack>
                
-          }
-               
+          {/*}*/}
+                
           </FlatList>
+
     </VStack>
   )
 }
 
-export default Readcontent;
+export default Readcontent; 
