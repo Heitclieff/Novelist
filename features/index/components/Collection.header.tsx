@@ -14,7 +14,6 @@ interface containerProps {
     translateX: any
 }
 const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) => {
-    console.log('colection header', data)
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height

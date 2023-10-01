@@ -10,6 +10,7 @@ interface containerProps {
 
 const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
     const theme:any = useContext(ThemeWrapper)
+    console.log("Foreground" , collection)
     
     return (
         <VStack

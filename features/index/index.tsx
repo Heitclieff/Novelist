@@ -1,4 +1,4 @@
-import React,{useContext , useEffect} from 'react'
+import React,{useContext , useEffect, useState} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { Box , Text, VStack } from 'native-base';
 import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimated';
@@ -33,37 +33,19 @@ const Index : React.FC = () => {
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     })
+    
+    const [CollectionMostview , setCollectionMostview] = useState<any[]>([]);
+    const [CollectionHotNew , setCollectionHotNew] = useState<any[]>([])
+    const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
+    
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const CollectionMostview = useSelector((state:any) => state.collectionMostview)
-    const CollectionHotNew = useSelector((state:any) => state.collectionHotNew)
-    const CollectionTopNew = useSelector((state:any) => state.collectionTopNew)
     const isReduxLoaded = useSelector((state: RootState) => state.iscollectionTopNewLoaded);
 
     const getTopNewAndDispatch = async () => {
         try {
-          const snapshotnt = await firestore().collection('Novels').orderBy('createAt', 'desc').get()
-          const topnewData = [];
-          for (const doc of snapshotnt.docs) {
-            const createdAt = doc.data().createAt.toDate();
-            const lastUpdate = doc.data().lastUpdate.toDate();
-            const creater = [];
-
-            const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
-            for (const projectDoc of projectSnapshot.docs) {
-              const userDocs = projectDoc.data().creater;
-              for (const user of userDocs) {
-                await firestore().collection('Users').doc(user).get().then((uData) => {
-                  const data = uData.data()
-                  creater.push({ id: user, username: data.username, image: data.pf_image });
-                })
-              }
-              const image = projectDoc.data().image;
-              topnewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, images: image, lastUpdate: lastUpdate });
-            }
-          }
-          // const query = await firestore().collection('Likes').where('novelDoc', '==', id).where('userDoc', '==', uid).get()
-          // console.log('data', updatedData)
-          dispatch(fetchTopNew(topnewData));  
+          const snapshortTop = await firestore().collection('Novels').orderBy('createAt', 'desc').get()
+          setCollectionTopNew(snapshortTop.docs)
+      
         } catch (error) {
           console.error('Error fetching Top New novels:', error);
         }
@@ -71,27 +53,9 @@ const Index : React.FC = () => {
     
       const getHotNewAndDispatch = async () => {
         try {
-          const snapshot = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get();
-          const newestNovels = [];
-          for (const doc of snapshot.docs) {
-            const lastUpdate = doc.data().lastUpdate.toDate();
-            const createdAt = doc.data().createAt.toDate();
-            const creater = [];
-            const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
-            for (const projectDoc of projectSnapshot.docs) {
-              const userDoc = projectDoc.data().creater;
-              for (const user of userDoc) {
-                await firestore().collection('Users').doc(user).get().then((uData) => {
-                  const data = uData.data()
-                  creater.push({ id: user, username: data.username, image: data.pf_image });
-                })
-              }
-              const image = projectDoc.data().image;
-              newestNovels.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, images: image, lastUpdate: lastUpdate });
-            }
-          }
-          newestNovels.sort((a, b) => b.view - a.view);
-          dispatch(fetchHotNew(newestNovels));
+          const snapshortHot = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get();
+          setCollectionHotNew(snapshortHot.docs)
+          // newestNovels.sort((a, b) => b.view - a.view);
         } catch (error) {
           console.error('Error fetching hot new novels:', error);
         }
@@ -99,27 +63,9 @@ const Index : React.FC = () => {
       
       const getMostviewAndDispatch = async () => {
         try {
-          const snapshotmv = await firestore().collection('Novels').orderBy('view', 'desc').get();
-          const mostviewData = [];
-
-          for (const doc of snapshotmv.docs) {
-            const createdAt = doc.data().createAt.toDate();
-            const creater = [];
-
-            const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
-            for (const projectDoc of projectSnapshot.docs) {
-              const userDocs = projectDoc.data().creater;
-              for (const user of userDocs) {
-                await firestore().collection('Users').doc(user).get().then((uData) => {
-                  const data = uData.data()
-                  creater.push({ id: user, username: data.username, image: data.image });
-                })
-              }
-              const image = projectDoc.data().image;
-              mostviewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image });
-            }
-          }
-          dispatch(fetchMostview(mostviewData));  
+          const snapshortMost = await firestore().collection('Novels').orderBy('view', 'desc').get();
+          setCollectionMostview(snapshortMost.docs)
+      
         } catch (error) {
           console.error('Error fetching most view novels:', error);
         }

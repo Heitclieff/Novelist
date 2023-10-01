@@ -15,6 +15,7 @@ const Indexheader : React.FC <layoutProps> = ({collections}) => {
  
     const renderCollectionItem = useCallback(
         (item : Collections, round : number) => {
+            const document = item.data();
             const translateX = Animated.add(scrollY , Animated.multiply(round , ScreenWidth * 0.8).interpolate({
                 inputRange: [0, ScreenWidth * 0.8],
                 outputRange: [0, (ScreenWidth - ScreenWidth * 0.8) / 2],
@@ -24,7 +25,7 @@ const Indexheader : React.FC <layoutProps> = ({collections}) => {
                 <Suspense callback = {<Box>Loading..</Box>}>
                     <Collectionheader 
                     key = {round}
-                    data={item} 
+                    data={document} 
                     id = {item.id}
                     translateX = {translateX}/>  
                 </Suspense>
