@@ -37,17 +37,21 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   const renderCollectionItem = useCallback(
-    
-    (item : Collections, round : number) => (
-      <Suspense fallback = {<Box>Loading...</Box>}>
+
+    (item : Collections, round : number) => {
+      const document = item.data()
+      return(
+        <Suspense fallback = {<Box>Loading...</Box>} key={round}>
         <MemorizedColletionItems
             id = {item.id}
-            title = {item.title}
-            view = {item.view}
-            images = {item.images}
+            title = {document.title}
+            view = {document.view}
+            images = {document.image}
             />
       </Suspense>
-    ),[]
+      )
+  
+    },[]
   );
   return (
     <Box

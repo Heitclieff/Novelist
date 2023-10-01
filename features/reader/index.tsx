@@ -61,7 +61,6 @@ const NovelContent : React.FC <Pageprops> = () => {
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
-
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState([]); //<any[]>
@@ -71,51 +70,61 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
 
-    const getNovelItem = async () => {
-        const novelItemSnapshort = await firestore().collection('Novels').where('novelDoc', '==', id).get()
-        const novelItem_Data = []
-        const creater = [];
-        const chapter_Item = []
-        for (const novelDoc of novelItemSnapshort.docs) {
-            let docId = novelDoc.data().novelDoc
-            const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
-                console.log('chap',chap)
-                chap.forEach((doc) => {
-                    console.log('chap doc',doc)
-                    const updateAt = doc.data().updateAt.toDate();
-                    chapter_Item.push({ id: doc.id, ...doc.data(), updateAt: updateAt })
-                })
-            })
-            const data = novelDoc.data().novelDoc
-            const userDocs = novelDoc.data().creater;
-                for (const user of userDocs) {
-                    await firestore().collection('Users').doc(user).get().then((uData) => {
-                        const data = uData.data()
-                        creater.push({ id: user, username: data.username, image: data.pf_image });
-                    })
-                }
-            const novelSnap = await firestore().collection('Novels').doc(id).get()
-            const createdAt = novelSnap.data().createAt.toDate();
-            const lastUpdate = novelSnap.data().lastUpdate.toDate();
+    // const getNovelItem = async () => {
+    //     const novelItemSnap = await firestore().collection('Novels').where('novelDoc', '==', id).get()
+    //     const novelItem_Data = []
+    //     const creater = [];
+    //     const chapter_Item = []
+    //     for (const novelDoc of novelItemSnap.docs) {
+    //         let docId = novelDoc.data().novelDoc
+    //         const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
+    //             console.log('chap',chap)
+    //             chap.forEach((doc) => {
+    //                 console.log('chap doc',doc)
+    //                 const updateAt = doc.data().updateAt.toDate();
+    //                 chapter_Item.push({ id: doc.id, ...doc.data(), updateAt: updateAt })
+    //             })
+    //         })
+    //         const data = novelDoc.data().novelDoc
+    //         const userDocs = novelDoc.data().creater;
+    //             for (const user of userDocs) {
+    //                 await firestore().collection('Users').doc(user).get().then((uData) => {
+    //                     const data = uData.data()
+    //                     creater.push({ id: user, username: data.username, image: data.pf_image });
+    //                 })
+    //             }
+    //         const novelSnap = await firestore().collection('Novels').doc(id).get()
+    //         const createdAt = novelSnap.data().createAt.toDate();
+    //         const lastUpdate = novelSnap.data().lastUpdate.toDate();
             
-            // console.log('template',novelSnap)
-            novelItem_Data.push({ id: novelDoc.id, ...novelDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate, creater: creater })
+    //         // console.log('template',novelSnap)
+    //         novelItem_Data.push({ id: novelDoc.id, ...novelDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate, creater: creater })
+    //     }
+    //     // console.log('reader index', novelItem_Data)
+    //     // console.log('reader index useState', chapter_Item)
+    //     chapter_Item.sort((a, b) => a.chap_id - b.chap_id);
+    //     console.log("Chapter Item" ,chapter_Item)
+    //     setnovelItem(novelItem_Data);
+    //     setchapterItem(chapter_Item)
+    //     setisReduxLoaded(true)
+    // }
+
+    const fetchNovelContent = async () : Promise<void> => {
+        const SnapshortContent = await firestore().collection('Novels').doc(id).get();
+
+        if(SnapshortContent.exists) {
+            const document = SnapshortContent.data();
+            setnovelItem(document);
+        } else {
+            console.log("Not found this document.")
         }
-        // console.log('reader index', novelItem_Data)
-        // console.log('reader index useState', chapter_Item)
-        chapter_Item.sort((a, b) => a.chap_id - b.chap_id);
-        console.log(chapter_Item)
-        setnovelItem(novelItem_Data);
-        setchapterItem(chapter_Item)
-        setisReduxLoaded(true)
+
     }
 
     useEffect(() => {
-        if (!isReduxLoaded) {
-            getNovelItem()
+            if(id) fetchNovelContent()
             // console.log('reader index useeffect',chapterItem)
-        }
-    }, [isReduxLoaded,novelItem,chapterItem])
+    }, [id])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -145,7 +154,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 bottomspace = {BOTTOM_SPACE}
               />
               }
-              {novelItem.length > 0  &&
+              {novelItem &&
                   <Box>
                           <Box w='100%' h={MAX_HEIGHT} position={'absolute'}>
                               <VStack alignItems={'center'} position='relative' overflow='hidden'>
@@ -162,7 +171,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   }]}>
                                       <AnimatedBackground
                                           id='background-images'
-                                          source={{ uri: novelItem[0].image }}
+                                          source={{ uri: novelItem.image }}
                                           alt="images"
                                           style={{
                                               width: '100%',
@@ -246,7 +255,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                             })}}>
                     
                                 <ForegroundItem
-                                        collection={novelItem[0]}
+                                        collection={novelItem}
                                     />
                            
                         </Animated.View>
@@ -255,21 +264,21 @@ const NovelContent : React.FC <Pageprops> = () => {
                           <VStack w='100%' bg={theme.Bg.base} position='relative' pb={HEADER_HEIGHT_EXPANDED + BOTTOM_SPACE} zIndex={0}>
                                
                            
-                             <Button onPress = {() => navigation.navigate('Readcontent',1,"hello")}>Content Test</Button>
+                             <Button onPress = {() => navigation.navigate('Readcontent',{id , title : novelItem.title})}>Content Test</Button>
                                 
                               <VStack w='100%'>
                                   <Mainsection
                                       isLiked={isLiked}
                                       setisLiked={setisLiked}
-                                      collection={novelItem[0]}
+                                      collection={novelItem}
                                   />
                               </VStack>
                               <VStack w='100%' pl={6} space={2}>
-                                  <Creatorsection collection={novelItem[0]} />
+                                  <Creatorsection collection={novelItem} />
                               </VStack>
                               <Divider bg={theme.Divider.base} mt={3} />
-                              <Overviewsection overview = {novelItem[0].overview}/>
-                              <Tagsection tag = {novelItem[0].tagDoc}/>
+                              <Overviewsection overview = {novelItem.overview}/>
+                              <Tagsection tag = {novelItem.tagDoc}/>
                               <VStack flex={1} pt={7}>
                                   <Chapterfield id = {chapterItem} handleCommentButton={handlePresentModalPress} />
                               </VStack>
