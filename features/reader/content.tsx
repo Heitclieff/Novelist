@@ -27,8 +27,9 @@ const Readcontent : React.FC <pageProps> = () => {
      const theme:any = useContext(ThemeWrapper)
 
      const route = useRoute();
-     const {p_id}:any = route.params
+     const {id}:any = route.params;
      const {title}:any = route.params
+
      // https://console.firebase.google.com/?_gl=1*1o1iavl*_ga*NTEyNTkwNjc3LjE2OTQ1MzAzNjU.*_ga_CW55HF8NVT*MTY5NTkwNDA1OC41LjAuMTY5NTkwNDA1OC42MC4wLjA.
 
      // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
@@ -37,7 +38,6 @@ const Readcontent : React.FC <pageProps> = () => {
      // const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false);
      const [chapterItem, setchapterItem] = useState([])
 
-     console.log("Value", inputValue);
      const getNovelItem = async () => {
           const novelItemSnap = await firestore().collection('Projects').where('novelDoc', '==', p_id).get()
           const novelItem_Data = []
@@ -93,7 +93,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
      const getFirestoreData = async () : Promise <void> => {
-          const maincollection = await firestore().collection('Novels').doc('4K3XjVb6m18Lb7Zwhy2R');
+          const maincollection = await firestore().collection('Novels').doc(id);
           const subcollection =  maincollection.collection('chapter');
 
           subcollection.get().then(querySnapshort => {
@@ -110,7 +110,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
      const uploadtoFirestore = async () : Promise <void> => {
-          const maincollection = await firestore().collection('Novels').doc('4K3XjVb6m18Lb7Zwhy2R');
+          const maincollection = await firestore().collection('Novels').doc(id);
           const subcollection =  maincollection.collection('chapter');
 
           try {
@@ -134,9 +134,9 @@ const Readcontent : React.FC <pageProps> = () => {
                <VStack flex = {1}  p = {5} space = {5}>
                     <HStack id = "story-heading-wrap" justifyContent={'center'} >
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {1}>
-                              {/* <Text color={theme.Text.description} textAlign={'center'}>{`${novelItem[0].title}`}</Text>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} fontSize={'md'}>{`${title}`}</Text> */}
-                              <Text color = {theme.Text.base}>Hello worlds</Text>
+                              <Text style = {{color : 'white'}} textAlign={'center'}>{`${title}`}</Text>
+                              {/* <Text color = {theme.Text.base} fontWeight={'semibold'} fontSize={'md'}>{`${title}`}</Text> */}
+                            
                          </VStack>
                     </HStack>
                     <VStack p = {2}>
