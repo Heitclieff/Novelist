@@ -19,7 +19,10 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-import { getCollectionData } from '../../systems/redux/action';
+// import { getCollectionData } from '../../systems/redux/action';
+
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops {
   route : any
@@ -38,8 +41,10 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
 
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const Collectionsdata = useSelector((state: any) => state.collectionsData)
-  const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  const [Collectionsdata , setCollectionsdata] = useState<any[]>([]);
+  // const Collectionsdata = useSelector((state: any) => state.collectionsData)
+  // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
   const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
 
 
@@ -47,9 +52,31 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         navigation.navigate(direction);
   }
 
+  const getCreateData = async () => {
+    let uid = auth().currentUser.uid
+    const snapCreate = await firestore().collection('Novels').where('creators', 'array-contains', uid).get()
+    const collection_data = []
+    for (const doc of fetchCate.docs) {
+      // console.log(doc.id)
+      // const proJect = await firestore().collection('Novels').where('cateDoc','==',doc.id).get()
+      // const projectItem = []
+      // for (let proData of proJect.docs) {
+        // projectItem.push({id: proData.id})
+      // }
+      const dataDoc = doc.data()
+      // console.log(dataDoc)
+      collection_data.push({ title: doc.id, images: dataDoc.image}) //, proDoc: projectItem 
+    } 
+    setCollectionsdata(collection_data)
+    setisReduxLoaded(true)
+
+  }
   useEffect(() => {
-    if (!isReduxLoaded) dispatch(getCollectionData());
-  }, [dispatch, isReduxLoaded])
+    if (!isReduxLoaded) {
+      getCreateData()
+      console.log(selectedcollection)
+    };
+  }, [isReduxLoaded])
 
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
@@ -65,7 +92,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
           <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
             <ImageBackground
               id='background-images'
-              source={{ uri: selectedcollection[0].images }}
+              source={{ uri: selectedcollection[0].image }}
               alt="images"
               style={{
                 width: '100%',

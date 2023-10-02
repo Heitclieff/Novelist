@@ -61,7 +61,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+    // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState([]); //<any[]>
     const [chapterItem, setchapterItem] = useState([])

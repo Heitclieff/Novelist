@@ -48,7 +48,7 @@ const Itemfield : React.FC <containerProps>= ({id, data}) => {
                               size={15}
                               color = {theme.Text.description}
                               name = 'heart'/>
-                              <Text color={theme.Text.description} fontSize={'xs'}>4.7k</Text>
+                              <Text color={theme.Text.description} fontSize={'xs'}>{data.like}</Text>
                          </HStack>
                          
                     </VStack>

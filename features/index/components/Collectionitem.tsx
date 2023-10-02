@@ -22,7 +22,7 @@ interface CollectionProps {
   avatar : any,
 }
 
-const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,avatar = null }) => {
+const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, like ,avatar = null }) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   return (
@@ -83,7 +83,7 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,a
                       <Text 
                         fontSize={'xs'}
                         color={theme.Text.description}
-                        >4.7k
+                        >{like}
                         </Text>
                        
                     </HStack>

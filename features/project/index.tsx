@@ -33,10 +33,14 @@ import CreatorItemfield from './components/Creator.itemfield';
 
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionsDataShowcase} from '../../systems/redux/action'
+// import { getCollectionsDataShowcase} from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
+
+// firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops { 
     theme : any
@@ -49,15 +53,23 @@ const Creator : React.FC <Pageprops> = () => {
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const [Projectype , setProjectype] = useState<string>('');
-    
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
+    const [Collectionsdata , setCollectionsdata] = useState<any[]>([]);
+    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
-  
+    // const Collectionsdata = []
+    const getCreatorData = async () => {
+        let uid = auth().currentUser.uid
+        const snapCreator = await firestore().collection('Users').doc(uid).get()
+        // Collectionsdata.push({ id: snapCreator.id, ...snapCreator.data()})
+        setCollectionsdata([{ id: snapCreator.id, ...snapCreator.data()}])
+        console.log(Collectionsdata)
+        setisReduxLoaded(true)
+    }
     useEffect(() => {
-        if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
-    }, [dispatch, isReduxLoaded])
+        if (!isReduxLoaded) {
+            getCreatorData()
+        };
+    }, [isReduxLoaded])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -67,7 +79,7 @@ const Creator : React.FC <Pageprops> = () => {
        bottomSheetModalRef.current?.present();
     }, []);
     const handleSheetChanges = useCallback((index: number) => {        
-   }, []);
+    }, []);
 
    const handleReturnChange = () => {
      bottomSheetModalRef.current?.snapToIndex(1);
@@ -110,10 +122,12 @@ const Creator : React.FC <Pageprops> = () => {
                 <VStack space = {1} m ={5} mt = {5}>
                 {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
                     Collectionsdata.map((item:any , index:number) => ( 
-                        React.useMemo(() => (
-                                <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
-                        ),[]
-                        ))) 
+                        // React.useMemo(() => (
+                        //         <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
+                        // ),[]
+                        // )
+                        <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/> 
+                        )) 
                     : null
                 }
                 </VStack> 

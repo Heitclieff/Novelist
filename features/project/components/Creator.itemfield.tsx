@@ -15,17 +15,35 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 //@Components
 import Avatarfield from '../../../components/field/Avatarfield'
 
+//firebase
+import firestore from '@react-native-firebase/firestore'
+
 interface containerProps {
      id : number,
      data : any
 }
-const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
+const CreatorItemfield : React.FC <containerProps> = async ({id,data})=> {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
-     console.log(data)
+     // console.log(data.project)
+
+     // get novel data
+     const list = data.project
+     const novel_collections = []
+     for (let i=0; i < list.length; i++) {
+          const snapNovel = await firestore().collection('Novels').doc(list[i]).get()
+          novel_collections.push({ id: snapNovel.id, ...snapNovel.data()})
+     }
+     // user data use data.username data.pf_image ...
+
+     //novel user novel_collections[i].imag , novel_collections[i]...
+     
+     // console.log('creator itemfield',novel_collections[0].image)
+     
 
 
-  return ( 
+
+     return ( 
      <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>
      {({
          isHovered,
@@ -38,7 +56,7 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
                     <Image
                          id = 'item-image'
                          style={{width : '100%' , height : '100%'}}
-                         source={{uri:data.images}}
+                         source={{uri:data.image}}
                     />
                </Box>
                <VStack w = '75%' h=  '100%'  bg = {theme.Bg.container} rounded={'md'} space = {2} pl = {3}>
