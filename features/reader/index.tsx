@@ -228,7 +228,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 })}}>
                 
                                 <ForegroundItem
-                                        collection={novelItem[0]}
+                                        collection={novelItem}
                                     />
                             </Animated.View>}
                         </Box>
@@ -262,7 +262,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 outputRange: [1, 0], 
                                 extrapolate: 'clamp',
                             })}}>
-                    
+                                
                                 <ForegroundItem
                                         collection={novelItem}
                                     />
