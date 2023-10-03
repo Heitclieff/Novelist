@@ -24,7 +24,6 @@ const MemorizedChapterItem = React.memo(ChapterItem)
 
 const Chapterfield : React.FC <containerProps> = ({noveltitle ,chapterdata,doc_id, handleCommentButton}) => {
     const theme:any = useContext(ThemeWrapper);
-
    
   return (
     <VStack space = {1} position={'relative'} >
@@ -49,7 +48,6 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,chapterdata,doc_i
         
         <VStack pt = {6}  pl = {4}  pr = {4}  space=  {2}>
             {chapterdata.map((document:any ,key:number) => {
-                console.log(document.updateAt)
                 return (
                     <MemorizedChapterItem
                     key={key}

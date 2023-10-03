@@ -220,14 +220,11 @@ const Index : React.FC = () => {
       }
       useEffect(() => {
         if (!isReduxLoaded) {
-          // Fetch data from Firestore and dispatch the action
-          // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
-         
         }
-      }, [dispatch, isReduxLoaded]);
+      }, [isReduxLoaded]);
 
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>

@@ -19,14 +19,11 @@ interface Fieldprops {
     timestamp : any;
 }
 const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id ,title, noveltitle,  timestamp , content}) => {
-    // console.log('chapterIterm p_id',p_id)
-    // console.log('chapterIterm id',id)
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
 
     const timezoneOffset = date.getTimezoneOffset();
-
     const formattedDate = date.toLocaleString();
   
   return (

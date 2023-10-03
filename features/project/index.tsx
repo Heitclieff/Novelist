@@ -50,26 +50,33 @@ const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
+    const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const [Projectype , setProjectype] = useState<string>('');
-    const [Collectionsdata , setCollectionsdata] = useState<any[]>([]);
+    const [document , setDocument] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
     // const Collectionsdata = []
-    const getCreatorData = async () => {
-        let uid = auth().currentUser.uid
-        const snapCreator = await firestore().collection('Users').doc(uid).get()
-        // Collectionsdata.push({ id: snapCreator.id, ...snapCreator.data()})
-        setCollectionsdata([{ id: snapCreator.id, ...snapCreator.data()}])
-        console.log(Collectionsdata)
-        setisReduxLoaded(true)
+    const getCreatorcontent = async () : Promise<void> => {
+        try {
+            const snapshotuser = await firestore().collection('Users').doc(USER_ID).get();
+            const userdocs = snapshotuser.data();
+    
+            const projectID = userdocs.project;
+            const snapshotproject = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , projectID.map(String)).get();    
+    
+            const projectdocs = snapshotproject.docs.map(doc => ({id : doc.id , ...doc.data()}));
+            setDocument(projectdocs);
+
+        }catch(error) {    
+            console.error("Error fetching document:", error);
+        
+        }
     }
     useEffect(() => {
-        if (!isReduxLoaded) {
-            getCreatorData()
-        };
-    }, [isReduxLoaded])
+        getCreatorcontent();
+    }, [])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -120,14 +127,22 @@ const Creator : React.FC <Pageprops> = () => {
                     </Box>   
             </Box> 
                 <VStack space = {1} m ={5} mt = {5}>
-                {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                    Collectionsdata.map((item:any , index:number) => ( 
-                        // React.useMemo(() => (
-                        //         <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
-                        // ),[]
-                        // )
-                        <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/> 
-                        )) 
+                {document.length > 0  ?
+                    document.map((item:any , index:number) => {
+                        return(
+                            <MemorizedCreatorItemfield 
+                            key = {index} 
+                            id = {item.id} 
+                            title = {item.title}
+                            status = {item.status}
+                            image = {item.image}
+                            creator = {item.creators}
+                            /> 
+                        )
+                       
+                    }
+                        
+                        ) 
                     : null
                 }
                 </VStack> 
