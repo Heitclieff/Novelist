@@ -1,7 +1,9 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect , useState} from 'react'
 import { ThemeWrapper } from '../../theme/Themeprovider';
 import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 //@page
 import Creatorcontent from '../../../features/creator';
@@ -24,15 +26,43 @@ const Drawernavigator : React.FC = () => {
   const route = useRoute();
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
+  const [projectdocument , setProjectdocument] = useState<{}>({});
+  const [chapterdocument , setChapterdocument] = useState<{}>({});
+  const [isLoading ,setisLoading] = useState(true)
+  const [ischapter , setisChapter] = useState(true)
+
+  const getProjectcontent = async () : Promise<void> => {
+    try {
+      const snapshotcontent = await firestore().collection('Novels').doc(id);
+      const snapshotproject =  await snapshotcontent.get()
+      const projectdocs = snapshotproject.data();
+  
+      setProjectdocument(projectdocs);
+      
+      const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
+      const chapterdocs = snapshotchapter.docs.map(doc => ({id : doc.id , ...doc.data()}));
+
+      setChapterdocument(chapterdocs)
+      setisLoading(false)
+
+    }catch(error){
+      console.error('Error fetching document:', error);
+    }
+  }
+
+  useEffect(() => {
+    getProjectcontent();
+  },[id])
 
   return (
+    !isLoading && 
     <Drawer.Navigator 
     initialRouteName="Home" 
     drawerContent={props => <Customdrawer {...props}/>}
     screenOptions={{drawerActiveTintColor : theme.Text.tab.active, drawerInactiveTintColor : theme.Text.tab.inactive}}>
       <Drawer.Screen name="Dashboard" 
         component={Creatorcontent} 
-        initialParams={{id}}
+        initialParams={{projectdocument , chapterdocument}}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <MaterialIcon
@@ -59,7 +89,7 @@ const Drawernavigator : React.FC = () => {
 
       <Drawer.Screen name="Chapters" 
           component={Chapter} 
-          initialParams={{id}}
+          initialParams={{chapterdocument}}
           options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <EntypoIcon

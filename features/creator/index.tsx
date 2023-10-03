@@ -34,34 +34,14 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
   const Screenheight = Dimensions.get('window').height;
-  const {id}:any =  route.params
-
+  const {projectdocument , chapterdocument} :any = route.params;
+  
   const MAX_HEIGHT  = Screenheight / 2.5;
   const HEADER_HEIGHT_NARROWED = 90;
   const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
-
-  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const [projectdocument , setProjectdocument] = useState<{}>({});
-  // // const Collectionsdata = useSelector((state: any) => state.collectionsData)
-  // // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
-  // const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
-  // const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
-
-
   const Redirectnavigation = (direction:never) => {
         navigation.navigate(direction);
   }
-
-  const getProjectcontent = async () => {
-    const snapshotproject = await firestore().collection('Novels').doc(id).get();
-    const projectdocs = snapshotproject.data();
-
-    setProjectdocument(projectdocs);
-  }
-  useEffect(() => {
-      getProjectcontent()
-  }, [id])
-
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
         {/* <Dashboardbar/> */}
@@ -101,7 +81,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
                 <Headercontent data={projectdocument} timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}} />
-                <EpisodeSection/>
+                <EpisodeSection chapter = {chapterdocument}/> 
               </VStack>
             )}
           />

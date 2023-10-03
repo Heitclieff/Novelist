@@ -15,9 +15,8 @@ interface containerProps {
 const ChapterItem : React.FC <containerProps> = ({data}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
-     const p_id = data.id
   return (
-     <Pressable onPress={() => navigation.navigate('Readcontent',{p_id})}>
+     <Pressable onPress={() => navigation.navigate('Readcontent',{id : data.id})}>
      {({
          isHovered,
          isFocused,
@@ -26,10 +25,10 @@ const ChapterItem : React.FC <containerProps> = ({data}) => {
           return(
     <HStack w=  '100%' p = {3} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container} rounded={'full'}>
           <Box w = '20%'  justifyContent={'center'} alignItems={'center'}>
-               <Text color={theme.Text.base} fontWeight={'semibold'} fontSize={'xl'}>1</Text>
+               <Text color={theme.Text.base} fontWeight={'semibold'} fontSize={'xl'}>{data.chap_id}</Text>
           </Box>
           <VStack w = '80%'  justifyContent={'center'} space = {1}> 
-               <Text color={theme.Text.base} fontWeight={'semibold'}>Chapter Name</Text>
+               <Text color={theme.Text.base} fontWeight={'semibold'}>{data.title}</Text>
                <HStack space = {1} alignItems={'center'}>
                     <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
                          <Image
