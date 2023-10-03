@@ -37,14 +37,15 @@ const Index : React.FC = () => {
     const [CollectionHotNew , setCollectionHotNew] = useState<any[]>([])
     const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
     
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollectionTopNewLoaded);
+    // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+    // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionTopNewLoaded);
+    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
 
     const getTopNewAndDispatch = async () => {
         try {
-          const snapshortTop = await firestore().collection('Novels').orderBy('createAt', 'desc').get()
+          const snapshortTop = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get()
           setCollectionTopNew(snapshortTop.docs)
-      
+          setisReduxLoaded(true)
         } catch (error) {
           console.error('Error fetching Top New novels:', error);
         }
@@ -62,7 +63,7 @@ const Index : React.FC = () => {
       
       const getMostviewAndDispatch = async () => {
         try {
-          const snapshortMost = await firestore().collection('Novels').orderBy('view', 'desc').get();
+          const snapshortMost = await firestore().collection('Novels').orderBy('view', 'desc').limit(10).get();
           setCollectionMostview(snapshortMost.docs)
       
         } catch (error) {
@@ -244,8 +245,6 @@ const Index : React.FC = () => {
       }
       useEffect(() => {
         if (!isReduxLoaded) {
-          // test()
-          // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();

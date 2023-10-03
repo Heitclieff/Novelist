@@ -27,11 +27,12 @@ const Category: React.FC <Pageprops> = () => {
   
   const getCategoryAndDispatch = async () => {
       try {
-          const fetchCate = await firestore().collection('Categories').get()
+          const fetchCate = await firestore().collection('Category').get()
           const Catearray = []
           
           for (const doc of fetchCate.docs) {
-            const proJect = await firestore().collection('Projects').where('cateDoc','==',doc.id).get()
+            // console.log(doc.id)
+            const proJect = await firestore().collection('Novels').where('cateDoc','==',doc.id).get()
             const projectItem = []
             for (let proData of proJect.docs) {
               projectItem.push({id: proData.id})

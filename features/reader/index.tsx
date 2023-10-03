@@ -61,7 +61,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+    // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState([]); //<any[]>
     const [chapterItem, setchapterItem] = useState([])
@@ -109,21 +109,31 @@ const NovelContent : React.FC <Pageprops> = () => {
     //     setisReduxLoaded(true)
     // }
 
-    const fetchNovelContent = async () : Promise<void> => {
-        const SnapshortContent = await firestore().collection('Novels').doc(id).get();
+    const fetchNovelandChapter = async () : Promise<void> => {
+        try {
+            // fetch SnapshortContent from Novel
+            const SnapshotContent = await firestore().collection('Novels').doc(id);
+            const documentSnapshot = await SnapshotContent.get();
+ 
+            if (!documentSnapshot.exists) {
+                console.log("Not found this document.");
+            }
+            const Noveldocument = documentSnapshot.data();
+            setnovelItem(Noveldocument);
 
-        if(SnapshortContent.exists) {
-            const document = SnapshortContent.data();
-            setnovelItem(document);
-        } else {
-            console.log("Not found this document.")
+            // fetch SnapshortContent from Chapter
+            const SnapshotChapter = await SnapshotContent.collection('Chapters').orderBy('updateAt','desc').get();
+            const Chapterdocument = SnapshotChapter.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            setchapterItem(Chapterdocument);
+
+        } catch (error) {
+            console.error("Error fetching document:", error);
         }
-
     }
 
     useEffect(() => {
-            if(id) fetchNovelContent()
-            // console.log('reader index useeffect',chapterItem)
+            if(id) fetchNovelandChapter()
     }, [id])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
@@ -133,7 +143,6 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const scrollY = useRef(new Animated.Value(0)).current;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    console.log('reader index')
   
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
@@ -264,7 +273,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                           <VStack w='100%' bg={theme.Bg.base} position='relative' pb={HEADER_HEIGHT_EXPANDED + BOTTOM_SPACE} zIndex={0}>
                                
                            
-                             <Button onPress = {() => navigation.navigate('Readcontent',{id , title : novelItem.title})}>Content Test</Button>
+                             {/* <Button onPress = {() => navigation.navigate('Readcontent',{id , title : novelItem.title})}>Content Test</Button> */}
                                 
                               <VStack w='100%'>
                                   <Mainsection
@@ -280,7 +289,11 @@ const NovelContent : React.FC <Pageprops> = () => {
                               <Overviewsection overview = {novelItem.overview}/>
                               <Tagsection tag = {novelItem.tagDoc}/>
                               <VStack flex={1} pt={7}>
-                                  <Chapterfield id = {chapterItem} handleCommentButton={handlePresentModalPress} />
+                                  <Chapterfield  
+                                    doc_id = {id}
+                                    noveltitle = {novelItem.title} 
+                                    chapterdata = {chapterItem} 
+                                    handleCommentButton={handlePresentModalPress} />
                               </VStack>
                               {/* <CommentModal BottomRef={bottomSheetModalRef}></CommentModal> */}
                           </VStack>

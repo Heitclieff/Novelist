@@ -39,22 +39,24 @@ const Template : React.FC <Pageprops> = ({collections}) => {
   
   const isReduxLoaded = false;
   const getCateItem = async () => {
-    const cateItemSnap = await firestore().collection('Projects').where('cateDoc', '==', title).get()
+    const cateItemSnap = await firestore().collection('Novels').where('cateDoc', '==', title).get()
     const cateItem_Data = []
     for (const cateDoc of cateItemSnap.docs) {
-      const data = cateDoc.data().novelDoc
-      const novelSnap = await firestore().collection('Novels').doc(data).get()
-      const createdAt = novelSnap.data().createAt.toDate();
-      const lastUpdate = novelSnap.data().lastUpdate.toDate();
+      const data = cateDoc.data()
+      console.log('template',data)
+      // const novelSnap = await firestore().collection('Novels').doc(data).get()
+      const createdAt = data.createAt.toDate();
+      const lastUpdate = data.lastUpdate.toDate();
       
       // console.log('template',novelSnap)
-      cateItem_Data.push({ id: cateDoc.id, ...cateDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate })
+      cateItem_Data.push({ id: cateDoc.id, ...cateDoc.data(), createAt: createdAt, lastUpdate: lastUpdate })
     }
     setCateItemData(cateItem_Data);
   }
      useEffect(() => {
        if(!isReduxLoaded) {
         getCateItem()
+        console.log(cateItemData)
        }
      },[dispatch , isReduxLoaded])
   return (
@@ -62,7 +64,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
           <Memorizednavigation title = {title} fixed/>
           <VStack flex={1} pl = {4} pr = {4}>
                 <ItemList collection={cateItemData}>
-                    {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.novelDoc} data= {item}/> }
+                    {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
                 </ItemList>
           </VStack>
          

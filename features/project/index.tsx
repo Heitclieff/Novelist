@@ -33,10 +33,14 @@ import CreatorItemfield from './components/Creator.itemfield';
 
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionsDataShowcase} from '../../systems/redux/action'
+// import { getCollectionsDataShowcase} from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
+
+// firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops { 
     theme : any
@@ -46,18 +50,33 @@ const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
+    const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const [Projectype , setProjectype] = useState<string>('');
-    
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
+    const [document , setDocument] = useState<any[]>([]);
+    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
-  
+    // const Collectionsdata = []
+    const getCreatorcontent = async () : Promise<void> => {
+        try {
+            const snapshotuser = await firestore().collection('Users').doc(USER_ID).get();
+            const userdocs = snapshotuser.data();
+    
+            const projectID = userdocs.project;
+            const snapshotproject = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , projectID.map(String)).get();    
+    
+            const projectdocs = snapshotproject.docs.map(doc => ({id : doc.id , ...doc.data()}));
+            setDocument(projectdocs);
+
+        }catch(error) {    
+            console.error("Error fetching document:", error);
+        
+        }
+    }
     useEffect(() => {
-        if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
-    }, [dispatch, isReduxLoaded])
+        getCreatorcontent();
+    }, [])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -67,7 +86,7 @@ const Creator : React.FC <Pageprops> = () => {
        bottomSheetModalRef.current?.present();
     }, []);
     const handleSheetChanges = useCallback((index: number) => {        
-   }, []);
+    }, []);
 
    const handleReturnChange = () => {
      bottomSheetModalRef.current?.snapToIndex(1);
@@ -108,12 +127,22 @@ const Creator : React.FC <Pageprops> = () => {
                     </Box>   
             </Box> 
                 <VStack space = {1} m ={5} mt = {5}>
-                {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                    Collectionsdata.map((item:any , index:number) => ( 
-                        React.useMemo(() => (
-                                <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
-                        ),[]
-                        ))) 
+                {document.length > 0  ?
+                    document.map((item:any , index:number) => {
+                        return(
+                            <MemorizedCreatorItemfield 
+                            key = {index} 
+                            id = {item.id} 
+                            title = {item.title}
+                            status = {item.status}
+                            image = {item.image}
+                            creator = {item.creators}
+                            /> 
+                        )
+                       
+                    }
+                        
+                        ) 
                     : null
                 }
                 </VStack> 

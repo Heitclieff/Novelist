@@ -37,7 +37,6 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   const renderCollectionItem = useCallback(
-
     (item : Collections, round : number) => {
       const document = item.data()
       return(
@@ -47,6 +46,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
             title = {document.title}
             view = {document.view}
             images = {document.image}
+            like = {document.like}
             />
       </Suspense>
       )

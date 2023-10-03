@@ -92,7 +92,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                             <Text
                                                 fontSize={'sm'}
                                                 color={theme.Text.static}>
-                                                4.7k
+                                                {data.like}
                                             </Text>
 
                                         </HStack>
