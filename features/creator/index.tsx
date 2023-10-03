@@ -1,4 +1,4 @@
-import React,{useContext , useRef , useEffect , useCallback} from 'react'
+import React,{useContext , useState, useRef , useEffect , useCallback} from 'react'
 import { Box , VStack} from 'native-base'
 import { ImageBackground, ScrollView ,View ,Dimensions } from 'react-native'
 import { useRoute } from '@react-navigation/native';
@@ -41,42 +41,26 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
 
   const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const [Collectionsdata , setCollectionsdata] = useState<any[]>([]);
-  // const Collectionsdata = useSelector((state: any) => state.collectionsData)
-  // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
-  const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
-  const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
+  const [projectdocument , setProjectdocument] = useState<{}>({});
+  // // const Collectionsdata = useSelector((state: any) => state.collectionsData)
+  // // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionLoaded);
+  // const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
+  // const selectedcollection = Collectionsdata.filter(filtereditems => filtereditems.id === id)
 
 
   const Redirectnavigation = (direction:never) => {
         navigation.navigate(direction);
   }
 
-  const getCreateData = async () => {
-    let uid = auth().currentUser.uid
-    const snapCreate = await firestore().collection('Novels').where('creators', 'array-contains', uid).get()
-    const collection_data = []
-    for (const doc of fetchCate.docs) {
-      // console.log(doc.id)
-      // const proJect = await firestore().collection('Novels').where('cateDoc','==',doc.id).get()
-      // const projectItem = []
-      // for (let proData of proJect.docs) {
-        // projectItem.push({id: proData.id})
-      // }
-      const dataDoc = doc.data()
-      // console.log(dataDoc)
-      collection_data.push({ title: doc.id, images: dataDoc.image}) //, proDoc: projectItem 
-    } 
-    setCollectionsdata(collection_data)
-    setisReduxLoaded(true)
+  const getProjectcontent = async () => {
+    const snapshotproject = await firestore().collection('Novels').doc(id).get();
+    const projectdocs = snapshotproject.data();
 
+    setProjectdocument(projectdocs);
   }
   useEffect(() => {
-    if (!isReduxLoaded) {
-      getCreateData()
-      console.log(selectedcollection)
-    };
-  }, [isReduxLoaded])
+      getProjectcontent()
+  }, [id])
 
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
@@ -87,12 +71,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
-        {selectedcollection.length > 0 && isReduxLoaded && 
+        {projectdocument  && 
         <>
           <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
             <ImageBackground
               id='background-images'
-              source={{ uri: selectedcollection[0].image }}
+              source={{ uri: projectdocument.image}}
               alt="images"
               style={{
                 width: '100%',
@@ -116,7 +100,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
-                <Headercontent data={selectedcollection[0]} />
+                <Headercontent data={projectdocument} timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}} />
                 <EpisodeSection/>
               </VStack>
             )}

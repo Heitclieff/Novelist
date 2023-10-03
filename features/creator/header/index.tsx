@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect , useState} from 'react'
 import { 
 Box , 
 Text ,
@@ -15,19 +15,37 @@ import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
 interface containerProps {
-  data : any
+  data : any,
+  timestamp : any,
 }
 
-const Headercontent : React.FC <containerProps> = ({data})=> {
+const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+  const [formattedDate , setformattedDate] = useState<{}>({});
+
+  const TimeConvert = (timestamp) => {
+    if(timestamp.createAt && timestamp.updatedAt){
+      const createAt = new Date(timestamp.createAt.seconds * 1000 + timestamp.createAt.nanoseconds / 1000000);
+      const lastupdate = new Date(timestamp.updatedAt.seconds * 1000 + timestamp.updatedAt.nanoseconds / 1000000);
+      
+      const formattedDateCreateAt = createAt.toLocaleString();
+      const formattedDatelastupdate = lastupdate.toLocaleString();
+
+      setformattedDate({createAt : formattedDateCreateAt , lastupdated : formattedDatelastupdate});
+    }
+  }
+ 
+  useEffect(() => {
+    TimeConvert(timestamp);
+  },[timestamp])
   return (
-    <VStack w = '100%' space = {2}>
+   data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
           <Text color={theme.Text.base} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
           <HStack mt = {1}>
             <Box rounded={'full'} pl = {1} pr = {1} borderColor={theme.Text.description} borderWidth={1}>
-              <Text color={theme.Text.description} fontSize={'xs'}>Public</Text>
+              <Text color={theme.Text.description} fontSize={'xs'}>{data.status}</Text>
             </Box>
           </HStack>
           <HStack mt = {1} space={1} alignItems={'center'}>
@@ -51,7 +69,7 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
                 />
               </Box>
               <Text fontSize={'xs'} color={theme.Text.description}>
-                  4.7k
+                  {data.like}
               </Text>
             
           </HStack>
@@ -62,7 +80,7 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
             <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
           </HStack>
           <Text  color={theme.Text.description}>
-            Lorem , ipsum dolor sit amet consectetur adipisicing elit. Laboriosam dolorum distinctio consequatur autem provident error doloribus ex earum? Provident culpa dolorum vero harum, labore dicta officiis adipisci corporis quae voluptates. 
+            {data.overview}
           </Text>
         </VStack>
         <VStack pl = {5} pr= {5} pt = {5} space = {2}>
@@ -83,8 +101,10 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
           </HStack>
        
           <HStack space=  {2}>
-            <Button size = 'xs' rounded={'full'} bg = {'gray.700'}>Romantic</Button>
-            <Button size = 'xs' rounded={'full'} bg = {'gray.700'}>Comendy</Button>
+          {data.tagDoc && data.tagDoc.map((item:any,index:number) =>{
+            return(
+              <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item}</Button>
+          )})}
           </HStack>
         </VStack>
 
@@ -92,12 +112,13 @@ const Headercontent : React.FC <containerProps> = ({data})=> {
           <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
        
           <VStack space=  {2}>
-                <Text color = {theme.Text.description}>Date: 10 Octorber 2022</Text>
-                <Text color = {theme.Text.description}>Last updated: 24 August 2023</Text>
+                <Text color = {theme.Text.description}>{`Date: ${formattedDate.createAt}`}</Text>
+                <Text color = {theme.Text.description}>{`Last updated: ${formattedDate.lastupdated}`}</Text>
           </VStack>
         </VStack>
 
     </VStack>
+
   )
 }
 
