@@ -4,7 +4,7 @@
             "outputFile": "com.nobelist.app-mergeDebugResources-35:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
-                    "source": "/Users/pacharapoltariya/.gradle/caches/transforms-3/1b5af26fac14777179546a59a5913ec4/transformed/browser-1.4.0/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\nagis\\.gradle\\caches\\transforms-3\\1b5af26fac14777179546a59a5913ec4\\transformed\\browser-1.4.0\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/pacharapoltariya/.gradle/caches/transforms-3/845c42ea617b425eb1fb868d75dc0e08/transformed/core-1.7.0/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\nagis\\.gradle\\caches\\transforms-3\\845c42ea617b425eb1fb868d75dc0e08\\transformed\\core-1.7.0\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "/Users/pacharapoltariya/.gradle/caches/transforms-3/e21a48fc07e68aa916f2f9287a02e87d/transformed/appcompat-1.4.1/res/values-en-rCA/values-en-rCA.xml",
+                    "source": "C:\\Users\\nagis\\.gradle\\caches\\transforms-3\\e21a48fc07e68aa916f2f9287a02e87d\\transformed\\appcompat-1.4.1\\res\\values-en-rCA\\values-en-rCA.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
