@@ -12,11 +12,17 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 interface containerProps {
      data : any
 }
-const ChapterItem : React.FC <containerProps> = ({data}) => {
+const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
   return (
-     <Pressable onPress={() => navigation.navigate('Readcontent',{id : data.id})}>
+     <Pressable onPress={() => navigation.navigate('Readcontent',{
+          id : data.id,
+          doc_id: doc_id,
+          title: data.title , 
+          content: data.content,
+          editable : true,
+          })}>
      {({
          isHovered,
          isFocused,

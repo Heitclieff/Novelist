@@ -32,7 +32,9 @@ const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id ,title, novelt
       doc_id,
       title , 
       content,
-      noveltitle})}>
+      noveltitle,
+      editable:false,
+      })}>
       {({
         isHovered,
         isFocused,

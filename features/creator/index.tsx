@@ -117,7 +117,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
                     <Spinner accessibilityLabel="Loading posts" />   
                 </Center>
                   :
-                <EpisodeSection chapter = {chapterdocs.content}/> }
+                <EpisodeSection chapter = {chapterdocs.content} doc_id = {id}/> }
               </VStack>
             )}
           />

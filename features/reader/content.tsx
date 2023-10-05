@@ -33,7 +33,8 @@ const Readcontent : React.FC <pageProps> = () => {
      id , 
      title , 
      noveltitle , 
-     content} :any = route.params;
+     content,
+     editable,} :any = route.params;
 
      // https://console.firebase.google.com/?_gl=1*1o1iavl*_ga*NTEyNTkwNjc3LjE2OTQ1MzAzNjU.*_ga_CW55HF8NVT*MTY5NTkwNDA1OC41LjAuMTY5NTkwNDA1OC42MC4wLjA.
 
@@ -69,11 +70,11 @@ const Readcontent : React.FC <pageProps> = () => {
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation editable = {EDITABLE} event = {updatedContent} title = {title}/>
+          <Chapternavigation editable = {editable} event = {updatedContent} title = {title}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
-                    {!EDITABLE && <HStack id = "story-heading-wrap" justifyContent={'center'} >
+                    {!editable && <HStack id = "story-heading-wrap" justifyContent={'center'} >
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
                               <Text style = {{color : 'white'}} >{noveltitle}</Text>
                               <Text style = {{color : 'white' ,fontWeight : 600}} textAlign={'center'}>{`${title}`}</Text>
@@ -86,7 +87,7 @@ const Readcontent : React.FC <pageProps> = () => {
                          <TextInput        
                          style = {{color : 'white'} }
                          multiline={true}
-                         editable = {EDITABLE}
+                         editable = {editable}
                          textAlignVertical="top"
                          placeholder="พิมพ์ข้อความที่นี่..."
                          placeholderTextColor={'white'}
