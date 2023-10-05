@@ -59,6 +59,11 @@ const initialState : RootState= {
           ...state, 
           theme : action.payload,
       }
+      case 'CHAPTER_CONTENT' : 
+        return {
+          ...state,
+          content: action.payload,
+        }
       case 'FETCH_TOP_NEW':
         return {
           ...state,

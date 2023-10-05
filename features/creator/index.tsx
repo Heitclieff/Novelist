@@ -1,5 +1,5 @@
 import React,{useContext , useState, useRef , useEffect , useCallback} from 'react'
-import { Box , VStack} from 'native-base'
+import { Box , VStack , Text , Center , Spinner} from 'native-base'
 import { ImageBackground, ScrollView ,View ,Dimensions } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,7 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-// import { getCollectionData } from '../../systems/redux/action';
+import { setChaptercontent } from '../../systems/redux/action';
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -33,15 +33,46 @@ const Memorizednavigation = React.memo(Elementnavigation);
 const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const chapterdocs = useSelector((state) => state.content);
+  const {projectdocument , snapshotcontent , id} :any = route.params;
+  const [isLoading , setisLoading] = useState<boolean>(true);
+
   const Screenheight = Dimensions.get('window').height;
-  const {projectdocument , chapterdocument} :any = route.params;
-  
   const MAX_HEIGHT  = Screenheight / 2.5;
   const HEADER_HEIGHT_NARROWED = 90;
   const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
+
   const Redirectnavigation = (direction:never) => {
         navigation.navigate(direction);
   }
+
+  const fetchchaptercontent = async () : Promise <void> => {
+    try {
+      const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
+      const chapterdocs = snapshotchapter.docs.map(doc => ({id : doc.id , ...doc.data()}));
+    
+      dispatch(setChaptercontent({content : chapterdocs , id}))
+      setisLoading(false);
+    } catch(error) {
+      console.error('Error fetching chapter data:', error);
+    }
+  }
+
+  const initailfetchContent = () => {
+      if(chapterdocs){
+        if(chapterdocs.id === id) {
+          setisLoading(false)
+          return
+        }
+      }
+      fetchchaptercontent();
+  }
+
+  useEffect(() => {
+    initailfetchContent();
+  },[])
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
         {/* <Dashboardbar/> */}
@@ -81,7 +112,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
                 <Headercontent data={projectdocument} timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}} />
-                <EpisodeSection chapter = {chapterdocument}/> 
+                {isLoading ? 
+                <Center mt = {5}>
+                    <Spinner accessibilityLabel="Loading posts" />   
+                </Center>
+                  :
+                <EpisodeSection chapter = {chapterdocs.content}/> }
               </VStack>
             )}
           />

@@ -1,25 +1,25 @@
 import React, { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { KeyboardAvoidingView } from 'react-native'
 import {
-  Box,
-  VStack,
-  HStack,
-  Input,
-  Text,
-  useDisclose,
-  Button,
-  Divider,
-  IconButton,
-  FormControl,
-  Icon,
-  Center
+Box,
+VStack,
+HStack,
+Input,
+Text,
+useDisclose,
+Button,
+Divider,
+IconButton,
+FormControl,
+Icon,
+Center,
+Spinner
 } from 'native-base'
 import { teamsdata } from '../assets/config'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { BottomSheetModalProvider, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
 import { SwipeListView } from 'react-native-swipe-list-view'
-
 //@Components
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
@@ -30,6 +30,8 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
 
+//@redux
+import { useSelector } from 'react-redux'
 interface Pageprops {
   route: any
 }
@@ -40,11 +42,14 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const theme: any = useContext(ThemeWrapper);
   const navigation = useNavigation();
   const { isOpen, onOpen, onClose } = useDisclose();
-  const [chapterdocs, setChapterdocs] = useState<{}>({});
+  const [isLoading, setisLoading] = useState<boolean>(true);
+  
+  const chapterdocs = useSelector((state) => state.content);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [150, 250], []);
-  const  {chapterdocument} = route.params
+  // const {chapterdocs} = route.params;
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -55,24 +60,25 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     bottomSheetModalRef.current?.snapToIndex(1);
   }
 
-  const separateChapterdocs = (): Promise<void> => {
-    if (chapterdocument.length <= 0) return
-
-    const separatedDocs = chapterdocument.reduce((acc, item) => {
+  const separatedChapterdocs = useMemo(() => {
+    if (!chapterdocs.content) return { draft: [], other: [] };
+  
+    const document = chapterdocs.content.reduce((acc, item) => {
       if (item.status === "Draft") {
         acc.draft.push(item);
       } else {
         acc.other.push(item);
       }
       return acc;
-    }, { draft: [], other: [] })
-
-    setChapterdocs({ draft: separatedDocs.draft, other: separatedDocs.other })
-  }
+    }, { draft: [], other: [] });
+    
+    setisLoading(false);
+    return document;
+  }, [chapterdocs.content]);
 
   useEffect(() => {
-    separateChapterdocs()
-  }, [])
+
+  }, [separatedChapterdocs])
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
@@ -95,15 +101,16 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
               placeholder='Seacrh your Chapter name'
             />
           </Box>
-          {chapterdocs ? 
+          {chapterdocs.content ? 
+            !isLoading ?
             <VStack space={2} m={5} mt={6}>
-              {chapterdocs.draft &&
+              {separatedChapterdocs.draft &&
                 <>
                   <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
                   <VStack mb={4} space={2}>
                     <SwipeListView
                       disableRightSwipe
-                      data={chapterdocs.draft}
+                      data={separatedChapterdocs.draft}
                       ItemSeparatorComponent={<Box h='2' />}
                       renderItem={(item: any, index: number) => (
                         <ChapterItem data={item.item} />
@@ -121,11 +128,11 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
               <VStack mb={4} space={3} >
                 <SwipeListView
                   disableRightSwipe
-                  data={chapterdocs.other}
+                  data={separatedChapterdocs.other}
                   ItemSeparatorComponent={<Box h='2' />}
                   renderItem={(item: any, index: number) => {
                     return (
-                      <ChapterItem data={item.item} />
+                      <ChapterItem key = {index} data={item.item} />
                     )
                   }
                   }
@@ -134,13 +141,16 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   rightOpenValue={-60}
                 />
               </VStack>
+             
             </VStack>
-            
+            :   
+            <Center mt = {5}>
+              <Spinner accessibilityLabel="Loading posts" />   
+            </Center>
             :
             <Center>
                 <Text color = {theme.Text.base} mt = {10}>No Chapter content.</Text>
             </Center> 
-
           }
         </FlatList>
         <KeyboardAvoidingView behavior="position">
