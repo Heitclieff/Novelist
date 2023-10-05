@@ -1,4 +1,6 @@
+#android
 android/app/build/
+
 node_modules/
 ios/Pods/
 .expo/
