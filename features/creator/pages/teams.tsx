@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext , useState , useEffect} from 'react'
 import { 
 Box , 
 VStack, 
@@ -12,17 +12,66 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
-//@Components
+
+//@Firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
+//@components
 // import Teambar from '../../../components/creater/[container]/Teambar';
 import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 
+
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)
-const Team : React.FC = () => {
+
+
+interface pageprops {
+     route:any
+}
+const Team : React.FC <pageprops> = ({route}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
+     const [creators , setCreators] = useState<any[]>([]);
+     const {projectdocument} = route.params
+     console.log("Teams", projectdocument.creators)
+
+     const separatedAccount = () => {
+          // wait for firebase collection create.
+          if (!userdocs) return { pending: [], other: [] };
+  
+          const document = userdocs.content.reduce((acc, item) => {
+               if (item.status === "Draft") {
+               acc.draft.push(item);
+               } else {
+               acc.other.push(item);
+               }
+               return acc;
+          }, { draft: [], other: [] });
+          
+          setisLoading(false);
+          return document;
+     }
+
+     const MatchingAccount = async () :Promise<void> => {
+          try {
+               const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
+               const userdocs = snapshotuser.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
+          
+               setCreators(userdocs);
+           }catch(error) {    
+               console.error("Error fetching document:", error);
+           }
+     }
+
+
+
+     useEffect(() => {
+          MatchingAccount();
+     },[])
+
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
@@ -65,7 +114,7 @@ const Team : React.FC = () => {
                {teamsdata.length > 0 || teamsdata ?
                     <SwipeListView 
                          disableRightSwipe
-                         data={teamsdata}
+                         data={creators}
                          ItemSeparatorComponent={<Box h=  '2'/>}
                          renderItem={(item:any , index:number) => {
                               const isleader = item.username == 'Heitclieff' ? true : false

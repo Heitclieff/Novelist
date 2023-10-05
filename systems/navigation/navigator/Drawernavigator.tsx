@@ -108,7 +108,7 @@ const Drawernavigator : React.FC = () => {
 
     <Drawer.Screen name="Teams" 
         component={Team} 
-        initialParams={{id}}
+        initialParams={{projectdocument}}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <IonIcon

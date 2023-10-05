@@ -27,14 +27,14 @@ const TeamItem : React.FC <containerProps> = ({data , isleader = false}) => {
                     <Image
                     id = 'profile-image'
                     style={{width : '100%' ,height : '100%'}}
-                    source={{uri : data.image}}
+                    source={{uri : data.pf_image}}
                     />
                </Box>
                <VStack>
                     <Text color = {theme.Text.base} fontWeight={'semibold'}>{data.username}</Text>
                     <Text color = {theme.Text.base} fontSize={'xs'}>{data.email}</Text>
                </VStack>
-               {isleader &&
+               {data.isleader &&
                <Box position={'absolute'} right={6}>
                     <Text color={theme.Text.description} fontSize={'xs'} >you</Text>
                </Box>
