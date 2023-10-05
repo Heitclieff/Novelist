@@ -1,14 +1,18 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect , useState , lazy , Suspense} from 'react'
 import { ThemeWrapper } from '../../theme/Themeprovider';
 import { useRoute } from '@react-navigation/native';
+import { Box } from 'native-base';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import { useNavigation } from '@react-navigation/native';
 //@page
-import Creatorcontent from '../../../features/creator';
-import Projectsettings from '../../../features/creator/pages/Projectsettings';
-import Team from '../../../features/creator/pages/teams';
-import Commit from '../../../features/creator/pages/commit';
-import Chapter from '../../../features/creator/pages/chapter';
+
+const Creatorcontent = lazy(() => import('../../../features/creator'));
+const Projectsettings = lazy(() => import('../../../features/creator/pages/Projectsettings'));
+const Team = lazy(() => import('../../../features/creator/pages/teams'));
+const Commit = lazy(() => import('../../../features/creator/pages/commit'));
+const Chapter = lazy(() => import('../../../features/creator/pages/chapter'));
 
 //@Icons
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
@@ -22,26 +26,69 @@ const Drawer = createDrawerNavigator();
 
 const Drawernavigator : React.FC = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
+  const [projectdocument , setProjectdocument] = useState<{}>({});
+  const [chapterdocs , setChapterdocs] = useState<{}>({});
+  const [snapshotcontent ,setSnapshotcontent] = useState<[]>([]);
+  const [isLoading ,setisLoading] = useState(true)
+  const [ischapter , setisChapter] = useState(true)
+
+  const getProjectcontent = async () : Promise<void> => {
+    try {
+      const snapshotcontent = await firestore().collection('Novels').doc(id);
+      const snapshotproject =  await snapshotcontent.get()
+      const projectdocs = snapshotproject.data();
+  
+      setProjectdocument(projectdocs);
+      setSnapshotcontent(snapshotcontent)
+
+      setisLoading(false)
+
+    }catch(error){
+      console.error('Error fetching document:', error);
+    }
+  }
+
+
+  useEffect(() => {
+    getProjectcontent();
+  },[id])
 
   return (
-    <Drawer.Navigator 
-    initialRouteName="Home" 
-    drawerContent={props => <Customdrawer {...props}/>}
-    screenOptions={{drawerActiveTintColor : theme.Text.tab.active, drawerInactiveTintColor : theme.Text.tab.inactive}}>
-      <Drawer.Screen name="Dashboard" 
-        component={Creatorcontent} 
-        initialParams={{id}}
-        options={{headerShown : false , 
-          drawerIcon : ({focused , size}) => (
-            <MaterialIcon
-              name='dashboard'
-              size={15}
-              color = {focused ? theme.Icon.drawer : theme.Icon.base}
-              />
-          )}}
-      />
+    !isLoading && 
+      <Drawer.Navigator 
+      initialRouteName="Home" 
+      drawerContent={props => <Customdrawer {...props}/>}
+      screenOptions={{drawerActiveTintColor : theme.Text.tab.active, drawerInactiveTintColor : theme.Text.tab.inactive}}>
+
+          <Drawer.Screen name="Dashboard" 
+            component={Creatorcontent} 
+            initialParams={{projectdocument  ,snapshotcontent , id}}
+            options={{headerShown : false , 
+            drawerIcon : ({focused , size}) => (
+              <MaterialIcon
+                name='dashboard'
+                size={15}
+                color = {focused ? theme.Icon.drawer : theme.Icon.base}
+                />
+            )}}
+          />
+
+          <Drawer.Screen name="Chapters" 
+            component={Chapter} 
+            initialParams={{}}
+            options={{headerShown : false , 
+            drawerIcon : ({focused , size}) => (
+              <EntypoIcon
+                name='list'
+                size={15}
+                color = {focused ? theme.Icon.drawer : theme.Icon.base}
+                />
+            )}}
+          />
+
 
     <Drawer.Screen name="Commit" 
           component={Commit} 
@@ -57,23 +104,11 @@ const Drawernavigator : React.FC = () => {
       />
 
 
-      <Drawer.Screen name="Chapters" 
-          component={Chapter} 
-          initialParams={{id}}
-          options={{headerShown : false , 
-            drawerIcon : ({focused , size}) => (
-              <EntypoIcon
-                name='list'
-                size={15}
-                color = {focused ? theme.Icon.drawer : theme.Icon.base}
-                />
-            )}}
-        />
-      
+    
 
     <Drawer.Screen name="Teams" 
         component={Team} 
-        initialParams={{id}}
+        initialParams={{projectdocument}}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <IonIcon
@@ -83,7 +118,6 @@ const Drawernavigator : React.FC = () => {
               />
           )}}
       />
-
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
         initialParams={{id}}

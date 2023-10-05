@@ -18,8 +18,11 @@ import ChapterItem from '../components/ChapterItem'
 
 const MemorizedChapterItem = React.memo(ChapterItem);
 
-interface  containerProps {}
-const EpisodeSection : React.FC <containerProps> = ()=> {
+interface  containerProps {
+   chapter : any;
+   doc_id : string;
+}
+const EpisodeSection : React.FC <containerProps> = ({chapter ,doc_id})=> {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
@@ -41,10 +44,14 @@ const EpisodeSection : React.FC <containerProps> = ()=> {
           </HStack>
          <SwipeListView 
             disableRightSwipe
-            data={[0,1]}
+            data={chapter}
             ItemSeparatorComponent={<Box h=  '2'/>}
             renderItem={(item:any , index:number) => (
-               <MemorizedChapterItem data = {teamsdata[0]}/>
+               <MemorizedChapterItem 
+               key = {index}  
+               data = {item.item}
+               doc_id = {doc_id}
+               />
             )}
             renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
             leftOpenValue={60}

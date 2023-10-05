@@ -61,7 +61,6 @@ const NovelContent : React.FC <Pageprops> = () => {
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
-    // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState([]); //<any[]>
     const [chapterItem, setchapterItem] = useState([])
@@ -69,45 +68,6 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
-
-    // const getNovelItem = async () => {
-    //     const novelItemSnap = await firestore().collection('Novels').where('novelDoc', '==', id).get()
-    //     const novelItem_Data = []
-    //     const creater = [];
-    //     const chapter_Item = []
-    //     for (const novelDoc of novelItemSnap.docs) {
-    //         let docId = novelDoc.data().novelDoc
-    //         const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
-    //             console.log('chap',chap)
-    //             chap.forEach((doc) => {
-    //                 console.log('chap doc',doc)
-    //                 const updateAt = doc.data().updateAt.toDate();
-    //                 chapter_Item.push({ id: doc.id, ...doc.data(), updateAt: updateAt })
-    //             })
-    //         })
-    //         const data = novelDoc.data().novelDoc
-    //         const userDocs = novelDoc.data().creater;
-    //             for (const user of userDocs) {
-    //                 await firestore().collection('Users').doc(user).get().then((uData) => {
-    //                     const data = uData.data()
-    //                     creater.push({ id: user, username: data.username, image: data.pf_image });
-    //                 })
-    //             }
-    //         const novelSnap = await firestore().collection('Novels').doc(id).get()
-    //         const createdAt = novelSnap.data().createAt.toDate();
-    //         const lastUpdate = novelSnap.data().lastUpdate.toDate();
-            
-    //         // console.log('template',novelSnap)
-    //         novelItem_Data.push({ id: novelDoc.id, ...novelDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate, creater: creater })
-    //     }
-    //     // console.log('reader index', novelItem_Data)
-    //     // console.log('reader index useState', chapter_Item)
-    //     chapter_Item.sort((a, b) => a.chap_id - b.chap_id);
-    //     console.log("Chapter Item" ,chapter_Item)
-    //     setnovelItem(novelItem_Data);
-    //     setchapterItem(chapter_Item)
-    //     setisReduxLoaded(true)
-    // }
 
     const fetchNovelandChapter = async () : Promise<void> => {
         try {
