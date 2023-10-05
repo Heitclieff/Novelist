@@ -10,7 +10,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -28,7 +28,7 @@ const MemorizedCollectionField = React.memo(CollectionsField);
 const Index : React.FC = () => {
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
-
+    const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     })
@@ -36,9 +36,6 @@ const Index : React.FC = () => {
     const [CollectionMostview , setCollectionMostview] = useState<any[]>([]);
     const [CollectionHotNew , setCollectionHotNew] = useState<any[]>([])
     const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
-    
-    // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    // const isReduxLoaded = useSelector((state: RootState) => state.iscollectionTopNewLoaded);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
 
     const getTopNewAndDispatch = async () => {
@@ -77,13 +74,25 @@ const Index : React.FC = () => {
         const pass = 'testData'
         const userName = ['PK1','PK2','PK3']
         const userDoc = ['yFr0Nvd2uuVesrUvRTBGxPROQ463','cM6dlETlfKPGTPRPdgjDWHzzH0o1','1SyhXW6TeiWFGFzOWuhEqOsTOX23']
-        const userImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/images%2FKyxN5YqQ43bM0XH3LTuZ2GtRaYH3%2Ffile%3A%2Fdata%2Fuser%2F0%2Fcom.novelistapp%2Fcache%2Frn_image_picker_lib_temp_0c8fc886-c63c-4dae-8281-e3f8ca05a732.jpg?alt=media&token=3b80c84b-4139-41a8-ab5e-b23f596609b5",
-                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/4.png?alt=media&token=8c828f11-f677-4d97-ae5b-8a4c56da6030",
-                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/3.jpeg?alt=media&token=356ae7fd-5926-4248-aa06-7879c630deff"
+        const userImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu1.jpg?alt=media&token=3ae9e9b0-2ceb-4d4f-8592-682a53ea7491&_gl=1*r9lc25*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2MzUuNjAuMC4w",
+                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu2.jpg?alt=media&token=e72f2c9b-6ad1-40a4-a766-43da5795d6e6&_gl=1*1eem61o*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2NjUuMzAuMC4w",
+                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu3.jpg?alt=media&token=4abdc5c3-e609-4858-9b1e-bea0a97b092f&_gl=1*d3mzr2*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2ODIuMTMuMC4w",
+                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fbg1.jpg?alt=media&token=2e6ea37f-522e-44b7-b095-879eeb717596&_gl=1*84dg12*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg3MzEuMzYuMC4w",
+                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fbg2.jpg?alt=media&token=d8c0bc35-06ce-4363-ae6e-5ec60e30f0a1&_gl=1*1qbs0dv*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg3NDkuMTguMC4w",
+                           "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fbg3.jpg?alt=media&token=33b66eb1-8064-4556-bf14-90a47048a25e&_gl=1*1dau9vy*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg3NjEuNi4wLjA."
                           ]
-        const novelImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/ca4.png?alt=media&token=a6692081-d5ad-4ab1-9efd-b3c1d43d70fd",
-                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/ca1.png?alt=media&token=c58a2a91-b4fc-4913-8fc3-4cbd19a16b35",
-                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/ca2.png?alt=media&token=ce3a39bc-b10d-40b7-ab0b-68e2999df2d6"
+        const novelImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn1.jpg?alt=media&token=b3ecdab7-8a34-4fd7-b5a9-4dcfba341fd3&_gl=1*zg81sw*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkwNzAuNTUuMC4w",
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn2.jpg?alt=media&token=3ba49180-1c81-4148-90d3-f42b4c77b3d0&_gl=1*8mazps*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkwODguMzcuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn15.jpg?alt=media&token=b643278c-a071-455a-8c99-f0f583f62817&_gl=1*12ty366*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMzMjE3MC4xNi4xLjE2OTYzMzM3MjMuMTcuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn4.jpg?alt=media&token=771230bd-370a-4ccf-9e0f-3bfe56814e3d&_gl=1*wjs9uf*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxMTAuMTUuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn5.jpg?alt=media&token=e9e1e7d6-6ba4-4286-aba7-bbad4a44e32b&_gl=1*17zb8vs*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxMjAuNS4wLjA.',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn14.jpg?alt=media&token=d4919ed2-719e-4e3e-9153-d49488796475&_gl=1*1cxhutt*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMzMjE3MC4xNi4xLjE2OTYzMzM1MzMuMjEuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn7.jpg?alt=media&token=1bf548f5-1f70-46a5-8668-afbc330782cc&_gl=1*1nqezxu*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxNDAuNDkuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn8.jpg?alt=media&token=500c5bdd-3c4d-4bf8-8a21-91d5f895d8f4&_gl=1*4a45ed*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxNTAuMzkuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn9.jpg?alt=media&token=f89327a0-1d99-4790-9abc-8be2564e76c5&_gl=1*1tt1hjs*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxNjIuMjcuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn10.jpg?alt=media&token=1db89af2-6b9a-4ce8-9a95-432861b586b2&_gl=1*1pq6eae*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxNzkuMTAuMC4w',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn11.jpg?alt=media&token=da70d09a-7be2-4f19-a0a6-5ccb80404b40&_gl=1*42b3h4*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxODguMS4wLjA.',
+                            'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/novel-image%2Fn12.jpg?alt=media&token=bce9c1c4-2878-41df-89da-639929d9892f&_gl=1*12tpawx*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjkxOTYuNjAuMC4w'
                            ]
         //add catagory
         const cate = ['Action', 'Drama', 'Fantasy', 'Comedy', 'Romantic', 'Horror']
@@ -97,17 +106,18 @@ const Index : React.FC = () => {
         
         const novel_status = ['Public', "Pivate"]
         const project_status = ['Complete', 'Not Complete']
-        const commit_status = ['Yes', 'No']
-        const novelDoc_list = []
+        const commit_status = [true,false]
+        // const novelDoc_list = []
         const chapter_status = ['Draft', 'All']
-        const tag_list = ['ระบบ','เกิดใหม่','คลั่งรัก','ซอมบี้','ย้อนเวลา']
-        const tag_list2 = ['ย้อนเวลา','ซอมบี้','คลั่งรัก','เกิดใหม่','ระบบ']
+        const tag_list = ['ระบบ','เกิดใหม่','คลั่งรัก','ซอมบี้','ย้อนเวลา','หักหลัง','ครอบครัว','ตลก','เวททนตร์','ตำนาน','เรื่องเล่า','เกมส์']
+        const tag_list2 = ['อาหาร','เทพ','สู้ชีวิต','ปลูกผัก','นางเอกฉลาด','พระเอกเก่ง','อบอุ่น','มนตรา','กำลังภายใน','หมอ','ย้อนยุค','เอาชีวิตรอด']
         const rating_list = ['12+', 'เด็ก', 'ผู้ใหญ่']
-        const project_list = []
+        // const project_list = []
         const comment_status = ['Public','Private']
         const libra_type = ['Bought','History','like']
-        const like_list = Array.from({ length: 3 }, () => Math.floor(Math.random() * 100))
-        const view_list = Array.from({ length: 3 }, () => Math.floor(Math.random() * 100))
+        const like_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
+        const view_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
+        let n = 0
         
         for (let i=0; i < cate.length; i++){
           await firestore().collection('Category').doc(cate[i]).set(
@@ -129,67 +139,91 @@ const Index : React.FC = () => {
             email: email[i],
             username: userName[i],
             bg_image: userImage[i],
-            pf_image: userImage[i],
+            pf_image: userImage[i+3],
             phone: '033235131',
             birthDate: new Date(),
             createAt: new Date(),
-            description: `descrip ${i+1}`
+            description: `descrip ${i+1}`,
+            following: 0,
+            follower: 0,
+            project: []
           };
+          const mainFollow = firestore().collection('Follows')
+          let followdata = {
+            follow: [userDoc[2]]
+          }
+          mainFollow.doc(userDoc[0]).add(followdata)
+          followdata = {
+            follow: [userDoc[0],userDoc[2]]
+          }
+          mainFollow.doc(userDoc[1]).add(followdata)
+          followdata = {
+            follow: [userDoc[1]]
+          }
+          mainFollow.doc(userDoc[2]).add(followdata)
+
           const mainUserRef = firestore().collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
           await mainUserdocRef.set(userData)
           console.log('mainUserdocRef', mainUserdocRef.id)
           
-          let novelData = {
-            title: `novelTestData ${i+1}`,
-            image: novelImage[i],
-            overview: `this novel is created for test data ${i+1}`,
-            like: like_list[i],
-            view: view_list[i],
-            status: novel_status[i%2],
-            createAt: new Date(),
-            lastUpdate: new Date(),
-            creators: [mainUserdocRef.id],
-            owner: mainUserdocRef.id,
-            cateDoc: cate[i],
-            comment_status: comment_status[i%2],
-            commit_status: commit_status[i%2],
-            rating: rating_list[i%3],
-            tagDoc: [tag_list[i%5],tag_list2[i%5]]
-          }
-
-          const mainNovelRef = firestore().collection('Novels')
-          const mainNovelDocRef = mainNovelRef.add(novelData).then(async(novelDoc) => {
-            console.log('novelDoc',novelDoc.id)
-            mainUserdocRef.update({
-              project: [novelDoc.id]
-            })
-            const mainDocRef = firestore().collection('Novels').doc(novelDoc.id)
-            const chapterdocRef = mainDocRef.collection('Chapters')
-            for (let a=0; a<4;a++) {
-              let chapData = {
-                chap_id: `${a+1}`,
-                title: `Chapter title ${a+1}`,
-                content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
-                image: userImage[i],
-                status: chapter_status[a%2],
-                updateAt: new Date(),
-                updatedBy: mainUserdocRef.id
-              }
-              await chapterdocRef.add(chapData)
+          for (let j = 0; j < 3; j++) {
+            let novelData = {
+              title: `novelTestData ${n+1}`,
+              image: novelImage[n],
+              overview: `this novel is created for test data ${i+1}`,
+              like: like_list[n],
+              view: view_list[n],
+              status: novel_status[n%2],
+              createAt: new Date(),
+              lastUpdate: new Date(),
+              creators: [mainUserdocRef.id],
+              owner: mainUserdocRef.id,
+              cateDoc: cate[n%6],
+              comment_status: comment_status[n%2],
+              commit_status: commit_status[n%2],
+              rating: rating_list[n%3],
+              tagDoc: [tag_list[n%12],tag_list2[n%12]]
             }
-            const bmUserRef = mainUserdocRef.collection('Bookmark')
-            const bmUserdocRef = await bmUserRef.add({
-              novelDoc: [novelDoc.id],
-              date: new Date()
+            n++
+
+            const mainNovelRef = firestore().collection('Novels')
+            const mainNovelDocRef = mainNovelRef.add(novelData).then(async(novelDoc) => {
+              console.log('novelDoc',novelDoc.id)
+              await mainUserdocRef.update({
+                project: firestore.FieldValue.arrayUnion(novelDoc.id)
+              });
+              const mainDocRef = firestore().collection('Novels').doc(novelDoc.id)
+              const chapterdocRef = mainDocRef.collection('Chapters')
+              for (let a=0; a<4;a++) {
+                let chapData = {
+                  chap_id: `${a+1}`,
+                  title: `Chapter title ${a+1}`,
+                  content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
+                  image: userImage[i],
+                  status: chapter_status[a%2],
+                  updateAt: new Date(),
+                  updatedBy: mainUserdocRef.id
+                }
+                await chapterdocRef.add(chapData)
+              }
+              if (j < 1) {
+                const bmUserRef = mainUserdocRef.collection('Bookmark')
+                const bmUserdocRef = await bmUserRef.add({
+                  novelDoc: [novelDoc.id],
+                  date: new Date()
+                })
+                const liUserRef = mainUserdocRef.collection('Library')
+                const liUserdocRef = await liUserRef.add({
+                  novelDoc: [novelDoc.id],
+                  type: libra_type[i],
+                  date: new Date()
+                })
+              }
+              
             })
-            const liUserRef = mainUserdocRef.collection('Library')
-            const liUserdocRef = await liUserRef.add({
-              novelDoc: [novelDoc.id],
-              type: libra_type[i],
-              date: new Date()
-            })
-          })
+          }
+          
         }
       }
       const test = async () => {
@@ -229,13 +263,13 @@ const Index : React.FC = () => {
         })
 
         for (let colList of collection_list) {
-          console.log(colList)
+          // console.log(colList)
           const colSnap = firestore().collection(colList)
           const querySnapshot = await colSnap.get();
           querySnapshot.forEach((doc) => {
             try {
               doc.ref.delete();
-              console.log('deleted',doc.ref)
+              // console.log('deleted',doc.ref)
             } catch(e) {
               console.log(e)
             }
@@ -243,11 +277,25 @@ const Index : React.FC = () => {
           });
         }
       }
+      const getUserandDispatch = async () => {
+        console.log('test')
+        // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
+        let uid = auth().currentUser.uid
+        const snapUserData = await firestore().collection('Users').doc(uid).get()
+        // console.log('menu', snapUserData.data())
+        let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
+        // console.log('redux menu',userData)
+        dispatch(setUser(userData))
+      }
       useEffect(() => {
         if (!isReduxLoaded) {
+          // test()
+          // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
+          getUserandDispatch();
+          // console.log('function menu',userdata)
         }
       }, [isReduxLoaded]);
 

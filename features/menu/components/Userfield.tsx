@@ -48,7 +48,7 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                                     w='100%'
                                     h='100%'
                                     resizeMode='cover'
-                                    source={{ uri: item.image }}
+                                    source={{ uri: item.pf_image }}
                                     alt="images"
                                 />
                             </Box>
