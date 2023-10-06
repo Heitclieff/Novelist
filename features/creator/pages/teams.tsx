@@ -23,6 +23,9 @@ import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 
+//@Redux
+import { useSelector , useDispatch } from 'react-redux';
+import { setChaptercontent } from '../../../systems/redux/action';
 
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)
@@ -34,12 +37,15 @@ interface pageprops {
 const Team : React.FC <pageprops> = ({route}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
-     const [creators , setCreators] = useState<any[]>([]);
-     const {projectdocument} = route.params
-     console.log("Teams", projectdocument.creators)
+     const dispatch = useDispatch();
 
+    
+     const {projectdocument} = route.params
+     const userdocs = useSelector((state) => state.content);
+     const [creators , setCreators] = useState<any[]>(userdocs.account);
      const separatedAccount = () => {
           // wait for firebase collection create.
+   
           if (!userdocs) return { pending: [], other: [] };
   
           const document = userdocs.content.reduce((acc, item) => {
@@ -56,18 +62,18 @@ const Team : React.FC <pageprops> = ({route}) => {
      }
 
      const MatchingAccount = async () :Promise<void> => {
+          if(userdocs.account) return
+
           try {
                const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
                const userdocs = snapshotuser.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
-          
+               
                setCreators(userdocs);
-           }catch(error) {    
+          }catch(error) {    
                console.error("Error fetching document:", error);
-           }
+          }
+          
      }
-
-
-
      useEffect(() => {
           MatchingAccount();
      },[])

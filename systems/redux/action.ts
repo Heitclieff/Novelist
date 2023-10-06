@@ -45,41 +45,41 @@ export const saveThemetoStorage = (theme:any) : ThunkAction <void , RootState , 
 }
 
 
-export const fetchTopNew = (topnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      if (topnew) {
-        dispatch({ type: 'FETCH_TOP_NEW', payload: topnew})
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-};
+// export const fetchTopNew = (topnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+//   return async (dispatch: Dispatch<AnyAction>) => {
+//     try {
+//       if (topnew) {
+//         dispatch({ type: 'FETCH_TOP_NEW', payload: topnew})
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };
 
-export const fetchHotNew = (hotnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      if (hotnew) {
-        dispatch({ type: 'FETCH_HOT_NEW', payload: hotnew})
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-};
+// export const fetchHotNew = (hotnew:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+//   return async (dispatch: Dispatch<AnyAction>) => {
+//     try {
+//       if (hotnew) {
+//         dispatch({ type: 'FETCH_HOT_NEW', payload: hotnew})
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };
 
-export const fetchMostview = (mostview:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      if (mostview) {
-        dispatch({ type: 'FETCH_MOST_VIEW', payload: mostview})
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-};
+// export const fetchMostview = (mostview:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+//   return async (dispatch: Dispatch<AnyAction>) => {
+//     try {
+//       if (mostview) {
+//         dispatch({ type: 'FETCH_MOST_VIEW', payload: mostview})
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };
 
 export const getCategoryData = (Cate:any) : ThunkAction <void ,RootState, unknown , AnyAction> => {
   return (dispatch: Dispatch <AnyAction>) => {
@@ -116,17 +116,26 @@ export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> =>
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ type: 'CLEAR_USER', isuserLoaded : false});
-      console.log('001')
+      // console.log('001')
     } catch (error) {
       console.log(error);
     }
   };
 };
 
+// export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
+//   return async (dispatch: Dispatch <AnyAction>, getState: () => RootState) => {
+//     const { userData } = getState();
+//     dispatch({ type: 'FETCH_USERDATA_SUCCESS', payload: userData , isuserLoaded : true });
+//   };
+// };
 export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
-      dispatch({ type: 'CHAPTER_CONTENT', payload :content , id});
+      dispatch({ 
+        type: 'CHAPTER_CONTENT', 
+        payload :content , 
+        id});
     } catch (error) {
       console.log(error);
     }
