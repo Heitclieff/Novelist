@@ -148,25 +148,33 @@ const Index : React.FC = () => {
             follower: 0,
             project: []
           };
-          const mainFollow = firestore().collection('Follows')
-          let followdata = {
-            follow: [userDoc[2]]
-          }
-          mainFollow.doc(userDoc[0]).add(followdata)
-          followdata = {
-            follow: [userDoc[0],userDoc[2]]
-          }
-          mainFollow.doc(userDoc[1]).add(followdata)
-          followdata = {
-            follow: [userDoc[1]]
-          }
-          mainFollow.doc(userDoc[2]).add(followdata)
+          
 
           const mainUserRef = firestore().collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
           await mainUserdocRef.set(userData)
           console.log('mainUserdocRef', mainUserdocRef.id)
           
+          const mainFollow = firestore().collection('Follows');
+
+          const followDataUser0 = {
+            follow: [userDoc[2]],
+          };
+
+          const followDataUser1 = {
+            follow: [userDoc[0], userDoc[2]],
+          };
+
+          const followDataUser2 = {
+            follow: [userDoc[1]],
+          };
+          mainFollow.doc(userDoc[0]).set(followDataUser0);
+          mainFollow.doc(userDoc[1]).set(followDataUser1);
+          mainFollow.doc(userDoc[2]).set(followDataUser2);
+
+          
+
+
           for (let j = 0; j < 3; j++) {
             let novelData = {
               title: `novelTestData ${n+1}`,
@@ -225,10 +233,19 @@ const Index : React.FC = () => {
           }
           
         }
+        await firestore().collection('Users').doc(userDoc[0]).update({ following: firestore.FieldValue.increment(1) });
+        await firestore().collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
+
+        await firestore().collection('Users').doc(userDoc[1]).update({ following: firestore.FieldValue.increment(2) });
+        await firestore().collection('Users').doc(userDoc[0]).update({ follower: firestore.FieldValue.increment(1) });
+        await firestore().collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
+        
+        await firestore().collection('Users').doc(userDoc[2]).update({ following: firestore.FieldValue.increment(1) });
+        await firestore().collection('Users').doc(userDoc[1]).update({ follower: firestore.FieldValue.increment(1) });
       }
       const test = async () => {
         // auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
-        const collection_list = ['Tags','Category']
+        const collection_list = ['Tags','Category','Follows']
         const usersCollectionRef = await firestore().collection('Users').get();
 
         usersCollectionRef.forEach(async (userDoc) => {

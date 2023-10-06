@@ -42,7 +42,7 @@ const Menu :React.FC <Pageprops> = () => {
   const userdata = useSelector((state:any) => state.userData)
   const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded)
 
-  console.log(userdata)
+  // console.log(userdata)
   useEffect(() => {
     if(!isReduxLoaded) {
 
