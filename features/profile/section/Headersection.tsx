@@ -59,7 +59,7 @@ const Headersection : React.FC <contianerProps> = ({currentProfile}) =>{
                 <VStack w = {100} h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >
                     <Suspense fallback={<Box>Loading..</Box>}>
                         {currentProfile &&
-                            <Avatarfield image={currentProfile.image} size = {'100%'} />
+                            <Avatarfield image={currentProfile.pf_image} size = {'100%'} />
                         }
                     </Suspense>
                 </VStack>
@@ -80,7 +80,7 @@ const Headersection : React.FC <contianerProps> = ({currentProfile}) =>{
                     >{currentProfile.username}</Text>
                     <Text
                         color={theme.Text.description}
-                    >description
+                    >{currentProfile.description}
                     </Text>
                 </VStack> 
                 <Box w='100%' paddingX={9} mt={1} mb = {2}>
