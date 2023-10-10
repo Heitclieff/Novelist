@@ -63,16 +63,18 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState([]); //<any[]>
+    const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
 
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
+    
 
     const fetchNovelandChapter = async () : Promise<void> => {
         try {
             // fetch SnapshortContent from Novel
-            const SnapshotContent = await firestore().collection('Novels').doc(id);
+            const SnapshotContent = firestore().collection('Novels').doc(id);
             const documentSnapshot = await SnapshotContent.get();
  
             if (!documentSnapshot.exists) {
@@ -80,7 +82,10 @@ const NovelContent : React.FC <Pageprops> = () => {
             }
             const Noveldocument = documentSnapshot.data();
             setnovelItem(Noveldocument);
-
+            const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
+            const snapSubData = await snapMainData.collection('Creator').get()
+            const creatordocument = snapSubData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setnovelId(creatordocument)
             // fetch SnapshortContent from Chapter
             const SnapshotChapter = await SnapshotContent.collection('Chapters').orderBy('updateAt','desc').get();
             const Chapterdocument = SnapshotChapter.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -243,7 +248,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   />
                               </VStack>
                               <VStack w='100%' pl={6} space={2}>
-                                  <Creatorsection collection={novelItem} />
+                                  <Creatorsection collection={novelId} />
                               </VStack>
                               <Divider bg={theme.Divider.base} mt={3} />
                               <Overviewsection overview = {novelItem.overview}/>
