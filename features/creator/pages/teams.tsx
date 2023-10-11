@@ -62,6 +62,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      }
 
      const MatchingAccount = async () :Promise<void> => {
+
           if(userdocs.account) return
 
           try {
