@@ -70,8 +70,11 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
     try {
          const creatorDocs = projectdocument.creators.map(doc => doc.userDoc);
          const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
-         const userdocs = snapshotuser?.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
-
+         const userdocs = snapshotuser?.docs.map((doc , index) => ({
+          id : doc.id ,
+          isleader : projectdocument.owner === doc.id, 
+          pending : projectdocument.creators[index].pending ,
+          ...doc.data() }));
          return userdocs;
 
      }catch(error) {    
