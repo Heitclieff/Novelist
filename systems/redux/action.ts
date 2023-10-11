@@ -131,7 +131,6 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
   };
 };
 
-export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
 export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
 
