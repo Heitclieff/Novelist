@@ -50,15 +50,38 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const fetchchaptercontent = async () : Promise <void> => {
     try {
+      const userdocs = await fetchmemberAccount();
       const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
-      const chapterdocs = snapshotchapter.docs.map(doc => ({id : doc.id , ...doc.data()}));
-    
-      dispatch(setChaptercontent({content : chapterdocs , id}))
+
+      const chapterdocs = snapshotchapter.docs.map(doc => ({
+        id : doc.id , 
+        updatedimg :userdocs?.find(filteraccount => filteraccount.id === doc.data().updatedBy)?.pf_image,
+        ...doc.data() , 
+        }))
+
+      dispatch(setChaptercontent({content : chapterdocs , id , teams : userdocs}));
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);
     }
   }
+
+  const fetchmemberAccount = async () => {
+    try {
+         const creatorDocs = projectdocument.creators.map(doc => doc.userDoc);
+         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
+         const userdocs = snapshotuser?.docs.map((doc , index) => ({
+          id : doc.id ,
+          isleader : projectdocument.owner === doc.id, 
+          pending : projectdocument.creators[index].pending ,
+          ...doc.data() }));
+         return userdocs;
+
+     }catch(error) {    
+         console.error("Error fetching document:", error);
+     }
+  }
+
 
   const initailfetchContent = () => {
       if(chapterdocs){

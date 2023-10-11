@@ -23,6 +23,9 @@ import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 
+//@Redux
+import { useSelector , useDispatch } from 'react-redux';
+import { setChaptercontent } from '../../../systems/redux/action';
 
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)
@@ -34,42 +37,36 @@ interface pageprops {
 const Team : React.FC <pageprops> = ({route}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
-     const [creators , setCreators] = useState<any[]>([]);
+     const dispatch = useDispatch();
+
+    
      const {projectdocument} = route.params
-     console.log("Teams", projectdocument.creators)
+     const userdocs = useSelector((state) => state.content);
+     const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
+     const [isLoading , setisLoading] = useState<boolean>(true)
 
-     const separatedAccount = () => {
-          // wait for firebase collection create.
-          if (!userdocs) return { pending: [], other: [] };
-  
-          const document = userdocs.content.reduce((acc, item) => {
-               if (item.status === "Draft") {
-               acc.draft.push(item);
-               } else {
-               acc.other.push(item);
+     const separatedAccount = (data) => {
+          const separateditem = {pending : [] , other : []};
+          data.forEach(item => {
+               if(item.pending) {
+                    separateditem.pending.push(item)
+               }else{
+                    separateditem.other.push(item)
                }
-               return acc;
-          }, { draft: [], other: [] });
-          
+          });
+          console.log("Separateditem"  ,separateditem);
           setisLoading(false);
-          return document;
+          setCreators(separateditem);
      }
 
-     const MatchingAccount = async () :Promise<void> => {
-          try {
-               const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
-               const userdocs = snapshotuser.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
-          
-               setCreators(userdocs);
-           }catch(error) {    
-               console.error("Error fetching document:", error);
-           }
+     const initalteams =  async () : Promise <T> => {
+          if(userdocs.teams){
+               separatedAccount(userdocs.teams)
+          } 
      }
-
-
-
+     
      useEffect(() => {
-          MatchingAccount();
+          initalteams();
      },[])
 
 
@@ -95,26 +92,30 @@ const Team : React.FC <pageprops> = ({route}) => {
             </Box> 
             <VStack space = {2} m ={5} mt = {6}>
                <VStack mb = {4} space = {1}>
-                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
-                    <SwipeListView 
-                         disableRightSwipe
-                         data={[0]}
-                         ItemSeparatorComponent={<Box h=  '2'/>}
-                         renderItem={(item:any , index:number) => {
-                              return(
-                                   <MemorizedTeamitem key = {index} id = {item.id} data= {teamsdata[1]}/>
-                              )
-                         }}
-                         renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
-                         leftOpenValue={60}
-                         rightOpenValue={-60}
-                    />
+                    {creators.pending.length  > 0 &&
+                         <>
+                         <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
+                              <SwipeListView 
+                                   disableRightSwipe
+                                   data={creators.pending}
+                                   ItemSeparatorComponent={<Box h=  '2'/>}
+                                   renderItem={(item:any , index:number) => {
+                                        return(
+                                             <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
+                                        )
+                                   }}
+                                   renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
+                                   leftOpenValue={60}
+                                   rightOpenValue={-60}
+                              />
+                         </>
+                    }         
                </VStack>
                <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
-               {teamsdata.length > 0 || teamsdata ?
+               {creators.other.length > 0 ? 
                     <SwipeListView 
                          disableRightSwipe
-                         data={creators}
+                         data={creators.other}
                          ItemSeparatorComponent={<Box h=  '2'/>}
                          renderItem={(item:any , index:number) => {
                               const isleader = item.username == 'Heitclieff' ? true : false
@@ -128,16 +129,6 @@ const Team : React.FC <pageprops> = ({route}) => {
                          rightOpenValue={-60}
                     />
                :null }
-            {/* {teamsdata.length > 0 || teamsdata ?
-                    teamsdata.map((item:any , index:number) => { 
-                         const isleader = item.username == 'Heitclieff' ? true : false
-                         return(
-                         <TeamMember key = {index} id = {item.id} data= {item} isleader = {isleader}/>       
-                         )
-                                  
-                    }) 
-                    : null
-                }    */}
             </VStack>
             </FlatList>
         </Box>

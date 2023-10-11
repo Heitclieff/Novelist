@@ -40,8 +40,10 @@ const Drawernavigator : React.FC = () => {
       const snapshotcontent = await firestore().collection('Novels').doc(id);
       const snapshotproject =  await snapshotcontent.get()
       const projectdocs = snapshotproject.data();
+
+      const memberdocs = await getProjectmember(snapshotcontent)
   
-      setProjectdocument(projectdocs);
+      setProjectdocument({...projectdocs , creators : memberdocs});
       setSnapshotcontent(snapshotcontent)
 
       setisLoading(false)
@@ -51,7 +53,18 @@ const Drawernavigator : React.FC = () => {
     }
   }
 
+  const getProjectmember = async (snapshotcontent:any) : Promise<void> => {
+    try {
+      const snapshotmember = await snapshotcontent.collection('Creator').get();
+      const memberdocs = snapshotmember.docs.map(doc => doc.data())
 
+      return memberdocs;
+    }catch(error) {
+      console.error('Error fetching Member:', error);
+    }
+  }
+
+  
   useEffect(() => {
     getProjectcontent();
   },[id])
