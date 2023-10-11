@@ -53,6 +53,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
 
     useEffect(() => {
         dispatch(getuserData());
+        console.log('profile',userdata[0].bg_image)
     } , [dispatch , isReduxLoaded])
 
     const ValidatePiorityAccount = () => {
@@ -91,7 +92,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             Contentfixed = {false}
             />
             <Box w = '100%' h = {MAX_HEIGHT} position={'absolute'}>
-                <ParallaxBackground background={currentProfile.background} scrollY={scrollY}/>
+                <ParallaxBackground background={currentProfile.bg_image} scrollY={scrollY}/>
             </Box>
             <Animated.FlatList
             data={[0]}

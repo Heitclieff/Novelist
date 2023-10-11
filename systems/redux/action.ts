@@ -123,13 +123,18 @@ export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> =>
   };
 };
 
-// export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
-//   return async (dispatch: Dispatch <AnyAction>, getState: () => RootState) => {
-//     const { userData } = getState();
-//     dispatch({ type: 'FETCH_USERDATA_SUCCESS', payload: userData , isuserLoaded : true });
-//   };
-// };
+
+export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
+  return async (dispatch: Dispatch <AnyAction>, getState: () => RootState) => {
+    const { userData } = getState();
+    dispatch({ type: 'FETCH_USERDATA_SUCCESS', payload: userData , isuserLoaded : true });
+  };
+};
+
+export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
+
 export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
