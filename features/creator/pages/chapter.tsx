@@ -37,6 +37,7 @@ interface Pageprops {
 }
 
 const Memorizednavigation = React.memo(Elementnavigation);
+const MemorizedChapterItem = React.memo(ChapterItem);
 
 const Chapter: React.FC<Pageprops> = ({ route }) => {
   const theme: any = useContext(ThemeWrapper);
@@ -77,8 +78,8 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   }, [chapterdocs.content]);
 
   useEffect(() => {
-
   }, [separatedChapterdocs])
+
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
@@ -112,9 +113,12 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                       disableRightSwipe
                       data={separatedChapterdocs.draft}
                       ItemSeparatorComponent={<Box h='2' />}
-                      renderItem={(item: any, index: number) => (
-                        <ChapterItem data={item.item} />
-                      )}
+                      renderItem={(item: any, index: number) => {
+                        return(
+                          <MemorizedChapterItem key = {index} data={item.item}/>
+                        )
+                       
+                      }}
                       renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
                       leftOpenValue={60}
                       rightOpenValue={-60}
@@ -131,11 +135,11 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   data={separatedChapterdocs.other}
                   ItemSeparatorComponent={<Box h='2' />}
                   renderItem={(item: any, index: number) => {
-                    return (
-                      <ChapterItem key = {index} data={item.item} />
+                    return(
+                      <MemorizedChapterItem key = {index} data={item.item}/>
                     )
-                  }
-                  }
+                   
+                  }}
                   renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
                   leftOpenValue={60}
                   rightOpenValue={-60}

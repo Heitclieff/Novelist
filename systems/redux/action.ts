@@ -132,7 +132,10 @@ export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> =>
 export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
-      dispatch({ type: 'CHAPTER_CONTENT', payload :content , id});
+      dispatch({ 
+        type: 'CHAPTER_CONTENT', 
+        payload :content , 
+        id});
     } catch (error) {
       console.log(error);
     }

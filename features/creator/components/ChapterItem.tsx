@@ -40,7 +40,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                          <Image
                          id = 'Profile-Image'
                          style={{width : '100%' ,height :'100%'}}
-                         source={{uri :data.image}}
+                         source={{uri :data.updatedimg}}
                          />
                     </Box>
                     <Text  color={theme.Text.base} fontSize={'xs'}>Approved 2 days ago</Text>

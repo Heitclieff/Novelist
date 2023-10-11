@@ -50,15 +50,34 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const fetchchaptercontent = async () : Promise <void> => {
     try {
+      const userdocs = await fetchmemberAccount();
       const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
-      const chapterdocs = snapshotchapter.docs.map(doc => ({id : doc.id , ...doc.data()}));
-    
+
+      const chapterdocs = snapshotchapter.docs.map(doc => ({
+        id : doc.id , 
+        updatedimg :userdocs?.find(filteraccount => filteraccount.id === doc.data().updatedBy)?.pf_image,
+        ...doc.data() , 
+        }))
+
       dispatch(setChaptercontent({content : chapterdocs , id}))
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);
     }
   }
+
+  const fetchmemberAccount = async () => {
+    try {
+         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
+         const userdocs = snapshotuser?.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
+
+         return userdocs;
+
+     }catch(error) {    
+         console.error("Error fetching document:", error);
+     }
+  }
+
 
   const initailfetchContent = () => {
       if(chapterdocs){

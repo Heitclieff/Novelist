@@ -46,13 +46,17 @@ const EpisodeSection : React.FC <containerProps> = ({chapter ,doc_id})=> {
             disableRightSwipe
             data={chapter}
             ItemSeparatorComponent={<Box h=  '2'/>}
-            renderItem={(item:any , index:number) => (
-               <MemorizedChapterItem 
-               key = {index}  
-               data = {item.item}
-               doc_id = {doc_id}
+            renderItem={(item:any , index:number) => {
+               return(              
+                  <MemorizedChapterItem 
+                  key = {index}  
+                  data = {item.item}
+                  doc_id = {doc_id}
                />
-            )}
+               )
+            }
+     
+            }
             renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
             leftOpenValue={60}
             rightOpenValue={-60}
