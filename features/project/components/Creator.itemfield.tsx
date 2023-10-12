@@ -32,9 +32,9 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
      const navigation = useNavigation();
      const [creatorlist ,setCreatorlist] = useState<any[]>([]);
      
-     const fetchinguserdata = async (): Promise <void>  => {
+     const MatchingUserid = async (creatordocs:any): Promise <void>  => {
         try{
-          const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId(), 'in' , creator.map(String)).get();
+          const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId(), 'in' , creatordocs.map(String)).get();
           const userdocs = snapshotuser.docs.map(doc => ({id : doc.id , ...doc.data()}));
           setCreatorlist(userdocs)
 
@@ -43,7 +43,24 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
         }
      }
 
-     useEffect(() => {fetchinguserdata()}, [])
+
+     const fetchingcreator = async (): Promise<void> => {
+          try{
+               const projectkey = firestore().collection('Novels').doc(id);
+               const creatorkey = await projectkey.collection("Creator").get();
+
+               const creatordocs = creatorkey?.docs.map(doc => doc.data().userDoc)
+               MatchingUserid(creatordocs);
+          }catch(error) {
+               console.error("Error fetching creator from collection:", error);
+          }
+     }
+
+  
+     useEffect(() => {
+          fetchingcreator();
+          // MatchingUserid()
+     }, [])
      return ( 
      <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>
      {({

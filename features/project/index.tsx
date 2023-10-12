@@ -53,20 +53,25 @@ const Creator : React.FC <Pageprops> = () => {
     const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
+  
+
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
-    // const Collectionsdata = []
-    const getCreatorcontent = async () : Promise<void> => {
+
+    const getProjectContent = async () : Promise<void> => {
         try {
-            const snapshotuser = await firestore().collection('Users').doc(USER_ID).get();
-            const userdocs = snapshotuser.data();
+            const projectCollection = firestore().collection('Novels');
+            const snapshotprojectkey = await firestore().collection('Users').doc(USER_ID).get();
+            const projectkey = snapshotprojectkey.data();
     
-            const projectID = userdocs.project;
-            const snapshotproject = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , projectID.map(String)).get();    
-    
-            const projectdocs = snapshotproject.docs.map(doc => ({id : doc.id , ...doc.data()}));
+            const projectID = projectkey?.project;
+            const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
+            const getProjectDocs = await snapshotproject.get();
+            
+            const projectdocs =  getProjectDocs.docs.map(doc => ({id : doc.id , ...doc.data()}));
+
             setDocument(projectdocs);
 
         }catch(error) {    
@@ -75,7 +80,7 @@ const Creator : React.FC <Pageprops> = () => {
         }
     }
     useEffect(() => {
-        getCreatorcontent();
+        getProjectContent();
     }, [])
 
     const windowHeight = Dimensions.get('window').height;
