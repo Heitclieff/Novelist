@@ -3,9 +3,12 @@ import {
 Box , 
 VStack , 
 Button,
-HStack } from 'native-base'
+HStack,
+useToast,
+
+} from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
-import { TextInput , Text } from 'react-native'
+import { TextInput , Text , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
 // import ContentNavigation from '../../../../components/[stack]/Novel/[container]/ContentNavigation'
 
@@ -16,7 +19,7 @@ import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
 import { useRoute } from '@react-navigation/native'
 import Chapternavigation from '../../components/navigation/Chapternavigation'
-
+import AlertItem from './components/Alert'
 //firebase
 import firestore from '@react-native-firebase/firestore'
 import Chapter from '../creator/pages/chapter';
@@ -26,7 +29,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const DOC_ID = "7xV6Am2tw5bII2xsHunR";
      const EDITABLE = true;
      const theme:any = useContext(ThemeWrapper)
-     
+     const toast = useToast();
      const route = useRoute();
      const {
      doc_id,
@@ -35,14 +38,8 @@ const Readcontent : React.FC <pageProps> = () => {
      noveltitle , 
      content,
      editable,} :any = route.params;
-
-     // https://console.firebase.google.com/?_gl=1*1o1iavl*_ga*NTEyNTkwNjc3LjE2OTQ1MzAzNjU.*_ga_CW55HF8NVT*MTY5NTkwNDA1OC41LjAuMTY5NTkwNDA1OC42MC4wLjA.
-
-     // const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-     const [novelItem, setnovelItem] = useState<{}>({});
+     
      const [inputValue ,setinputValue] = useState("");
-     const [chapterItem, setchapterItem] = useState([])
-
      const HandleChange = (text:string) => {
           setinputValue(text)
      }
@@ -54,18 +51,29 @@ const Readcontent : React.FC <pageProps> = () => {
      const updatedContent = async () : Promise <void> => {
           const maincollection = await firestore().collection('Novels').doc(doc_id);
           const subcollection =  maincollection.collection('Chapters');
-
+          let toastStatus = "error"
           try {
                await subcollection.doc(id).update({content : inputValue});
                console.log("Updated Content Successfull.")
+               toastStatus = "success"
           }catch(error) {
                console.error("Update Content Problem ", error);
           }
+
+          toast.show({
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem status = {toastStatus} /> 
+               }
+          })
+
      }
 
      useEffect(() => {
           initialContent();
       }, [id]);
+
 
 
   return (

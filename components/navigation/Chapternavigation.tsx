@@ -10,7 +10,7 @@ AlertDialog,
 Divider,
 IconButton
 } from 'native-base';
-import { Animated } from 'react-native';
+import { Animated, Alert } from 'react-native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
 
@@ -34,7 +34,8 @@ const SaveButton: React.FC<SaveProps> = ({event}) => {
      const [isOpen, setIsOpen] = React.useState(false);
      const cancelRef = React.useRef(null);
      const onClose = () => setIsOpen(false);
-
+     
+   
      return (
           <Center>
                <Text color={theme.Text.base} onPress={() => setIsOpen(!isOpen)}>Save</Text>
@@ -70,6 +71,26 @@ const SaveButton: React.FC<SaveProps> = ({event}) => {
 const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
+     const [showAlert, setShowAlert] = useState(false);
+
+     const handleShowAlert = () => {
+          setShowAlert(true);
+        };
+      
+        const handleHideAlert = () => {
+          setShowAlert(false);
+        };
+
+        
+     const SavingAlertDailog = () => 
+     Alert.alert('Saving', 'you want to save this progress ?', [
+          {
+               text: 'Cancel',
+               style: 'cancel',
+          },
+          {text: 'Save', onPress: () => event()},
+          
+          ]);
 
      return (
           <Animated.View
@@ -131,9 +152,11 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                                              color={theme.Icon.base}
                                              name='settings' />}
                               />
-                              <SaveButton event = {event}/>
+                              <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
                          </HStack>
+                      
                     }
+                         
                </HStack>
           </Animated.View>
      )
