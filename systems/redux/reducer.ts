@@ -8,6 +8,7 @@ export interface RootState {
     createrData : any
     userData : any
     theme : any
+    tags :any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -28,6 +29,7 @@ const initialState : RootState= {
     libraryData : [],
     createrData : [],
     userData : [] ,
+    tags : {},
     theme : {},
 
     iscollectionMostviewLoaded : false,
@@ -104,6 +106,12 @@ const initialState : RootState= {
           return {
             ...state,
             userData : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_TAGS' :
+          return {
+            ...state,
+            tags : action.payload,
             isuserLoaded : true,
           }
         case 'CLEAR_USER':
