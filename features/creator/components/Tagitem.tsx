@@ -10,12 +10,13 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 interface containerProps {
      id : any,
      title : string ,
-     onAction : any
+     onAction : any,
+     onFocused : boolean,
 
 }
-const TagItem : React.FC <containerProps>= ({id ,title ,onAction , selectedTags = false}) => {
+const TagItem : React.FC <containerProps>= ({id ,title ,onAction , selectedTags = false , onFocused}) => {
      const theme:any = useContext(ThemeWrapper);
-     const [isAction , setisAction] = useState(false)
+     const [isAction , setisAction] = useState(onFocused);
 
      const onTagsPress = () =>{
           if(selectedTags)return

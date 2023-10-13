@@ -18,7 +18,7 @@ interface contianerProps {
     Contentfixed : boolean
 }
 
-const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true}) => {
+const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null}) => {
   const navigation:any  = useNavigation();
   const theme:any = useContext(ThemeWrapper);
   return (

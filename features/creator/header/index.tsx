@@ -14,6 +14,10 @@ import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
+//@Firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
 interface containerProps {
   data : any,
   timestamp : any,
@@ -23,6 +27,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   const [formattedDate , setformattedDate] = useState<{}>({});
+  const [Tagdocs ,setTagsdocs] = useState<any[]>([])
 
   const TimeConvert = (timestamp) => {
     if(timestamp.createAt && timestamp.updatedAt){
@@ -36,9 +41,27 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
     }
   }
  
+  const fetchingTagsTitle = async () : Promise<void> => {
+      try{ 
+        const tagsID =  data.tagDoc;
+        const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
+  
+        const tagdocs = snapshotTags.docs.map(doc => doc.data())
+
+        setTagsdocs(tagdocs)
+      }catch(error) {
+        console.error("Error fetching Tag title :", error);
+      }
+     
+  }
+
   useEffect(() => {
     TimeConvert(timestamp);
   },[timestamp])
+
+  useEffect(() => {
+    fetchingTagsTitle();
+  } , [Tagdocs])
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
@@ -83,30 +106,34 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
             {data.overview}
           </Text>
         </VStack>
-        <VStack pl = {5} pr= {5} pt = {5} space = {2}>
-          <HStack justifyContent={'space-between'}>
-          <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
-          <IconButton 
-            onPress={() => navigation.navigate('Tags')}
-            size = 'md'
-            rounded={'full'}
-            icon = {
-                <AntdesignIcon
-                    name='plus'
-                    size={15}
-                    color = {theme.Icon.base}
+          {
+            data.tagDoc &&
+            <VStack pl = {5} pr= {5} pt = {5} space = {2}>
+              <HStack justifyContent={'space-between'}>
+                <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
+                    <IconButton 
+                onPress={() => navigation.navigate('Tags', {current_tags : data.tagDoc})}
+                size = 'md'
+                rounded={'full'}
+                icon = {
+                    <AntdesignIcon
+                        name='plus'
+                        size={15}
+                        color = {theme.Icon.base}
+                    />
+                }
                 />
-            }
-            />
-          </HStack>
+              </HStack>
        
-          <HStack space=  {2}>
-          {data.tagDoc && data.tagDoc.map((item:any,index:number) =>{
-            return(
-              <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item}</Button>
-          )})}
-          </HStack>
-        </VStack>
+            <HStack space=  {2}>
+              {Tagdocs.length > 0 && Tagdocs.map((item:any,index:number) =>{
+                return(
+                  <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item.title}</Button>
+              )})}
+            </HStack>
+          </VStack>
+          }
+         
 
         <VStack pl = {5} pr= {5} pt = {2} space = {2} >
           <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
