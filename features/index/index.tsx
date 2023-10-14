@@ -118,7 +118,8 @@ const Index : React.FC = () => {
         const like_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
         const view_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
         let n = 0
-        
+        let tag1 = []
+        let tag2 = []
         for (let i=0; i < cate.length; i++){
           await firestore().collection('Category').doc(cate[i]).set(
             {
@@ -144,6 +145,20 @@ const Index : React.FC = () => {
             addAt: new Date()
           })
         }
+        const mainTagRef = firestore().collection('Tags')
+        let x = 0
+        
+        const snapMainTag = await mainTagRef.get().then((snap)=>{
+          snap.forEach((doc)=>{
+            if (x%2===0) {
+              tag1.push(doc.id)
+            } else {
+              tag2.push(doc.id)
+            }
+            x++
+          })
+          
+        })
         // const createUser = await auth().createUserWithEmailAndPassword(email[1], pass)
         for (let i=0; i < email.length; i++) {
           // const createUser = await auth().createUserWithEmailAndPassword(email[i], pass)
@@ -151,7 +166,7 @@ const Index : React.FC = () => {
             email: email[i],
             username: userName[i],
             bg_image: userImage[i],
-            pf_image: userImage[i+3],
+            pf_image: userImage[i],
             phone: '033235131',
             birthDate: new Date(),
             createAt: new Date(),
@@ -160,30 +175,9 @@ const Index : React.FC = () => {
             follower: 0,
             project: []
           };
-          
-
           const mainUserRef = firestore().collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
           await mainUserdocRef.set(userData)
-          // console.log('mainUserdocRef', mainUserdocRef.id)
-          
-          const mainFollow = firestore().collection('Follows');
-
-          const followDataUser0 = {
-            follow: [userDoc[2]],
-          };
-
-          const followDataUser1 = {
-            follow: [userDoc[0], userDoc[2]],
-          };
-
-          const followDataUser2 = {
-            follow: [userDoc[1]],
-          };
-          mainFollow.doc(userDoc[0]).set(followDataUser0);
-          mainFollow.doc(userDoc[1]).set(followDataUser1);
-          mainFollow.doc(userDoc[2]).set(followDataUser2);
-
           for (let j = 0; j < 3; j++) {
             let novelData = {
               title: `novelTestData ${n+1}`,
@@ -199,7 +193,7 @@ const Index : React.FC = () => {
               comment_status: comment_status[n%2],
               commit_status: commit_status[n%2],
               rating: rating_list[n%3],
-              tagDoc: [tag_list[n%12],tag_list2[n%12]]
+              tagDoc: [tag1[n%12],tag2[n%12]]
             }
             n++
 
@@ -210,9 +204,11 @@ const Index : React.FC = () => {
                 project: firestore.FieldValue.arrayUnion(novelDoc.id)
               });
               const mainDocRef = firestore().collection('Novels').doc(novelDoc.id)
-              const creatorRef = mainDocRef.collection('Creator')
-              await creatorRef.add({
+              const creatorRef = mainDocRef.collection('Creator').doc(userDoc[i])
+              await creatorRef.set({
                 userDoc: userDoc[i],
+                pf_image: userImage[i],
+                username: userName[i],
                 pending: false,
                 addAt: new Date()
               })
@@ -232,12 +228,14 @@ const Index : React.FC = () => {
               if (j < 1) {
                 const bmUserRef = mainUserdocRef.collection('Bookmark')
                 const bmUserdocRef = await bmUserRef.add({
-                  novelDoc: [novelDoc.id],
+                  novelDoc: novelDoc.id,
+                  image: novelImage[0],
+                  title: `novelTestData ${n+1}`,
                   date: new Date()
                 })
                 const liUserRef = mainUserdocRef.collection('Library')
                 const liUserdocRef = await liUserRef.add({
-                  novelDoc: [novelDoc.id],
+                  novelDoc: novelDoc.id,
                   type: libra_type[i%4],
                   date: new Date()
                 })
@@ -262,7 +260,7 @@ const Index : React.FC = () => {
           comment_status: comment_status[0],
           commit_status: commit_status[0],
           rating: rating_list[0],
-          tagDoc: [tag_list[2],tag_list2[2]]
+          tagDoc: [tag1[2],tag2[2]]
         }
         const extraNovelRef = firestore().collection('Novels')
         // console.log('extra',extraNovelRef)
@@ -327,6 +325,30 @@ const Index : React.FC = () => {
         
         await firestore().collection('Users').doc(userDoc[2]).update({ following: firestore.FieldValue.increment(1) });
         await firestore().collection('Users').doc(userDoc[1]).update({ follower: firestore.FieldValue.increment(1) });
+        const mainUserRef = firestore().collection('Users')
+        const mainUserdocRef0 = mainUserRef.doc(userDoc[0])
+        const mainUserdocRef1 = mainUserRef.doc(userDoc[1])
+        const mainUserdocRef2 = mainUserRef.doc(userDoc[2])
+        
+        const mainFollow0 = mainUserdocRef0.collection('Follows');
+        const mainFollow1 = mainUserdocRef1.collection('Follows');
+        const mainFollow2 = mainUserdocRef2.collection('Follows');
+        const followDataUser0 = {
+          following: [userDoc[2]],
+          follower: [userDoc[1]]
+        };
+        const followDataUser1 = {
+          following: [userDoc[0], userDoc[2]],
+          follower: [userDoc[2]]
+        };
+        const followDataUser2 = {
+          following: [userDoc[1]],
+          follower: [userDoc[0],userDoc[1]]
+        };
+        mainFollow0.add(followDataUser0);
+        mainFollow1.add(followDataUser1);
+        mainFollow2.add(followDataUser2);
+        console.log('Done adding data')
       }
       const test = async () => {
         // auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
@@ -340,6 +362,11 @@ const Index : React.FC = () => {
           });
           const userLibraryCollectionRef = await userDoc.ref.collection('Library').get();
           userLibraryCollectionRef.forEach(async (subDoc) => {
+            await subDoc.ref.delete();
+          });
+
+          const userFollowsCollectionRef = await userDoc.ref.collection('Follows').get();
+          userFollowsCollectionRef.forEach(async (subDoc) => {
             await subDoc.ref.delete();
           });
           try {
@@ -382,9 +409,10 @@ const Index : React.FC = () => {
             
           });
         }
+        console.log('Done deleting data')
       }
       const getUserandDispatch = async () => {
-        console.log('test')
+        // console.log('test')
         // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
         let uid = auth().currentUser.uid
         const snapUserData = await firestore().collection('Users').doc(uid).get()

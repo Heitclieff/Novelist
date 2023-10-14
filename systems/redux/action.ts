@@ -104,7 +104,7 @@ export const setUser = (user:any): ThunkAction<void, RootState, unknown, AnyActi
     try {
       if (user) {
         dispatch({ type: 'SET_USER', payload: user , isuserLoaded : true})
-        console.log('002')
+        // console.log('002')
       }
     } catch (error) {
       console.log(error);
@@ -131,7 +131,7 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
   };
 };
 
-export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
+// export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
 export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
 
