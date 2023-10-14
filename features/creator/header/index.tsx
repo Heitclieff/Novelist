@@ -87,7 +87,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
           <Text color={theme.Text.base} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
           <HStack mt = {1}>
             <Box rounded={'full'} pl = {1} pr = {1} borderColor={theme.Text.description} borderWidth={1}>
-              <Text color={theme.Text.description} fontSize={'xs'}>{data.status}</Text>
+              <Text color={theme.Text.description} fontSize={'xs'}>{data.status ? "Public" : "Private"}</Text>
             </Box>
           </HStack>
           <HStack mt = {1} space={1} alignItems={'center'}>

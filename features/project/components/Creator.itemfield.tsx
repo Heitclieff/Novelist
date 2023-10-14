@@ -81,8 +81,8 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
                     <VStack justifyContent={'center'} pt = {1}>
                          <Text color={theme.Text.heading} fontWeight={'semibold'}>{title}</Text>
                          <HStack alignItems={'center'} space = {2}>
-                              <Box w={1} h= {1} bg = {status === 'Public' ? 'green.400' : 'red.400'} rounded={'full'}></Box>
-                              <Text color = {theme.Text.base} fontSize={'xs'}>{status}</Text>
+                              <Box w={1} h= {1} bg = {status ? 'green.400' : 'red.400'} rounded={'full'}></Box>
+                              <Text color = {theme.Text.base} fontSize={'xs'}>{status ? "Public" : "Private"}</Text>
                          </HStack>
                     </VStack>
                     <Box w ='100%' pr = {2}>
