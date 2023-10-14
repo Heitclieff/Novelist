@@ -40,7 +40,7 @@ const Tag: React.FC <Pageprops> = () => {
 
      const tagdocs = useSelector((state) => state.tags)
      const tagitem = useSelector((state) => state.tagitem)
-     const {current_tags , TagslocalUpdate} = route.params;
+     const {current_tags , handleTagupdate} = route.params;
 
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
@@ -85,20 +85,18 @@ const Tag: React.FC <Pageprops> = () => {
           }
      }
 
-     const handleTagSaving = () => {
-          TagslocalUpdate(selectedTags);
+     const handleTagSaving = async () : Promise<void> => {
+          const isSuccess = await handleTagupdate(selectedTags);
          
           toast.show({
                placement : 'top',
                render: ({
-                 id
+                    id
                }) => {
-                 return <AlertItem status = {"success"}/> 
+                    return <AlertItem status = {isSuccess ? "success" : "error"}/> 
                }
           })
-
      }
-     
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {handleTagSaving}/>

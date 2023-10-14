@@ -13,7 +13,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-
+import AlertItem from '../../reader/components/Alert'
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -21,11 +21,13 @@ import firestore from '@react-native-firebase/firestore'
 interface containerProps {
   data : any,
   timestamp : any,
+  id : string,
 }
 
-const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
+const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+
   const [formattedDate , setformattedDate] = useState<{}>({});
   const [Tagdocs ,setTagsdocs] = useState<any[]>([])
 
@@ -42,7 +44,6 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
   }
  
   const fetchingTagsTitle = async () : Promise<void> => {
-      console.log(data.tagDoc)
       try{ 
         const tagsID =  data.tagDoc;
         const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
@@ -53,11 +54,23 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
       }catch(error) {
         console.error("Error fetching Tag title :", error);
       }
-     
   }
 
-  const TagslocalUpdate = (tagdocs) => {
-    setTagsdocs(tagdocs);
+  const handleTagupdate = async (tagdocs:any) :Promise<T> => {
+    try {
+        const tagid = tagdocs.map((doc => doc.id))
+        firestore()
+        .collection('Novels')
+        .doc(id)
+        .update({ tagDoc: tagid })
+       
+        setTagsdocs(tagdocs);
+
+        return true
+    } catch (error) {
+        console.error("Error Update Novel Tag :", error);
+        return false
+    }
   }
 
   useEffect(() => {
@@ -67,6 +80,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
   useEffect(() => {
     fetchingTagsTitle();
   } , [data.tagDoc])
+
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
@@ -121,7 +135,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
                     <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
                   
                     <IconButton 
-                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , TagslocalUpdate})}
+                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , handleTagupdate})}
                       size = 'md'
                       rounded={'full'}
                       icon = {

@@ -86,7 +86,6 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   }
 
 
-
   const initailfetchContent = () => {
       if(chapterdocs){
         if(chapterdocs.id === id) {
@@ -140,6 +139,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
               <VStack flex={1} bg={theme.Bg.base}>
                 <Headercontent 
                 data={projectdocs} 
+                id = {id}
                 timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}}
                 />
                 {isLoading ? 
