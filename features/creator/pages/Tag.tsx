@@ -77,7 +77,6 @@ const Tag: React.FC <Pageprops> = () => {
      const OnTagsAction = (id:string, title:string) => {
           if(!isEdit) setisEdit(true);
           
-
           if (!selectedTags.some(tag => tag.id === id)) {
                setSelectedTags([...selectedTags , {id , title}]);
           }else { 
@@ -129,7 +128,7 @@ const Tag: React.FC <Pageprops> = () => {
                     <HStack w = '100%' overflow={'hidden'} space = {2} flexWrap={'wrap'}>
                          {Object.keys(tagdocs).length > 0 &&
                               tagdocs.tags.map((item:any , index:number) =>{
-                                   const isFocused = current_tags.includes(item.id);
+                                   const isFocused = current_tags.some(currentTag => currentTag.id === item.id);
 
                                    return(
                                         <TagItem 
