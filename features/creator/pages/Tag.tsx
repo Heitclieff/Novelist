@@ -4,6 +4,8 @@ Box ,
 VStack ,
 Text , 
 Input, 
+Button,
+useToast,
 HStack} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation , useRoute } from '@react-navigation/native'
@@ -13,11 +15,13 @@ import { Categorydata } from '../../../assets/content/VisualCollectionsdata'
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setTags } from '../../../systems/redux/action'
-
+import AlertItem from '../../reader/components/Alert'
 //@Components
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import TagItem from '../components/Tagitem'
+import { StatusDialog } from '../assets/toastStatus'
+
 //@Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -32,9 +36,11 @@ const Tag: React.FC <Pageprops> = () => {
      const navigation = useNavigation();
      const route:any = useRoute();
      const dispatch = useDispatch();
-     const tagdocs = useSelector((state) => state.tags)
+     const toast = useToast();
 
-     const {current_tags} = route.params;
+     const tagdocs = useSelector((state) => state.tags)
+     const tagitem = useSelector((state) => state.tagitem)
+     const {current_tags , TagslocalUpdate} = route.params;
 
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
@@ -47,10 +53,30 @@ const Tag: React.FC <Pageprops> = () => {
           setCurrentTags();
      }
 
+     const setCurrentTags = () => {
+          if(!current_tags || Object.keys(tagdocs).length === 0) return
+
+          const matchingTags = tagdocs.tags
+          .filter(tagdoc => current_tags.some(currentTag => currentTag.id === tagdoc.id))
+          .map(tagdoc => ({id : tagdoc.id , title : tagdoc.title}));
+
+          setSelectedTags(matchingTags)
+     }
+
+
+     useEffect(() => {
+          if(Object.keys(tagdocs).length == 0 ){
+               fetchingTags();
+          }     
+     }, [])
+
+     useEffect(() => { 
+          setCurrentTags();   
+     } ,[tagdocs])
+
      const OnTagsAction = (id:string, title:string) => {
-          if(!isEdit) {
-               setisEdit(true);
-          }
+          if(!isEdit) setisEdit(true);
+          
 
           if (!selectedTags.some(tag => tag.id === id)) {
                setSelectedTags([...selectedTags , {id , title}]);
@@ -59,27 +85,24 @@ const Tag: React.FC <Pageprops> = () => {
                setSelectedTags(updatedSelectedTags); 
           }
      }
-   
-     const setCurrentTags = () => {
-          if(!current_tags) return
-   
-          const matchingTags = tagdocs.tags
-          .filter(tagdoc => current_tags.includes(tagdoc.id))
-          .map(tagdoc => ({id : tagdoc.id , title : tagdoc.title}));
 
-          setSelectedTags(matchingTags)
+     const handleTagSaving = () => {
+          TagslocalUpdate(selectedTags);
+         
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem status = {"success"}/> 
+               }
+          })
+
      }
-
-     useEffect(() => { 
-          if(Object.keys(tagdocs).length == 0 ){
-               fetchingTags();
-               return
-          }     
-          setCurrentTags();   
-     } ,[tagdocs])
+     
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
-             <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {null}/>
+          <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {handleTagSaving}/>
           <FlatList>
                <VStack flex=  {1} p = {5} space = {5}>
                     <VStack space = {2}>

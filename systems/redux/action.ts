@@ -132,6 +132,20 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
 };
 
 
+
+export const setTagSection = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_TAGS_SECTION', 
+        payload :tags , 
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
 export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {

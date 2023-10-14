@@ -19,7 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-import { setChaptercontent } from '../../systems/redux/action';
+import { setChaptercontent} from '../../systems/redux/action';
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -38,6 +38,8 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const chapterdocs = useSelector((state) => state.content);
   const {projectdocument , snapshotcontent , id} :any = route.params;
   const [isLoading , setisLoading] = useState<boolean>(true);
+
+  const [projectdocs , setprojectdocs] = useState<{}>(projectdocument);
 
   const Screenheight = Dimensions.get('window').height;
   const MAX_HEIGHT  = Screenheight / 2.5;
@@ -60,6 +62,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         }))
 
       dispatch(setChaptercontent({content : chapterdocs , id , teams : userdocs}));
+  
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);
@@ -81,6 +84,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
          console.error("Error fetching document:", error);
      }
   }
+
 
 
   const initailfetchContent = () => {
@@ -134,7 +138,10 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
-                <Headercontent data={projectdocument} timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}} />
+                <Headercontent 
+                data={projectdocs} 
+                timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}}
+                />
                 {isLoading ? 
                 <Center mt = {5}>
                     <Spinner accessibilityLabel="Loading posts" />   

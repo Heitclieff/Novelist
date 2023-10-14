@@ -42,11 +42,12 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
   }
  
   const fetchingTagsTitle = async () : Promise<void> => {
+      console.log(data.tagDoc)
       try{ 
         const tagsID =  data.tagDoc;
         const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
   
-        const tagdocs = snapshotTags.docs.map(doc => doc.data())
+        const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}))
 
         setTagsdocs(tagdocs)
       }catch(error) {
@@ -55,13 +56,17 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
      
   }
 
+  const TagslocalUpdate = (tagdocs) => {
+    setTagsdocs(tagdocs);
+  }
+
   useEffect(() => {
     TimeConvert(timestamp);
   },[timestamp])
 
   useEffect(() => {
     fetchingTagsTitle();
-  } , [Tagdocs])
+  } , [data.tagDoc])
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
@@ -109,28 +114,34 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp})=> {
           {
             data.tagDoc &&
             <VStack pl = {5} pr= {5} pt = {5} space = {2}>
-              <HStack justifyContent={'space-between'}>
-                <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
+              
+                {Tagdocs.length > 0 &&
+                  <>
+                  <HStack justifyContent={'space-between'}>
+                    <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
+                  
                     <IconButton 
-                onPress={() => navigation.navigate('Tags', {current_tags : data.tagDoc})}
-                size = 'md'
-                rounded={'full'}
-                icon = {
-                    <AntdesignIcon
-                        name='plus'
-                        size={15}
-                        color = {theme.Icon.base}
+                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , TagslocalUpdate})}
+                      size = 'md'
+                      rounded={'full'}
+                      icon = {
+                          <AntdesignIcon
+                              name='plus'
+                              size={15}
+                              color = {theme.Icon.base}
+                          />
+                        }
                     />
-                }
-                />
+                  </HStack>
+        
+                  <HStack space=  {2}>
+                    {Tagdocs.map((item:any,index:number) =>{
+                      return(
+                        <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item.title}</Button>
+                    )})}  
               </HStack>
-       
-            <HStack space=  {2}>
-              {Tagdocs.length > 0 && Tagdocs.map((item:any,index:number) =>{
-                return(
-                  <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item.title}</Button>
-              )})}
-            </HStack>
+              </>
+             }
           </VStack>
           }
          

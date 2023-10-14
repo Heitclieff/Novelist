@@ -9,6 +9,7 @@ export interface RootState {
     userData : any
     theme : any
     tags :any
+    tagitem :any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -30,6 +31,7 @@ const initialState : RootState= {
     createrData : [],
     userData : [] ,
     tags : {},
+    tagitem : {},
     theme : {},
 
     iscollectionMostviewLoaded : false,
@@ -112,6 +114,12 @@ const initialState : RootState= {
           return {
             ...state,
             tags : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_TAGS_SECTION' :
+          return {
+            ...state,
+            tagitem : action.payload,
             isuserLoaded : true,
           }
         case 'CLEAR_USER':
