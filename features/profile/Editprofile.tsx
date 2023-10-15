@@ -76,7 +76,7 @@ const Editprofile : React.FC <Pageprops> = () => {
                 </Box> 
               </Center>
               <Box ml = {5} position={'absolute'} bottom={0}   w = '85' h = '85' zIndex={10}>
-                  <MemorizedAvatarfield image = {userdata[0].image} size = '100%'/>
+                  <MemorizedAvatarfield image = {userdata[0].pf_image} size = '100%'/>
                 </Box>
             </Box>
             
