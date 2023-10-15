@@ -7,6 +7,7 @@ export interface RootState {
     libraryData : any
     createrData : any
     userData : any
+    docs : any
     theme : any
     tags :any
     tagitem :any
@@ -31,6 +32,7 @@ const initialState : RootState= {
     createrData : [],
     userData : [] ,
     tags : {},
+    docs : {},
     tagitem : {},
     theme : {},
 
@@ -67,6 +69,11 @@ const initialState : RootState= {
         return {
           ...state,
           content: action.payload,
+        }
+        case 'PROJECT_DOCUMENT' : 
+        return {
+          ...state,
+          docs: action.payload,
         }
       case 'FETCH_TOP_NEW':
         return {

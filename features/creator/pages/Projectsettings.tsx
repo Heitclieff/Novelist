@@ -18,6 +18,11 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
 
+// @Redux Tookits
+import { setProjectDocument } from '../../../systems/redux/action'
+import { useDispatch , useSelector } from 'react-redux'
+
+
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -29,10 +34,13 @@ interface Pageprops {
 const Memorizednavigation = React.memo(Elementnavigation)
 
 const Projectsettings : React.FC <Pageprops>= ({route}) => {
-     const {projectdocument , ProjectdocumentUpdate , id} = route.params
+     const {id} = route.params
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const dispatch = useDispatch();
    
+     const projectdocument = useSelector((state) => state.docs.docs);
+
      const [isEdit , setIsedit] = useState<boolean>(false)
      const [isnotEmpty , setisnotEmpty] = useState<boolean>(false);
      const [projectconfig , Setprojectconfig] = useState<{}>({
@@ -56,17 +64,18 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const handleProjectUpdate = () => {
           try{
-               const SaperatedConfig = {};
+               const firestoreConfig = {};
+               const updateDocument = {...projectdocument};
                for(const key in projectconfig){
                     if(projectconfig[key] !== projectdocument[key]){
-                         SaperatedConfig[key] = projectconfig[key];
+                         firestoreConfig[key] = projectconfig[key];
+                         updateDocument[key] = projectconfig[key];
                     }
                }
-
-               firestore().collection('Novels').doc(id).update(SaperatedConfig);
-               ProjectdocumentUpdate(SaperatedConfig);
+               
+               firestore().collection('Novels').doc(id).update(firestoreConfig);
+               dispatch(setProjectDocument({docs :updateDocument}));
                console.log("Sucessfull Updated Configuration.");
-
        
           }catch(error){
                console.error("Error Update Novel Tag :", error);

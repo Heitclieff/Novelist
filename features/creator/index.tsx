@@ -36,10 +36,10 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const dispatch = useDispatch();
 
   const chapterdocs = useSelector((state) => state.content);
-  const {projectdocument , snapshotcontent , id} :any = route.params;
-  const [isLoading , setisLoading] = useState<boolean>(true);
+  const projectdocs = useSelector((state) => state.docs.docs)
 
-  const [projectdocs , setprojectdocs] = useState<{}>(projectdocument);
+  const {projectdocument , snapshotcontent , id , isupdated} :any = route.params;
+  const [isLoading , setisLoading] = useState<boolean>(true);
 
   const Screenheight = Dimensions.get('window').height;
   const MAX_HEIGHT  = Screenheight / 2.5;
@@ -71,12 +71,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const fetchmemberAccount = async () => {
     try {
-         const creatorDocs = projectdocument.creators.map(doc => doc.userDoc);
+         const creatorDocs = projectdocs.creators.map(doc => doc.userDoc);
          const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
          const userdocs = snapshotuser?.docs.map((doc , index) => ({
           id : doc.id ,
-          isleader : projectdocument.owner === doc.id, 
-          pending : projectdocument.creators[index].pending ,
+          isleader : projectdocs.owner === doc.id, 
+          pending : projectdocs.creators[index].pending ,
           ...doc.data() }));
          return userdocs;
 
@@ -95,12 +95,6 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
       }
       fetchchaptercontent();
   }
-
-
-  useEffect(() => {
-    console.log("UPADTED PROJECT DOCS")
-    setprojectdocs(projectdocument)
-  },[projectdocument])
 
   useEffect(() => {
     initailfetchContent();
@@ -143,10 +137,11 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
+              
                 <Headercontent 
                 data={projectdocs} 
                 id = {id}
-                timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}}
+                timestamp = {{createAt : projectdocs.createAt , updatedAt : projectdocs.lastUpdate}}
                 />
                 {isLoading ? 
                 <Center mt = {5}>

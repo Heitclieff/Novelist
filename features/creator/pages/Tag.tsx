@@ -38,10 +38,11 @@ const Tag: React.FC <Pageprops> = () => {
      const dispatch = useDispatch();
      const toast = useToast();
 
-     const tagdocs = useSelector((state) => state.tags)
-     const tagitem = useSelector((state) => state.tagitem)
      const {current_tags , handleTagupdate} = route.params;
-
+     const tagdocs = useSelector((state) => state.tags)
+     
+ 
+     console.log(current_tags);
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
 
@@ -56,6 +57,7 @@ const Tag: React.FC <Pageprops> = () => {
      const setCurrentTags = () => {
           if(!current_tags || Object.keys(tagdocs).length === 0) return
 
+          console.log("DO IT")
           const matchingTags = tagdocs.tags
           .filter(tagdoc => current_tags.some(currentTag => currentTag.id === tagdoc.id))
           .map(tagdoc => ({id : tagdoc.id , title : tagdoc.title}));

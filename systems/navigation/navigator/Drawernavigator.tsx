@@ -22,20 +22,32 @@ import Customdrawer from '../../../features/creator/drawer/Customdrawer';
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+
+//@Redux Toolkits
+import { setProjectDocument } from '../../redux/action';
+import { useSelector , useDispatch } from 'react-redux';
 const Drawer = createDrawerNavigator();
 
 const Drawernavigator : React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+  const projectdocument = useSelector((state) => state.docs.docs)
+
+
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
-  const [projectdocument , setProjectdocument] = useState<{}>({});
+  const [projectDocument , setProjectdocument] = useState<{}>({});
   const [chapterdocs , setChapterdocs] = useState<{}>({});
   const [snapshotcontent ,setSnapshotcontent] = useState<[]>([]);
   const [isLoading ,setisLoading] = useState(true)
   const [ischapter , setisChapter] = useState(true)
+  const [isupdated , setisUpdated] = useState(false)
+  
+
 
   const getProjectcontent = async () : Promise<void> => {
+    console.log("FETCH PROJECT CONTENT")
     try {
       const snapshotcontent = await firestore().collection('Novels').doc(id);
       const snapshotproject =  await snapshotcontent.get()
@@ -43,9 +55,11 @@ const Drawernavigator : React.FC = () => {
 
       const memberdocs = await getProjectmember(snapshotcontent)
   
-      setProjectdocument({...projectdocs , creators : memberdocs});
+      const projectkey = {...projectdocs , creators : memberdocs}
+      setProjectdocument(projectkey);
       setSnapshotcontent(snapshotcontent)
 
+      dispatch(setProjectDocument({docs :projectkey}));
       setisLoading(false)
 
     }catch(error){
@@ -64,10 +78,8 @@ const Drawernavigator : React.FC = () => {
     }
   }
 
-  const ProjectdocumentUpdate = (docs:any) => {
-      console.log("DO THIS" , docs)
-      console.log(projectdocument)
-      setProjectdocument((prev) => ({...prev , docs}));
+  const ProjectdocumentUpdate = (UpdateDocument:any) => {
+      dispatch(setProjectDocument({docs :UpdateDocument}));
   }
   
   useEffect(() => {
@@ -83,7 +95,7 @@ const Drawernavigator : React.FC = () => {
 
           <Drawer.Screen name="Dashboard" 
             component={Creatorcontent} 
-            initialParams={{projectdocument  ,snapshotcontent , id}}
+            initialParams={{projectdocument  ,snapshotcontent , id , isupdated }}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <MaterialIcon
@@ -138,7 +150,7 @@ const Drawernavigator : React.FC = () => {
       />
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
-        initialParams={{projectdocument , ProjectdocumentUpdate, id }}
+        initialParams={{projectdocument, id }}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <AntdesignIcon
