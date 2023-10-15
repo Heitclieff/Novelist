@@ -104,7 +104,7 @@ export const setUser = (user:any): ThunkAction<void, RootState, unknown, AnyActi
     try {
       if (user) {
         dispatch({ type: 'SET_USER', payload: user , isuserLoaded : true})
-        console.log('002')
+        // console.log('002')
       }
     } catch (error) {
       console.log(error);
@@ -123,7 +123,6 @@ export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> =>
   };
 };
 
-
 export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyAction> => {
   return async (dispatch: Dispatch <AnyAction>, getState: () => RootState) => {
     const { userData } = getState();
@@ -131,33 +130,7 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
   };
 };
 
-
-
-export const setTagSection = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      dispatch({ 
-        type: 'SET_TAGS_SECTION', 
-        payload :tags , 
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-}
-
-export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      dispatch({ 
-        type: 'SET_TAGS', 
-        payload :tags , 
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-}
+// export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
 export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
 
