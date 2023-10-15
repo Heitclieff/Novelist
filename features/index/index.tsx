@@ -113,7 +113,7 @@ const Index : React.FC = () => {
         const tag_list2 = ['อาหาร','เทพ','สู้ชีวิต','ปลูกผัก','นางเอกฉลาด','พระเอกเก่ง','อบอุ่น','มนตรา','กำลังภายใน','หมอ','ย้อนยุค','เอาชีวิตรอด']
         const rating_list = ['12+', 'เด็ก', 'ผู้ใหญ่']
         // const project_list = []
-        const comment_status = ['Public','Private']
+        const comment_status = [true, false]
         const libra_type = ['Bought','History','like','library']
         const like_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
         const view_list = Array.from({ length: 15 }, () => Math.floor(Math.random() * 100))
