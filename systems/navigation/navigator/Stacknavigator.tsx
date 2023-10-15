@@ -15,8 +15,9 @@ const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
 const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
-const Template = lazy(() => import('../../../features/_template'));
 
+const Template = lazy(() => import('../../../features/_template'));
+const Editpage = lazy(() => import('../../../features/_template/editfield'));
 const NovelContent = lazy(() => import('../../../features/reader'));
 const Creatorcontent = lazy(() => import('../../../features/creator'));
 const Createproject = lazy(() => import('../../../features/project/Createproject'));
@@ -96,6 +97,17 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             {(props:any) => 
             <Suspense fallback = {<Box>Loading..</Box>}>
               <Editprofile {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "EditPage"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Editpage {...props}/>
             </Suspense>
             }
           </Stack.Screen>
