@@ -15,7 +15,6 @@ interface containerProps {
 
 const Creatorsection : React.FC <containerProps> = ({collection}) => {
     const theme:any = useContext(ThemeWrapper)
-    // console.log('reader section creator', collection)
   return (
     <HStack space= {2}>
     {collection && collection.map((item:any , key:number) => {

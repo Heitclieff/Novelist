@@ -1,4 +1,4 @@
-import React,{useContext, useState} from 'react'
+import React,{useContext} from 'react'
 import { 
 Box, 
 VStack , 
@@ -17,48 +17,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import CreateProjectbar from '../components/creater/[container]/CreateProjectbar';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 
-//firebase
-import firestore from '@react-native-firebase/firestore'
-import auth from '@react-native-firebase/auth'
-
 const Createproject : React.FC = () => {
-     const [projectName, setProjectName] = useState('');
-     const [overView, setoverView] = useState('');
-     const uid = auth().currentUser.uid
-     // const novel_status = ['Public', "Pivate"]
-     // const cate = ['Action', 'Drama', 'Fantasy', 'Comedy', 'Romantic', 'Horror']
-     // const commit_status = [true,false]
-     // const tag_list = ['ระบบ','เกิดใหม่','คลั่งรัก','ซอมบี้','ย้อนเวลา','หักหลัง','ครอบครัว','ตลก','เวททนตร์','ตำนาน','เรื่องเล่า','เกมส์']
-     // const tag_list2 = ['อาหาร','เทพ','สู้ชีวิต','ปลูกผัก','นางเอกฉลาด','พระเอกเก่ง','อบอุ่น','มนตรา','กำลังภายใน','หมอ','ย้อนยุค','เอาชีวิตรอด']
-     // const rating_list = ['12+', 'เด็ก', 'ผู้ใหญ่']
-     // const comment_status = ['Public','Private']
-     // let novelData = {
-     //      title: projectName,
-     //      image: '',
-     //      overview: overView,
-     //      like: 0,
-     //      view: 0,
-     //      status: novel_status[0],
-     //      createAt: new Date(),
-     //      lastUpdate: new Date(),
-     //      creators: ['user id'],
-     //      owner: 'user id',
-     //      cateDoc: cate[0],
-     //      comment_status: comment_status[0],
-     //      commit_status: commit_status[0],
-     //      rating: rating_list[0],
-     //      tagDoc: [tag_list[0],tag_list2[0]]
-     // }
-     // const uid = auth().currentUser.uid
-     // const mainUserRef = firestore().collection('Users')
-     // const mainUserdocRef = mainUserRef.doc(uid)
-     // const mainNovelRef = firestore().collection('Novels')
-     // const mainNovelDocRef = mainNovelRef.add(novelData).then(async(novelDoc) => {
-     //     console.log('novelDoc',novelDoc.id)
-     //     await mainUserdocRef.update({
-     //       project: firestore.FieldValue.arrayUnion(novelDoc.id)
-     //     });
-     // })
      const theme:any = useContext(ThemeWrapper);
      return(
      <VStack flex = {1} bg = {theme.Bg.base}>
@@ -76,8 +35,6 @@ const Createproject : React.FC = () => {
                                           color={theme.Text.base}
                                           h={9}
                                           placeholder='Enter your project name'
-                                          value={projectName}
-                                          onChangeText={(text) => setProjectName(text)}
                                      />
                                 </VStack>
 
@@ -88,10 +45,7 @@ const Createproject : React.FC = () => {
                                           bg={theme.Bg.container}
                                           borderColor={theme.Bg.container}
                                           color={theme.Text.base}
-                                          placeholder="Enter your project Overview" 
-                                          value={overView}
-                                          onChangeText={(text) => setoverView(text)}
-                                     />
+                                          placeholder="Enter your project Overview" />
                               </VStack>
 
                               <VStack space={2} >

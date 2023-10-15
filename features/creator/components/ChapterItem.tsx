@@ -39,7 +39,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                     <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
                          <Image
                          id = 'Profile-Image'
-                         style={{width : '100%' ,height :'100%' , objectFit : 'cover'}}
+                         style={{width : '100%' ,height :'100%'}}
                          source={{uri :data.updatedimg}}
                          />
                     </Box>

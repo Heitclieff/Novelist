@@ -42,31 +42,40 @@ const Team : React.FC <pageprops> = ({route}) => {
     
      const {projectdocument} = route.params
      const userdocs = useSelector((state) => state.content);
-     const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
-     const [isLoading , setisLoading] = useState<boolean>(true)
-
-     const separatedAccount = (data) => {
-          const separateditem = {pending : [] , other : []};
-          data.forEach(item => {
-               if(item.pending) {
-                    separateditem.pending.push(item)
-               }else{
-                    separateditem.other.push(item)
+     const [creators , setCreators] = useState<any[]>(userdocs.account);
+     const separatedAccount = () => {
+          // wait for firebase collection create.
+   
+          if (!userdocs) return { pending: [], other: [] };
+  
+          const document = userdocs.content.reduce((acc, item) => {
+               if (item.status === "Draft") {
+               acc.draft.push(item);
+               } else {
+               acc.other.push(item);
                }
-          });
-          console.log("Separateditem"  ,separateditem);
+               return acc;
+          }, { draft: [], other: [] });
+          
           setisLoading(false);
-          setCreators(separateditem);
+          return document;
      }
 
-     const initalteams =  async () : Promise <T> => {
-          if(userdocs.teams){
-               separatedAccount(userdocs.teams)
-          } 
+     const MatchingAccount = async () :Promise<void> => {
+          if(userdocs.account) return
+
+          try {
+               const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
+               const userdocs = snapshotuser.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
+               
+               setCreators(userdocs);
+          }catch(error) {    
+               console.error("Error fetching document:", error);
+          }
+          
      }
-     
      useEffect(() => {
-          initalteams();
+          MatchingAccount();
      },[])
 
 
@@ -92,30 +101,26 @@ const Team : React.FC <pageprops> = ({route}) => {
             </Box> 
             <VStack space = {2} m ={5} mt = {6}>
                <VStack mb = {4} space = {1}>
-                    {creators.pending.length  > 0 &&
-                         <>
-                         <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
-                              <SwipeListView 
-                                   disableRightSwipe
-                                   data={creators.pending}
-                                   ItemSeparatorComponent={<Box h=  '2'/>}
-                                   renderItem={(item:any , index:number) => {
-                                        return(
-                                             <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
-                                        )
-                                   }}
-                                   renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
-                                   leftOpenValue={60}
-                                   rightOpenValue={-60}
-                              />
-                         </>
-                    }         
-               </VStack>
-               <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
-               {creators.other.length > 0 ? 
+                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
                     <SwipeListView 
                          disableRightSwipe
-                         data={creators.other}
+                         data={[0]}
+                         ItemSeparatorComponent={<Box h=  '2'/>}
+                         renderItem={(item:any , index:number) => {
+                              return(
+                                   <MemorizedTeamitem key = {index} id = {item.id} data= {teamsdata[1]}/>
+                              )
+                         }}
+                         renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
+                         leftOpenValue={60}
+                         rightOpenValue={-60}
+                    />
+               </VStack>
+               <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
+               {teamsdata.length > 0 || teamsdata ?
+                    <SwipeListView 
+                         disableRightSwipe
+                         data={creators}
                          ItemSeparatorComponent={<Box h=  '2'/>}
                          renderItem={(item:any , index:number) => {
                               const isleader = item.username == 'Heitclieff' ? true : false
@@ -129,6 +134,16 @@ const Team : React.FC <pageprops> = ({route}) => {
                          rightOpenValue={-60}
                     />
                :null }
+            {/* {teamsdata.length > 0 || teamsdata ?
+                    teamsdata.map((item:any , index:number) => { 
+                         const isleader = item.username == 'Heitclieff' ? true : false
+                         return(
+                         <TeamMember key = {index} id = {item.id} data= {item} isleader = {isleader}/>       
+                         )
+                                  
+                    }) 
+                    : null
+                }    */}
             </VStack>
             </FlatList>
         </Box>
