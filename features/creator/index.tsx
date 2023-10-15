@@ -96,6 +96,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
       fetchchaptercontent();
   }
 
+
+  useEffect(() => {
+    console.log("UPADTED PROJECT DOCS")
+    setprojectdocs(projectdocument)
+  },[projectdocument])
+
   useEffect(() => {
     initailfetchContent();
   },[])

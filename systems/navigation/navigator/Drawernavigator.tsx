@@ -64,6 +64,11 @@ const Drawernavigator : React.FC = () => {
     }
   }
 
+  const ProjectdocumentUpdate = (docs:any) => {
+      console.log("DO THIS" , docs)
+      console.log(projectdocument)
+      setProjectdocument((prev) => ({...prev , docs}));
+  }
   
   useEffect(() => {
     getProjectcontent();
@@ -133,7 +138,7 @@ const Drawernavigator : React.FC = () => {
       />
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
-        initialParams={{id}}
+        initialParams={{projectdocument , ProjectdocumentUpdate, id }}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <AntdesignIcon
