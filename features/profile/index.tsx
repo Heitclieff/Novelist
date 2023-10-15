@@ -77,8 +77,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     } , []);
 
     useEffect(() => {
-        setIsLoading(true);
-  
         setTimeout(() => {
           setIsLoading(false);
         },0)

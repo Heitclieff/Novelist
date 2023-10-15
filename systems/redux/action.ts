@@ -129,13 +129,45 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
     dispatch({ type: 'FETCH_USERDATA_SUCCESS', payload: userData , isuserLoaded : true });
   };
 };
-export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
+
+
+
+export const setTagSection = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_TAGS_SECTION', 
+        payload :tags , 
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_TAGS', 
+        payload :tags , 
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
         type: 'CHAPTER_CONTENT', 
         payload :content , 
-        id});
+        id,
+        teams
+      });
     } catch (error) {
       console.log(error);
     }
