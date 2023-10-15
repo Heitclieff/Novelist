@@ -32,8 +32,7 @@ const Drawernavigator : React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const projectdocument = useSelector((state) => state.docs.docs)
-
+  const projectdocument = useSelector((state) => state.docs)
 
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
@@ -44,24 +43,23 @@ const Drawernavigator : React.FC = () => {
   const [ischapter , setisChapter] = useState(true)
   const [isupdated , setisUpdated] = useState(false)
   
-
-
   const getProjectcontent = async () : Promise<void> => {
-    console.log("FETCH PROJECT CONTENT")
     try {
-      const snapshotcontent = await firestore().collection('Novels').doc(id);
-      const snapshotproject =  await snapshotcontent.get()
-      const projectdocs = snapshotproject.data();
-
-      const memberdocs = await getProjectmember(snapshotcontent)
+      if(projectdocument.id !== id){
+        const snapshotcontent = await firestore().collection('Novels').doc(id);
+        const snapshotproject =  await snapshotcontent.get()
+        const projectdocs = snapshotproject.data();
   
-      const projectkey = {...projectdocs , creators : memberdocs}
-      setProjectdocument(projectkey);
-      setSnapshotcontent(snapshotcontent)
-
-      dispatch(setProjectDocument({docs :projectkey}));
-      setisLoading(false)
-
+        const memberdocs = await getProjectmember(snapshotcontent)
+    
+        const projectkey = {...projectdocs , creators : memberdocs}
+        setProjectdocument(projectkey);
+        setSnapshotcontent(snapshotcontent)
+  
+        dispatch(setProjectDocument({docs :projectkey , id : id}));
+      }
+      
+      setisLoading(false);
     }catch(error){
       console.error('Error fetching document:', error);
     }
@@ -78,10 +76,6 @@ const Drawernavigator : React.FC = () => {
     }
   }
 
-  const ProjectdocumentUpdate = (UpdateDocument:any) => {
-      dispatch(setProjectDocument({docs :UpdateDocument}));
-  }
-  
   useEffect(() => {
     getProjectcontent();
   },[id])
@@ -95,7 +89,7 @@ const Drawernavigator : React.FC = () => {
 
           <Drawer.Screen name="Dashboard" 
             component={Creatorcontent} 
-            initialParams={{projectdocument  ,snapshotcontent , id , isupdated }}
+            initialParams={{projectdocument:  projectdocument.docs  ,snapshotcontent , id , isupdated }}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <MaterialIcon
@@ -119,7 +113,6 @@ const Drawernavigator : React.FC = () => {
             )}}
           />
 
-
     <Drawer.Screen name="Commit" 
           component={Commit} 
           initialParams={{id}}
@@ -133,12 +126,9 @@ const Drawernavigator : React.FC = () => {
             )}}
       />
 
-
-    
-
     <Drawer.Screen name="Teams" 
         component={Team} 
-        initialParams={{projectdocument}}
+        initialParams={{projectdocument : projectdocument.docs}}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <IonIcon
@@ -150,7 +140,7 @@ const Drawernavigator : React.FC = () => {
       />
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
-        initialParams={{projectdocument, id }}
+        initialParams={{projectdocument : projectdocument.docs, id }}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <AntdesignIcon

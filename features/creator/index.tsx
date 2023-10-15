@@ -108,12 +108,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
-        {projectdocument  && 
+        {projectdocs  && 
         <>
           <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
             <ImageBackground
               id='background-images'
-              source={{ uri: projectdocument.image}}
+              source={{ uri: projectdocs.image}}
               alt="images"
               style={{
                 width: '100%',

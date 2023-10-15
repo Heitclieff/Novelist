@@ -159,13 +159,13 @@ export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyActi
 }
 
 
-export const setProjectDocument = (docs:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+export const setProjectDocument = (docs:any , id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
         type: 'PROJECT_DOCUMENT', 
-        payload :docs 
+        payload :docs , id
       });
     } catch (error) {
       console.log(error);
