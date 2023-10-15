@@ -43,7 +43,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
     const cateItem_Data = []
     for (const cateDoc of cateItemSnap.docs) {
       const data = cateDoc.data()
-      console.log('template',data)
+      // console.log('template',data)
       // const novelSnap = await firestore().collection('Novels').doc(data).get()
       const createdAt = data.createAt.toDate();
       const lastUpdate = data.lastUpdate.toDate();
@@ -56,7 +56,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
      useEffect(() => {
        if(!isReduxLoaded) {
         getCateItem()
-        console.log(cateItemData)
+        // console.log(cateItemData)
        }
      },[dispatch , isReduxLoaded])
   return (

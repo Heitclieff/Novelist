@@ -59,7 +59,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         ...doc.data() , 
         }))
 
-      dispatch(setChaptercontent({content : chapterdocs , id}))
+      dispatch(setChaptercontent({content : chapterdocs , id , teams : userdocs}));
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);
@@ -68,9 +68,13 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const fetchmemberAccount = async () => {
     try {
-         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' , projectdocument.creators.map(String)).get();
-         const userdocs = snapshotuser?.docs.map(doc => ({id : doc.id ,isleader : projectdocument.owner === doc.id , ...doc.data() }));
-
+         const creatorDocs = projectdocument.creators.map(doc => doc.userDoc);
+         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
+         const userdocs = snapshotuser?.docs.map((doc , index) => ({
+          id : doc.id ,
+          isleader : projectdocument.owner === doc.id, 
+          pending : projectdocument.creators[index].pending ,
+          ...doc.data() }));
          return userdocs;
 
      }catch(error) {    
