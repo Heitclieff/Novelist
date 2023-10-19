@@ -19,18 +19,21 @@ import Userfield from './components/Userfield';
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
-import { useSelector } from 'react-redux';
+import { useSelector , useDispatch } from 'react-redux';
+import { setProjectTeams } from '../../systems/redux/action';
 
 const MemorizedUserfield = React.memo(Userfield);
 
 const Searchpage : React.FC =() => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
-     
+     const dispatch = useDispatch();
+
      const [searchQuery, setsearchQuery] = useState<string>('');
      const [searchResults, setSearchResults] = useState<[]>([]);
      const userdocs = useSelector((state) => state.teams);
-     
+     const docID = useSelector((state) => state.content)
+
      const searchUsers = async () : Promise<void> => {
           if(!searchQuery) {
                setSearchResults([]);
@@ -52,6 +55,31 @@ const Searchpage : React.FC =() => {
           }catch(error){
                console.log("Error Searching Users" , error)
           }
+     }
+
+     const UpdatedTeams = async (data:any , ) : Promise<void> => {
+          const updateItem = [
+               ...userdocs.teams,
+               {
+                    ...data,
+                    pending: true,
+                    isleader : false,
+               }
+          ]
+          dispatch(setProjectTeams({teams : updateItem}));
+
+          const timestamp = firestore.FieldValue.serverTimestamp();
+          const docRef =  await firestore()
+                         .collection('Novels')
+                         .doc(docID.id)
+                         .collection('Creator')
+                         .add({
+                              pending : true,
+                              userDoc : data.id,
+                              addAt  : timestamp,
+                         })
+
+          console.log("docRef ID" , docRef.id)
      }
 
      useEffect(() => {
@@ -97,10 +125,8 @@ const Searchpage : React.FC =() => {
                                    key = {index}
                                    id = {item.id}
                                    data = {item}
-                                   username = {item.username}
-                                   image = {item.pf_image}
-                                   email = {item.email}
                                    status = {status}
+                                   UpdatedTeams={UpdatedTeams}
                                    />
                               )
                          }

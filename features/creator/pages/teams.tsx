@@ -25,7 +25,7 @@ import Elementnavigation from '../../../components/navigation/Elementnavigation'
 
 //@Redux
 import { useSelector , useDispatch } from 'react-redux';
-import { setChaptercontent } from '../../../systems/redux/action';
+import { setProjectTeams } from '../../../systems/redux/action';
 
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)

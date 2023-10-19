@@ -11,34 +11,24 @@ import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
-// @Redux Toolkits
-import { setProjectTeams } from '../../../systems/redux/action'
 import { useDispatch , useSelector } from 'react-redux'
 
 interface containerProps {
      id : string,
      data : any,
      status : any,
+     UpdatedTeams:any,
 }
 
-const Userfield : React.FC <containerProps> = ({id ,data, status}) => {
+const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}) => {
      const theme:any = useContext(ThemeWrapper);
-     const dispatch = useDispatch();
      const navigation = useNavigation();
-     const teamsdocs = useSelector((state) => state.teams)
 
      const OnselectedUsers =  () =>{
           try{
-               const userdocs = [
-                    ...teamsdocs.teams,
-                    {
-                         ...data,
-                         pending: true,
-                         isleader : false,
-                    }
-               ]
-               dispatch(setProjectTeams({teams : userdocs}));
+               UpdatedTeams(data);
                navigation.goBack();
+
           }catch(error){
                console.log("Failed to SetChapter Content" , error);
           }
