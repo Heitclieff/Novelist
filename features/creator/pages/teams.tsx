@@ -4,6 +4,7 @@ Box ,
 VStack, 
 Input , 
 Icon ,
+HStack,
 Text } from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
@@ -12,17 +13,17 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { useToast } from 'native-base';
 
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
 //@components
-// import Teambar from '../../../components/creater/[container]/Teambar';
 import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
-
+import CreatorAlert from '../components/Alert';
 //@Redux
 import { useSelector , useDispatch } from 'react-redux';
 import { setProjectTeams } from '../../../systems/redux/action';
@@ -38,12 +39,13 @@ const Team : React.FC <pageprops> = ({route}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
      const dispatch = useDispatch();
-
+     const toast = useToast();
     
      const {projectdocument} = route.params
      const userdocs = useSelector((state) => state.teams);
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
+     const [isDisable , setisDisable] = useState<boolean>(false);
 
      const separatedAccount = (data:any) => {
           const separateditem = {pending : [] , other : []};
@@ -61,9 +63,12 @@ const Team : React.FC <pageprops> = ({route}) => {
      const initalteams =  async () : Promise<void> => {
           if(userdocs.teams){
                separatedAccount(userdocs.teams)
-          } 
+          }
+          
+          if(userdocs.teams.length >= 3) {
+               setisDisable(true);
+          }
      }
-     
      useEffect(() => {
           initalteams();
      },[userdocs])
@@ -71,12 +76,16 @@ const Team : React.FC <pageprops> = ({route}) => {
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
-        <Memorizednavigation title = "Teams" 
-        rightElement={[
-          { icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'plus'/> , navigate : () => navigation.navigate('Search',{novelsearch : false})},
-          {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}
-          ]}
-        />
+          <Memorizednavigation title="Teams"
+               rightElement={[
+                    {
+                         status: isDisable,
+                         icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />,
+                         navigate: () => navigation.navigate('Search', { novelsearch: false })
+                    },
+                    { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
+               ]}
+          />
          <Box flex = {1}>
           <FlatList>
             <Box w= '100%' mt = {2}>
@@ -93,10 +102,15 @@ const Team : React.FC <pageprops> = ({route}) => {
               </Box> 
             </Box> 
             <VStack space = {2} m ={5} mt = {6}>
+               <CreatorAlert/>
                <VStack mb = {4} space = {1}>
                     {creators.pending.length  > 0 &&
                          <>
-                         <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
+                         <HStack justifyContent = {'space-between'}>
+                              <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
+                              <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.pending.length}/2`}</Text>
+                         </HStack>
+                       
                               <SwipeListView 
                                    disableRightSwipe
                                    data={creators.pending}
@@ -113,7 +127,10 @@ const Team : React.FC <pageprops> = ({route}) => {
                          </>
                     }         
                </VStack>
-               <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
+               <HStack justifyContent = {'space-between'}>
+                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
+                    <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.other.length}/3`}</Text>
+               </HStack>
                {creators.other.length > 0 ? 
                     <SwipeListView 
                          disableRightSwipe

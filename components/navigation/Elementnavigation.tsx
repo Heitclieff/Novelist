@@ -43,7 +43,7 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
             }  
             </Box>
             <HStack space = {2} alignItems={'center'}>
-                {rightElement.length > 0 && rightElement.map((item:any , index:number) =>{
+                {rightElement.length > 0  && rightElement.map((item:any , index:number) =>{
                     return(
                         <IconButton
                         key = {index} 
@@ -52,6 +52,7 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
                         rounded={'full'}
                         colorScheme={'cyan'}
                         icon = {item.icon}
+                        isDisabled = {item.status}
                         />
                     )
                 })         
