@@ -19,7 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-import { setChaptercontent} from '../../systems/redux/action';
+import { setChaptercontent , setProjectTeams} from '../../systems/redux/action';
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -61,8 +61,9 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         ...doc.data() , 
         }))
 
-      dispatch(setChaptercontent({content : chapterdocs , id , teams : userdocs}));
-  
+      dispatch(setChaptercontent({content : chapterdocs , id }));
+      dispatch(setProjectTeams({teams : userdocs}))
+
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);

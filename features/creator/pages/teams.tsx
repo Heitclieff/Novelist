@@ -41,11 +41,11 @@ const Team : React.FC <pageprops> = ({route}) => {
 
     
      const {projectdocument} = route.params
-     const userdocs = useSelector((state) => state.content);
+     const userdocs = useSelector((state) => state.teams);
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
 
-     const separatedAccount = (data) => {
+     const separatedAccount = (data:any) => {
           const separateditem = {pending : [] , other : []};
           data.forEach(item => {
                if(item.pending) {
@@ -54,12 +54,11 @@ const Team : React.FC <pageprops> = ({route}) => {
                     separateditem.other.push(item)
                }
           });
-          console.log("Separateditem"  ,separateditem);
           setisLoading(false);
           setCreators(separateditem);
      }
 
-     const initalteams =  async () : Promise <T> => {
+     const initalteams =  async () : Promise<void> => {
           if(userdocs.teams){
                separatedAccount(userdocs.teams)
           } 
@@ -67,13 +66,16 @@ const Team : React.FC <pageprops> = ({route}) => {
      
      useEffect(() => {
           initalteams();
-     },[])
+     },[userdocs])
 
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
         <Memorizednavigation title = "Teams" 
-        rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+        rightElement={[
+          { icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'plus'/> , navigate : () => navigation.navigate('Search',{novelsearch : false})},
+          {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}
+          ]}
         />
          <Box flex = {1}>
           <FlatList>
