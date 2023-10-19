@@ -41,8 +41,6 @@ const Tag: React.FC <Pageprops> = () => {
      const {current_tags , handleTagupdate} = route.params;
      const tagdocs = useSelector((state) => state.tags)
      
- 
-     console.log(current_tags);
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
 
