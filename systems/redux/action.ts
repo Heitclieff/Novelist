@@ -188,3 +188,18 @@ export const setChaptercontent = (content:any ,id:string , teams:any): ThunkActi
     }
   };
 };
+
+
+export const setProjectTeams = (teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_PROJECT_TEAMS', 
+        payload : teams,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

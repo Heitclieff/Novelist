@@ -9,6 +9,7 @@ export interface RootState {
     userData : any
     docs : any
     theme : any
+    teams: any
     tags :any
     tagitem :any
 
@@ -31,6 +32,7 @@ const initialState : RootState= {
     libraryData : [],
     createrData : [],
     userData : [] ,
+    teams : [],
     tags : {},
     docs : {},
     tagitem : {},
@@ -128,6 +130,12 @@ const initialState : RootState= {
             ...state,
             tagitem : action.payload,
             isuserLoaded : true,
+          }
+        case 'SET_PROJECT_TEAMS':
+          return {
+            ...state,
+            teams : action.payload,
+            iscreaterLoaded : true
           }
         case 'CLEAR_USER':
           return {
