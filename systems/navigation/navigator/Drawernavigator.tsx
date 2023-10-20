@@ -68,7 +68,7 @@ const Drawernavigator : React.FC = () => {
   const getProjectmember = async (snapshotcontent:any) : Promise<void> => {
     try {
       const snapshotmember = await snapshotcontent.collection('Creator').get();
-      const memberdocs = snapshotmember.docs.map(doc => doc.data())
+      const memberdocs = snapshotmember.docs.map(doc =>({doc_id : doc.id , ...doc.data()}))
 
       return memberdocs;
     }catch(error) {

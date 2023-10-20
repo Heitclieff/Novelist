@@ -92,7 +92,7 @@ const Searchpage : React.FC =() => {
                   w = '85%'
                   rounded={'full'} 
                   bg = {theme.Bg.container} 
-                  borderColor={theme.Bg.comment} 
+                  borderColor={theme.Bg.comment}  
                   color={theme.Text.base}
                   h  = {9}
                   InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}

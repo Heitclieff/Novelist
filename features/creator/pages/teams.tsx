@@ -40,9 +40,8 @@ const Team : React.FC <pageprops> = ({route}) => {
      const navigation = useNavigation();
      const dispatch = useDispatch();
      const toast = useToast();
-    
-     const {projectdocument} = route.params
      const userdocs = useSelector((state) => state.teams);
+     const projectdocs = useSelector((state) => state.content)
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
      const [isDisable , setisDisable] = useState<boolean>(false);
@@ -62,17 +61,39 @@ const Team : React.FC <pageprops> = ({route}) => {
 
      const initalteams =  async () : Promise<void> => {
           if(userdocs.teams){
+               console.log(userdocs.teams)
                separatedAccount(userdocs.teams)
           }
-          
+     }
+     const DisableAddmember = () => {
           if(userdocs.teams.length >= 3) {
                setisDisable(true);
+          }else{
+               setisDisable(false);
           }
      }
+
+     const RemoveMember = async (id:string , doc_id:string) : Promise<void> => {
+          try{
+               const removedSelecteduser = userdocs.teams.filter(user => user.id !== id);
+               dispatch(setProjectTeams({teams: removedSelecteduser}));
+
+               const docRef = await firestore()
+                              .collection('Novels')
+                              .doc(projectdocs.id)
+                              .collection('Creator')
+                              .doc(doc_id)
+                              .delete()
+                              
+          }catch(error) {
+               console.log("Remove Failed " , error)
+          }
+     }
+
      useEffect(() => {
           initalteams();
-     },[userdocs])
-
+          DisableAddmember();
+     },[userdocs.teams])
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
@@ -102,7 +123,9 @@ const Team : React.FC <pageprops> = ({route}) => {
               </Box> 
             </Box> 
             <VStack space = {2} m ={5} mt = {6}>
-               <CreatorAlert/>
+               {userdocs.teams?.length >= 3 &&
+                    <CreatorAlert/>
+               }
                <VStack mb = {4} space = {1}>
                     {creators.pending.length  > 0 &&
                          <>
@@ -120,7 +143,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                                              <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
                                         )
                                    }}
-                                   renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
+                                   renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {RemoveMember} id = {data.item.id} doc_id = {data.item.doc_id}/>)}
                                    leftOpenValue={60}
                                    rightOpenValue={-60}
                               />
@@ -143,7 +166,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                               )
                               
                          }}
-                         renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
+                         renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {RemoveMember}/>)}
                          leftOpenValue={60}
                          rightOpenValue={-60}
                     />

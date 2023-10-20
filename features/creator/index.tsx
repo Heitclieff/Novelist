@@ -73,14 +73,22 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const fetchmemberAccount = async () => {
     try {
          const creatorDocs = projectdocs.creators.map(doc => doc.userDoc);
-         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
-         const userdocs = snapshotuser?.docs.map((doc , index) => ({
-          id : doc.id ,
-          isleader : projectdocs.owner === doc.id, 
-          pending : projectdocs.creators[index].pending ,
-          ...doc.data() }));
-         return userdocs;
+         const snapshotuser = await firestore().collection('Users')
+         .where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs)
+         .get();
 
+         const snapshotuserMap = new Map(snapshotuser?.docs.map(doc => [doc.id, doc]));
+         const userdocs = creatorDocs.map((doc_id:string , index:number) => {
+          const doc = snapshotuserMap.get(doc_id)?.data();
+            return {
+                id : doc_id ,
+                doc_id : projectdocs.creators[index].doc_id,
+                isleader : projectdocs.owner === doc_id, 
+                pending : projectdocs.creators[index].pending ,
+                ...doc
+              }
+              });
+        return userdocs;
      }catch(error) {    
          console.error("Error fetching document:", error);
      }
