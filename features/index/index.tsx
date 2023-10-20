@@ -429,11 +429,12 @@ const Index : React.FC = () => {
           const snapshotusers = firestore().collection("Users").doc(uid)
           const getlibrarykeys = await snapshotusers.collection("Library").get();
           const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
-    
+
           const findingNovels = await firestore().collection("Novels")
           .where(firestore.FieldPath.documentId() ,'in', librarykeys)
           .get();
-        
+
+
           const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
           dispatch(setMylibrary({book : novelDocs}))
         } catch (error) {

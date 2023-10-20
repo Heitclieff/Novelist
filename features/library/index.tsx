@@ -84,7 +84,7 @@ const Library: React.FC <Pageprops> = () => {
             </Box> 
             <VStack space = {1} m ={5} mt = {6}>
               {myBooks && 
-                myBooks?.book.length > 0 ?
+                myBooks.book?.length > 0 ?
                       myBooks.book.map((item:any , index:number) => (       
                           <MemorizedLibraryitem key = {index} id = {item.id} data= {item}/>        
                           )) 

@@ -25,12 +25,13 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
-// import { getCollectionData } from '../../systems/redux/action'
+import { setMylibrary } from '../../systems/redux/action';
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -58,6 +59,11 @@ const NovelContent : React.FC <Pageprops> = () => {
     const route = useRoute()
     const {id}:any = route.params
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+
+    const myBooks = useSelector((state) => state.book)
+    const myAccount = useSelector((state) => state.userData);
+
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
@@ -65,7 +71,8 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [novelItem, setnovelItem] = useState([]); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
-
+    
+    const [isMyOwn , setisMyOwn] = useState<boolean>(false);
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
@@ -76,12 +83,14 @@ const NovelContent : React.FC <Pageprops> = () => {
             // fetch SnapshortContent from Novel
             const SnapshotContent = firestore().collection('Novels').doc(id);
             const documentSnapshot = await SnapshotContent.get();
+            const novelDocs = documentSnapshot.data();
             if (!documentSnapshot.exists) {
                 console.log("Not found this document.");
                 return
             }
-            setnovelItem(documentSnapshot.data());
-
+            setnovelItem(novelDocs);
+            findingBookinMylibrary();
+            
             // const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
             const snapSubData = await SnapshotContent.collection('Creator').get();
             const creatorkey = snapSubData?.docs.map(doc => doc.data().userDoc);
@@ -105,6 +114,45 @@ const NovelContent : React.FC <Pageprops> = () => {
         return userdocs
 
     }
+
+    const findingBookinMylibrary = () => {
+        const findingBooks = myBooks?.book.find((doc) => doc.id === id)?.id
+        if(!findingBooks) return
+        setisMyOwn(true);
+    }   
+
+    const setMylibraryBooks = async () : Promise<void> => {
+        try{
+            const uid = myAccount[0].id
+            const getuserpath =  firestore().collection('Users').doc(uid);
+            const librarypath =  getuserpath.collection("Library")
+            const timestamp = firestore.FieldValue.serverTimestamp();
+
+            if(!isMyOwn){
+                dispatch(setMylibrary({book : [{id : id , ...novelItem}, ...myBooks.book]}))
+                const docRef = await librarypath.add({           
+                    date : timestamp,
+                    novelDoc : id,
+                    type : 'Bought'
+                    });
+                console.log('Add success', docRef.id)
+            }else{
+                const removeBooks = myBooks.book.filter((book) => book.id !== id)
+                dispatch(setMylibrary({book: removeBooks}));
+
+                const getlibrarykeys = await librarypath.where('novelDoc' , '==' , id).get()
+                const docID =  getlibrarykeys.docs.map(doc => doc.id)
+                const docRef = await librarypath.doc(docID[0]).delete();
+                console.log("Remove" , id , 'success');
+                
+            }
+        }catch(error){
+            console.log("Add Book to library Failed" , error)
+        }
+        setisMyOwn(!isMyOwn);
+
+    }
+
 
     useEffect(() => {
             if(id) fetchNovelandChapter()
@@ -135,6 +183,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                 isLiked={isLiked}
                 setisLiked={setisLiked}
                 bottomspace = {BOTTOM_SPACE}
+                myBook = {isMyOwn}
+                setlibrary = {setMylibraryBooks}
               />
               }
               {novelItem &&
