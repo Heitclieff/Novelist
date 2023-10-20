@@ -12,6 +12,7 @@ export interface RootState {
     teams: any
     tags :any
     tagitem :any
+    book : any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -37,6 +38,7 @@ const initialState : RootState= {
     docs : {},
     tagitem : {},
     theme : {},
+    book : [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -112,6 +114,13 @@ const initialState : RootState= {
             ...state,
             createrData : action.payload,
             iscreaterLoaded : true
+          }
+
+        case 'SET_MY_LIBRARY' :
+          return {
+            ...state,
+            book : action.payload,
+            isuserLoaded : true,
           }
         case 'SET_USER' :
           return {

@@ -132,6 +132,22 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
 
 // export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
+export const setMylibrary = (book:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_MY_LIBRARY', 
+        payload : book,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+
+
 export const setTagSection = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
