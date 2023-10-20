@@ -10,7 +10,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -419,8 +419,28 @@ const Index : React.FC = () => {
         // console.log('menu', snapUserData.data())
         let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
         // console.log('redux menu',userData)
+        getLibraryContent(uid);
         dispatch(setUser(userData))
       }
+
+      const getLibraryContent = async (uid):Promise<T> => {
+        try {
+          // fixed userdata to Object
+          const snapshotusers = firestore().collection("Users").doc(uid)
+          const getlibrarykeys = await snapshotusers.collection("Library").get();
+          const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
+    
+          const findingNovels = await firestore().collection("Novels")
+          .where(firestore.FieldPath.documentId() ,'in', librarykeys)
+          .get();
+        
+          const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
+          dispatch(setMylibrary({book : novelDocs}))
+        } catch (error) {
+          console.log("fetching Userdata failed" , error)
+        }
+      };
+
       useEffect(() => {
         if (!isReduxLoaded) {
           // test()

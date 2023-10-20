@@ -53,7 +53,7 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                         name= 'library-outline' 
                     />}
           >
-               <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? 'amber.400' : null}>Add to library</Text>
+               <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? 'amber.400' : null}>On Your Library</Text>
           </Button>    
           
      </HStack>

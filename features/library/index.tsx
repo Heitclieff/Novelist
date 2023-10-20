@@ -61,7 +61,7 @@ const Library: React.FC <Pageprops> = () => {
   };
   
   useEffect(() => {
-    getLibraryContent();
+    if(!myBooks) getLibraryContent();
   },[userID])
 
   return (
