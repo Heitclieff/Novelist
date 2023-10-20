@@ -76,16 +76,18 @@ const NovelContent : React.FC <Pageprops> = () => {
             // fetch SnapshortContent from Novel
             const SnapshotContent = firestore().collection('Novels').doc(id);
             const documentSnapshot = await SnapshotContent.get();
- 
             if (!documentSnapshot.exists) {
                 console.log("Not found this document.");
+                return
             }
-            const Noveldocument = documentSnapshot.data();
-            setnovelItem(Noveldocument);
-            const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
-            const snapSubData = await snapMainData.collection('Creator').get()
-            const creatordocument = snapSubData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setnovelId(creatordocument)
+            setnovelItem(documentSnapshot.data());
+
+            // const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
+            const snapSubData = await SnapshotContent.collection('Creator').get();
+            const creatorkey = snapSubData?.docs.map(doc => doc.data().userDoc);
+            const creatorDocs = await matchingUserwithId(creatorkey);
+            
+            setnovelId(creatorDocs);
             // fetch SnapshortContent from Chapter
             const SnapshotChapter = await SnapshotContent.collection('Chapters').orderBy('updateAt','desc').get();
             const Chapterdocument = SnapshotChapter.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -95,6 +97,13 @@ const NovelContent : React.FC <Pageprops> = () => {
         } catch (error) {
             console.error("Error fetching document:", error);
         }
+    }
+
+    const matchingUserwithId = async (creatorkeys : any) :Promise<T> => {
+        const getuserkeys = await firestore().collection('Users').where(firestore.FieldPath.documentId(), 'in' , creatorkeys).get();
+        const userdocs = getuserkeys.docs.map(doc => ({id: doc.id , ...doc.data()}));
+        return userdocs
+
     }
 
     useEffect(() => {
