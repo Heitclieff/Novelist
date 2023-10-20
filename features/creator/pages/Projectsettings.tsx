@@ -122,13 +122,13 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
                                         <IconButton 
-                                        size = 'md'
+                                        size = 'sm'
                                         rounded={'full'}
                                         icon = {
                                             <AntdesignIcon
                                             name='plus'
-                                            size={10}
-                                            color = {theme.Text.base}
+                                            size={12}
+                                            color = {theme.Icon.static}
                                             />
                                         }
                               />
@@ -168,19 +168,6 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              
                                         </Button>
                                    </VStack>
-                                     <VStack space={2}>
-                                          {/* {Checkboxlist.map((item:any , index:number) => {
-                                   return(
-                                   <Checkbox value="test" key = {index} >
-                                        <Text color = {theme.Text.base}>
-                                             {item.status}
-                                        </Text>
-                                   </Checkbox>
-                                   )
-                                   })} */}
-
-                                     </VStack>
-
                                 </VStack>
 
                            </VStack>
