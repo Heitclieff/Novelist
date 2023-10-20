@@ -61,7 +61,6 @@ const Team : React.FC <pageprops> = ({route}) => {
 
      const initalteams =  async () : Promise<void> => {
           if(userdocs.teams){
-               console.log(userdocs.teams)
                separatedAccount(userdocs.teams)
           }
      }
@@ -137,15 +136,23 @@ const Team : React.FC <pageprops> = ({route}) => {
                               <SwipeListView 
                                    disableRightSwipe
                                    data={creators.pending}
+                                   leftOpenValue={60}
+                                   rightOpenValue={-60}
                                    ItemSeparatorComponent={<Box h=  '2'/>}
                                    renderItem={(item:any , index:number) => {
                                         return(
                                              <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
                                         )
                                    }}
-                                   renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {RemoveMember} id = {data.item.id} doc_id = {data.item.doc_id}/>)}
-                                   leftOpenValue={60}
-                                   rightOpenValue={-60}
+                                   renderHiddenItem={ (data, rowMap) => (
+                                        <Deletebutton 
+                                             action = {RemoveMember} 
+                                             id = {data.item.id} 
+                                             doc_id = {data.item.doc_id}
+                                             title = {data.item.username}
+                                        />
+                                         )
+                                   }
                               />
                          </>
                     }         
@@ -159,16 +166,22 @@ const Team : React.FC <pageprops> = ({route}) => {
                          disableRightSwipe
                          data={creators.other}
                          ItemSeparatorComponent={<Box h=  '2'/>}
+                         leftOpenValue={60}
+                         rightOpenValue={-60}
+                       
                          renderItem={(item:any , index:number) => {
-                              const isleader = item.username == 'Heitclieff' ? true : false
                               return(
-                                   <MemorizedTeamitem key = {index} id = {item.id} data= {item.item} isleader = {isleader}/>
+                                   <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
                               )
                               
                          }}
-                         renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {RemoveMember}/>)}
-                         leftOpenValue={60}
-                         rightOpenValue={-60}
+                         renderHiddenItem={ (data) => (
+                              <Deletebutton 
+                                action = {RemoveMember} 
+                                title = {data.item.username}/>
+                                )
+                         }
+                         disableLeftSwipe = {Boolean(data => data?.isleader)}
                     />
                :null }
             </VStack>
