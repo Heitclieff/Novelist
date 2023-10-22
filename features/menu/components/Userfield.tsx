@@ -22,7 +22,7 @@ interface FiledProps {
 const Userfield: React.FC<FiledProps> = ({data}) => {
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
-    // console.log('userfield',data[0].pf_image)
+    // console.log('userfield',data)
     // data.map((item : any , key : number) => console.log(item))
     return ( data.map((item : any , key : number) => 
     <Pressable key = {key} onPress={()=> navigation.navigate("ProfileStack")}>

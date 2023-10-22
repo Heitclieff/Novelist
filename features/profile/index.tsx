@@ -19,7 +19,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
-import { getuserData } from '../../systems/redux/action'
+// import { getuserData } from '../../systems/redux/action'
 
 //@Components && Sections;
 import Headersection from './section/Headersection'
@@ -50,11 +50,10 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const MAX_HEIGHT  = Screenheight / 3.5;
     const HEADER_HEIGHT_NARROWED = 90;
     const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
-
     useEffect(() => {
-        dispatch(getuserData());
-        console.log('profile',userdata[0].bg_image)
-    } , [dispatch , isReduxLoaded])
+        // dispatch(getuserData());
+        // console.log('profile',userdata[0].bg_image)
+    } , [userdata])
 
     const ValidatePiorityAccount = () => {
         if(Profiledata.length === 0 || !Profiledata){      

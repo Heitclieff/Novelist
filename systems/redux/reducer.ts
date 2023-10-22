@@ -8,6 +8,7 @@ export interface RootState {
     createrData : any
     userData : any
     theme : any
+    bookMark : any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -17,6 +18,7 @@ export interface RootState {
     iscreaterLoaded : boolean,
     isuserLoaded : boolean
     isthemeLoaded : boolean ,
+    isbookMarkLoaded : boolean,
     
 }
 
@@ -27,8 +29,22 @@ const initialState : RootState= {
     categoryData : [],
     libraryData : [],
     createrData : [],
-    userData : [] ,
+    userData: {
+      bg_image: '',
+      birthDate: {},
+      createAt: {},
+      description: '',
+      email: '',
+      follower: 0,
+      following: 0,
+      id: '',
+      pf_image: '',
+      phone: '',
+      project: [],
+      username: '',
+    },
     theme : {},
+    bookMark: [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -38,6 +54,7 @@ const initialState : RootState= {
     iscreaterLoaded : false,
     isuserLoaded : false,
     isthemeLoaded : false,
+    isbookMarkLoaded : false,
     
   };
   
@@ -111,6 +128,16 @@ const initialState : RootState= {
             ...state,
             userData : action.payload,
             isuserLoaded : false,
+          }
+        case 'UPDATE_USERFIELD':
+          return {
+            ...state,
+            userData: action.payload
+          }
+        case 'SET_BOOKMARK':
+          return {
+            ...state,
+            bookMark: action.payload
           }
       default:
         return state;

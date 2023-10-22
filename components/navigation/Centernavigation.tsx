@@ -18,7 +18,7 @@ interface contianerProps {
     Contentfixed : boolean
 }
 
-const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true}) => {
+const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true, onSave }) => {
   const navigation:any  = useNavigation();
   const theme:any = useContext(ThemeWrapper);
   return (
@@ -67,7 +67,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
             {onEditcontent &&
-                <Pressable onPress={() => navigation.goBack()}>
+                <Pressable onPress={(onSave)}>
                 {({
                 isHovered,
                 isFocused,

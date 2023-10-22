@@ -10,7 +10,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setBookmark, setUser } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -73,7 +73,7 @@ const Index : React.FC = () => {
         const email = ['testData1@gmail.com','testData2@gmail.com','testData3@gmail.com']
         const pass = 'testData'
         const userName = ['PK1','PK2','PK3']
-        const userDoc = ['yFr0Nvd2uuVesrUvRTBGxPROQ463','cM6dlETlfKPGTPRPdgjDWHzzH0o1','1SyhXW6TeiWFGFzOWuhEqOsTOX23']
+        const userDoc = ['zjoWzRuP6bWgjjhVCiEe8936GVi1','R68kRovUlSMsLyKo5spUTCh2qav2','hIAHTZB9SFb5nZi0YMhX7bIVyHw2']
         const userImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/4.png?alt=media&token=8c828f11-f677-4d97-ae5b-8a4c56da6030&_gl=1*6p2zhp*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5Njk0MjM3OS4yOC4xLjE2OTY5NDY3OTguMTMuMC4w",
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu2.jpg?alt=media&token=e72f2c9b-6ad1-40a4-a766-43da5795d6e6&_gl=1*1eem61o*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2NjUuMzAuMC4w",
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu3.jpg?alt=media&token=4abdc5c3-e609-4858-9b1e-bea0a97b092f&_gl=1*d3mzr2*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2ODIuMTMuMC4w",
@@ -104,7 +104,7 @@ const Index : React.FC = () => {
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/category%2Fhorror.jpg?alt=media&token=99e63e8c-342d-4486-ab7d-76e68f1fbe2d"
                           ]
         
-        const novel_status = ['Public', "Pivate"]
+        const novel_status = [true,false]
         const project_status = ['Complete', 'Not Complete']
         const commit_status = [true,false]
         // const novelDoc_list = []
@@ -414,12 +414,24 @@ const Index : React.FC = () => {
       const getUserandDispatch = async () => {
         // console.log('test')
         // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
+        // await auth().signOut()
         let uid = auth().currentUser.uid
         const snapUserData = await firestore().collection('Users').doc(uid).get()
         // console.log('menu', snapUserData.data())
         let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
         // console.log('redux menu',userData)
         dispatch(setUser(userData))
+        const userDocRef = firestore().collection('Users').doc(uid)
+        const bookMarkRef = userDocRef.collection('Bookmark')
+        const snapBMdata = await bookMarkRef.get()
+        const snapbmdatanovel = snapBMdata.docs[0].data()
+        // console.log(snapbmdatanovel)
+        const novelDocRef = firestore().collection('Novels').doc(snapbmdatanovel.novelDoc)
+        const snapcreatorRef = novelDocRef.collection('Creator')
+        const snapcreatorData = await snapcreatorRef.get()
+        const creatorData = snapcreatorData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const bookMarkdata = snapBMdata.docs.map(doc => ({ id: doc.id, ...doc.data(), creator: creatorData }));
+        dispatch(setBookmark(bookMarkdata))
       }
       useEffect(() => {
         if (!isReduxLoaded) {
