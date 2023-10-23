@@ -15,6 +15,31 @@ interface containerProps {
 const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
+
+     const getTimeAgo = (timestamp) => {
+          const currentDate = new Date();
+          const timestampDate = new Date(timestamp);
+          const timeDifference = currentDate - timestampDate;
+          const secondsDifference = Math.floor(timeDifference / 1000);
+
+          if (secondsDifference < 60) {
+               return `Aprove ${secondsDifference} second${secondsDifference !== 1 ? 's' : ''} ago`;
+             } else if (secondsDifference < 3600) {
+               const minutesDifference = Math.floor(secondsDifference / 60);
+               return `Aprove ${minutesDifference} minute${minutesDifference !== 1 ? 's' : ''} ago`;
+             } else if (secondsDifference < 86400) {
+               const hoursDifference = Math.floor(secondsDifference / 3600);
+               return `Aprove ${hoursDifference} hour${hoursDifference !== 1 ? 's' : ''} ago`;
+             } else {
+               const daysDifference = Math.floor(secondsDifference / 86400);
+               return `Aprove ${daysDifference} day${daysDifference !== 1 ? 's' : ''} ago`;
+          }
+     }
+
+     const date = new Date(data.updateAt.seconds * 1000 + data.updateAt.nanoseconds / 1000000);
+     const timeago = getTimeAgo(date);
+
+     
   return (
      <Pressable onPress={() => navigation.navigate('Readcontent',{
           id : data.id,
@@ -43,7 +68,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                          source={{uri :data.updatedimg}}
                          />
                     </Box>
-                    <Text  color={theme.Text.base} fontSize={'xs'}>Approved 2 days ago</Text>
+                    <Text  color={theme.Text.base} fontSize={'xs'}>{timeago}</Text>
                </HStack>
                
           </VStack>
