@@ -48,7 +48,7 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
             <IconButton 
                 size = 'sm'
                 rounded={'full'}
-                // onPress={() => {setisMarks(!isMarks);  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}}
+                onPress={() => {setisMarks()}}
                 icon = {
                     <IonIcon 
                     size = {15}

@@ -50,10 +50,10 @@ const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
-    const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
+    // const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
-  
+    const USER_DATA = useSelector((state) => state.userData)
 
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
@@ -63,15 +63,16 @@ const Creator : React.FC <Pageprops> = () => {
     const getProjectContent = async () : Promise<void> => {
         try {
             const projectCollection = firestore().collection('Novels');
-            const snapshotprojectkey = await firestore().collection('Users').doc(USER_ID).get();
+            const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
             const projectkey = snapshotprojectkey.data();
-    
+
             const projectID = projectkey?.project;
             const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
             const getProjectDocs = await snapshotproject.get();
             
             const projectdocs =  getProjectDocs.docs.map(doc => ({id : doc.id , ...doc.data()}));
 
+            console.log(projectdocs);
             setDocument(projectdocs);
 
         }catch(error) {    

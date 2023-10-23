@@ -31,7 +31,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
-import { setMylibrary } from '../../systems/redux/action';
+import { setMylibrary ,setMybookmarks } from '../../systems/redux/action';
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -48,6 +48,7 @@ import Tagsection from './section/Tag'
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
+import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 interface Pageprops {}
 
@@ -63,6 +64,7 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const myBooks = useSelector((state) => state.book)
     const myAccount = useSelector((state) => state.userData);
+    const Mybookmarks = useSelector((state) => state.slot)
 
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
@@ -89,7 +91,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 return
             }
             setnovelItem(novelDocs);
-            findingBookinMylibrary();
+            // findingBookinMylibrary();
             
             // const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
             const snapSubData = await SnapshotContent.collection('Creator').get();
@@ -121,6 +123,59 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisMyOwn(true);
     }   
 
+    const findingBookinMyBookmarks = () => {
+        const findingBookmarks = Mybookmarks?.slot.find((doc) => doc.id === id)?.id
+        if(!findingBookmarks) return
+        setisMarks(true);
+    }
+
+    const AddtoMyBookmarks = async () : Promise<void> => {
+        try{
+            setisMarks(!isMarks)
+            const uid = myAccount[0].id
+            const getuserpath =  firestore().collection('Users').doc(uid);
+            const bookmarkpath = getuserpath.collection("Bookmark");
+            const timestamp = firestore.FieldValue.serverTimestamp();
+           
+            const currentDate = new Date();
+            const formattedDate = {
+                seconds: Math.floor(currentDate.getTime() / 1000),
+                nanoseconds: (currentDate.getTime() % 1000) * 1000000,
+            };
+            let BookSlot  = [];
+
+            if(!isMarks){
+                const docRef = await bookmarkpath.add({
+                    date : timestamp,
+                    novelDoc : id, 
+                })
+
+                BookSlot = [{docid : docRef.id , id : id , date : formattedDate , ...novelItem} ,...Mybookmarks.slot]
+                console.log("Sucess" ,docRef.id)
+            }else {
+                const BookmarksStore = {removeBooks : [] , keepBooks : []};
+                Mybookmarks.slot.forEach(book => {
+                    if(book.id !== id){
+                        BookmarksStore.keepBooks.push(book);
+                    }else{
+                        BookmarksStore.removeBooks.push(book);
+                        return
+                    }
+                });
+
+                BookSlot = BookmarksStore.keepBooks;
+                await bookmarkpath.doc(BookmarksStore.removeBooks[0]?.docid).delete();
+            }
+           
+            dispatch(setMybookmarks({slot : BookSlot}))
+
+        }catch(error){
+            console.log("Add Book to Bookmarks Failed" , error)
+        }
+       
+        // dispatch(setMybookmarks(slot : ))
+    }
+
     const setMylibraryBooks = async () : Promise<void> => {
         try{
             const uid = myAccount[0].id
@@ -137,7 +192,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                     });
                 console.log('Add success', docRef.id)
             }else{
-                const removeBooks = myBooks.book.filter((book) => book.id !== id)
+                const removeBooks = Mybookmarks.slot.filter((book) => book.id !== id)
                 dispatch(setMylibrary({book: removeBooks}));
 
                 const getlibrarykeys = await librarypath.where('novelDoc' , '==' , id).get()
@@ -150,13 +205,20 @@ const NovelContent : React.FC <Pageprops> = () => {
             console.log("Add Book to library Failed" , error)
         }
         setisMyOwn(!isMyOwn);
-
     }
 
 
     useEffect(() => {
             if(id) fetchNovelandChapter()
     }, [id])
+
+    useEffect(() => {
+        findingBookinMyBookmarks();
+    },[id])
+
+    useEffect(() => {
+        findingBookinMylibrary();
+    },[id])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -175,7 +237,7 @@ const NovelContent : React.FC <Pageprops> = () => {
           <Box flex={1} bg={theme.Bg.base} position={'relative'}>
               <MemorizedContentnavigation
                   isMarks={isMarks}
-                  setisMarks={setisMarks}
+                  setisMarks={AddtoMyBookmarks}
                   showNavigate={showNavigate}
               />
               {Platform.OS == 'android' &&

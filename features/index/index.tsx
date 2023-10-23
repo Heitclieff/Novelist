@@ -10,7 +10,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -38,6 +38,7 @@ const Index : React.FC = () => {
     const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
 
+    
     const getTopNewAndDispatch = async () => {
         try {
           const snapshortTop = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get()
@@ -413,14 +414,15 @@ const Index : React.FC = () => {
       }
       const getUserandDispatch = async () => {
         // console.log('test')
-        // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
+        // await auth().signInWithEmailAndPassword('testData1@gmail.com','Newpass')
         let uid = auth().currentUser.uid
         const snapUserData = await firestore().collection('Users').doc(uid).get()
         // console.log('menu', snapUserData.data())
         let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
         // console.log('redux menu',userData)
-        getLibraryContent(uid);
         dispatch(setUser(userData))
+        getLibraryContent(uid);
+        getBookmarks(uid);
       }
 
       const getLibraryContent = async (uid):Promise<T> => {
@@ -442,6 +444,40 @@ const Index : React.FC = () => {
         }
       };
 
+      const getBookmarks = async(uid) :Promise<void> => {
+        try{
+          const getuserkeys = firestore().collection('Users').doc(uid);
+          const getbookmarks = await getuserkeys.collection('Bookmark').orderBy('date' ,'desc').get();
+    
+          const bookmarkKeys = getbookmarks.docs.map(doc => ({id : doc.id , novelDoc : doc.data().novelDoc , date : doc.data().date}))
+          const novelDocsMap = await Matchingbookmarks(bookmarkKeys);
+          
+          const Mybooks = bookmarkKeys.map((bookdoc:any) => {
+            const doc = novelDocsMap.get(bookdoc.novelDoc)?.data();
+            return {
+                docid : bookdoc.id,
+                id : bookdoc.novelDoc,
+                date : bookdoc.date,
+                ...doc
+            }
+          });
+
+          dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
+          
+        }catch(error){
+          console.log('Failed to fetching Bookmarks', error)
+        }
+      }
+  
+      const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
+          const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
+          const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
+  
+          const novelDocsMap = new Map(getNovels?.docs.map(doc => [doc.id , doc]))
+
+          return novelDocsMap;
+      }
+
       useEffect(() => {
         if (!isReduxLoaded) {
           // test()
@@ -449,10 +485,13 @@ const Index : React.FC = () => {
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
-          getUserandDispatch();
           // console.log('function menu',userdata)
         }
       }, [isReduxLoaded]);
+
+      useEffect(() => {
+        getUserandDispatch();
+      },[])
 
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>

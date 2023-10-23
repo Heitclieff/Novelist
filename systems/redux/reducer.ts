@@ -13,6 +13,7 @@ export interface RootState {
     tags :any
     tagitem :any
     book : any
+    slot : any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -39,6 +40,7 @@ const initialState : RootState= {
     tagitem : {},
     theme : {},
     book : [],
+    slot : [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -122,6 +124,12 @@ const initialState : RootState= {
             book : action.payload,
             isuserLoaded : true,
           }
+        case 'SET_MY_BOOKMARKS' :
+        return {
+          ...state,
+          slot : action.payload,
+          isuserLoaded : true,
+        }
         case 'SET_USER' :
           return {
             ...state,
