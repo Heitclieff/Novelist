@@ -52,7 +52,7 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
                 icon = {
                     <IonIcon 
                     size = {15}
-                    color = {isMarks ? 'amber.400': theme.Icon.static}
+                    color = {isMarks ? '#fbbf24': theme.Icon.static}
                     name = {isMarks ? 'bookmark' : 'bookmark-outline'}/>}
                 />
         </HStack>

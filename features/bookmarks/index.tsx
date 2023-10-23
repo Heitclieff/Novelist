@@ -93,21 +93,6 @@ const Bookmarks : React.FC <Pageprops> = () => {
           )
         },[]
     ); 
-  
-    // const InitalBooksSet = () => {
-    //   // const Mybookskey = Array.from(Mybookmarks.slot?.values());
-    
-    //   const Mybooks = Mybookmarks.dockey.map((bookdoc:any) => {
-    //     const doc = Mybookmarks.slot.get(bookdoc.novelDoc)?.data();
-    //     return {
-    //         docid : bookdoc.id,
-    //         date : bookdoc.date,
-    //         ...doc
-    //     }
-    //   });
-
-    //   dispatch(setMybookmarks({slot : Mybooks , }))
-    // }
 
     useEffect(() => {
       if(Mybookmarks.slot?.length <= 0){
