@@ -44,6 +44,8 @@ const Readcontent : React.FC <pageProps> = () => {
           setinputValue(text)
      }
 
+
+     console.log(doc_id)
      const initialContent = async () : Promise <void> => {
           if(content) setinputValue(content);
      }
@@ -77,7 +79,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation editable = {editable} event = {updatedContent} title = {title}/>
+          <Chapternavigation editable = {editable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>

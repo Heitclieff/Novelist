@@ -94,11 +94,11 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const DeleteChapter = async (id): Promise<void>=> { 
     try { 
       const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
-      const chapterpath = projectpath.collection("Chapter").doc(id);
+      const chapterpath = projectpath.collection("Chapters").doc(id);
       
       const removechapter = chapterdocs.content.filter(doc => doc.id !== id)
       dispatch(setChaptercontent({content : removechapter  , id : chapterdocs.id}))
-      // const docRef = await chapterpath.delete();
+      const docRef = await chapterpath.delete();
       console.log("Remove Chapter Success" , id)
     }catch(error){
       console.log("Failed To Remove This Chapter" , error)
@@ -135,10 +135,10 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
                   <VStack mb={4} space={2}>
                     {separatedChapterdocs.draft.map((item:string , index:number) => {
-                      const isVisible = item.access?.includes(useraccount?.[0].id)
+                      const isVisible = item.access?.includes(useraccount?.[0].id) || projectdocs.owner === useraccount?.[0].id
                       const isDisable = item.createdBy === useraccount?.[0].id || projectdocs.owner === useraccount?.[0].id
 
-                      
+        
                       if(isVisible)
                         return(
                           <SwipeListView

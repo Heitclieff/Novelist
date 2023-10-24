@@ -12,6 +12,7 @@ const Leaderboard = lazy(() => import('../../../features/leaderboard'));
 const Profile = lazy(() => import('../../../features/profile'));
 const Bookmarks = lazy(() => import('../../../features/bookmarks'));
 const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
+const EditChapter = lazy(() => import ('../../../features/creator/pages/editchapter'))
 const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
@@ -101,6 +102,18 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             </Suspense>
             }
           </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Editchapter"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <EditChapter {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
 
           <Stack.Screen 
           name = "Leaderboard"

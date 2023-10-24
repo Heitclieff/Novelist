@@ -53,9 +53,11 @@ const CreateChapter : React.FC <Pageprops> = () =>{
 
                 const docAdd = { 
                     chap_id : "10" ,
+                    access : [userdata[0].id],
                     status : "Draft",
                     title : ChapterTitle,
                     content : '',
+                    createdBy : userdata[0].id,
                     updatedBy : userdata[0].id,
                     updatedimg : userdata[0].pf_image,
                     

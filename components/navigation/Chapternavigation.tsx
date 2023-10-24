@@ -25,6 +25,7 @@ interface contianerProps {
      editable: boolean;
      event: any;
      title: string;
+     chapterdocs : any,
 }
 
 interface SaveProps { }
@@ -68,7 +69,7 @@ const SaveButton: React.FC<SaveProps> = ({event}) => {
      )
 }
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , chapterdocs}) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
      const [showAlert, setShowAlert] = useState(false);
@@ -146,6 +147,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                               <IconButton
                                    size='sm'
                                    rounded={'full'}
+                                   onPress ={() => navigation.navigate('Editchapter', {title : title , chapterdocs})}
                                    icon={
                                         <FeatherIcon
                                              size={20}
