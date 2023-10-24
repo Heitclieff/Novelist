@@ -172,3 +172,29 @@ export const setBookmark = (content:any): ThunkAction<void, RootState, unknown, 
     }
   };
 };
+
+export const setHeadLeader = (data:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (data) {
+        dispatch({ type: 'SET_HEADLEADER', payload: data , isheadLeader : true})
+        // console.log('set head',data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const setItemLeader = (data:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (data) {
+        dispatch({ type: 'SET_ITEMLEADER', payload: data , isitemLeader : true})
+        // console.log('002')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

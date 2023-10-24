@@ -18,7 +18,7 @@ import { useDispatch , useSelector } from 'react-redux'
 
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
-import { getuserData } from '../../systems/redux/action'
+import { getuserData, setHeadLeader, setItemLeader } from '../../systems/redux/action'
 
 // fireabase 
 import firestore from '@react-native-firebase/firestore'
@@ -33,9 +33,9 @@ const Leaderboard: React.FC <pageProps> = () => {
     const theme:any = useContext(ThemeWrapper);
    
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const userdata = useSelector((state:any) => state.userData)
-    // const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
-    const [isLoaded, setisLoaded] = useState<Boolean>(false)
+    const header = useSelector((state:any) => state.headLeader)
+    const item = useSelector((state:any) => state.itemLeader)
+    const isReduxLoaded = useSelector((state:RootState) =>state.isheadLeader )
 
     const MAX_HEIGHT  = 410;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -43,8 +43,6 @@ const Leaderboard: React.FC <pageProps> = () => {
    
     const scrollY = useRef(new Animated.Value(0)).current;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
-    const [leaderData, setleaderData] = useState([])
-    const [itemData, setitemData] = useState([])
 
     const setLeaderBoard = async () => {
         const leaderboardEntries = [];
@@ -84,27 +82,23 @@ const Leaderboard: React.FC <pageProps> = () => {
     const fetchLeaderBoard = async () => {
         const mainLeaderRef = db.collection('Leaderboards')
         const snapLeader = await mainLeaderRef.get()
-        // console.log(snapLeader.docs)
         const data = snapLeader.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        // console.log(data)
-        // console.log(data[0].leaderboard)
-        setleaderData(data[0])
-        const sliceData = data[0].leaderboard.slice(3,15)
-        setitemData(sliceData)
-        setisLoaded(true)
+        const headerBoard = data[0].leaderboard.slice(0,3)
+        const itemBoard = data[0].leaderboard.slice(3,15)
+        dispatch(setHeadLeader(headerBoard))
+        dispatch(setItemLeader(itemBoard))
     }  
     
     
     useEffect(() => {
-        // setLeaderBoard()
-        fetchLeaderBoard()
-        if (isLoaded) {
-            // console.log('leaderboaed index',leaderData)
-            // console.log('item leader',itemData)
-        }
         
-    } , [isLoaded])
-    if(isLoaded) {
+        if (!isReduxLoaded) {
+            fetchLeaderBoard()
+            
+            // setLeaderBoard()
+        }
+        // console.log(header,item)
+    } , [header,item,isReduxLoaded])
         return (
             <Box flex = {1} >
                 <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
@@ -119,9 +113,9 @@ const Leaderboard: React.FC <pageProps> = () => {
                             }),
                         },
                         ], }]}>
-                        {isLoaded && <AnimatedBackground
+                        {isReduxLoaded && <AnimatedBackground
                             id='background-images'
-                            source={{uri :leaderData.leaderboard[0].image}}
+                            source={{uri :header[0].image}}
                             alt="images"
                             style={{ 
                                 width: '100%', 
@@ -152,7 +146,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                         </AnimatedBackground>}
                     </Animated.View>
                 </Box>
-                <MemorizedLeadheader data = {leaderData} />
+                <MemorizedLeadheader data = {header} />
             </Box>
             <Box flex=  {1}>
                 <Animated.ScrollView
@@ -177,11 +171,11 @@ const Leaderboard: React.FC <pageProps> = () => {
                 }}
                 >
                         <VStack  bg = {theme.Bg.base} borderTopLeftRadius={'lg'} borderTopRightRadius={'lg'} pt = {6} pb = {HEADER_HEIGHT_EXPANDED} alignItems={'center'} space = {3}>
-                        {itemData.length === 0
+                        {item.length === 0
                             ? [0, 0, 0, 0, 0, 0, 0].map((item, index) => (
                                 <LeaderItem index={index + 4} item={item} key={index} />
                                 ))
-                            : itemData.map((item, index) => (
+                            : item.map((item, index) => (
                                 <LeaderItem index={index + 4} item={item} key={index} />
                                 ))
                             }
@@ -192,7 +186,6 @@ const Leaderboard: React.FC <pageProps> = () => {
             </Box>
         
         )
-    }
     
 }
 

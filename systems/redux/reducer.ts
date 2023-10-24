@@ -9,6 +9,8 @@ export interface RootState {
     userData : any
     theme : any
     bookMark : any
+    headLeader: any
+    itemLeader: any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -16,9 +18,11 @@ export interface RootState {
     iscategoryLoaded  : boolean,
     islibraryLoaded : boolean,
     iscreaterLoaded : boolean,
-    isuserLoaded : boolean
+    isuserLoaded : boolean,
     isthemeLoaded : boolean ,
     isbookMarkLoaded : boolean,
+    isheadLeader: boolean,
+    isitemLeader: boolean,
     
 }
 
@@ -45,6 +49,8 @@ const initialState : RootState= {
     },
     theme : {},
     bookMark: [],
+    headLeader: [],
+    itemLeader: [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -55,7 +61,8 @@ const initialState : RootState= {
     isuserLoaded : false,
     isthemeLoaded : false,
     isbookMarkLoaded : false,
-    
+    isheadLeader: false,
+    isitemLeader: false,
   };
   
  const collectionsReducer = (state = initialState, action:any) : RootState => {
@@ -138,6 +145,18 @@ const initialState : RootState= {
           return {
             ...state,
             bookMark: action.payload
+          }
+        case 'SET_HEADLEADER':
+          return {
+            ...state,
+            headLeader: action.payload,
+            isheadLeader: true
+          }
+        case 'SET_ITEMLEADER':
+          return {
+            ...state,
+            itemLeader: action.payload,
+            isitemLeader: true
           }
       default:
         return state;
