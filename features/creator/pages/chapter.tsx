@@ -45,8 +45,9 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [isLoading, setisLoading] = useState<boolean>(true);
   
+  const projectdocs = useSelector((state) => state.docs.docs)
   const chapterdocs = useSelector((state) => state.content);
-
+  const useraccount = useSelector((state) => state.userData);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [150, 250], []);
@@ -111,41 +112,58 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                 <>
                   <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
                   <VStack mb={4} space={2}>
-                    <SwipeListView
-                      disableRightSwipe
-                      data={separatedChapterdocs.draft}
-                      ItemSeparatorComponent={<Box h='2' />}
-                      renderItem={(item: any, index: number) => {
+                    {separatedChapterdocs.draft.map((item:string , index:number) => {
+                      const isVisible = item.access?.includes(useraccount?.[0].id)
+                      const isDisable = item.createdBy !== useraccount?.[0].id || projectdocs.owner !== useraccount?.[0].id
+  
+                      if(isVisible)
                         return(
-                          <MemorizedChapterItem key = {index} data={item.item} doc_id = {chapterdocs.id}/>
-                        )
-                       
-                      }}
-                      renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
-                      leftOpenValue={60}
-                      rightOpenValue={-60}
-
-                    />
+                          <SwipeListView
+                            key = {index}
+                            disableRightSwipe
+                            disableLeftSwipe = {isDisable}
+                            data={[0]}
+                            ItemSeparatorComponent={<Box h='2' />}
+                            renderItem={() => {
+                              return(
+                                <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                              )
+                            }}
+                            renderHiddenItem={() => (<Deletebutton />)}
+                            leftOpenValue={60}
+                            rightOpenValue={-60}
+                          />
+                      )
+                    })}
                   </VStack>
                 </>
               }
               
               <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
               <VStack mb={4} space={3} >
-                <SwipeListView
-                  disableRightSwipe
-                  data={separatedChapterdocs.other}
-                  ItemSeparatorComponent={<Box h='2' />}
-                  renderItem={(item: any, index: number) => {
-                    return(
-                      <MemorizedChapterItem key = {index} data={item.item} doc_id = {chapterdocs.id}/>
+                {separatedChapterdocs.other && 
+                  separatedChapterdocs.other.map((item:any , index:number) => {
+                    const isDisable = projectdocs.owner !== useraccount?.[0].id 
+                    return (
+                      <SwipeListView
+                      disableRightSwipe
+                      disableLeftSwipe = {isDisable}
+                      data={[0]}
+                      ItemSeparatorComponent={<Box h='2' />}
+                      renderItem={() => {
+                        return(
+                          <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                        )
+                       
+                      }}
+                      renderHiddenItem={() => (<Deletebutton />)}
+                      leftOpenValue={60}
+                      rightOpenValue={-60}
+                    />
                     )
-                   
-                  }}
-                  renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
-                  leftOpenValue={60}
-                  rightOpenValue={-60}
-                />
+                  })
+                }
+             
               </VStack>
              
             </VStack>
