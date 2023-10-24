@@ -5,6 +5,7 @@ import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimat
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import {LogBox} from 'react-native';
 //@Redux tools
 import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -178,6 +179,15 @@ const Index : React.FC = () => {
           const mainUserRef = firestore().collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
           await mainUserdocRef.set(userData)
+          const mainScoreRef = firestore().collection('Scores')
+          const mainScoreDocRef = mainScoreRef.doc(userDoc[i])
+          mainScoreDocRef.set({
+            sum: 0,
+            totalbook: 0,
+            score: 0,
+            username: userName[i],
+            image: userImage[i],
+          })
           for (let j = 0; j < 3; j++) {
             let novelData = {
               title: `novelTestData ${n+1}`,
@@ -193,8 +203,13 @@ const Index : React.FC = () => {
               comment_status: comment_status[n%2],
               commit_status: commit_status[n%2],
               rating: rating_list[n%3],
-              tagDoc: [tag1[n%12],tag2[n%12]]
+              tagDoc: [tag1[n%12],tag2[n%12]],
+              multiproject: false,
             }
+            
+            let increment = like_list[n] + view_list[n]
+            await mainScoreDocRef.update({ sum: firestore.FieldValue.increment(increment) });
+            await mainScoreDocRef.update({ totalbook: firestore.FieldValue.increment(1) });
             n++
 
             const mainNovelRef = firestore().collection('Novels')
@@ -260,7 +275,8 @@ const Index : React.FC = () => {
           comment_status: comment_status[0],
           commit_status: commit_status[0],
           rating: rating_list[0],
-          tagDoc: [tag1[2],tag2[2]]
+          tagDoc: [tag1[2],tag2[2]],
+          multiproject: true,
         }
         const extraNovelRef = firestore().collection('Novels')
         // console.log('extra',extraNovelRef)
@@ -348,11 +364,14 @@ const Index : React.FC = () => {
         mainFollow0.add(followDataUser0);
         mainFollow1.add(followDataUser1);
         mainFollow2.add(followDataUser2);
+        const mainScoreRef = firestore().collection('Scores')
+        const snapScoreDoc = await mainScoreRef.get()
+        console.log(snapScoreDoc.docs)
         console.log('Done adding data')
       }
       const test = async () => {
         // auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
-        const collection_list = ['Tags','Category','Follows','Rates']
+        const collection_list = ['Tags','Category','Follows','Rates','Scores']
         const usersCollectionRef = await firestore().collection('Users').get();
 
         usersCollectionRef.forEach(async (userDoc) => {
@@ -433,14 +452,38 @@ const Index : React.FC = () => {
         const bookMarkdata = snapBMdata.docs.map(doc => ({ id: doc.id, ...doc.data(), creator: creatorData }));
         dispatch(setBookmark(bookMarkdata))
       }
+      const callScore = async () => {
+        const mainScoreRef = firestore().collection('Scores')
+        const snapSocreDoc = await mainScoreRef.get()
+        // console.log(snapSocreDoc.docs)
+        let snapData = snapSocreDoc.docs
+        const score = snapData.map(doc => {
+          const data = doc.data();
+          const sum = data.sum;
+          const totalbook = data.totalbook;
+          const scoreValue = totalbook === 0 ? 0 : Math.floor(sum / totalbook);
+          return { id: doc.id, score: scoreValue };
+        });
+        console.log(score)
+        score.forEach(async(data) => {
+          const docRef = firestore().collection("Scores").doc(data.id);
+        
+          await docRef.update({
+            score: data.score,
+          })
+        });
+      }
+
       useEffect(() => {
         if (!isReduxLoaded) {
+          LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
           // test()
           // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
           getUserandDispatch();
+          // callScore()
           // console.log('function menu',userdata)
         }
       }, [isReduxLoaded]);
