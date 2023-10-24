@@ -37,6 +37,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const chapterdocs = useSelector((state) => state.content);
   const projectdocs = useSelector((state) => state.docs.docs)
+  const useraccount = useSelector((state) => state.userData);
 
   const {projectdocument , snapshotcontent , id , isupdated} :any = route.params;
   const [isLoading , setisLoading] = useState<boolean>(true);
@@ -80,10 +81,13 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
          const snapshotuserMap = new Map(snapshotuser?.docs.map(doc => [doc.id, doc]));
          const userdocs = creatorDocs.map((doc_id:string , index:number) => {
           const doc = snapshotuserMap.get(doc_id)?.data();
+
             return {
                 id : doc_id ,
                 doc_id : projectdocs.creators[index].doc_id,
-                isleader : projectdocs.owner === doc_id, 
+                isleader : projectdocs.owner === useraccount[0].id, 
+                owner : projectdocs.owner,
+                isyou : doc_id === useraccount[0].id,
                 pending : projectdocs.creators[index].pending ,
                 ...doc
               }

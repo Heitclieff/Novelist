@@ -41,6 +41,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      const dispatch = useDispatch();
      const toast = useToast();
      const userdocs = useSelector((state) => state.teams);
+     const useraccount = useSelector((state) => state.userData);
      const projectdocs = useSelector((state) => state.content)
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
@@ -134,7 +135,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                          </HStack>
                        
                               <SwipeListView 
-                                   disableRightSwipe
+                                   disableRightSwipe = {(item) => !item.item.isleader}
                                    data={creators.pending}
                                    leftOpenValue={60}
                                    rightOpenValue={-60}
@@ -162,27 +163,35 @@ const Team : React.FC <pageprops> = ({route}) => {
                     <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.other.length}/3`}</Text>
                </HStack>
                {creators.other.length > 0 ? 
-                    <SwipeListView 
-                         disableRightSwipe
-                         data={creators.other}
-                         ItemSeparatorComponent={<Box h=  '2'/>}
-                         leftOpenValue={60}
-                         rightOpenValue={-60}
-                       
-                         renderItem={(item:any , index:number) => {
-                              return(
-                                   <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
-                              )
-                              
-                         }}
-                         renderHiddenItem={ (data) => (
-                              <Deletebutton 
-                                action = {RemoveMember} 
-                                title = {data.item.username}/>
-                                )
-                         }
-                         disableLeftSwipe = {Boolean(data => data?.isleader)}
-                    />
+                    creators.other.map((item:string , index:number) => {
+                         const isDisable = item?.id === item.owner || item.owner !== useraccount[0].id
+                         return(
+                              <SwipeListView 
+                                key = {index}
+                                disableRightSwipe
+                                disableLeftSwipe = {isDisable}
+                                data={[0]}
+                                ItemSeparatorComponent={<Box h=  '2'/>}
+                                leftOpenValue={60}
+                                rightOpenValue={-60}
+                            
+                                renderItem={() => {
+                                   return(
+                                        <MemorizedTeamitem key = {index} id = {item.id} data= {item}/>
+                                   )
+                                }}
+
+                                renderHiddenItem={ () => (
+                                   <Deletebutton 
+                                     action = {RemoveMember} 
+                                     title = {item.username}/>
+                                     )
+                                }
+                                
+                              />
+                         )
+                    })
+                   
                :null }
             </VStack>
             </FlatList>
