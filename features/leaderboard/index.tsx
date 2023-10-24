@@ -44,6 +44,8 @@ const Leaderboard: React.FC <pageProps> = () => {
     const scrollY = useRef(new Animated.Value(0)).current;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
     const [leaderData, setleaderData] = useState([])
+    const [itemData, setitemData] = useState([])
+
     const setLeaderBoard = async () => {
         const leaderboardEntries = [];
         const mainLeaderRef = db.collection('Leaderboards')
@@ -87,6 +89,8 @@ const Leaderboard: React.FC <pageProps> = () => {
         // console.log(data)
         // console.log(data[0].leaderboard)
         setleaderData(data[0])
+        const sliceData = data[0].leaderboard.slice(3,15)
+        setitemData(sliceData)
         setisLoaded(true)
     }  
     
@@ -95,7 +99,8 @@ const Leaderboard: React.FC <pageProps> = () => {
         // setLeaderBoard()
         fetchLeaderBoard()
         if (isLoaded) {
-            console.log('leaderboaed index',leaderData.leaderboard[0].image)
+            console.log('leaderboaed index',leaderData)
+            console.log('item leader',itemData)
         }
         
     } , [isLoaded])
@@ -172,9 +177,13 @@ const Leaderboard: React.FC <pageProps> = () => {
                 }}
                 >
                         <VStack  bg = {theme.Bg.base} borderTopLeftRadius={'lg'} borderTopRightRadius={'lg'} pt = {6} pb = {HEADER_HEIGHT_EXPANDED} alignItems={'center'} space = {3}>
-                                {leaderData.leaderboard.map((item ,index:number) =>
-                                <LeaderItem index = {index + 4} item = {item} key={index}/>
-                                )
+                        {itemData.length === 0
+                            ? [0, 0, 0, 0, 0, 0, 0].map((item, index) => (
+                                <LeaderItem index={index + 4} item={item} key={index} />
+                                ))
+                            : itemData.map((item, index) => (
+                                <LeaderItem index={index + 4} item={item} key={index} />
+                                ))
                             }
                         </VStack>
                 </Animated.ScrollView>

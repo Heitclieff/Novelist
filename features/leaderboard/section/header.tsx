@@ -26,7 +26,7 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
                 point = {leaderboardData[1].score}
                 size =  {100}
                 color = {'teal.500'}
-                index = {3}
+                index = {2}
                  />
             </Box>
             <LeaderAvatarfield size =  {120} 
@@ -43,7 +43,7 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
                 point = {leaderboardData[2].score}
                 size =  {100}
                 color = "blue.400"
-                index = {2}
+                index = {3}
                 />
             </Box>
         </HStack>
