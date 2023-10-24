@@ -13,7 +13,7 @@ interface containerProps {
 }
 const LeaderItem : React.FC <containerProps> = ({index, item}) => {
     const theme:any = useContext(ThemeWrapper);
-    console.log('leaderitem', item)
+    // console.log('leaderitem', typeof(item))
     const isItemZero = item.score === 0;
 
     return (

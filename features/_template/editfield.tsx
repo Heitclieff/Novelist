@@ -55,8 +55,20 @@ const Editfield : React.FC <Pageprops> =() => {
     const uid = userdata[0].id
     const userDocRef = firestore().collection('Users').doc(uid)
     const updateUserData = (field, value, successMessage, errorMessage) => {
-      dispatch(updateUserField(field,value));
-      userDocRef.update({ [field]: value }).then(() => {
+      if (options.title === 'Username') {
+        const scoreCollectionRef = firestore().collection('Scores');
+        const scoreDocRef = scoreCollectionRef.doc(uid)
+        scoreDocRef.update({ [field]: value }).then(async() => {
+          const userData = await userDocRef.get()
+          let project = userData.data().project
+          project.forEach(doc => {
+            const novelDocRef = firestore().collection('Novels').doc(doc)
+            const creatorRef = novelDocRef.collection('Creator').doc(uid)
+            creatorRef.update({ [field]: value }).then(()=>{
+              dispatch(updateUserField(field,value));
+              
+            })
+          });
           Alert.alert('Saved', `${field}: ${value}`, [
             {
               text: 'OK',
@@ -66,14 +78,29 @@ const Editfield : React.FC <Pageprops> =() => {
             },
           ]);
         })
-        .catch((error) => {
-          console.error(`Error updating ${field}:`, error);
-          Alert.alert('Error', errorMessage, [
-            {
-              text: 'OK',
-            },
-          ]);
-        });
+
+      } else {
+        dispatch(updateUserField(field,value));
+        userDocRef.update({ [field]: value }).then(() => {
+            Alert.alert('Saved', `${field}: ${value}`, [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.goBack();
+                },
+              },
+            ]);
+          })
+          .catch((error) => {
+            console.error(`Error updating ${field}:`, error);
+            Alert.alert('Error', errorMessage, [
+              {
+                text: 'OK',
+              },
+            ]);
+          });
+      }
+      
     };
   
     if (options.title === 'Username') {

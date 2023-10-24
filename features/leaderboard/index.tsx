@@ -99,8 +99,8 @@ const Leaderboard: React.FC <pageProps> = () => {
         // setLeaderBoard()
         fetchLeaderBoard()
         if (isLoaded) {
-            console.log('leaderboaed index',leaderData)
-            console.log('item leader',itemData)
+            // console.log('leaderboaed index',leaderData)
+            // console.log('item leader',itemData)
         }
         
     } , [isLoaded])
