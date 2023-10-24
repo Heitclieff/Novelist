@@ -47,6 +47,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   
   const chapterdocs = useSelector((state) => state.content);
 
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [150, 250], []);
   // const {chapterdocs} = route.params;
@@ -80,11 +81,12 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   useEffect(() => {
   }, [separatedChapterdocs])
 
+
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
         rightElement={[
-          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />, navigate: handlePresentModalPress },
+          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id}) },
           { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />
@@ -115,7 +117,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                       ItemSeparatorComponent={<Box h='2' />}
                       renderItem={(item: any, index: number) => {
                         return(
-                          <MemorizedChapterItem key = {index} data={item.item}/>
+                          <MemorizedChapterItem key = {index} data={item.item} doc_id = {chapterdocs.id}/>
                         )
                        
                       }}
@@ -136,7 +138,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   ItemSeparatorComponent={<Box h='2' />}
                   renderItem={(item: any, index: number) => {
                     return(
-                      <MemorizedChapterItem key = {index} data={item.item}/>
+                      <MemorizedChapterItem key = {index} data={item.item} doc_id = {chapterdocs.id}/>
                     )
                    
                   }}

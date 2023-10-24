@@ -75,6 +75,8 @@ const Readcontent : React.FC <pageProps> = () => {
       }, [id]);
 
 
+      console.log("DOC_ID" , doc_id)
+      console.log("id" , id)
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
