@@ -188,6 +188,19 @@ export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyActi
 }
 
 
+export const setTempleteCache = (content:any ,path : string): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_TEMPLETE', 
+        payload :content , path
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
 export const setProjectDocument = (docs:any , id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
   return async (dispatch: Dispatch<AnyAction>) => {
