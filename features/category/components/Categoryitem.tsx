@@ -14,15 +14,16 @@ import { useNavigation } from '@react-navigation/native'
 interface Itemsprops {
     images : string 
     title : string 
+    id : string
 }
 
-const CategoryItems : React.FC <Itemsprops> = ({images , title}) =>{
+const CategoryItems : React.FC <Itemsprops> = ({images , title , id}) =>{
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   // console.log('cate item',title)
 
   return (
-    <Pressable onPress={()=> navigation.navigate('Template',{title})}>
+    <Pressable onPress={()=> navigation.navigate('Template',{title, path : 'Novels' , option : id})}>
     {({
       isHovered,
       isFocused,

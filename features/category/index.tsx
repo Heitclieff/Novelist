@@ -56,6 +56,7 @@ const Category: React.FC <Pageprops> = () => {
             {(item:any, index:number) => (
                 <MemorizedCategoryItems 
                     key = {index} 
+                    id = {item.id}
                     images={item.image} 
                     title ={item.id}
                     proDoc={item.proDoc}/> 

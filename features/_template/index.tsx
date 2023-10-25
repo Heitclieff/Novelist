@@ -16,7 +16,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { RootState } from '../../systems/redux/reducer'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { setTempleteCache } from '../../systems/redux/action'
+import { setTempleteCache ,setCategoryCache } from '../../systems/redux/action'
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
@@ -32,27 +32,56 @@ const Template : React.FC <Pageprops> = ({collections}) => {
   // console.log('_template index', collections)
   const theme:any = useContext(ThemeWrapper);
   const route = useRoute()
-  const {title ,path}:any = route.params
+  const {title ,path , option}:any = route.params
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const temepletedocs = useSelector((state) => state.templete)
-  const Collectionsdata = []
-  const isReduxLoaded = false;
+  const categorydocs = useSelector((state) => state.categoryCache)
+
+  const [selectedContent , setSelectedContent] = useState<any[]>(temepletedocs.content)
 
   const getDatafromCollection = async() :Promise<void> => {
     try{
       const getpath = firestore().collection(path);
       const getsnapshot = await getpath.get();
       const getdocs = getsnapshot.docs.map((doc) => ({id : doc.id , ...doc.data()}));
-
+      
       dispatch(setTempleteCache({content : getdocs , path : path}))
+
+      if(option) {
+        if(option !== categorydocs.option){
+            SelectedfromOption(getdocs);
+            return
+        }
+        return
+      }
+
+      setSelectedContent(getdocs);
+
     }catch(error){
       console.log("Failed To fetch from firebase" ,error)
     }
   }
 
-  const initailfetching = () => {
-    if(path || !temepletedocs.path){
+  const SelectedfromOption = (getdocs) => {
+      const selectedContent = getdocs?.filter((doc) => doc.cateDoc.includes(option));
+      dispatch(setCategoryCache({category : selectedContent, option : option}))
+      setSelectedContent(selectedContent)
+  }
+
+  const initailfetching = async () => {
+    if(!path) return
+
+    if(!temepletedocs.path){
       getDatafromCollection();
+      return
+    }
+
+    if(option) {
+      if(option !== categorydocs.option){
+        SelectedfromOption(temepletedocs.content);
+        return
+      }
+      setSelectedContent(categorydocs.category);
     }
   }
 
@@ -60,12 +89,14 @@ const Template : React.FC <Pageprops> = ({collections}) => {
     initailfetching();
   } , [])
 
+
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title = {title} fixed/>
           <VStack flex={1} pl = {4} pr = {4}>
-            {temepletedocs.content?.length > 0 &&
-              <ItemList collection={temepletedocs.content}>
+            {temepletedocs.content?.length > 0 && 
+
+              <ItemList collection={selectedContent}>
                {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
              </ItemList>
             } 

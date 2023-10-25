@@ -16,6 +16,7 @@ export interface RootState {
     tagitem :any
     book : any
     slot : any
+    categoryCache : any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -45,6 +46,7 @@ const initialState : RootState= {
     theme : {},
     book : [],
     slot : [],
+    categoryCache : [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -150,6 +152,12 @@ const initialState : RootState= {
           return {
             ...state,
             category : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_CATEGORY_CACHE' :
+          return {
+            ...state,
+            categoryCache : action.payload,
             isuserLoaded : true,
           }
         case 'SET_TEMPLETE' :

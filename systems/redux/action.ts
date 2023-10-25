@@ -211,6 +211,16 @@ export const setTempleteCache = (content:any ,path : string): ThunkAction<void, 
   };
 }
 
+export const setCategoryCache = (category:any , option : string): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+        dispatch({ type: 'SET_CATEGORY_CACHE', payload: category , option , isuserLoaded : true})
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const setProjectDocument = (docs:any , id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 
   return async (dispatch: Dispatch<AnyAction>) => {
