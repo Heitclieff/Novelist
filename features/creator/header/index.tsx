@@ -57,13 +57,13 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
       }
   }
 
-  const handleTagupdate = async (tagdocs:any) :Promise<T> => {
+  const handleTagupdate = async (tagdocs:any , selectedCategory:any) :Promise<T> => {
     try {
         const tagid = tagdocs.map((doc => doc.id))
         firestore()
         .collection('Novels')
         .doc(id)
-        .update({ tagDoc: tagid })
+        .update({ tagDoc: tagid , cateDoc : selectedCategory})
        
         setTagsdocs(tagdocs);
 

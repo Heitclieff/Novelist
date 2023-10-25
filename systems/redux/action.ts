@@ -112,6 +112,16 @@ export const setUser = (user:any): ThunkAction<void, RootState, unknown, AnyActi
   };
 };
 
+export const setCategory = (category:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+        dispatch({ type: 'SET_CATEGORY', payload: category , isuserLoaded : true})
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {

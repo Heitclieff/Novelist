@@ -11,7 +11,8 @@ export interface RootState {
     theme : any
     teams: any
     tags :any
-    templete : any
+    templete : any,
+    category : any
     tagitem :any
     book : any
     slot : any
@@ -40,6 +41,7 @@ const initialState : RootState= {
     tags : {},
     docs : {},
     tagitem : {},
+    category : [],
     theme : {},
     book : [],
     slot : [],
@@ -142,6 +144,12 @@ const initialState : RootState= {
           return {
             ...state,
             tags : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_CATEGORY' :
+          return {
+            ...state,
+            category : action.payload,
             isuserLoaded : true,
           }
         case 'SET_TEMPLETE' :

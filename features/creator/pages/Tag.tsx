@@ -40,6 +40,7 @@ const Tag: React.FC <Pageprops> = () => {
 
      const {current_tags , handleTagupdate} = route.params;
      const tagdocs = useSelector((state) => state.tags)
+     const catedocs = useSelector((state) => state.category)
      
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
@@ -85,8 +86,21 @@ const Tag: React.FC <Pageprops> = () => {
           }
      }
 
+     const MatchingTagsWithcategory = async () : Promise<T> => {
+          const selectedCategory = [];
+          selectedTags.map((tags:any , index : number) => {
+               const inGroup = catedocs?.category.find(category => category.group.includes(tags.id));
+               if(inGroup){
+                    if(!selectedCategory.includes(inGroup.id)){
+                         selectedCategory.push(inGroup.id);
+                    }   
+               }
+          })
+          return selectedCategory;
+     }
      const handleTagSaving = async () : Promise<void> => {
-          const isSuccess = await handleTagupdate(selectedTags);
+          const selectedCategory = await MatchingTagsWithcategory();
+          const isSuccess = await handleTagupdate(selectedTags , selectedCategory);
          
           toast.show({
                placement : 'top',
