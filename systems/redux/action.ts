@@ -220,6 +220,21 @@ export const setCategoryCache = (category:any , option : string): ThunkAction<vo
     }
   };
 };
+export const setProjectContent = (docs:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'PROJECT_CONTENT', 
+        payload :docs
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+
 
 export const setProjectDocument = (docs:any , id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
 

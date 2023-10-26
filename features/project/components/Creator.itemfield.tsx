@@ -56,11 +56,10 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
           }
      }
 
-  
      useEffect(() => {
           fetchingcreator();
           // MatchingUserid()
-     }, [])
+     }, [id])
      return ( 
      <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>
      {({

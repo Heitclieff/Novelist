@@ -18,6 +18,7 @@ export interface RootState {
     tagitem :any
     book : any
     slot : any
+    project : any
     categoryCache : any
 
     iscollectionMostviewLoaded : boolean,
@@ -48,6 +49,7 @@ const initialState : RootState= {
     theme : {},
     book : [],
     slot : [],
+    project : [],
     content : [],
     contentdocs : {},
     categoryCache : [],
@@ -95,6 +97,11 @@ const initialState : RootState= {
         return {
           ...state,
           docs: action.payload,
+        }
+        case 'PROJECT_CONTENT' : 
+        return {
+          ...state,
+          project: action.payload,
         }
       case 'FETCH_TOP_NEW':
         return {

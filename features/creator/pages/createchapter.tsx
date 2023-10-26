@@ -63,9 +63,22 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                     
                }
                 const docRef = await chapterpath.add({...docAdd , updateAt : timestamp}); 
+                const contentRef = await chapterpath.doc(docRef.id).collection("Content").add({content : ""})
+
                 console.log(docRef.id)
                 // Create and Add to firestore and waiting for firestore return key id;
-                dispatch(setChaptercontent({content : [{id : docRef.id , updateAt : formattedDate, ...docAdd} , ...chapterdocs.content] , id : chapterdocs.id}))
+                dispatch(setChaptercontent(  
+                    {
+                    ...chapterdocs,
+                    content : [{
+                         id : docRef.id , 
+                         updateAt : formattedDate, 
+                         ...docAdd
+                         } , 
+                    ...chapterdocs.content
+                    ] ,
+
+               }))
                 navigation.navigate('Readcontent', {doc_id : doc_id , id : docRef.id , title : ChapterTitle , content : '' ,editable : true})
           }catch(error){
                console.log("Failed To Create Chapter ", error);

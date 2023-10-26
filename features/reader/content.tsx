@@ -54,6 +54,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
 
+
      const initialContent = async () : Promise <void> => {
           if(contentdocs.docid === id) {
                setinputValue(contentdocs.contentdocs);
@@ -61,13 +62,16 @@ const Readcontent : React.FC <pageProps> = () => {
                return
           }
 
-          getnovelContent();
+          if(id){
+               getnovelContent();
+          }
+          
      }
 
      const getnovelContent =  async () : Promise<void> => {
           try{
                const content = await chapterdocs.snapshotchapter.doc(id).collection('Content').get();
-               const contentDocs = content.docs.map(doc =>({id : doc.id ,...doc.data()}));
+               const contentDocs = content.docs?.map(doc =>({id : doc.id ,...doc.data()}));
 
                setinputValue(contentDocs?.[0].content)
                setContentid(contentDocs?.[0].id);

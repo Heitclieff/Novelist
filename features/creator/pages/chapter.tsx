@@ -95,9 +95,14 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     try { 
       const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
       const chapterpath = projectpath.collection("Chapters").doc(id);
+      const Contentpath = chapterpath.collection('Content')
+
       
+
       const removechapter = chapterdocs.content.filter(doc => doc.id !== id)
-      dispatch(setChaptercontent({content : removechapter  , id : chapterdocs.id}))
+      dispatch(setChaptercontent({...chapterdocs , content : removechapter  , id : chapterdocs.id}))
+      
+      await Contentpath.parent?.delete();
       const docRef = await chapterpath.delete();
       console.log("Remove Chapter Success" , id)
     }catch(error){

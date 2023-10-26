@@ -54,7 +54,9 @@ const Tag: React.FC <Pageprops> = () => {
      }
 
      const setCurrentTags = () => {
-          if(!current_tags || Object.keys(tagdocs).length === 0) return
+          if(!current_tags || Object.keys(tagdocs).length === 0){
+               return
+          }
 
           console.log("DO IT")
           const matchingTags = tagdocs.tags
@@ -140,7 +142,7 @@ const Tag: React.FC <Pageprops> = () => {
                     <HStack w = '100%' overflow={'hidden'} space = {2} flexWrap={'wrap'}>
                          {Object.keys(tagdocs).length > 0 &&
                               tagdocs.tags.map((item:any , index:number) =>{
-                                   const isFocused = current_tags.some(currentTag => currentTag.id === item.id);
+                                   const isFocused = current_tags ? current_tags.some(currentTag => currentTag.id === item.id) : false;
 
                                    return(
                                         <TagItem 
