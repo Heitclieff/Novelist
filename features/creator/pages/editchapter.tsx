@@ -19,7 +19,7 @@ const EditChapter : React.FC <pageProps> = () => {
      const chaptercontent  = useSelector((state) => state.content)
      const useraccount = useSelector((state) => state.userData);
 
-     const {title , chapterdocs}:any = route.params;
+     const {title , chapterdocs , setChapterheader}:any = route.params;
      const theme:any = useContext(ThemeWrapper);
 
      const [chapterTitle , setChapterTitle] = useState<string>(title);
@@ -27,7 +27,6 @@ const EditChapter : React.FC <pageProps> = () => {
 
    
      const SavingEditChapter = async () => {
-          console.log(chapterdocs)
           try{
                const saperatedchapter = {updated : {} , still : []}
                chaptercontent.content.forEach(doc => {
@@ -49,12 +48,12 @@ const EditChapter : React.FC <pageProps> = () => {
                saperatedchapter.updated['updatedimg'] = useraccount?.[0].pf_image
                
                const combindchapter =[{...saperatedchapter.updated},...saperatedchapter.still]
-               dispatch(setChaptercontent({content : combindchapter , id : chapterdocs.docid}));
+               setChapterheader(chapterTitle);
+               dispatch(setChaptercontent({content : combindchapter , id : chapterdocs.docid , snapshotchapter : chapterdocs.snapshotchapter}));
      
                const novelpath =  firestore().collection('Novels').doc(chapterdocs.docid);
                const chapterpath= novelpath.collection('Chapters').doc(chapterdocs.id);
                const timestamp = firestore.FieldValue.serverTimestamp();
-
                const docRef = await chapterpath.update({
                     title  : chapterTitle,
                     updatedAt : timestamp,
@@ -72,7 +71,7 @@ const EditChapter : React.FC <pageProps> = () => {
      <VStack p = {6} space = {2}>
           <Text color={theme.Text.base} fontWeight={'semibold'} pb={2} >Chapter Title</Text>
                <FormControl mb="5">
-               <Input 
+               <Input  
                w = {'100%'} 
                h = {10} 
                bg=  {theme.Bg.container} 

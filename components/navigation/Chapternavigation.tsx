@@ -73,6 +73,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
      const [showAlert, setShowAlert] = useState(false);
+     const [chapterheader ,setChapterheader] = useState(title);
 
      const handleShowAlert = () => {
           setShowAlert(true);
@@ -115,7 +116,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
                                         />
                                    }
                               />
-                              <Text color={theme.Text.heading}>{title}</Text>
+                              <Text color={theme.Text.heading}>{chapterheader}</Text>
                          </HStack>
 
                     </Box>
@@ -147,7 +148,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
                               <IconButton
                                    size='sm'
                                    rounded={'full'}
-                                   onPress ={() => navigation.navigate('Editchapter', {title : title , chapterdocs})}
+                                   onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
                                    icon={
                                         <FeatherIcon
                                              size={20}

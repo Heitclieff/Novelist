@@ -54,15 +54,16 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const fetchchaptercontent = async () : Promise <void> => {
     try {
       const userdocs = await fetchmemberAccount();
-      const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
+      const snapshotchapter = snapshotcontent.collection('Chapters');
+      const getchapter  = await snapshotchapter.orderBy('updateAt' , 'desc').get();
 
-      const chapterdocs = snapshotchapter.docs.map(doc => ({
+      const chapterdocs = getchapter.docs.map(doc => ({
         id : doc.id , 
         updatedimg :userdocs?.find(filteraccount => filteraccount.id === doc.data().updatedBy)?.pf_image,
         ...doc.data() , 
         }))
 
-      dispatch(setChaptercontent({content : chapterdocs , id }));
+      dispatch(setChaptercontent({content : chapterdocs , id , snapshotchapter : snapshotchapter}));
       dispatch(setProjectTeams({teams : userdocs}))
 
       setisLoading(false);
@@ -161,7 +162,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
                     <Spinner accessibilityLabel="Loading posts" />   
                 </Center>
                   :
-                <EpisodeSection chapter = {chapterdocs.content} doc_id = {id}/> }
+                <EpisodeSection doc_id = {id}/> }
               </VStack>
             )}
           />

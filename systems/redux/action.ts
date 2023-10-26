@@ -235,7 +235,7 @@ export const setProjectDocument = (docs:any , id:string): ThunkAction<void, Root
   };
 };
 
-export const setChaptercontent = (content:any ,id:string , teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+export const setChaptercontent = (content:any ,id:string , snapshotchapter:any): ThunkAction<void, RootState, unknown, AnyAction> => {
 
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
@@ -243,13 +243,30 @@ export const setChaptercontent = (content:any ,id:string , teams:any): ThunkActi
         type: 'CHAPTER_CONTENT', 
         payload :content , 
         id,
-        teams
+        snapshotchapter,
       });
     } catch (error) {
       console.log(error);
     }
   };
 };
+
+export const setChapterWriteContent = (content:any ,id:string , docid:string): ThunkAction<void, RootState, unknown, AnyAction> => {
+
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'CHAPTER_WRITE_CONTENT', 
+        payload :content , 
+        id,
+        docid
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 
 
 export const setProjectTeams = (teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {

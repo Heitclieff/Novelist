@@ -13,6 +13,8 @@ export interface RootState {
     tags :any
     templete : any,
     category : any
+    content : any,
+    contentdocs : any
     tagitem :any
     book : any
     slot : any
@@ -46,6 +48,8 @@ const initialState : RootState= {
     theme : {},
     book : [],
     slot : [],
+    content : [],
+    contentdocs : {},
     categoryCache : [],
 
     iscollectionMostviewLoaded : false,
@@ -81,6 +85,11 @@ const initialState : RootState= {
         return {
           ...state,
           content: action.payload,
+        }
+        case 'CHAPTER_WRITE_CONTENT' : 
+        return {
+          ...state,
+          contentdocs: action.payload,
         }
         case 'PROJECT_DOCUMENT' : 
         return {

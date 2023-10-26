@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext , useEffect, useState} from 'react'
 import { 
 Box, 
 HStack , 
@@ -15,6 +15,7 @@ interface containerProps {
 const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
+     const [timeago ,settimeago] = useState('');
 
      const getTimeAgo = (timestamp:any) => {
           const currentDate = new Date();
@@ -36,9 +37,13 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
           }
      }
 
-     const date = new Date(data.updateAt.seconds * 1000 + data.updateAt.nanoseconds / 1000000);
-     const timeago = getTimeAgo(date);
+     
 
+     useEffect(() => {
+          const date = new Date(data.updateAt.seconds * 1000 + data.updateAt.nanoseconds / 1000000);
+          const time = getTimeAgo(date);
+          settimeago(time);
+     },[data])
      
   return (
      <Pressable onPress={() => navigation.navigate('Readcontent',{
