@@ -322,15 +322,16 @@ const Index : React.FC = () => {
           });
           
           const mainDocRef = db.collection('Novels').doc(novelDoc.id)
-          const creatorRef = mainDocRef.collection('Creator')
-          await creatorRef.add({
+          const creatorRef1 = mainDocRef.collection('Creator').doc(userDoc[0])
+          const creatorRef2 = mainDocRef.collection('Creator').doc(userDoc[2])
+          await creatorRef1.set({
             userDoc: userDoc[0],
             pf_image: userImage[0],
             username: userName[0],
             pending: false,
             addAt: new Date()
           })
-          await creatorRef.add({
+          await creatorRef2.set({
             userDoc: userDoc[2],
             pf_image: userImage[2],
             username: userName[2],
