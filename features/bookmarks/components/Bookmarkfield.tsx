@@ -17,6 +17,7 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
     // console.log('bookmark field',data, id)
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
+
     const TimeConvert = (timestamp) => {
       if(timestamp){
         const birth =new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
@@ -27,6 +28,9 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
       }
     }
     const date = TimeConvert(data.date)
+    
+    const timezoneOffset = date.getTimezoneOffset();
+    const formattedDate = date.toLocaleString();
   return (
     <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>
       {({
@@ -47,7 +51,7 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
                         <Text key={key} color = {theme.Text.description} fontSize={'xs'}>{items.username}</Text>
                     ))}
                 </HStack>
-                <Text color = {theme.Text.base} fontSize={'xs'}>{date}</Text>
+                <Text color = {theme.Text.base} fontSize={'xs'}>{formattedDate}</Text>
             </VStack>
         </HStack>
         )

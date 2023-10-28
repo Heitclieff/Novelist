@@ -19,7 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-import { setChaptercontent } from '../../systems/redux/action';
+import { setChaptercontent , setProjectTeams} from '../../systems/redux/action';
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -36,7 +36,10 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const dispatch = useDispatch();
 
   const chapterdocs = useSelector((state) => state.content);
-  const {projectdocument , snapshotcontent , id} :any = route.params;
+  const projectdocs = useSelector((state) => state.docs.docs)
+  const useraccount = useSelector((state) => state.userData);
+
+  const {projectdocument , snapshotcontent , id , isupdated} :any = route.params;
   const [isLoading , setisLoading] = useState<boolean>(true);
 
   const Screenheight = Dimensions.get('window').height;
@@ -51,15 +54,18 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const fetchchaptercontent = async () : Promise <void> => {
     try {
       const userdocs = await fetchmemberAccount();
-      const snapshotchapter = await snapshotcontent.collection('Chapters').orderBy('updateAt' , 'desc').get();
+      const snapshotchapter = snapshotcontent.collection('Chapters');
+      const getchapter  = await snapshotchapter.orderBy('updateAt' , 'desc').get();
 
-      const chapterdocs = snapshotchapter.docs.map(doc => ({
+      const chapterdocs = getchapter.docs.map(doc => ({
         id : doc.id , 
         updatedimg :userdocs?.find(filteraccount => filteraccount.id === doc.data().updatedBy)?.pf_image,
         ...doc.data() , 
         }))
 
-      dispatch(setChaptercontent({content : chapterdocs , id , teams : userdocs}));
+      dispatch(setChaptercontent({content : chapterdocs , id , snapshotchapter : snapshotchapter}));
+      dispatch(setProjectTeams({teams : userdocs}))
+
       setisLoading(false);
     } catch(error) {
       console.error('Error fetching chapter data:', error);
@@ -68,15 +74,26 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   const fetchmemberAccount = async () => {
     try {
-         const creatorDocs = projectdocument.creators.map(doc => doc.userDoc);
-         const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs).get();
-         const userdocs = snapshotuser?.docs.map((doc , index) => ({
-          id : doc.id ,
-          isleader : projectdocument.owner === doc.id, 
-          pending : projectdocument.creators[index].pending ,
-          ...doc.data() }));
-         return userdocs;
+         const creatorDocs = projectdocs.creators.map(doc => doc.userDoc);
+         const snapshotuser = await firestore().collection('Users')
+         .where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs)
+         .get();
 
+         const snapshotuserMap = new Map(snapshotuser?.docs.map(doc => [doc.id, doc]));
+         const userdocs = creatorDocs.map((doc_id:string , index:number) => {
+          const doc = snapshotuserMap.get(doc_id)?.data();
+
+            return {
+                id : doc_id ,
+                doc_id : projectdocs.creators[index].doc_id,
+                isleader : projectdocs.owner === useraccount[0].id, 
+                owner : projectdocs.owner,
+                isyou : doc_id === useraccount[0].id,
+                pending : projectdocs.creators[index].pending ,
+                ...doc
+              }
+              });
+        return userdocs;
      }catch(error) {    
          console.error("Error fetching document:", error);
      }
@@ -105,12 +122,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
             {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
-        {projectdocument  && 
+        {projectdocs  && 
         <>
           <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
             <ImageBackground
               id='background-images'
-              source={{ uri: projectdocument.image}}
+              source={{ uri: projectdocs.image}}
               alt="images"
               style={{
                 width: '100%',
@@ -134,13 +151,18 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
-                <Headercontent data={projectdocument} timestamp = {{createAt : projectdocument.createAt , updatedAt : projectdocument.lastUpdate}} />
+              
+                <Headercontent 
+                data={projectdocs} 
+                id = {id}
+                timestamp = {{createAt : projectdocs.createAt , updatedAt : projectdocs.lastUpdate}}
+                />
                 {isLoading ? 
                 <Center mt = {5}>
                     <Spinner accessibilityLabel="Loading posts" />   
                 </Center>
                   :
-                <EpisodeSection chapter = {chapterdocs.content} doc_id = {id}/> }
+                <EpisodeSection doc_id = {id}/> }
               </VStack>
             )}
           />

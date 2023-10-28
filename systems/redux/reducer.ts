@@ -7,10 +7,22 @@ export interface RootState {
     libraryData : any
     createrData : any
     userData : any
+    docs : any
     theme : any
     bookMark : any
     headLeader: any
     itemLeader: any
+    teams: any
+    tags :any
+    templete : any,
+    category : any
+    content : any,
+    contentdocs : any
+    tagitem :any
+    book : any
+    slot : any
+    project : any
+    categoryCache : any
 
     iscollectionMostviewLoaded : boolean,
     iscollectionHotNewLoaded : boolean,
@@ -51,6 +63,19 @@ const initialState : RootState= {
     bookMark: [],
     headLeader: [],
     itemLeader: [],
+    templete :[],
+    teams : [],
+    tags : {},
+    docs : {},
+    tagitem : {},
+    category : [],
+    theme : {},
+    book : [],
+    slot : [],
+    project : [],
+    content : [],
+    contentdocs : {},
+    categoryCache : [],
 
     iscollectionMostviewLoaded : false,
     iscollectionHotNewLoaded : false,
@@ -88,6 +113,21 @@ const initialState : RootState= {
           ...state,
           content: action.payload,
         }
+        case 'CHAPTER_WRITE_CONTENT' : 
+        return {
+          ...state,
+          contentdocs: action.payload,
+        }
+        case 'PROJECT_DOCUMENT' : 
+        return {
+          ...state,
+          docs: action.payload,
+        }
+        case 'PROJECT_CONTENT' : 
+        return {
+          ...state,
+          project: action.payload,
+        }
       case 'FETCH_TOP_NEW':
         return {
           ...state,
@@ -124,11 +164,60 @@ const initialState : RootState= {
             createrData : action.payload,
             iscreaterLoaded : true
           }
+
+        case 'SET_MY_LIBRARY' :
+          return {
+            ...state,
+            book : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_MY_BOOKMARKS' :
+        return {
+          ...state,
+          slot : action.payload,
+          isuserLoaded : true,
+        }
         case 'SET_USER' :
           return {
             ...state,
             userData : action.payload,
             isuserLoaded : true,
+          }
+        case 'SET_TAGS' :
+          return {
+            ...state,
+            tags : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_CATEGORY' :
+          return {
+            ...state,
+            category : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_CATEGORY_CACHE' :
+          return {
+            ...state,
+            categoryCache : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_TEMPLETE' :
+          return {
+            ...state,
+            templete : action.payload,
+            isuserLoaded : true,
+        }
+        case 'SET_TAGS_SECTION' :
+          return {
+            ...state,
+            tagitem : action.payload,
+            isuserLoaded : true,
+          }
+        case 'SET_PROJECT_TEAMS':
+          return {
+            ...state,
+            teams : action.payload,
+            iscreaterLoaded : true
           }
         case 'CLEAR_USER':
           return {

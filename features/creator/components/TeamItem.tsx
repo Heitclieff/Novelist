@@ -34,7 +34,7 @@ const TeamItem : React.FC <containerProps> = ({data , isleader = false}) => {
                     <Text color = {theme.Text.base} fontWeight={'semibold'}>{data.username}</Text>
                     <Text color = {theme.Text.base} fontSize={'xs'}>{data.email}</Text>
                </VStack>
-               {data.isleader &&
+               {data?.isyou &&
                <Box position={'absolute'} right={6}>
                     <Text color={theme.Text.description} fontSize={'xs'} >you</Text>
                </Box>

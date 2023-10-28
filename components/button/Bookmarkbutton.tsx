@@ -7,11 +7,15 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-interface containerProps {}
-const Bookmarkbutton : React.FC <containerProps> = () => {
+interface containerProps {
+     action : any
+     docid : string
+}
+const Bookmarkbutton : React.FC <containerProps> = ({action , docid}) => {
      const theme:any = useContext(ThemeWrapper);
   return (
      <HStack  
+     
      flex = {1} 
      m = {1}  
      space = {1} 
@@ -23,6 +27,7 @@ const Bookmarkbutton : React.FC <containerProps> = () => {
      overflow={'hidden'}>
 
           <IconButton 
+          onPress = {() => action(docid)}
           bg = {'amber.500'}
           colorScheme={'rose'}
           size = 'md'

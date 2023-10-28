@@ -22,32 +22,44 @@ import Customdrawer from '../../../features/creator/drawer/Customdrawer';
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+
+//@Redux Toolkits
+import { setProjectDocument } from '../../redux/action';
+import { useSelector , useDispatch } from 'react-redux';
 const Drawer = createDrawerNavigator();
 
 const Drawernavigator : React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const dispatch = useDispatch()
+  const projectdocument = useSelector((state) => state.docs)
+
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
-  const [projectdocument , setProjectdocument] = useState<{}>({});
+  const [projectDocument , setProjectdocument] = useState<{}>({});
   const [chapterdocs , setChapterdocs] = useState<{}>({});
   const [snapshotcontent ,setSnapshotcontent] = useState<[]>([]);
   const [isLoading ,setisLoading] = useState(true)
   const [ischapter , setisChapter] = useState(true)
-
+  const [isupdated , setisUpdated] = useState(false)
+  
   const getProjectcontent = async () : Promise<void> => {
     try {
-      const snapshotcontent = await firestore().collection('Novels').doc(id);
-      const snapshotproject =  await snapshotcontent.get()
-      const projectdocs = snapshotproject.data();
-
-      const memberdocs = await getProjectmember(snapshotcontent)
+      if(projectdocument.id !== id){
+        const snapshotcontent = await firestore().collection('Novels').doc(id);
+        const snapshotproject =  await snapshotcontent.get()
+        const projectdocs = snapshotproject.data();
   
-      setProjectdocument({...projectdocs , creators : memberdocs});
-      setSnapshotcontent(snapshotcontent)
-
-      setisLoading(false)
-
+        const memberdocs = await getProjectmember(snapshotcontent)
+    
+        const projectkey = {...projectdocs , creators : memberdocs}
+        setProjectdocument(projectkey);
+        setSnapshotcontent(snapshotcontent)
+  
+        dispatch(setProjectDocument({docs :projectkey , id : id}));
+      }
+      
+      setisLoading(false);
     }catch(error){
       console.error('Error fetching document:', error);
     }
@@ -56,7 +68,7 @@ const Drawernavigator : React.FC = () => {
   const getProjectmember = async (snapshotcontent:any) : Promise<void> => {
     try {
       const snapshotmember = await snapshotcontent.collection('Creator').get();
-      const memberdocs = snapshotmember.docs.map(doc => doc.data())
+      const memberdocs = snapshotmember.docs.map(doc =>({doc_id : doc.id , ...doc.data()}))
 
       return memberdocs;
     }catch(error) {
@@ -64,7 +76,6 @@ const Drawernavigator : React.FC = () => {
     }
   }
 
-  
   useEffect(() => {
     getProjectcontent();
   },[id])
@@ -78,7 +89,7 @@ const Drawernavigator : React.FC = () => {
 
           <Drawer.Screen name="Dashboard" 
             component={Creatorcontent} 
-            initialParams={{projectdocument  ,snapshotcontent , id}}
+            initialParams={{projectdocument:  projectdocument.docs  ,snapshotcontent , id , isupdated }}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <MaterialIcon
@@ -102,7 +113,6 @@ const Drawernavigator : React.FC = () => {
             )}}
           />
 
-
     <Drawer.Screen name="Commit" 
           component={Commit} 
           initialParams={{id}}
@@ -116,12 +126,9 @@ const Drawernavigator : React.FC = () => {
             )}}
       />
 
-
-    
-
     <Drawer.Screen name="Teams" 
         component={Team} 
-        initialParams={{projectdocument}}
+        initialParams={{projectdocument : projectdocument.docs}}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <IonIcon
@@ -133,7 +140,7 @@ const Drawernavigator : React.FC = () => {
       />
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
-        initialParams={{id}}
+        initialParams={{projectdocument : projectdocument.docs, id }}
         options={{headerShown : false , 
           drawerIcon : ({focused , size}) => (
             <AntdesignIcon

@@ -33,7 +33,7 @@ import CreatorItemfield from './components/Creator.itemfield';
 
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-// import { getCollectionsDataShowcase} from '../../systems/redux/action'
+import { setProjectContent } from '../../systems/redux/action';
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
@@ -50,23 +50,31 @@ const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
-    const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
+    // const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
+    const dispatch = useDispatch();
     const navigation = useNavigation();
+    const USER_DATA = useSelector((state) => state.userData)
+    const projectdocs = useSelector((state) => state.project)
+
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
-    // const Collectionsdata = []
-    const getCreatorcontent = async () : Promise<void> => {
+
+    const getProjectContent = async () : Promise<void> => {
         try {
-            const snapshotuser = await firestore().collection('Users').doc(USER_ID).get();
-            const userdocs = snapshotuser.data();
-    
-            const projectID = userdocs.project;
-            const snapshotproject = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , projectID.map(String)).get();    
-    
-            const projectdocs = snapshotproject.docs.map(doc => ({id : doc.id , ...doc.data()}));
+            const projectCollection = firestore().collection('Novels');
+            const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
+            const projectkey = snapshotprojectkey.data();
+
+            const projectID = projectkey?.project;
+            const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
+            const getProjectDocs = await snapshotproject.get();
+            
+            const projectdocs =  getProjectDocs.docs.map(doc => ({id : doc.id , ...doc.data()}));
+
+            dispatch(setProjectContent({docs : projectdocs}))
             setDocument(projectdocs);
 
         }catch(error) {    
@@ -75,7 +83,7 @@ const Creator : React.FC <Pageprops> = () => {
         }
     }
     useEffect(() => {
-        getCreatorcontent();
+        getProjectContent();
     }, [])
 
     const windowHeight = Dimensions.get('window').height;
@@ -106,7 +114,7 @@ const Creator : React.FC <Pageprops> = () => {
         <Box >
             <Suspense fallback = {<Box>Loading...</Box>}>
                 <Memorizednavigation title = "Create"
-                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : handlePresentModalPress}]}
+                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : () => navigation.navigate('CreateProject')}]}
             />
             </Suspense>
         </Box>
@@ -127,8 +135,8 @@ const Creator : React.FC <Pageprops> = () => {
                     </Box>   
             </Box> 
                 <VStack space = {1} m ={5} mt = {5}>
-                {document.length > 0  ?
-                    document.map((item:any , index:number) => {
+                {projectdocs && projectdocs.docs?.length > 0  ?
+                    projectdocs.docs?.map((item:any , index:number) => {
                         return(
                             <MemorizedCreatorItemfield 
                             key = {index} 
@@ -152,7 +160,7 @@ const Creator : React.FC <Pageprops> = () => {
         renderInPortal={false} 
         shadow={2} bg ={'teal.600'} 
         size="sm" 
-        onPress={handlePresentModalPress}
+        onPress={() => navigation.navigate('CreateProject')}
         icon={<AntdesignIcon color="white" name="plus" size= {15} />} />
         <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

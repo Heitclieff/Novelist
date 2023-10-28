@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 //redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoryData } from '../../systems/redux/action';
+import { getCategoryData ,setCategory } from '../../systems/redux/action';
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer';
@@ -22,28 +22,16 @@ const MemorizedCategoryItems = React.memo(CategoryItems)
 const Category: React.FC <Pageprops> = () => {
   const theme: any = useContext(ThemeWrapper);
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const Categorydata = useSelector((state:any)=> state.categoryData)
+  const Categorydata = useSelector((state:any)=> state.category)
   const isReduxLoaded = useSelector((state: RootState) => state.iscategoryLoaded);
   
   const getCategoryAndDispatch = async () => {
       try {
-          const fetchCate = await firestore().collection('Category').get()
-          const Catearray = []
-          
-          for (const doc of fetchCate.docs) {
-            // console.log(doc.id)
-            const proJect = await firestore().collection('Novels').where('cateDoc','==',doc.id).get()
-            const projectItem = []
-            for (let proData of proJect.docs) {
-              projectItem.push({id: proData.id})
-            }
-            const dataDoc = doc.data()
-            // console.log(dataDoc)
-            Catearray.push({ title: doc.id, images: dataDoc.image, proDoc: projectItem })
-          }
-          // console.log('this is category',Catearray)
+          const getcategory = await firestore().collection('Category').get()
+          const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
+         
+          dispatch(setCategory({category : categorydocs}));
 
-          dispatch(getCategoryData(Catearray));  
 
         } catch (error) {
           console.error('Error fetching Category', error);
@@ -51,10 +39,9 @@ const Category: React.FC <Pageprops> = () => {
   };
 
   useEffect(() => {
-    if(!isReduxLoaded) {
-      getCategoryAndDispatch()
-    };
-  },[dispatch , isReduxLoaded])
+    if(!Categorydata.category) getCategoryAndDispatch();
+    
+  },[])
 
   return (
     <Box
@@ -64,13 +51,14 @@ const Category: React.FC <Pageprops> = () => {
     bg = {theme.Bg.base}
     >
     <Suspense fallback = {<Box>Loading...</Box>}>
-      {isReduxLoaded &&  
-        <ItemList collection={Categorydata}>
+      {
+        <ItemList collection={Categorydata.category}>
             {(item:any, index:number) => (
                 <MemorizedCategoryItems 
                     key = {index} 
-                    images={item.images} 
-                    title ={item.title}
+                    id = {item.id}
+                    images={item.image} 
+                    title ={item.id}
                     proDoc={item.proDoc}/> 
             )}
           </ItemList>       

@@ -68,7 +68,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
           >{title}</Heading>
           <Box>
             <IconButton 
-            onPress={() => navigation.navigate('Template',{title})}
+            onPress={() => navigation.navigate('Template',{title, path : 'Novels'})}
             rounded={'full'}
             icon = {
                 <EntypoIcon 

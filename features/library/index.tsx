@@ -23,8 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
-import { fetchLibraryData } from '../../systems/redux/action';
-
+import { setMylibrary } from '../../systems/redux/action';
 //firebase
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
@@ -37,63 +36,33 @@ const MemorizedLibraryitem = React.memo(Libraryitem)
 
 const Library: React.FC <Pageprops> = () => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-  const Librarydata = useSelector((state:any)=> state.libraryData)
   const theme:any = useContext(ThemeWrapper);
+  const myBooks = useSelector((state:any) => state.book);
   const userdata = useSelector((state:any) => state.userData)
+  const userID = userdata[0]?.id; 
 
-  const isReduxLoaded = useSelector((state: RootState) => state.islibraryLoaded);
-  const getLibraryAndDispatch = async () => {
+  const getLibraryContent = async ():Promise<void> => {
     try {
-      const uid = auth().currentUser.uid;
-      const snapshot = await firestore().collection('Librarys').doc(uid).get();
-      if (snapshot.exists) {
-        const data = snapshot.data();
-        console.log(data);
-  
-        const novelLibrary = data.novel_library || [];
-        console.log(novelLibrary);
-  
-        // Create an array to store the updated data
-        const updatedData = [];
-  
-        for (const docId of novelLibrary) {
-          // Fetch additional data from the 'Projects' collection
-          const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', docId).get();
-  
-          for (const projectDoc of projectSnapshot.docs) {
-            const userDocs = projectDoc.data().userDoc;
-            const creater = [];
-  
-            for (const user of userDocs) {
-              const uData = await firestore().collection('Users').doc(user).get();
-              const userData = uData.data();
-              creater.push({ id: user, username: userData.username, image: userData.image });
-            }
-  
-            const imagePro = projectDoc.data().imagePro;
-  
-            // Push the combined data to the 'updatedData' array
-            updatedData.push({ id: docId, ...projectDoc.data(), creater, imagePro });
-          }
-        }
-  
-        // Dispatch the updated data to Redux
-        dispatch(fetchLibraryData(updatedData));
-      } else {
-        console.log('Document does not exist.');
-      }
+      // fixed userdata to Object
+      const snapshotusers = firestore().collection("Users").doc(userID)
+      const getlibrarykeys = await snapshotusers.collection("Library").get();
+      const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
+
+      const findingNovels = await firestore().collection("Novels")
+      .where(firestore.FieldPath.documentId() ,'in', librarykeys)
+      .get();
+    
+      const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
+      dispatch(setMylibrary({book : novelDocs}))
+
     } catch (error) {
-      console.error('Error fetching Library', error);
+      console.log("fetching Userdata failed" , error)
     }
   };
   
-  
-
   useEffect(() => {
-    if(!isReduxLoaded) {
-      getLibraryAndDispatch()
-    };
-  },[dispatch , isReduxLoaded])
+    if(!myBooks) getLibraryContent();
+  },[userID])
 
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
@@ -114,11 +83,12 @@ const Library: React.FC <Pageprops> = () => {
               </Box> 
             </Box> 
             <VStack space = {1} m ={5} mt = {6}>
-              {isReduxLoaded && Librarydata.length > 0 || Librarydata ?
-                      Librarydata.map((item:any , index:number) => (       
+              {myBooks && 
+                myBooks.book?.length > 0 ?
+                      myBooks.book.map((item:any , index:number) => (       
                           <MemorizedLibraryitem key = {index} id = {item.id} data= {item}/>        
                           )) 
-                      : null
+                      : <Text color = {theme.Text.base}>No data</Text>
                   }
             </VStack>
             </FlatList>

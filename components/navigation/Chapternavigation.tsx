@@ -25,6 +25,7 @@ interface contianerProps {
      editable: boolean;
      event: any;
      title: string;
+     chapterdocs : any,
 }
 
 interface SaveProps { }
@@ -68,10 +69,22 @@ const SaveButton: React.FC<SaveProps> = ({event}) => {
      )
 }
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , chapterdocs}) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
-     
+
+     const [showAlert, setShowAlert] = useState(false);
+     const [chapterheader ,setChapterheader] = useState(title);
+
+     const handleShowAlert = () => {
+          setShowAlert(true);
+        };
+      
+        const handleHideAlert = () => {
+          setShowAlert(false);
+        };
+
+ 
      const SavingAlertDailog = () => 
      Alert.alert('Saving', 'you want to save this progress ?', [
           {
@@ -79,7 +92,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                style: 'cancel',
           },
           {text: 'Save', onPress: () => event()},
-          ]);
+     ]);
 
      return (
           <Animated.View
@@ -103,7 +116,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                                         />
                                    }
                               />
-                              <Text color={theme.Text.heading}>{title}</Text>
+                              <Text color={theme.Text.heading}>{chapterheader}</Text>
                          </HStack>
 
                     </Box>
@@ -135,6 +148,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                               <IconButton
                                    size='sm'
                                    rounded={'full'}
+                                   onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
                                    icon={
                                         <FeatherIcon
                                              size={20}
@@ -143,7 +157,9 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title })
                               />
                               <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
                          </HStack>
+                      
                     }
+                         
                </HStack>
           </Animated.View>
      )

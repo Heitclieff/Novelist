@@ -12,6 +12,7 @@ const Leaderboard = lazy(() => import('../../../features/leaderboard'));
 const Profile = lazy(() => import('../../../features/profile'));
 const Bookmarks = lazy(() => import('../../../features/bookmarks'));
 const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
+const EditChapter = lazy(() => import ('../../../features/creator/pages/editchapter'))
 const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
@@ -21,8 +22,10 @@ const Editpage = lazy(() => import('../../../features/_template/editfield'));
 const NovelContent = lazy(() => import('../../../features/reader'));
 const Creatorcontent = lazy(() => import('../../../features/creator'));
 const Createproject = lazy(() => import('../../../features/project/Createproject'));
+const CreateChapter = lazy(() => import ('../../../features/creator/pages/createchapter'))
 const Tag = lazy(() => import('../../../features/creator/pages/Tag'));
 const Readcontent = lazy(() => import('../../../features/reader/content'));
+
 
 interface navigatorProps {
     theme:any
@@ -111,7 +114,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             </Suspense>
             }
           </Stack.Screen>
-
+      
           <Stack.Screen 
           name = "Leaderboard"
           options={{headerShown : false}}
@@ -180,7 +183,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
 
           <Stack.Screen 
           name = "CreateProject"
-          options={{headerShown : false}}
+          options={{headerShown : false }}
           >
             {(props:any) => 
             <Suspense fallback = {<Box>Loading..</Box>}>
@@ -188,6 +191,18 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             </Suspense>
             }
           </Stack.Screen>
+
+          <Stack.Screen 
+          name = "CreateChapter"
+          options={{headerShown : false, animation : 'slide_from_bottom'}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <CreateChapter {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
 
           <Stack.Screen 
           name = "CreatorContent"

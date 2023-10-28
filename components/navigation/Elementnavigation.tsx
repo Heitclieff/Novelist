@@ -1,5 +1,5 @@
 import React,{useContext} from 'react'
-import { Box , IconButton ,Icon , HStack , Text } from 'native-base';
+import { Box , IconButton ,Icon , HStack , Text , Pressable } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
@@ -9,10 +9,11 @@ interface containerProps {
     title : string
     rightElement : any
     children :any
-    Contentfixed : boolean
+    Contentfixed : boolean,
+    ediable : boolean
 }
 
-const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElement = [] , Contentfixed = true}) => {
+const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElement = [] , Contentfixed = true , editable = false ,isAction = null}) => {
     const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
@@ -41,8 +42,8 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
             />
             }  
             </Box>
-            <HStack space = {2}>
-                {rightElement.length > 0 && rightElement.map((item:any , index:number) =>{
+            <HStack space = {2} alignItems={'center'}>
+                {rightElement.length > 0  && rightElement.map((item:any , index:number) =>{
                     return(
                         <IconButton
                         key = {index} 
@@ -51,10 +52,29 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
                         rounded={'full'}
                         colorScheme={'cyan'}
                         icon = {item.icon}
+                        isDisabled = {item.status}
                         />
                     )
                 })         
                 }
+                { editable && 
+                    <Pressable onPress={() => {isAction(); navigation.goBack()}}>
+                        {({
+                        isHovered,
+                        isFocused,
+                        isPressed
+                        }) => {
+                        return(
+                            <Text
+                            fontSize={'xs'}
+                            fontWeight={'normal'}
+                            color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
+                            >save
+                            </Text>
+                        )
+                        }}
+                        </Pressable>
+                    }
            </HStack>
      </HStack>
   )

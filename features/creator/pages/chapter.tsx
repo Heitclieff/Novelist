@@ -30,8 +30,14 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
 
+// @Firestore
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
 //@redux
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
+import { setChaptercontent } from '../../../systems/redux/action'
+
 interface Pageprops {
   route: any
 }
@@ -42,10 +48,14 @@ const MemorizedChapterItem = React.memo(ChapterItem);
 const Chapter: React.FC<Pageprops> = ({ route }) => {
   const theme: any = useContext(ThemeWrapper);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [isLoading, setisLoading] = useState<boolean>(true);
   
+
+  const projectdocs = useSelector((state) => state.docs.docs)
   const chapterdocs = useSelector((state) => state.content);
+  const useraccount = useSelector((state) => state.userData);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => [150, 250], []);
@@ -80,11 +90,31 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   useEffect(() => {
   }, [separatedChapterdocs])
 
+
+  const DeleteChapter = async (id): Promise<void>=> { 
+    try { 
+      const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
+      const chapterpath = projectpath.collection("Chapters").doc(id);
+      const Contentpath = chapterpath.collection('Content')
+
+      
+
+      const removechapter = chapterdocs.content.filter(doc => doc.id !== id)
+      dispatch(setChaptercontent({...chapterdocs , content : removechapter  , id : chapterdocs.id}))
+      
+      await Contentpath.parent?.delete();
+      const docRef = await chapterpath.delete();
+      console.log("Remove Chapter Success" , id)
+    }catch(error){
+      console.log("Failed To Remove This Chapter" , error)
+    }
+  }
+
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
         rightElement={[
-          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />, navigate: handlePresentModalPress },
+          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id}) },
           { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />
@@ -109,41 +139,60 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                 <>
                   <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
                   <VStack mb={4} space={2}>
-                    <SwipeListView
-                      disableRightSwipe
-                      data={separatedChapterdocs.draft}
-                      ItemSeparatorComponent={<Box h='2' />}
-                      renderItem={(item: any, index: number) => {
-                        return(
-                          <MemorizedChapterItem key = {index} data={item.item}/>
-                        )
-                       
-                      }}
-                      renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
-                      leftOpenValue={60}
-                      rightOpenValue={-60}
+                    {separatedChapterdocs.draft.map((item:string , index:number) => {
+                      const isVisible = item.access?.includes(useraccount?.[0].id) || projectdocs.owner === useraccount?.[0].id
+                      const isDisable = item.createdBy === useraccount?.[0].id || projectdocs.owner === useraccount?.[0].id
 
-                    />
+        
+                      if(isVisible)
+                        return(
+                          <SwipeListView
+                            key = {index}
+                            disableRightSwipe
+                            disableLeftSwipe = {!isDisable}
+                            data={[0]}
+                            ItemSeparatorComponent={<Box h='2' />}
+                            renderItem={() => {
+                              return(
+                                <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                              )
+                            }}
+                            renderHiddenItem={() => (<Deletebutton id = {item.id} action = {DeleteChapter}/>)}
+                            leftOpenValue={60}
+                            rightOpenValue={-60}
+                          />
+                      )
+                    })}
                   </VStack>
                 </>
               }
               
               <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
               <VStack mb={4} space={3} >
-                <SwipeListView
-                  disableRightSwipe
-                  data={separatedChapterdocs.other}
-                  ItemSeparatorComponent={<Box h='2' />}
-                  renderItem={(item: any, index: number) => {
-                    return(
-                      <MemorizedChapterItem key = {index} data={item.item}/>
+                {separatedChapterdocs.other && 
+                  separatedChapterdocs.other.map((item:any , index:number) => {
+                    const isDisable = projectdocs.owner !== useraccount?.[0].id 
+                    return (
+                      <SwipeListView
+                      key = {index}
+                      disableRightSwipe
+                      disableLeftSwipe = {isDisable}
+                      data={[0]}
+                      ItemSeparatorComponent={<Box h='2' />}
+                      renderItem={() => {
+                        return(
+                          <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                        )
+                       
+                      }}
+                      renderHiddenItem={() => (<Deletebutton  id = {item.id} action = {DeleteChapter}/>)}
+                      leftOpenValue={60}
+                      rightOpenValue={-60}
+                    />
                     )
-                   
-                  }}
-                  renderHiddenItem={(data, rowMap) => (<Deletebutton />)}
-                  leftOpenValue={60}
-                  rightOpenValue={-60}
-                />
+                  })
+                }
+             
               </VStack>
              
             </VStack>
