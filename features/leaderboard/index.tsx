@@ -64,7 +64,7 @@ const Leaderboard: React.FC <pageProps> = () => {
             });
 
             // Step 5: Update the Leaderboards collection with the array of entries
-            db.collection("Leaderboards").doc('hww60M4MJqjPkLII0C1E')
+            mainLeaderRef.doc('hww60M4MJqjPkLII0C1E')
             .set({
                 leaderboard: leaderboardEntries,
             })

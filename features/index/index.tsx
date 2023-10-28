@@ -589,6 +589,7 @@ const Index : React.FC = () => {
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
+          // callScore();
         }
       }, [isReduxLoaded]);
 
