@@ -14,11 +14,21 @@ interface containerProps{
     id : number | string
 }
 const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
+    // console.log('bookmark field',data, id)
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
 
-    const date = new Date(data.date.seconds * 1000 + data.date.nanoseconds / 1000000);
-
+    const TimeConvert = (timestamp) => {
+      if(timestamp){
+        const birth =new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+        const birthDate = birth.toLocaleDateString();
+  
+        // setformattedDate({createAt : formattedDateCreateAt , lastupdated : formattedDatelastupdate});
+        return birthDate
+      }
+    }
+    const date = TimeConvert(data.date)
+    
     const timezoneOffset = date.getTimezoneOffset();
     const formattedDate = date.toLocaleString();
   return (
@@ -36,6 +46,11 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
             </Box>
             <VStack w = '77%' h = '100%' pl = {2} justifyContent={'center'}>
                 <Text color = {theme.Text.base} numberOfLines={2} fontWeight={'semibold'}>{data.title}</Text>
+                <HStack>
+                    {data.creator && data.creator.map((items :any, key:number) => (
+                        <Text key={key} color = {theme.Text.description} fontSize={'xs'}>{items.username}</Text>
+                    ))}
+                </HStack>
                 <Text color = {theme.Text.base} fontSize={'xs'}>{formattedDate}</Text>
             </VStack>
         </HStack>

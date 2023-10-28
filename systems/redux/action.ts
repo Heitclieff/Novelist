@@ -3,6 +3,7 @@ import {ThunkAction } from "redux-thunk";
 import { RootState } from "./reducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Themedark , Themelight } from "../theme/theme";
+import { userdata } from "../../assets/content/VisualCollectionsdata";
 
 export const SET_THEME = 'SET_THEME';
 export const LOAD_THEME_FROM_STORAGE = 'LOAD_THEME_FROM_STORAGE';
@@ -140,21 +141,6 @@ export const getuserData = () : ThunkAction <void ,RootState, unknown , AnyActio
   };
 };
 
-// export const setChaptercontent = (content:any ,id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
-
-export const setMylibrary = (book:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-  return async (dispatch: Dispatch<AnyAction>) => {
-    try {
-      dispatch({ 
-        type: 'SET_MY_LIBRARY', 
-        payload : book,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-};
-
 
 export const setMybookmarks = (slot:any , dockey:any): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
@@ -251,7 +237,6 @@ export const setProjectDocument = (docs:any , id:string): ThunkAction<void, Root
 };
 
 export const setChaptercontent = (content:any ,id:string , snapshotchapter:any): ThunkAction<void, RootState, unknown, AnyAction> => {
-
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
@@ -292,6 +277,58 @@ export const setProjectTeams = (teams:any): ThunkAction<void, RootState, unknown
         type: 'SET_PROJECT_TEAMS', 
         payload : teams,
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const updateUserField = (field:string,newData:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>, getState: () => RootState) => {
+    const { userData } = getState();
+    try {
+      dispatch({ 
+        type: 'UPDATE_USERFIELD',
+        payload: userData.map(items => ({ ...items, [field]: newData })),
+      });
+      console.log('updated')
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const setBookmark = (content:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ type: 'SET_BOOKMARK', payload: content, isbookMarkLoaded : true});
+      // console.log('001')
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const setHeadLeader = (data:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (data) {
+        dispatch({ type: 'SET_HEADLEADER', payload: data , isheadLeader : true})
+        // console.log('set head',data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const setItemLeader = (data:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      if (data) {
+        dispatch({ type: 'SET_ITEMLEADER', payload: data , isitemLeader : true})
+        // console.log('002')
+      }
     } catch (error) {
       console.log(error);
     }
