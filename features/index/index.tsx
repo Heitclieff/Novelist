@@ -539,7 +539,6 @@ const Index : React.FC = () => {
           .where(firestore.FieldPath.documentId() ,'in', librarykeys)
           .get();
 
-
           const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
           dispatch(setMylibrary({book : novelDocs}))
         } catch (error) {
@@ -589,6 +588,7 @@ const Index : React.FC = () => {
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
+        }
       }, [isReduxLoaded]);
 
       useEffect(() => {

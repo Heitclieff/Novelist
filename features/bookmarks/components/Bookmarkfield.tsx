@@ -18,17 +18,8 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
 
-    const TimeConvert = (timestamp) => {
-      if(timestamp){
-        const birth =new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
-        const birthDate = birth.toLocaleDateString();
-  
-        // setformattedDate({createAt : formattedDateCreateAt , lastupdated : formattedDatelastupdate});
-        return birthDate
-      }
-    }
-    const date = TimeConvert(data.date)
-    
+    const date = new Date(data.date.seconds * 1000 + data.date.nanoseconds / 1000000);
+
     const timezoneOffset = date.getTimezoneOffset();
     const formattedDate = date.toLocaleString();
   return (
