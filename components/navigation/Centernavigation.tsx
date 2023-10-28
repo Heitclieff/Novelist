@@ -18,7 +18,7 @@ interface contianerProps {
     Contentfixed : boolean
 }
 
-const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true}) => {
+const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null}) => {
   const navigation:any  = useNavigation();
   const theme:any = useContext(ThemeWrapper);
   return (
@@ -29,7 +29,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
       zIndex: 10 }]
     }>
     <HStack w = '100%'  safeAreaTop position = 'relative' justifyContent={'center'} pl = {4} pr = {4}  pt = {3} pb ={3} bg = {transparent ? 'transparent' : theme.Bg.base }> 
-            <Box w = '15%' justifyContent='center' alignItems={'center'}>
+            <Box w = '15%' h = {8} justifyContent='center' alignItems={'center'}>
                 {onEditcontent ? 
                     <Pressable onPress={() => navigation.goBack()}>
                     {({
@@ -41,6 +41,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
                         <Text
                         fontSize={'md'}
                         fontWeight={'medium'}
+                        
                         color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
                         >cancel
                         </Text>
@@ -67,7 +68,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
             {onEditcontent &&
-                <Pressable onPress={() => navigation.goBack()}>
+                <Pressable onPress={() => {isAction(); navigation.goBack()}}>
                 {({
                 isHovered,
                 isFocused,

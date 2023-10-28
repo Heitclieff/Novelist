@@ -33,10 +33,14 @@ import CreatorItemfield from './components/Creator.itemfield';
 
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getCollectionsDataShowcase} from '../../systems/redux/action'
+import { setProjectContent } from '../../systems/redux/action';
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
+
+// firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops { 
     theme : any
@@ -46,18 +50,41 @@ const Memorizednavigation = React.memo(Elementnavigation)
 const MemorizedCreatorItemfield = React.memo(CreatorItemfield)
 
 const Creator : React.FC <Pageprops> = () => {
+    // const USER_ID = "1SyhXW6TeiWFGFzOWuhEqOsTOX23";
     const theme:any = useContext(ThemeWrapper);
+    const dispatch = useDispatch();
     const navigation = useNavigation();
+    const USER_DATA = useSelector((state) => state.userData)
+    const projectdocs = useSelector((state) => state.project)
+
     const [Projectype , setProjectype] = useState<string>('');
-    
-    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    const Collectionsdata = useSelector((state: any) => state.collectionsDatashowcase)
-    const isReduxLoaded = useSelector((state: RootState) => state.iscollecitonDatashowcaseLoaded);
+    const [document , setDocument] = useState<any[]>([]);
+    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const {dismiss} = useBottomSheetModal();
-  
+
+    const getProjectContent = async () : Promise<void> => {
+        try {
+            const projectCollection = firestore().collection('Novels');
+            const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
+            const projectkey = snapshotprojectkey.data();
+
+            const projectID = projectkey?.project;
+            const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
+            const getProjectDocs = await snapshotproject.get();
+            
+            const projectdocs =  getProjectDocs.docs.map(doc => ({id : doc.id , ...doc.data()}));
+
+            dispatch(setProjectContent({docs : projectdocs}))
+            setDocument(projectdocs);
+
+        }catch(error) {    
+            console.error("Error fetching document:", error);
+        
+        }
+    }
     useEffect(() => {
-        if (!isReduxLoaded) dispatch(getCollectionsDataShowcase());
-    }, [dispatch, isReduxLoaded])
+        getProjectContent();
+    }, [])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -67,7 +94,7 @@ const Creator : React.FC <Pageprops> = () => {
        bottomSheetModalRef.current?.present();
     }, []);
     const handleSheetChanges = useCallback((index: number) => {        
-   }, []);
+    }, []);
 
    const handleReturnChange = () => {
      bottomSheetModalRef.current?.snapToIndex(1);
@@ -87,7 +114,7 @@ const Creator : React.FC <Pageprops> = () => {
         <Box >
             <Suspense fallback = {<Box>Loading...</Box>}>
                 <Memorizednavigation title = "Create"
-                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : handlePresentModalPress}]}
+                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : () => navigation.navigate('CreateProject')}]}
             />
             </Suspense>
         </Box>
@@ -108,12 +135,22 @@ const Creator : React.FC <Pageprops> = () => {
                     </Box>   
             </Box> 
                 <VStack space = {1} m ={5} mt = {5}>
-                {isReduxLoaded && Collectionsdata.length > 0 || Collectionsdata ?
-                    Collectionsdata.map((item:any , index:number) => ( 
-                        React.useMemo(() => (
-                                <MemorizedCreatorItemfield key = {index} id = {item.id} data= {item}/>        
-                        ),[]
-                        ))) 
+                {projectdocs && projectdocs.docs?.length > 0  ?
+                    projectdocs.docs?.map((item:any , index:number) => {
+                        return(
+                            <MemorizedCreatorItemfield 
+                            key = {index} 
+                            id = {item.id} 
+                            title = {item.title}
+                            status = {item.status}
+                            image = {item.image}
+                            creator = {item.creators}
+                            /> 
+                        )
+                       
+                    }
+                        
+                        ) 
                     : null
                 }
                 </VStack> 
@@ -123,7 +160,7 @@ const Creator : React.FC <Pageprops> = () => {
         renderInPortal={false} 
         shadow={2} bg ={'teal.600'} 
         size="sm" 
-        onPress={handlePresentModalPress}
+        onPress={() => navigation.navigate('CreateProject')}
         icon={<AntdesignIcon color="white" name="plus" size= {15} />} />
         <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

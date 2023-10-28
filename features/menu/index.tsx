@@ -20,11 +20,15 @@ const LazyOptionfield = React.lazy(() => import('../../components/field/Optionfi
 
 //@redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
-import { getuserData , setTheme } from '../../systems/redux/action'
+import { setUser , setTheme } from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
 import { useNavigation } from '@react-navigation/native'
+
+//firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops { }
 
@@ -36,12 +40,14 @@ const Menu :React.FC <Pageprops> = () => {
   const theme:any =  useContext(ThemeWrapper)
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const userdata = useSelector((state:any) => state.userData)
-
   const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded)
 
+  // console.log(userdata)
   useEffect(() => {
-    if(!isReduxLoaded) dispatch(getuserData());
-  },[dispatch , isReduxLoaded])
+    if(!isReduxLoaded) {
+
+    }
+  },[isReduxLoaded])
 
   const iconList = [
       <FeatherIcon name = "edit" size = {15} color = {theme.Icon.base}/>,

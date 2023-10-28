@@ -26,7 +26,7 @@ const Libraryitem : React.FC <containerProps>= ({id, data}) => {
                     <Image 
                     id = "Background-image"
                     style={{width : '100%' ,height : '100%'}}
-                    source={{uri: data.images}}
+                    source={{uri: data.image}}
                     />
                </Box>
                <VStack w= '75%'  pl = {2} pr = {2}  ml = {2}  rounded={'md'} space = {1}>
@@ -44,7 +44,7 @@ const Libraryitem : React.FC <containerProps>= ({id, data}) => {
                                 size={10}
                                 color = {theme.Text.description}
                                 name = 'heart'/>
-                                <Text color={theme.Text.description} fontSize={'xs'}>4.7k</Text>
+                                <Text color={theme.Text.description} fontSize={'xs'}>{data.like}</Text>
                          </HStack>
                     </VStack>
                </VStack>

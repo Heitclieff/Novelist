@@ -2,117 +2,175 @@ import React,{useContext, useEffect, useState} from 'react'
 import { 
 Box , 
 VStack , 
-Text , 
-HStack } from 'native-base'
+Button,
+HStack,
+useToast,
+
+} from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
+import { TextInput , Text , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
 // import ContentNavigation from '../../../../components/[stack]/Novel/[container]/ContentNavigation'
-
+import Chapternavigation from '../../components/navigation/Chapternavigation'
+import AlertItem from './components/Alert'
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
+import { setChapterWriteContent ,setChaptercontent } from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
 import { useRoute } from '@react-navigation/native'
-import Chapternavigation from '../../components/navigation/Chapternavigation'
 
-//firebase
+
+// @Redux tookits
+
+//@ firebase
 import firestore from '@react-native-firebase/firestore'
 import Chapter from '../creator/pages/chapter';
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
+     const DOC_ID = "7xV6Am2tw5bII2xsHunR";
+     const EDITABLE = true;
      const theme:any = useContext(ThemeWrapper)
+     const toast = useToast();
      const route = useRoute();
-     const {p_id}:any = route.params
-     const {title}:any = route.params
+     const dispatch = useDispatch();
+     const {
+     doc_id,
+     id , 
+     title , 
+     noveltitle , 
+     content,
+     editable,} :any = route.params;
+     
+     const chapterdocs = useSelector((state) => state.content);
+     const useraccount = useSelector((state) => state.userData);
+     const contentdocs = useSelector((state) => state.contentdocs);
+     const [inputValue ,setinputValue] = useState("");
+     const [contentid ,setContentid] = useState<string>('');
+     const HandleChange = (text:string) => {
+          setinputValue(text)
+     }
 
 
-     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-     const [novelItem, setnovelItem] = useState<any[]>([]);
-     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false);
-     const [chapterItem, setchapterItem] = useState([])
 
-     const getNovelItem = async () => {
-          const novelItemSnap = await firestore().collection('Projects').where('novelDoc', '==', p_id).get()
-          const novelItem_Data = []
-          const chapter_Item = []
-          for (const novelDoc of novelItemSnap.docs) {
-            let docId = novelDoc.data().novelDoc
-            const chapItem = await firestore().collection('Chapters').where('novelDoc', '==', docId).get().then((chap) => {
-                // console.log('chap',chap)
-                chap.forEach((doc) => {
-                    // console.log('chap doc',doc)
-                    const updateAt = doc.data().updateAt.toDate();
-                    chapter_Item.push({ id: doc.id, ...doc.data(), updateAt: updateAt })
-                })
-            })
-            const data = novelDoc.data().novelDoc
-            const novelSnap = await firestore().collection('Novels').doc(p_id).get()
-            const createdAt = novelSnap.data().createAt.toDate();
-            const lastUpdate = novelSnap.data().lastUpdate.toDate();
-            
-            // console.log('template',novelSnap)
-            novelItem_Data.push({ id: novelDoc.id, ...novelDoc.data(), ...novelSnap.data(), createAt: createdAt, lastUpdate: lastUpdate })
+     const initialContent = async () : Promise <void> => {
+          if(contentdocs.docid === id) {
+               setinputValue(contentdocs.contentdocs);
+               setContentid(contentdocs.id);
+               return
           }
-          chapter_Item.sort((a, b) => a.chap_id - b.chap_id);
-          setnovelItem(novelItem_Data);
-          setchapterItem(chapter_Item)
-          setisReduxLoaded(true)
-          // console.log(cateItem_Data)
-          novelItem.map(item => {
-            console.log("Category Document:", item.cateDoc);
-            console.log("Comment Status:", item.comment_status);
-            console.log("Commit Status:", item.commit_status);
-            console.log("Create At:", item.createAt);
-            console.log("Creators:", item.creater);
-            console.log("ID:", item.id);
-            console.log("Image URL:", item.image);
-            console.log("Last Update:", item.lastUpdate);
-            console.log("Like:", item.like);
-            console.log("Name:", item.name);
-            console.log("Novel Document:", item.novelDoc);
-            console.log("Overview:", item.overview);
-            console.log("Owner:", item.owner);
-            console.log("Project Status:", item.project_status);
-            console.log("Rating:", item.rating);
-            console.log("Status:", item.status);
-            console.log("Title:", item.title);
-            console.log("View:", item.view);
-          });
-        }
- 
+
+          if(id){
+               getnovelContent();
+          }
+          
+     }
+
+     const getnovelContent =  async () : Promise<void> => {
+          try{
+               const content = await chapterdocs.snapshotchapter.doc(id).collection('Content').get();
+               const contentDocs = content.docs?.map(doc =>({id : doc.id ,...doc.data()}));
+
+               setinputValue(contentDocs?.[0].content)
+               setContentid(contentDocs?.[0].id);
+               dispatch(setChapterWriteContent({contentdocs : contentDocs?.[0].content, docid : id , id : contentDocs?.[0].id}));
+          }catch(error){
+               console.log("Failed to get Novels content" , error);
+          }
+     }
+
+     const updatedContent = async () : Promise <void> => {
+          let toastStatus = "error"
+          try {
+               const currentDate = new Date();
+               const formattedDate = {
+                   seconds: Math.floor(currentDate.getTime() / 1000),
+                   nanoseconds: (currentDate.getTime() % 1000) * 1000000,
+               };
+               const userdocs = useraccount?.[0]
+               
+               const index = chapterdocs.content.findIndex(chapter => chapter.id === id);
+
+               const updateddocs = chapterdocs.content;
+
+               updateddocs[index].updateAt = formattedDate
+               updateddocs[index].updatedBy = userdocs.id
+               updateddocs[index].updatedimg = userdocs.pf_image
+
+               dispatch(setChaptercontent({content : updateddocs, ...chapterdocs}))
+               dispatch(setChapterWriteContent({contentdocs : inputValue, docid : id , id : contentid}));
+        
+               const getchapter = chapterdocs.snapshotchapter.doc(id)
+               const getcontent = getchapter.collection('Content');
+               const timestamp = firestore.FieldValue.serverTimestamp();
+
+               const contentRef = await getcontent.doc(contentid).update({content : inputValue});
+               const docRef = await getchapter.update({
+                    updateAt : timestamp,
+                    updatedBy : userdocs.id,
+               });
+
+               console.log("Updated Content Successfull.")
+               toastStatus = "success"
+          }catch(error) {
+               console.error("Update Content Problem ", error);
+          }
+
+          toast.show({
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem status = {toastStatus} /> 
+               }
+          })
+
+     }
+
      useEffect(() => {
-          if (!isReduxLoaded) {
-               getNovelItem()
-          }
-      }, [isReduxLoaded, chapterItem, novelItem])
-  
+          initialContent();
+      }, [id]);
+
+
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation/>
+          <Chapternavigation editable = {editable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}}/>
           <FlatList>
-          {novelItem.length > 0 && isReduxLoaded &&
+          {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
-                    <HStack id = "story-heading-wrap" justifyContent={'center'} >
-                         <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {1}>
-                              <Text color={theme.Text.description} textAlign={'center'}>{`${novelItem[0].title}`}</Text>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} fontSize={'md'}>{`${title}`}</Text>
-                         </VStack>
-                    </HStack>
+                    {!editable && <HStack id = "story-heading-wrap" justifyContent={'center'} >
+                         <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
+                              <Text style = {{color : 'white'}} >{noveltitle}</Text>
+                              <Text style = {{color : 'white' ,fontWeight : 600}} textAlign={'center'}>{`${title}`}</Text>
+                              </VStack>
+                    </HStack>}
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>
-                              {`${novelItem[0].overview}`}
+                              {/* {`${novelItem[0].overview}`} */}
                          </Text>
+                         <TextInput        
+                         style = {{color : 'white'} }
+                         multiline={true}
+                         editable = {editable}
+                         textAlignVertical="top"
+                         placeholder="พิมพ์ข้อความที่นี่..."
+                         placeholderTextColor={'white'}
+                         onChangeText={HandleChange}
+                         // onChangeText={handleInputChange} // เรียกใช้งานเมื่อมีการเปลี่ยนแปลงข้อความ
+                         value={inputValue} // กำหนดค่าของ TextInput จาก State
+                         
+                         />
                     </VStack>
-
+                    {/* <Button colorScheme={'teal'} onPress = {uploadtoFirestore}>Test Save</Button> */}
                </VStack>
                
-          }
-               
+          {/*}*/}
+                
           </FlatList>
+
     </VStack>
   )
 }
 
-export default Readcontent;
+export default Readcontent; 

@@ -22,6 +22,8 @@ interface FiledProps {
 const Userfield: React.FC<FiledProps> = ({data}) => {
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
+    // console.log('userfield',data[0].pf_image)
+    // data.map((item : any , key : number) => console.log(item))
     return ( data.map((item : any , key : number) => 
     <Pressable key = {key} onPress={()=> navigation.navigate("ProfileStack")}>
             {({
@@ -48,7 +50,7 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                                     w='100%'
                                     h='100%'
                                     resizeMode='cover'
-                                    source={{ uri: item.image }}
+                                    source={{ uri: item.pf_image }}
                                     alt="images"
                                 />
                             </Box>

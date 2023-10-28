@@ -12,16 +12,24 @@ import { SwipeListView } from 'react-native-swipe-list-view'
 import { useNavigation } from '@react-navigation/native'
 import { teamsdata } from '../assets/config'
 
+// @Redux toolkits
+import { useSelector , useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 //@Components
 import Deletebutton from '../../../components/button/Deletebutton'
 import ChapterItem from '../components/ChapterItem'
 
 const MemorizedChapterItem = React.memo(ChapterItem);
 
-interface  containerProps {}
-const EpisodeSection : React.FC <containerProps> = ()=> {
+interface  containerProps {
+   doc_id : string;
+}
+const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const chapterdocs = useSelector((state) => state.content)
+
+
   return (
      <VStack pl = {5} pr= {5} pt = {5} space = {2}>
           <HStack justifyContent={'space-between'}>
@@ -41,11 +49,18 @@ const EpisodeSection : React.FC <containerProps> = ()=> {
           </HStack>
          <SwipeListView 
             disableRightSwipe
-            data={[0,1]}
+            data={chapterdocs.content}
             ItemSeparatorComponent={<Box h=  '2'/>}
-            renderItem={(item:any , index:number) => (
-               <MemorizedChapterItem data = {teamsdata[0]}/>
-            )}
+            renderItem={(item:any , index:number) => {
+               return(              
+                  <MemorizedChapterItem 
+                  key = {item.id}  
+                  data = {item.item}
+                  doc_id = {doc_id}
+               />
+               )
+            }
+            }
             renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
             leftOpenValue={60}
             rightOpenValue={-60}

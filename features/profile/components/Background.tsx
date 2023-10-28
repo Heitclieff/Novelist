@@ -11,7 +11,14 @@ interface containerProps {
 
 const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) => {
   const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
-
+  // console.log('background',background)
+  const handleImageLoad = () => {
+    console.log('Image loaded successfully');
+  }
+  
+  const handleImageError = (error) => {
+    console.error('Error loading image:', error);
+  }
   return (
     <Box 
     w = '100%' 
@@ -23,6 +30,8 @@ const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) 
         <AnimatedBackground
         id='background-images'
         source={{uri : background}}  
+        onLoad={handleImageLoad}
+        onError={handleImageError}  
         style={{ 
           width: '100%', 
           height: '100%', 

@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext , useEffect , useRef , useState} from 'react'
 import { 
 VStack,
 HStack ,
@@ -12,22 +12,92 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 
+// @Components
+import Userfield from './components/Userfield';
+
+//@Firestore
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
+import { useSelector , useDispatch } from 'react-redux';
+import { setProjectTeams } from '../../systems/redux/action';
+
+const MemorizedUserfield = React.memo(Userfield);
+
 const Searchpage : React.FC =() => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const dispatch = useDispatch();
 
+     const [searchQuery, setsearchQuery] = useState<string>('');
+     const [searchResults, setSearchResults] = useState<[]>([]);
+     const userdocs = useSelector((state) => state.teams);
+     const docID = useSelector((state) => state.content)
+
+     const searchUsers = async () : Promise<void> => {
+          if(!searchQuery) {
+               setSearchResults([]);
+               return
+          }
+          try{
+               const usersRef = await firestore().collection('Users')
+               .where('username', '>=' , searchQuery)
+               .where('username', '<=', searchQuery +`\uf8ff`)
+               .get()
+
+               if(usersRef.docs.length > 0) {
+                    const users = usersRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
+                    setSearchResults(users);   
+               }else{
+                    setSearchResults([]);
+               }
+
+          }catch(error){
+               console.log("Error Searching Users" , error)
+          }
+     }
+
+     const UpdatedTeams = async (data:any , ) : Promise<void> => {
+          const updateItem = [
+               ...userdocs.teams,
+               {
+                    ...data,
+                    pending: true,
+                    isleader : false,
+               }
+          ]
+          dispatch(setProjectTeams({teams : updateItem}));
+
+          const timestamp = firestore.FieldValue.serverTimestamp();
+          const docRef =  await firestore()
+                         .collection('Novels')
+                         .doc(docID.id)
+                         .collection('Creator')
+                         .add({
+                              pending : true,
+                              userDoc : data.id,
+                              addAt  : timestamp,
+                         })
+
+          console.log("docRef ID" , docRef.id)
+     }
+
+     useEffect(() => {
+          searchUsers();
+     } , [searchQuery])
   return (
-     <VStack flex = {1} bg=  {theme.Bg.base}>
+     <VStack flex = {1} bg=  {theme.Bg.base} space = {5}>
           <HStack pl = {6} pr = {6} pt = {3} safeAreaTop space = {2}>
                   <Input
                   w = '85%'
                   rounded={'full'} 
                   bg = {theme.Bg.container} 
-                  borderColor={theme.Bg.comment} 
+                  borderColor={theme.Bg.comment}  
                   color={theme.Text.base}
                   h  = {9}
                   InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
                   placeholder='Search'
+                  onChangeText={(e) => setsearchQuery(e)}
                   />
                <Pressable flex = {1} justifyContent={'center'} alignItems={'center'} onPress={()=> navigation.goBack()}> 
                     {({
@@ -44,7 +114,26 @@ const Searchpage : React.FC =() => {
                </Pressable>
           </HStack> 
           <FlatList flex = {1}>
+               <VStack p = {4}>
+                    {searchResults.length > 0 &&
+                         searchResults.map((item:any , index:number) => {
+                              const status = userdocs.teams.find((doc) => doc.id === item.id)
+                              if(status?.isleader) return
 
+                              return(
+                                   <MemorizedUserfield 
+                                   key = {index}
+                                   id = {item.id}
+                                   data = {item}
+                                   status = {status}
+                                   UpdatedTeams={UpdatedTeams}
+                                   />
+                              )
+                         }
+                              
+                         )
+                    }
+               </VStack>
           </FlatList>
      </VStack>
   )

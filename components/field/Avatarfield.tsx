@@ -7,6 +7,7 @@ interface containerProps {
      size  : number | string
 }
 const Avatarfield : React.FC <containerProps> =({image , size = 25}) => {
+ 
   return (
     <Box w=  {size} h = {size} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
           <Image
