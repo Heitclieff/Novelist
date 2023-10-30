@@ -25,7 +25,7 @@ const Itemfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}
      const navigation = useNavigation();
 
   return (
-     <Pressable>
+     <Pressable onPress = {() => navigation.navigate('Novelmain' ,{id})}>
      {({
          isHovered,
          isFocused,
