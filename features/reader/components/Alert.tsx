@@ -15,10 +15,10 @@ interface containerProps {
 
 const AlertItem: React.FC<containerProps> = ({ status }) => {
      return <Stack space={3} w="100%" maxW="400">
-          {StatusDialog.map((item) => {
+          {StatusDialog.map((item , index) => {
                if (status === item.status) {
                     return (
-                         <Alert w="100%" status={item.status}>
+                         <Alert key = {index} w="100%" status={item.status}>
                               <VStack space={2} flexShrink={1} w="100%">
                                    <HStack flexShrink={1} space={2} justifyContent="space-between">
                                         <HStack space={2} flexShrink={1}>

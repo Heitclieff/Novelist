@@ -11,7 +11,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
 
 //@Components
 import Indexheader from './header/Indexheader';
@@ -546,6 +546,21 @@ const Index : React.FC = () => {
         }
       };
 
+
+      const getCategoryAndDispatch = async () => {
+        try {
+            const getcategory = await firestore().collection('Category').get()
+            const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
+           
+            dispatch(setCategory({category : categorydocs}));
+  
+  
+          } catch (error) {
+            console.error('Error fetching Category', error);
+        }
+    };
+  
+
       const getBookmarks = async(uid) :Promise<void> => {
         try{
           const getuserkeys = firestore().collection('Users').doc(uid);
@@ -571,6 +586,7 @@ const Index : React.FC = () => {
         }
       }
   
+      
       const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
           const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
           const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
@@ -594,6 +610,10 @@ const Index : React.FC = () => {
       useEffect(() => {
         getUserandDispatch();
       },[])
+
+      useEffect(() => {
+        getCategoryAndDispatch();
+      })
 
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>
