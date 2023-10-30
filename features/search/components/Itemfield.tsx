@@ -38,26 +38,8 @@ const Itemfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}
                     </Box>
                     <HStack w='80%' h='100%' justifyContent={'space-between'} alignItems={'center'}>
                          <VStack>
-                              <Text color={theme.Text.base} fontSize={'sm'}>{data.username}</Text>
-                              <Text color={theme.Text.description} fontSize={'xs'}>{data.email}</Text>
+                              <Text color={theme.Text.base} fontSize={'sm'}>{data.title}</Text>
                          </VStack>
-                         <Box>
-                              {status && 
-                                   status.pending ?   
-                                        <Box borderWidth={1} rounded={'full'} borderColor={theme.Text.description}>
-                                             <Text color = {theme.Text.description} fontSize={'xs'} m = {1}>Pending</Text>
-                                        </Box>
-                                        :
-                                        
-                                        
-                                        <AntdesignIcon
-                                        name={'plus'}
-                                        size={15}
-                                        color={theme.Icon.static}/>
-                                        
-                                   }
-                    
-                         </Box>
                     </HStack>
                </HStack>
           )
