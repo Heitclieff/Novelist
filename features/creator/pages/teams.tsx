@@ -102,7 +102,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                     {
                          status: isDisable,
                          icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />,
-                         navigate: () => navigation.navigate('Search', { novelsearch: false })
+                         navigate: () => navigation.navigate('Search', { fixedsearch: true })
                     },
                     { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
                ]}

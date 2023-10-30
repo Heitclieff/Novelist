@@ -11,9 +11,11 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
+import { useRoute } from '@react-navigation/native';
 
 // @Components
 import Userfield from './components/Userfield';
+import Itemfield from './components/Itemfield';
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
@@ -23,14 +25,20 @@ import { useSelector , useDispatch } from 'react-redux';
 import { setProjectTeams } from '../../systems/redux/action';
 
 const MemorizedUserfield = React.memo(Userfield);
+const MemorizedItemfield = React.memo(Itemfield);
+
 
 const Searchpage : React.FC =() => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const dispatch = useDispatch();
+     const route = useRoute();
+     
+     const fixedsearch = route.params?.fixedsearch ? true : false;
 
      const [searchQuery, setsearchQuery] = useState<string>('');
-     const [searchResults, setSearchResults] = useState<[]>([]);
+     const [novelResults ,setNovelResults] = useState<[]>([])
+     const [searchResults, setSearchResults] = useState<{}>([]);
      const userdocs = useSelector((state) => state.teams);
      const docID = useSelector((state) => state.content)
 
@@ -54,6 +62,29 @@ const Searchpage : React.FC =() => {
 
           }catch(error){
                console.log("Error Searching Users" , error)
+          }
+     }
+
+     const searchnovel = async () : Promise<void> => {
+          if(!searchQuery) {
+               setSearchResults([]);
+               return
+          }
+
+          try{
+               const novelRef = await firestore().collection('Novels')
+               .where('title', '>=' , searchQuery)
+               .where('title', '<=', searchQuery +`\uf8ff`)
+               .limit(5)
+               .get()
+
+               if(novelRef.docs.length > 0) {
+                    const noveldocs = novelRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
+                    setNovelResults(noveldocs)
+               }
+
+          }catch(error){
+               console.log("Error Searching Novels" , error)
           }
      }
 
@@ -83,6 +114,9 @@ const Searchpage : React.FC =() => {
      }
 
      useEffect(() => {
+        
+          searchnovel();
+          
           searchUsers();
      } , [searchQuery])
   return (
@@ -114,26 +148,53 @@ const Searchpage : React.FC =() => {
                </Pressable>
           </HStack> 
           <FlatList flex = {1}>
+               {novelResults?.length > 0 &&
                <VStack p = {4}>
-                    {searchResults.length > 0 &&
-                         searchResults.map((item:any , index:number) => {
-                              const status = userdocs.teams.find((doc) => doc.id === item.id)
-                              if(status?.isleader) return
-
+                    {
+                         novelResults.map((item:any , index:number) => {
                               return(
-                                   <MemorizedUserfield 
+                                   <MemorizedItemfield 
                                    key = {index}
                                    id = {item.id}
                                    data = {item}
-                                   status = {status}
-                                   UpdatedTeams={UpdatedTeams}
                                    />
                               )
                          }
-                              
                          )
                     }
-               </VStack>
+                </VStack>
+               }
+               {searchResults?.length > 0 &&
+                    <VStack p = {4}>
+                         {
+                              fixedsearch ?
+                              searchResults.map((item:any , index:number) => {
+                                   const status = userdocs.teams.find((doc) => doc.id === item.id)
+                                   if(status?.isleader) return
+
+                                   return(
+                                        <MemorizedUserfield 
+                                        key = {index}
+                                        id = {item.id}
+                                        data = {item}
+                                        status = {status}
+                                        UpdatedTeams={UpdatedTeams}
+                                        />
+                                   )
+                              })
+                              : searchResults.map((item:any , index:number) => { 
+                                   return(
+                                        <MemorizedUserfield 
+                                        key = {index}
+                                        id = {item.id}
+                                        data = {item}
+                                        UpdatedTeams={UpdatedTeams}
+                                        />
+                                   )
+                              })   
+                         }
+                    </VStack>
+                }
           </FlatList>
      </VStack>
   )
