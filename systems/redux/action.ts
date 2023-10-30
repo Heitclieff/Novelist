@@ -302,7 +302,7 @@ export const updateUserField = (field:string,newData:any): ThunkAction<void, Roo
         type: 'UPDATE_USERFIELD',
         payload: userData.map(items => ({ ...items, [field]: newData })),
       });
-      console.log('updated')
+      console.log('updated',field)
     } catch (error) {
       console.log(error);
     }

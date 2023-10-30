@@ -36,7 +36,7 @@ const Editfield : React.FC <Pageprops> =() => {
   // console.log('editfield',userdata[0].id)
   // console.log('option',options)
   // console.log('editfield input',input)
-  const handleSave = () => {
+  const handleSave = async () => {
     const parts = input.split('/');
     const year = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1;
@@ -56,28 +56,32 @@ const Editfield : React.FC <Pageprops> =() => {
     const userDocRef = firestore().collection('Users').doc(uid)
     const updateUserData = (field, value, successMessage, errorMessage) => {
       if (options.title === 'Username') {
-        const scoreCollectionRef = firestore().collection('Scores');
-        const scoreDocRef = scoreCollectionRef.doc(uid)
-        scoreDocRef.update({ [field]: value }).then(async() => {
-          const userData = await userDocRef.get()
-          let project = userData.data().project
-          project.forEach(doc => {
-            const novelDocRef = firestore().collection('Novels').doc(doc)
-            const creatorRef = novelDocRef.collection('Creator').doc(uid)
-            creatorRef.update({ [field]: value }).then(()=>{
-              dispatch(updateUserField(field,value));
-              
-            })
-          });
-          Alert.alert('Saved', `${field}: ${value}`, [
-            {
-              text: 'OK',
-              onPress: () => {
-                navigation.goBack();
+        userDocRef.update({ [field]: value }).then(()=>{
+          const scoreCollectionRef = firestore().collection('Scores');  //pass
+          const scoreDocRef = scoreCollectionRef.doc(uid)
+          scoreDocRef.update({ [field]: value }).then(async() => {
+            const userData = await userDocRef.get()
+            let project = userData.data().project
+            project.forEach(doc => {
+              console.log(doc)
+              const novelDocRef = firestore().collection('Novels').doc(doc) //pass
+              const creatorRef = novelDocRef.collection('Creator').doc(uid)
+              creatorRef.update({ [field]: value }).then(()=>{
+                dispatch(updateUserField(field,value));
+                
+              })
+            });
+            Alert.alert('Saved', `${field}: ${value}`, [
+              {
+                text: 'OK',
+                onPress: () => {
+                  // navigation.goBack();
+                },
               },
-            },
-          ]);
+            ]);
+          })
         })
+        
 
       } else {
         dispatch(updateUserField(field,value));
@@ -86,7 +90,7 @@ const Editfield : React.FC <Pageprops> =() => {
               {
                 text: 'OK',
                 onPress: () => {
-                  navigation.goBack();
+                  // navigation.goBack();
                 },
               },
             ]);
@@ -165,7 +169,7 @@ const Editfield : React.FC <Pageprops> =() => {
   if (options.title === 'Birthdate') {
     return (
       <Box flex = {1} bg = {theme.Bg.base}>
-          <Centernavigation title ={options.title} onEditcontent ={true} onSave={handleSave} />
+          <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleSave} />
           <VStack p ={4} space = {2}>
               <Text pl = {2} color={theme.Text.description} fontSize={'xs'} fontWeight={'semibold'}>{options.title}</Text>
               <DatePicker
@@ -192,7 +196,7 @@ const Editfield : React.FC <Pageprops> =() => {
   } else if (options.title === 'Password') {
     return (
       <Box flex = {1} bg = {theme.Bg.base}>
-            <Centernavigation title ={options.title} onEditcontent ={true} onSave={handleSave} />
+            <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleSave} />
             <VStack p ={4} space = {2}>
                 <Text pl = {2} color={theme.Text.description} fontSize={'xs'} fontWeight={'semibold'}>{options.title}</Text>
                 <Input
@@ -237,7 +241,7 @@ const Editfield : React.FC <Pageprops> =() => {
   } else {
     return (
       <Box flex = {1} bg = {theme.Bg.base}>
-            <Centernavigation title ={options.title} onEditcontent ={true} onSave={handleSave} />
+            <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleSave} />
             <VStack p ={4} space = {2}>
                 <Text pl = {2} color={theme.Text.description} fontSize={'xs'} fontWeight={'semibold'}>{options.title}</Text>
                 <Input
