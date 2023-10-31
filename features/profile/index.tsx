@@ -198,7 +198,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                                                 </VStack>
                                             </VStack>
                                         </Center> :
-                                        <Careersection />}
+                                        <Careersection id = {currentProfile.id}/>}
                                 </VStack>
                             </VStack>
                         </VStack>
