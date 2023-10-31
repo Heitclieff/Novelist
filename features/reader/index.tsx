@@ -31,7 +31,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
-import { setMylibrary ,setMybookmarks } from '../../systems/redux/action';
+import { setMylibrary ,setMybookmarks ,setUser } from '../../systems/redux/action';
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -70,7 +70,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
-    const [novelItem, setnovelItem] = useState([]); //<any[]>
+    const [novelItem, setnovelItem] = useState({}); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
     
@@ -129,6 +129,12 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisMarks(true);
     }
 
+    const findinglikeinMyfavorite = () => {
+        const findinglike = myAccount[0].favorite.includes(id);
+        if(!findinglike) return
+        setisLiked(true);
+        
+    }
     const AddtoMyBookmarks = async () : Promise<void> => {
         try{
             setisMarks(!isMarks)
@@ -172,8 +178,36 @@ const NovelContent : React.FC <Pageprops> = () => {
         }catch(error){
             console.log("Add Book to Bookmarks Failed" , error)
         }
-       
-        // dispatch(setMybookmarks(slot : ))
+    }
+
+    const setBookisLiked = async (liked:boolean) : Promise<void> => {
+        try{
+            let increment = novelItem.like
+            let MyfavoriteBooks = [...myAccount[0].favorite];
+
+            if(liked) {
+                increment += 1
+                MyfavoriteBooks.push(id);
+            }else{
+                increment -= 1
+                const deleteBooks = MyfavoriteBooks.filter(item => item !== id);
+                MyfavoriteBooks = deleteBooks;
+            }
+            setisLiked(liked);    
+            setnovelItem({...novelItem , like : increment})
+
+            const novelRef = await firestore().collection('Novels').doc(id)
+                            .update({like : increment})
+                            ;
+
+
+            const userRef  = await firestore().collection('Users').doc(myAccount[0].id)
+                            .update({favorite : MyfavoriteBooks})
+
+            dispatch(setUser([{...myAccount[0] , favorite : MyfavoriteBooks}]))
+        }catch(error){
+            console.log("Failed To Like a Book",error)
+        }
     }
 
     const setMylibraryBooks = async () : Promise<void> => {
@@ -208,9 +242,10 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
 
+ 
     useEffect(() => {
             if(id) fetchNovelandChapter()
-    }, [id])
+    }, [])
 
     useEffect(() => {
         findingBookinMyBookmarks();
@@ -219,6 +254,10 @@ const NovelContent : React.FC <Pageprops> = () => {
     useEffect(() => {
         findingBookinMylibrary();
     },[id])
+
+    useEffect(() => {
+        findinglikeinMyfavorite();
+    },[])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -243,7 +282,7 @@ const NovelContent : React.FC <Pageprops> = () => {
               {Platform.OS == 'android' &&
                 <MemorizedBottomnavigation
                 isLiked={isLiked}
-                setisLiked={setisLiked}
+                setisLiked={setBookisLiked}
                 bottomspace = {BOTTOM_SPACE}
                 myBook = {isMyOwn}
                 setlibrary = {setMylibraryBooks}
