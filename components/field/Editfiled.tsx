@@ -22,7 +22,7 @@ const Editfield : React.FC <containerProps> = ({options , inputStyle = 'flex-sta
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
   return (
-    <Pressable onPress={() => navigation.navigate('Edittingtemplete',{options})}>
+    <Pressable onPress={() => navigation.navigate('EditPage',{options})}>
     {({
       isHovered,
       isFocused,

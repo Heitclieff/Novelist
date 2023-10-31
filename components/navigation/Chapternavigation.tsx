@@ -72,6 +72,7 @@ const SaveButton: React.FC<SaveProps> = ({event}) => {
 const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , chapterdocs}) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
+
      const [showAlert, setShowAlert] = useState(false);
      const [chapterheader ,setChapterheader] = useState(title);
 
@@ -83,7 +84,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
           setShowAlert(false);
         };
 
-        
+ 
      const SavingAlertDailog = () => 
      Alert.alert('Saving', 'you want to save this progress ?', [
           {
@@ -91,8 +92,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
                style: 'cancel',
           },
           {text: 'Save', onPress: () => event()},
-          
-          ]);
+     ]);
 
      return (
           <Animated.View

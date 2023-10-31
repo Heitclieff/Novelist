@@ -41,25 +41,25 @@ const AccountSettings : React.FC <Pageprops> = () => {
   },
   {
     title : 'Phone',
-    value : '+66959521138',
+    value : userdata[0].phone,
   },
-  {
-    title : 'Email',
-    value : userdata[0].email,
-  },
+  // {
+  //   title : 'Email',
+  //   value : userdata[0].email,
+  // },
   {
      title : 'Password',
-     value : userdata[0].email,
+     value : 'Change Password',
    },
   ]
 
   useEffect(() => {
-    if(!isReduxLoaded) dispatch(getuserData());
-  },[dispatch , isReduxLoaded])
+    // if(!isReduxLoaded) dispatch(getuserData());
+  },[userdata])
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-      <Memorizednavigation title= 'Account' onEditcontent = {true} />
+      <Memorizednavigation title= 'Account' onEditcontent = {false} />
       <FlatList>
         <VStack flex = {1} mt = {1}  space = {3}> 
             <VStack >          

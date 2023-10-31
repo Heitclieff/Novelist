@@ -1,6 +1,6 @@
 import React,{useEffect , Suspense} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import {
 Box,
 VStack,
@@ -38,32 +38,57 @@ const Editprofile : React.FC <Pageprops> = () => {
   const userdata = useSelector((state:any) => state.userData)
   const navigation = useNavigation();
   const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded)
+  // const [isEdit, setisEdit] = useState<Boolean>(true)
 
+  const TimeConvert = (timestamp) => {
+    if(timestamp){
+      const birth =new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+      const birthDate = birth.toLocaleDateString();
+
+      // setformattedDate({createAt : formattedDateCreateAt , lastupdated : formattedDatelastupdate});
+      return birthDate
+    }
+  }
+  // const [userConfig, setuserConfig] = useState<{}>({
+  //   username: userdata[0].username,
+  //   description: userdata[0].description,
+  //   Birthdate: TimeConvert(userdata[0].birthDate),
+  // })
+
+  // const userConfigchange = (field:string,target:any) => {
+  //   // if(!isEdit) setisEdit(!isEdit)
+  //   setuserConfig((userConfig)=>({
+  //     ...userConfig,
+  //     [field]: target,
+  //   }))
+  // }
+
+  
   const MenuOptions = [{
     title : 'Username' , 
     value : userdata[0].username,
   },
   {
     title : 'description',
-    value : 'description',
+    value : userdata[0].description,
     height : '20',
   },
   {
     title : 'Birthdate',
-    value : '25 December 2002',
+    value : TimeConvert(userdata[0].birthDate),
   },
 
   ]
 
   useEffect(() => {
-    if(!isReduxLoaded) dispatch(getuserData());
-  },[dispatch , isReduxLoaded])
-
+    // if(!isReduxLoaded) dispatch(getuserData());
+  },[userdata])
+  // console.log('Editprofile',userdata)
   
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-      <Memorizednavigation title = "Edit Profile"  onEditcontent = {true}/>
+      <Memorizednavigation title = "Edit Profile"  onEditcontent = {false}/>
       <FlatList>
         <VStack flex = {1} mt = {1}  space = {2}> 
             <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>
@@ -83,6 +108,7 @@ const Editprofile : React.FC <Pageprops> = () => {
             <VStack >          
             <Divider bg = {theme.Divider.base}/>
                 <Suspense  fallback = {<Box>Loading..</Box>}>       
+                  {/* <MemorizedEditfield options = {MenuOptions}/> */}
                   {MenuOptions.map((items , key) => 
                     <VStack space = {1}  key=  {key}>
                       <MemorizedEditfield options = {items}/>

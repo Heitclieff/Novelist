@@ -5,12 +5,14 @@ import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimat
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import {LogBox} from 'react-native';
 //@Redux tools
 import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
+
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -26,6 +28,7 @@ const MemorizedIndexheaderitem = React.memo(Indexheader);
 const MemorizedCollectionField = React.memo(CollectionsField);
 
 const Index : React.FC = () => {
+    const db = firestore()
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
@@ -41,7 +44,7 @@ const Index : React.FC = () => {
     
     const getTopNewAndDispatch = async () => {
         try {
-          const snapshortTop = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get()
+          const snapshortTop = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get()
           setCollectionTopNew(snapshortTop.docs)
           setisReduxLoaded(true)
         } catch (error) {
@@ -51,7 +54,7 @@ const Index : React.FC = () => {
     
       const getHotNewAndDispatch = async () => {
         try {
-          const snapshortHot = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get();
+          const snapshortHot = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get();
           setCollectionHotNew(snapshortHot.docs)
           // newestNovels.sort((a, b) => b.view - a.view);
         } catch (error) {
@@ -61,7 +64,7 @@ const Index : React.FC = () => {
       
       const getMostviewAndDispatch = async () => {
         try {
-          const snapshortMost = await firestore().collection('Novels').orderBy('view', 'desc').limit(10).get();
+          const snapshortMost = await db.collection('Novels').orderBy('view', 'desc').limit(10).get();
           setCollectionMostview(snapshortMost.docs)
       
         } catch (error) {
@@ -74,7 +77,7 @@ const Index : React.FC = () => {
         const email = ['testData1@gmail.com','testData2@gmail.com','testData3@gmail.com']
         const pass = 'testData'
         const userName = ['PK1','PK2','PK3']
-        const userDoc = ['yFr0Nvd2uuVesrUvRTBGxPROQ463','cM6dlETlfKPGTPRPdgjDWHzzH0o1','1SyhXW6TeiWFGFzOWuhEqOsTOX23']
+        const userDoc = ['zjoWzRuP6bWgjjhVCiEe8936GVi1','R68kRovUlSMsLyKo5spUTCh2qav2','hIAHTZB9SFb5nZi0YMhX7bIVyHw2']
         const userImage = ["https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/4.png?alt=media&token=8c828f11-f677-4d97-ae5b-8a4c56da6030&_gl=1*6p2zhp*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5Njk0MjM3OS4yOC4xLjE2OTY5NDY3OTguMTMuMC4w",
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu2.jpg?alt=media&token=e72f2c9b-6ad1-40a4-a766-43da5795d6e6&_gl=1*1eem61o*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2NjUuMzAuMC4w",
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/user-image%2Fu3.jpg?alt=media&token=4abdc5c3-e609-4858-9b1e-bea0a97b092f&_gl=1*d3mzr2*_ga*MTQzNjExMjI3OS4xNjk2MDUyOTM3*_ga_CW55HF8NVT*MTY5NjMyNTY2NC4xNS4xLjE2OTYzMjg2ODIuMTMuMC4w",
@@ -105,11 +108,11 @@ const Index : React.FC = () => {
                            "https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/category%2Fhorror.jpg?alt=media&token=99e63e8c-342d-4486-ab7d-76e68f1fbe2d"
                           ]
         
-        const novel_status = ['Public', "Pivate"]
+        const novel_status = [true,false]
         const project_status = ['Complete', 'Not Complete']
         const commit_status = [true,false]
         // const novelDoc_list = []
-        const chapter_status = ['Draft', 'All']
+        const chapter_status = [true,false]
         const tag_list = ['ระบบ','เกิดใหม่','คลั่งรัก','ซอมบี้','ย้อนเวลา','หักหลัง','ครอบครัว','ตลก','เวททนตร์','ตำนาน','เรื่องเล่า','เกมส์']
         const tag_list2 = ['อาหาร','เทพ','สู้ชีวิต','ปลูกผัก','นางเอกฉลาด','พระเอกเก่ง','อบอุ่น','มนตรา','กำลังภายใน','หมอ','ย้อนยุค','เอาชีวิตรอด']
         const rating_list = ['12+', 'เด็ก', 'ผู้ใหญ่']
@@ -121,45 +124,65 @@ const Index : React.FC = () => {
         let n = 0
         let tag1 = []
         let tag2 = []
-        for (let i=0; i < cate.length; i++){
-          await firestore().collection('Category').doc(cate[i]).set(
-            {
-              image: cate_link[i]
-            }
-          )
-        }
+        let cateGroup1 = [], cateGroup2 = [], cateGroup3 = [], cateGroup4 = [], cateGroup5 = [], cateGroup6 = []
+
         for (let i=0; i < tag_list.length; i++) {
-          await firestore().collection('Tags').add({
+          await db.collection('Tags').add({
             title: tag_list[i],
             addAt: new Date()
           })
         }
         for (let i=0; i < tag_list.length; i++) {
-          await firestore().collection('Tags').add({
+          await db.collection('Tags').add({
             title: tag_list2[i],
             addAt: new Date()
           })
         }
         for (let i=0; i < rating_list.length; i++) {
-          await firestore().collection('Rates').add({
+          await db.collection('Rates').add({
             title: rating_list[i],
             addAt: new Date()
           })
         }
-        const mainTagRef = firestore().collection('Tags')
+        const mainTagRef = db.collection('Tags')
         let x = 0
         
         const snapMainTag = await mainTagRef.get().then((snap)=>{
           snap.forEach((doc)=>{
+            let data = doc.data()
+            let title = data.title
             if (x%2===0) {
               tag1.push(doc.id)
             } else {
               tag2.push(doc.id)
             }
+            if (title === 'ระบบ' || title === 'พระเอกเก่ง' || title === 'กำลังภายใน' || title === 'สู้ชีวิต' || title === 'อบอุ่น' || title === 'มนตรา') {
+              cateGroup1.push(doc.id)
+            } else if (title === "ครอบครัว" || title === 'เรื่องเล่า') {
+              cateGroup2.push(doc.id)
+            } else if (title === 'เวททนตร์' || title === 'เกิดใหม่' || title === 'ซอมบี้' || title === 'ย้อนเวลา' || title === 'เกมส์' || title === 'อาหาร' || title === 'เทพ' || title === 'ปลูกผัก') {
+              cateGroup3.push(doc.id)
+            } else if (title === 'ตลก') {
+              cateGroup4.push(doc.id)
+            } else if (title === "คลั่งรัก" || title === "นางเอกฉลาด" || title === 'หมอ' || title === 'ย้อนยุค') {
+              cateGroup5.push(doc.id)
+            } else {
+              cateGroup6.push(doc.id)
+            }
             x++
           })
           
         })
+        let allGroup = [cateGroup1,cateGroup2,cateGroup3,cateGroup4,cateGroup5,cateGroup6]
+        for (let i=0; i < cate.length; i++){
+          await db.collection('Category').doc(cate[i]).set(
+            {
+              image: cate_link[i],
+              group: allGroup[i]
+            }
+          )
+        }
+        
         // const createUser = await auth().createUserWithEmailAndPassword(email[1], pass)
         for (let i=0; i < email.length; i++) {
           // const createUser = await auth().createUserWithEmailAndPassword(email[i], pass)
@@ -176,9 +199,18 @@ const Index : React.FC = () => {
             follower: 0,
             project: []
           };
-          const mainUserRef = firestore().collection('Users')
+          const mainUserRef = db.collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
           await mainUserdocRef.set(userData)
+          const mainScoreRef = db.collection('Scores')
+          const mainScoreDocRef = mainScoreRef.doc(userDoc[i])
+          mainScoreDocRef.set({
+            sum: 0,
+            totalbook: 0,
+            score: 0,
+            username: userName[i],
+            image: userImage[i],
+          })
           for (let j = 0; j < 3; j++) {
             let novelData = {
               title: `novelTestData ${n+1}`,
@@ -194,17 +226,22 @@ const Index : React.FC = () => {
               comment_status: comment_status[n%2],
               commit_status: commit_status[n%2],
               rating: rating_list[n%3],
-              tagDoc: [tag1[n%12],tag2[n%12]]
+              tagDoc: [tag1[n%12],tag2[n%12]],
+              multiproject: false,
             }
+            
+            let increment = like_list[n] + view_list[n]
+            await mainScoreDocRef.update({ sum: firestore.FieldValue.increment(increment) });
+            await mainScoreDocRef.update({ totalbook: firestore.FieldValue.increment(1) });
             n++
 
-            const mainNovelRef = firestore().collection('Novels')
+            const mainNovelRef = db.collection('Novels')
             const mainNovelDocRef = mainNovelRef.add(novelData).then(async(novelDoc) => {
               // console.log('novelDoc',novelDoc.id)
               await mainUserdocRef.update({
                 project: firestore.FieldValue.arrayUnion(novelDoc.id)
               });
-              const mainDocRef = firestore().collection('Novels').doc(novelDoc.id)
+              const mainDocRef = db.collection('Novels').doc(novelDoc.id)
               const creatorRef = mainDocRef.collection('Creator').doc(userDoc[i])
               await creatorRef.set({
                 userDoc: userDoc[i],
@@ -218,13 +255,22 @@ const Index : React.FC = () => {
                 let chapData = {
                   chap_id: `${a+1}`,
                   title: `Chapter title ${a+1}`,
-                  content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
+                  // content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
                   image: userImage[i],
                   status: chapter_status[a%2],
                   updateAt: new Date(),
-                  updatedBy: mainUserdocRef.id
+                  createdBy: mainUserdocRef.id,
+                  updatedBy: mainUserdocRef.id,
+                  access: [mainUserdocRef.id]
                 }
-                await chapterdocRef.add(chapData)
+                await chapterdocRef.add(chapData).then(async(ref) => {
+                  const contentDocRef = chapterdocRef.doc(ref.id)
+                  const contentRef = contentDocRef.collection('Content')
+                  await contentRef.add({
+                    content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
+                  })
+                })
+                // const contentRef = chapterdocRef.collection('Content')
               }
               if (j < 1) {
                 const bmUserRef = mainUserdocRef.collection('Bookmark')
@@ -261,29 +307,31 @@ const Index : React.FC = () => {
           comment_status: comment_status[0],
           commit_status: commit_status[0],
           rating: rating_list[0],
-          tagDoc: [tag1[2],tag2[2]]
+          tagDoc: [tag1[2],tag2[2]],
+          multiproject: true,
         }
-        const extraNovelRef = firestore().collection('Novels')
+        const extraNovelRef = db.collection('Novels')
         // console.log('extra',extraNovelRef)
         const extraNovelDocRef = extraNovelRef.add(novelData).then(async(novelDoc) => {
           console.log('novelDoc',novelDoc.id)
-          await firestore().collection('Users').doc(userDoc[0]).update({
+          await db.collection('Users').doc(userDoc[0]).update({
             project: firestore.FieldValue.arrayUnion(novelDoc.id)
           });
-          await firestore().collection('Users').doc(userDoc[2]).update({
+          await db.collection('Users').doc(userDoc[2]).update({
             project: firestore.FieldValue.arrayUnion(novelDoc.id)
           });
           
-          const mainDocRef = firestore().collection('Novels').doc(novelDoc.id)
-          const creatorRef = mainDocRef.collection('Creator')
-          await creatorRef.add({
+          const mainDocRef = db.collection('Novels').doc(novelDoc.id)
+          const creatorRef1 = mainDocRef.collection('Creator').doc(userDoc[0])
+          const creatorRef2 = mainDocRef.collection('Creator').doc(userDoc[2])
+          await creatorRef1.set({
             userDoc: userDoc[0],
             pf_image: userImage[0],
             username: userName[0],
             pending: false,
             addAt: new Date()
           })
-          await creatorRef.add({
+          await creatorRef2.set({
             userDoc: userDoc[2],
             pf_image: userImage[2],
             username: userName[2],
@@ -317,16 +365,16 @@ const Index : React.FC = () => {
             }
           }
         })
-        await firestore().collection('Users').doc(userDoc[0]).update({ following: firestore.FieldValue.increment(1) });
-        await firestore().collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
+        await db.collection('Users').doc(userDoc[0]).update({ following: firestore.FieldValue.increment(1) });
+        await db.collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
 
-        await firestore().collection('Users').doc(userDoc[1]).update({ following: firestore.FieldValue.increment(2) });
-        await firestore().collection('Users').doc(userDoc[0]).update({ follower: firestore.FieldValue.increment(1) });
-        await firestore().collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
+        await db.collection('Users').doc(userDoc[1]).update({ following: firestore.FieldValue.increment(2) });
+        await db.collection('Users').doc(userDoc[0]).update({ follower: firestore.FieldValue.increment(1) });
+        await db.collection('Users').doc(userDoc[2]).update({ follower: firestore.FieldValue.increment(1) });
         
-        await firestore().collection('Users').doc(userDoc[2]).update({ following: firestore.FieldValue.increment(1) });
-        await firestore().collection('Users').doc(userDoc[1]).update({ follower: firestore.FieldValue.increment(1) });
-        const mainUserRef = firestore().collection('Users')
+        await db.collection('Users').doc(userDoc[2]).update({ following: firestore.FieldValue.increment(1) });
+        await db.collection('Users').doc(userDoc[1]).update({ follower: firestore.FieldValue.increment(1) });
+        const mainUserRef = db.collection('Users')
         const mainUserdocRef0 = mainUserRef.doc(userDoc[0])
         const mainUserdocRef1 = mainUserRef.doc(userDoc[1])
         const mainUserdocRef2 = mainUserRef.doc(userDoc[2])
@@ -349,12 +397,15 @@ const Index : React.FC = () => {
         mainFollow0.add(followDataUser0);
         mainFollow1.add(followDataUser1);
         mainFollow2.add(followDataUser2);
+        const mainScoreRef = db.collection('Scores')
+        const snapScoreDoc = await mainScoreRef.get()
+        console.log(snapScoreDoc.docs)
         console.log('Done adding data')
       }
       const test = async () => {
         // auth().signInWithEmailAndPassword('testData1@gmail.com', 'testData')
-        const collection_list = ['Tags','Category','Follows','Rates']
-        const usersCollectionRef = await firestore().collection('Users').get();
+        const collection_list = ['Tags','Category','Follows','Rates','Scores',"Leaderboards"]
+        const usersCollectionRef = await db.collection('Users').get();
 
         usersCollectionRef.forEach(async (userDoc) => {
           const userBookmarkCollectionRef = await userDoc.ref.collection('Bookmark').get();
@@ -378,11 +429,15 @@ const Index : React.FC = () => {
         })
 
 
-        const novelsCollectionRef = await firestore().collection('Novels').get();
+        const novelsCollectionRef = await db.collection('Novels').get();
 
         novelsCollectionRef.forEach(async (novelDoc) => {
           const novelChaptersCollectionRef = await novelDoc.ref.collection('Chapters').get();
           novelChaptersCollectionRef.forEach(async (subDoc) => {
+            const contentCollectionRef = await subDoc.ref.collection("Content").get();
+            contentCollectionRef.forEach(async (subCol)=> {
+              await subCol.ref.delete();
+            })
             await subDoc.ref.delete();
           });
           const novelCreatorsCollectionRef = await novelDoc.ref.collection('Creator').get();
@@ -398,7 +453,7 @@ const Index : React.FC = () => {
 
         for (let colList of collection_list) {
           // console.log(colList)
-          const colSnap = firestore().collection(colList)
+          const colSnap = db.collection(colList)
           const querySnapshot = await colSnap.get();
           querySnapshot.forEach((doc) => {
             try {
@@ -414,15 +469,64 @@ const Index : React.FC = () => {
       }
       const getUserandDispatch = async () => {
         // console.log('test')
-        // await auth().signInWithEmailAndPassword('testData1@gmail.com','Newpass')
+        // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
+        // await auth().signOut()
         let uid = auth().currentUser.uid
-        const snapUserData = await firestore().collection('Users').doc(uid).get()
+        const snapUserData = await db.collection('Users').doc(uid).get()
         // console.log('menu', snapUserData.data())
         let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
         // console.log('redux menu',userData)
         dispatch(setUser(userData))
         getLibraryContent(uid);
         getBookmarks(uid);
+        
+//         const userDocRef = db.collection('Users').doc(uid)
+//         const bookMarkRef = userDocRef.collection('Bookmark')
+//         const snapBMdata = await bookMarkRef.get()
+//         const snapbmdatanovel = snapBMdata.docs[0].data()
+//         // console.log(snapbmdatanovel)
+//         const novelDocRef = db.collection('Novels').doc(snapbmdatanovel.novelDoc)
+//         const snapcreatorRef = novelDocRef.collection('Creator')
+//         const snapcreatorData = await snapcreatorRef.get()
+//         const creatorData = snapcreatorData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+//         const bookMarkdata = snapBMdata.docs.map(doc => ({ id: doc.id, ...doc.data(), creator: creatorData }));
+//         dispatch(setBookmark(bookMarkdata))
+      }
+      
+      const callScore = async () => {
+        const mainScoreRef = db.collection('Scores')
+        const snapSocreDoc = await mainScoreRef.get()
+        // console.log(snapSocreDoc.docs)
+        let snapData = snapSocreDoc.docs
+        const score = snapData.map(doc => {
+          const data = doc.data();
+          const sum = data.sum;
+          const totalbook = data.totalbook;
+          const scoreValue = totalbook === 0 ? 0 : Math.floor(sum / totalbook);
+          return { id: doc.id, score: scoreValue };
+        });
+        console.log(score)
+        score.forEach(async(data) => {
+          const docRef = db.collection("Scores").doc(data.id);
+        
+          await docRef.update({
+            score: data.score,
+          })
+        });
+      }
+
+      const ab = async () => {
+        // const mainTagRef = db.collection('Tags')
+        // const snapMainTag = await mainTagRef.get().then((snap)=>{
+        //   snap.forEach((doc)=>{
+        //     let data = doc.data()
+        //     console.log(data.title)
+        //   })})
+
+        const mainNullRef = db.collection('Null')
+        mainNullRef.add({ ab: 'ab' }).then((ref)=>{
+          console.log('ab', ref.id)
+        })
       }
 
       const getLibraryContent = async (uid):Promise<T> => {
@@ -436,13 +540,27 @@ const Index : React.FC = () => {
           .where(firestore.FieldPath.documentId() ,'in', librarykeys)
           .get();
 
-
           const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
           dispatch(setMylibrary({book : novelDocs}))
         } catch (error) {
           console.log("fetching Userdata failed" , error)
         }
       };
+
+
+      const getCategoryAndDispatch = async () => {
+        try {
+            const getcategory = await firestore().collection('Category').get()
+            const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
+           
+            dispatch(setCategory({category : categorydocs}));
+  
+  
+          } catch (error) {
+            console.error('Error fetching Category', error);
+        }
+    };
+  
 
       const getBookmarks = async(uid) :Promise<void> => {
         try{
@@ -469,6 +587,7 @@ const Index : React.FC = () => {
         }
       }
   
+      
       const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
           const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
           const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
@@ -480,18 +599,23 @@ const Index : React.FC = () => {
 
       useEffect(() => {
         if (!isReduxLoaded) {
+          LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
           // test()
           // allData()
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
-          // console.log('function menu',userdata)
+          // callScore();
         }
       }, [isReduxLoaded]);
 
       useEffect(() => {
         getUserandDispatch();
       },[])
+
+      useEffect(() => {
+        getCategoryAndDispatch();
+      })
 
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>

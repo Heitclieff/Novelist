@@ -17,25 +17,67 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
     <Box flex = {1} position = 'relative'>
         <HStack w = '100%' h ='100%' space = {5} position = 'absolute' zIndex={10} justifyContent={'center'} alignItems={'center'} safeAreaTop>
             <Box mt = {10}>
+                {data.length > 0 ? (
                 <LeaderAvatarfield  
+                image = {data[1].image}
+                username = {data[1].username}
+                point = {data[1].score}
                 size =  {100}
                 color = {'teal.500'}
-                index = {3}
-                 />
+                index = {2}
+                 />)
+                :
+                ( <LeaderAvatarfield  
+                    image = {'null'}
+                    username = {'unknow'}
+                    point = {0}
+                    size =  {100}
+                    color = {'teal.500'}
+                    index = {2}
+                     />)
+                }
             </Box>
+            {data.length > 0 ? 
+            (
             <LeaderAvatarfield size =  {120} 
-            image = {data.image}
-            username = {data.username}
-            point = {20021}
+            image = {data[0].image}
+            username = {data[0].username}
+            point = {data[0].score}
             color = "amber.400"
             index = {1}
+            />) :
+            (
+                <LeaderAvatarfield size =  {120} 
+                image = {'null'}
+                username = {"unknow"}
+                point = {0}
+                color = "amber.400"
+                index = {1}
             />
+            )
+            }
             <Box mt = {10} >
-                <LeaderAvatarfield 
-                size =  {100}
-                color = "blue.400"
-                index = {2}
-                />
+                {data.length > 0 ?
+                (
+                    <LeaderAvatarfield 
+                    image = {data[2].image}
+                    username = {data[2].username}
+                    point = {data[2].score}
+                    size =  {100}
+                    color = "blue.400"
+                    index = {3}
+                    />) :
+                (
+                    <LeaderAvatarfield 
+                    image = {'null'}
+                    username = {"unknow"}
+                    point = {0}
+                    size =  {100}
+                    color = "blue.400"
+                    index = {3}
+                    />
+                )
+                }
             </Box>
         </HStack>
     </Box>

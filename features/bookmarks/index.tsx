@@ -83,7 +83,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
               ItemSeparatorComponent={<Box h=  '2'/>}
               renderItem={(itemdisable:any , index:number) => (
                 <Center>
-                   <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.id}/>
+                   <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.novelDoc}/>
                 </Center>
               )}
               renderHiddenItem={ (data, rowMap) => (<Bookmarkbutton action = {Deletefrombookmarks} docid = {item.docid}/>)}

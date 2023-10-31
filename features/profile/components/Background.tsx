@@ -30,8 +30,8 @@ const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) 
         <AnimatedBackground
         id='background-images'
         source={{uri : background}}  
-        onLoad={handleImageLoad}
-        onError={handleImageError}  
+        // onLoad={handleImageLoad}
+        // onError={handleImageError}  
         style={{ 
           width: '100%', 
           height: '100%', 

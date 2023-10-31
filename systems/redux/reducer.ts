@@ -9,6 +9,9 @@ export interface RootState {
     userData : any
     docs : any
     theme : any
+    bookMark : any
+    headLeader: any
+    itemLeader: any
     teams: any
     tags :any
     templete : any,
@@ -27,8 +30,11 @@ export interface RootState {
     iscategoryLoaded  : boolean,
     islibraryLoaded : boolean,
     iscreaterLoaded : boolean,
-    isuserLoaded : boolean
+    isuserLoaded : boolean,
     isthemeLoaded : boolean ,
+    isbookMarkLoaded : boolean,
+    isheadLeader: boolean,
+    isitemLeader: boolean,
     
 }
 
@@ -39,7 +45,24 @@ const initialState : RootState= {
     categoryData : [],
     libraryData : [],
     createrData : [],
-    userData : [] ,
+    userData: {
+      bg_image: '',
+      birthDate: {},
+      createAt: {},
+      description: '',
+      email: '',
+      follower: 0,
+      following: 0,
+      id: '',
+      pf_image: '',
+      phone: '',
+      project: [],
+      username: '',
+    },
+    theme : {},
+    bookMark: [],
+    headLeader: [],
+    itemLeader: [],
     templete :[],
     teams : [],
     tags : {},
@@ -62,7 +85,9 @@ const initialState : RootState= {
     iscreaterLoaded : false,
     isuserLoaded : false,
     isthemeLoaded : false,
-    
+    isbookMarkLoaded : false,
+    isheadLeader: false,
+    isitemLeader: false,
   };
   
  const collectionsReducer = (state = initialState, action:any) : RootState => {
@@ -199,6 +224,28 @@ const initialState : RootState= {
             ...state,
             userData : action.payload,
             isuserLoaded : false,
+          }
+        case 'UPDATE_USERFIELD':
+          return {
+            ...state,
+            userData: action.payload
+          }
+        case 'SET_BOOKMARK':
+          return {
+            ...state,
+            bookMark: action.payload
+          }
+        case 'SET_HEADLEADER':
+          return {
+            ...state,
+            headLeader: action.payload,
+            isheadLeader: true
+          }
+        case 'SET_ITEMLEADER':
+          return {
+            ...state,
+            itemLeader: action.payload,
+            isitemLeader: true
           }
       default:
         return state;

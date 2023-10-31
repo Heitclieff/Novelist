@@ -14,6 +14,7 @@ interface containerProps{
     id : number | string
 }
 const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
+    // console.log('bookmark field',data, id)
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
 
@@ -36,6 +37,11 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
             </Box>
             <VStack w = '77%' h = '100%' pl = {2} justifyContent={'center'}>
                 <Text color = {theme.Text.base} numberOfLines={2} fontWeight={'semibold'}>{data.title}</Text>
+                <HStack>
+                    {data.creator && data.creator.map((items :any, key:number) => (
+                        <Text key={key} color = {theme.Text.description} fontSize={'xs'}>{items.username}</Text>
+                    ))}
+                </HStack>
                 <Text color = {theme.Text.base} fontSize={'xs'}>{formattedDate}</Text>
             </VStack>
         </HStack>
