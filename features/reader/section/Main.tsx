@@ -39,17 +39,32 @@ const Mainsection : React.FC <containerProps> = ({isLiked ,setisLiked, collectio
                 />
                 }
           </HStack>
-          <HStack space={1} alignItems={'center'}>
-              <Text fontSize={'sm'} color={theme.Text.description}>
-                  {collection.view}
-              </Text>
-              <Box>
-                  <AntdesignIcon
-                      size={10}
-                      color={theme.Text.description}
-                      name='eyeo'
-                  />
-              </Box>
+          <HStack space={2} alignItems={'center'}>
+            <HStack space= {1}  alignItems={'center'}>
+                <Text fontSize={'sm'} color={theme.Text.description}>
+                    {collection.view}
+                </Text>
+                <Box>
+                    <AntdesignIcon
+                        size={10}
+                        color={theme.Text.description}
+                        name='eyeo'
+                    />
+                </Box>
+            </HStack>
+            <HStack space = {1}  alignItems={'center'}>
+                <Text fontSize={'sm'} color={theme.Text.description}>
+                    {collection.like}
+                </Text>
+                <Box>
+                    <AntdesignIcon
+                        size={10}
+                        color={theme.Text.description}
+                        name='heart'
+                    />
+                </Box>
+            </HStack>
+            
           </HStack>
       </Box>
   )

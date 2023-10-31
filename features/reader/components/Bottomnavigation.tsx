@@ -32,10 +32,11 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                   size='sm'
                   w='15%'
                   h='9'
+                  bg = {isLiked ? 'red.500' : theme.Bg.base}
                   variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
                   borderColor={isLiked ? 'red.500' : theme.Icon.base}
                   rounded={'md'}
-                //   onPress={() => { setisLiked(!isLiked); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
+                  onPress={() => { setisLiked(!isLiked);}}
                   icon={
                       <AntdesignIcon
                           size= {15}
