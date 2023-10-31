@@ -56,7 +56,7 @@ export const Themedark = ({
     outline : 'coolGray.500',
     follow : { 
       base :'coolGray.200',
-      focused : 'coolGray.300',
+      focused : 'coolGray.400',
     },
   },
 })

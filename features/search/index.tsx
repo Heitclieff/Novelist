@@ -188,7 +188,8 @@ const Searchpage : React.FC =() => {
                                         key = {index}
                                         id = {item.id}
                                         data = {item}
-                                        UpdatedTeams={UpdatedTeams}
+                                        teamsmode = {false}
+                                        UpdatedTeams={() => navigation.navigate('ProfileStack', {profile : item})}
                                         />
                                    )
                               })   
