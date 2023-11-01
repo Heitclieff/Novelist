@@ -184,7 +184,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                             <VStack bg={theme.Bg.base}>
                                 <HStack pl={8} h={10} space={1} alignItems={'center'}>
                                     <Text fontWeight={'semibold'} color={theme.Text.base}>{currentProfile?.username}</Text>
-                                    <Text color={theme.Text.base}>Careers</Text>
+                                    <Text fontWeight={'semibold'}  color={theme.Text.base}>Careers</Text>
                                 </HStack>
                                 <VStack mb={HEADER_HEIGHT_EXPANDED}>
                                     {isLoading ?
