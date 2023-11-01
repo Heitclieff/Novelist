@@ -18,9 +18,10 @@ interface containerProps {
      data : any,
      status : any,
      UpdatedTeams:any,
+     teamsmode : boolean
 }
 
-const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}) => {
+const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams , teamsmode = true}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
 
@@ -35,7 +36,7 @@ const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}
           
      }
   return (
-     <Pressable onPress={OnselectedUsers}>
+     <Pressable onPress={teamsmode ? OnselectedUsers : UpdatedTeams}>
      {({
          isHovered,
          isFocused,
@@ -51,7 +52,8 @@ const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}
                               <Text color={theme.Text.base} fontSize={'sm'}>{data.username}</Text>
                               <Text color={theme.Text.description} fontSize={'xs'}>{data.email}</Text>
                          </VStack>
-                         <Box>
+                         {teamsmode &&
+                              <Box>
                               {status && 
                                    status.pending ?   
                                         <Box borderWidth={1} rounded={'full'} borderColor={theme.Text.description}>
@@ -66,14 +68,8 @@ const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams}
                                         color={theme.Icon.static}/>
                                         
                                    }
-                              
-                              {/* <AntdesignIcon
-                                   name={'plus'}
-                                   size={15}
-                                   color={theme.Icon.static}
-                              /> */}
-
                          </Box>
+                         }
                     </HStack>
                </HStack>
           )
