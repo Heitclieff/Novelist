@@ -91,8 +91,9 @@ const NovelContent : React.FC <Pageprops> = () => {
                 console.log("Not found this document.");
                 return
             }
-            setnovelItem(novelDocs);
-            increaseBookView(novelDocs)
+    
+            const Newviews  = increaseBookView(novelDocs)
+            setnovelItem({...novelDocs , view : Newviews});
             // findingBookinMylibrary();
             
             // const snapMainData = db.collection('Novels').doc(documentSnapshot.id)
@@ -122,6 +123,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const increaseBookView = (current:any) => {
         try{
             firestore().collection('Novels').doc(id).update({view : firestore.FieldValue.increment(1)})
+            return current.view + 1
         }catch(error){
             console.log("Failed to increase view" , error)
         }
