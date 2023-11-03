@@ -91,6 +91,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 return
             }
             setnovelItem(novelDocs);
+            increaseBookView(novelDocs)
             // findingBookinMylibrary();
             
             // const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
@@ -117,6 +118,14 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     }
 
+    const increaseBookView = (current:any) => {
+        try{
+            firestore().collection('Novels').doc(id).update({view : firestore.FieldValue.increment(1)})
+        }catch(error){
+            console.log("Failed to increase view" , error)
+        }
+    }
+
     const findingBookinMylibrary = () => {
         const findingBooks = myBooks?.book.find((doc) => doc.id === id)?.id
         if(!findingBooks) return
@@ -132,8 +141,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const findinglikeinMyfavorite = () => {
         const findinglike = myAccount[0].favorite.includes(id);
         if(!findinglike) return
-        setisLiked(true);
-        
+        setisLiked(true);   
     }
     const AddtoMyBookmarks = async () : Promise<void> => {
         try{
