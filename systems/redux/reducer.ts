@@ -21,6 +21,7 @@ export interface RootState {
     tagitem :any
     book : any
     slot : any
+    rates : any
     project : any
     categoryCache : any
 
@@ -73,6 +74,7 @@ const initialState : RootState= {
     book : [],
     slot : [],
     project : [],
+    rates : [],
     content : [],
     contentdocs : {},
     categoryCache : [],
@@ -164,6 +166,13 @@ const initialState : RootState= {
             createrData : action.payload,
             iscreaterLoaded : true
           }
+          
+        case 'SET_RATING' :
+          return {
+            ...state,
+            rates : action.payload,
+        }
+
 
         case 'SET_MY_LIBRARY' :
           return {

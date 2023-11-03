@@ -17,6 +17,7 @@ import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
+import Rating from '../../project/components/Rating'
 
 // @Redux Tookits
 import { setProjectDocument } from '../../../systems/redux/action'
@@ -38,19 +39,35 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const dispatch = useDispatch();
-   
+
      const projectdocument = useSelector((state) => state.docs.docs);
+     const rating =  useSelector((state) => state.rates);
+
+     const [showRating, setShowRating] = useState(false);
+     const [selectRating , setSelectRating] = useState<{}>({title : projectdocument?.rating})
+
 
      const [isEdit , setIsedit] = useState<boolean>(false)
      const [isnotEmpty , setisnotEmpty] = useState<boolean>(false);
+     
      const [projectconfig , Setprojectconfig] = useState<{}>({
           title : projectdocument.title ,
           overview : projectdocument.overview,
+          rating : projectdocument.rating,
           comment_status : projectdocument.comment_status,
           commit_status : projectdocument.commit_status,
           status : projectdocument.status
-          })
-  
+     })
+
+     const setSelectedRating = (target:any) => {
+          if(!isEdit) setIsedit(!isEdit);
+          
+          Setprojectconfig((prevProjectconfig) => ({
+               ...prevProjectconfig,
+               rating : target.title,
+          }))
+     }
+
 
      const projectConfigChange = (field:string,target:any) => {
           if(!isEdit) setIsedit(!isEdit);
@@ -82,6 +99,8 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                return false
           }
      }
+
+
   return (
        <VStack flex={1} bg={theme.Bg.base}>
             <Memorizednavigation title = "Project Settings"  editable = {isEdit} isAction  = {handleProjectUpdate}
@@ -123,6 +142,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
                                         <IconButton 
                                         size = 'sm'
+                                        onPress = {() => setShowRating(true)}
                                         rounded={'full'}
                                         icon = {
                                             <AntdesignIcon
@@ -133,8 +153,14 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         }
                               />
                                    </HStack>
-                                     
+                                   
+                                   {projectdocument?.rating &&
+                                        projectconfig ? 
+                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{projectconfig?.rating}</Text>
+                                    :     
                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
+                                   }
+                                   
                               </VStack>
                                 <VStack space={2} >
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
@@ -172,7 +198,13 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
                            </VStack>
                       </VStack>
-                 </FlatList>
+               </FlatList>
+               <Rating 
+               isOpen={showRating} 
+               onClose = {setShowRating} 
+               isselect = {{title : projectconfig.rating}}
+               selectRating = {setSelectedRating}
+               rating=  {rating?.rates}/> 
           </Box>
      </VStack>
   )

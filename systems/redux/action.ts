@@ -123,6 +123,21 @@ export const setCategory = (category:any): ThunkAction<void, RootState, unknown,
   };
 };
 
+
+export const setRating = (rates:any ): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_RATING', 
+        payload : rates
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+
 export const clearUser = (): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
@@ -154,6 +169,7 @@ export const setMybookmarks = (slot:any , dockey:any): ThunkAction<void, RootSta
     }
   };
 };
+
 
 export const setMylibrary = (book:any): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
