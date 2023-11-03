@@ -162,7 +162,7 @@ const Createproject : React.FC = () => {
                                         {projectdocs.tagDoc?.length > 0 ?
                                              projectdocs.tagDoc.map((item:any , index:number) => 
 
-                                             <Button key = {index}  p = {1} rounded={'full'} borderWidth={1} borderColor={'teal.600'} mb = {1} bg=  {"teal.600"}>
+                                             <Button key = {item.id}  p = {1} rounded={'full'} borderWidth={1} borderColor={'teal.600'} mb = {1} bg=  {"teal.600"}>
                                                   <Text color = {'white'} fontSize={'xs'}>{item.title}</Text>
                                               </Button>
                                              

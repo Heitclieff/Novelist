@@ -46,6 +46,7 @@ const Tag: React.FC <Pageprops> = () => {
      const [isEdit , setisEdit] = useState<boolean>(false);
 
      const fetchingTags =  async () :Promise<void> => {
+          console.log("Fetching Tags")
           const snapshotTags = await firestore().collection('Tags').get();
           const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}));
           
@@ -54,11 +55,10 @@ const Tag: React.FC <Pageprops> = () => {
      }
 
      const setCurrentTags = () => {
-          if(!current_tags || Object.keys(tagdocs).length === 0){
+          if(!current_tags || current_tags.length <= 0  || Object.keys(tagdocs).length === 0){
                return
           }
 
-          console.log("DO IT")
           const matchingTags = tagdocs.tags
           .filter(tagdoc => current_tags.some(currentTag => currentTag.id === tagdoc.id))
           .map(tagdoc => ({id : tagdoc.id , title : tagdoc.title}));
@@ -75,7 +75,7 @@ const Tag: React.FC <Pageprops> = () => {
 
      useEffect(() => { 
           setCurrentTags();   
-     } ,[tagdocs])
+     } ,[])
 
      const OnTagsAction = (id:string, title:string) => {
           if(!isEdit) setisEdit(true);

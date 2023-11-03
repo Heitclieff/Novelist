@@ -12,7 +12,9 @@ import Itemfield from "../../../components/field/Itemfield";
 //firebase
 import firestore from '@react-native-firebase/firestore'
 
-interface Pageprops {}
+interface Pageprops {
+  id : string
+}
 
 const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
     return (
@@ -24,41 +26,36 @@ const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
     );
   });
 
-const Careersection : React.FC <Pageprops> = () => {
+const Careersection : React.FC <Pageprops> = ({id}) => {
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const collectionsData = useSelector((state:any) => state.userData)
-    // const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
+
+
     const [snapProject, setsnapProject] = useState<any[]>([])
     const [isReduxLoaded , setisReduxLoaded] = useState<boolean>(false);
-    // console.log('career',collectionsData[0].project)
-    const fetchProject = async () => {
-      let p = []
-      let pd = collectionsData[0].project
-      for (let proDoc of pd) {
-        let projectData = await firestore().collection('Novels').doc(proDoc).get()
-        p.push({id: proDoc, ...projectData.data()})
+
+    const findingProjectwithid = async () => {
+      try{
+        const getnovel = await firestore().collection('Novels')
+        .where('owner' ,'==' , id)
+        .get()
+  
+        const noveldocs = getnovel.docs.map((doc => ({id : doc.id , ...doc.data()})))
+        setsnapProject(noveldocs)
+      }catch(error){
+        console.log("Failed To find Project" ,error)
       }
-      // pd.forEach( async (proDoc) => {
-        
-      // });
-      setsnapProject(p)
-      setisReduxLoaded(true)
     }
 
-    // const fetchCollectionsData = useCallback(() => {
-    //     dispatch(getCollectionData());
-    //   }, [dispatch]);    
 
     useEffect(() => {
-      if(!isReduxLoaded) {
-        fetchProject()
-        // console.log(snapProject)
-      };
-    },[snapProject])
+
+      findingProjectwithid()
+    },[id])
   
     return (
         <>
-        {isReduxLoaded &&    
+        {snapProject &&    
   
           <Center>
             <ItemList collection = {snapProject}>

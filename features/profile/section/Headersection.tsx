@@ -9,44 +9,21 @@ Center ,
 Divider } from 'native-base'
 import { useNavigation } from '@react-navigation/native';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
+import EditProfileButton from '../components/EditButton';
+import FollowButton from '../components/FollowButton';
 const Avatarfield  = React.lazy(() =>import('../../../components/field/Avatarfield'));
 const Statusdisplay = React.lazy(() =>import('../components/Statusdisplay'));
 
 
 interface contianerProps {
     currentProfile : any,
+    isOwner : boolean
+    isfollow : boolean,
+    action : any
 
 }
 
-interface ProfileButtonprops {
-    theme : any,
-    navigation : any
-}
-
-const EditProfileButton : React.FC <ProfileButtonprops> = ({theme , navigation}) => {
-    const EditProfile = () => {
-        console.log("Edit Functions.")
-    }
-    return(
-        <Button
-            h={8}
-            variant={'outline'}
-            rounded={'2xl'}
-            borderColor={theme.Button.outline}
-            colorScheme={'coolGray'}
-            onPress={() => navigation.navigate('Editprofile')}
-            size='xs'>
-            <Center>
-                <Text fontSize={'11'} fontWeight={'semibold'} color = {theme.Text.base}>
-                    Edit Profile
-                </Text>
-            </Center>  
-        </Button>
-    )
-}
-
-
-const Headersection : React.FC <contianerProps> = ({currentProfile}) =>{
+const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action}) =>{
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
   return (
@@ -67,7 +44,12 @@ const Headersection : React.FC <contianerProps> = ({currentProfile}) =>{
                 <Box w = '100%' h = '50%' justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>
                     <Box>
                         {/* Validate Profile for use Button between Follow && Followed and Edit profile. */}
-                        <EditProfileButton theme = {theme} navigation = {navigation}/>
+                        {isOwner ? 
+                        <EditProfileButton  navigation = {navigation}/>
+                        :
+                        <FollowButton navigation={navigation} isfollow = {isfollow} action = {action}/>
+                        }
+                        
                     </Box>
                 </Box>
             </HStack>

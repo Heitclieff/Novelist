@@ -31,7 +31,7 @@ import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
-import { setMylibrary ,setMybookmarks } from '../../systems/redux/action';
+import { setMylibrary ,setMybookmarks ,setUser } from '../../systems/redux/action';
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -56,6 +56,7 @@ const MemorizedBottomnavigation = React.memo(Bottomnavigation);
 const MemorizedContentnavigation = React.memo(Contentnavigation);
  
 const NovelContent : React.FC <Pageprops> = () => {
+    const db = firestore()
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
     const {id}:any = route.params
@@ -65,12 +66,12 @@ const NovelContent : React.FC <Pageprops> = () => {
     const myBooks = useSelector((state) => state.book)
     const myAccount = useSelector((state) => state.userData);
     const Mybookmarks = useSelector((state) => state.slot)
-
+    // console.log('reader content',myAccount[0].id)
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
 
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
-    const [novelItem, setnovelItem] = useState([]); //<any[]>
+    const [novelItem, setnovelItem] = useState({}); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
     
@@ -83,7 +84,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const fetchNovelandChapter = async () : Promise<void> => {
         try {
             // fetch SnapshortContent from Novel
-            const SnapshotContent = firestore().collection('Novels').doc(id);
+            const SnapshotContent = db.collection('Novels').doc(id);
             const documentSnapshot = await SnapshotContent.get();
             const novelDocs = documentSnapshot.data();
             if (!documentSnapshot.exists) {
@@ -91,9 +92,10 @@ const NovelContent : React.FC <Pageprops> = () => {
                 return
             }
             setnovelItem(novelDocs);
+            increaseBookView(novelDocs)
             // findingBookinMylibrary();
             
-            // const snapMainData = firestore().collection('Novels').doc(documentSnapshot.id)
+            // const snapMainData = db.collection('Novels').doc(documentSnapshot.id)
             const snapSubData = await SnapshotContent.collection('Creator').get();
             const creatorkey = snapSubData?.docs.map(doc => doc.data().userDoc);
             const creatorDocs = await matchingUserwithId(creatorkey);
@@ -111,10 +113,18 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
     const matchingUserwithId = async (creatorkeys : any) :Promise<T> => {
-        const getuserkeys = await firestore().collection('Users').where(firestore.FieldPath.documentId(), 'in' , creatorkeys).get();
+        const getuserkeys = await db.collection('Users').where(firestore.FieldPath.documentId(), 'in' , creatorkeys).get();
         const userdocs = getuserkeys.docs.map(doc => ({id: doc.id , ...doc.data()}));
         return userdocs
 
+    }
+
+    const increaseBookView = (current:any) => {
+        try{
+            firestore().collection('Novels').doc(id).update({view : firestore.FieldValue.increment(1)})
+        }catch(error){
+            console.log("Failed to increase view" , error)
+        }
     }
 
     const findingBookinMylibrary = () => {
@@ -129,11 +139,16 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisMarks(true);
     }
 
+    const findinglikeinMyfavorite = () => {
+        const findinglike = myAccount[0].favorite.includes(id);
+        if(!findinglike) return
+        setisLiked(true);   
+    }
     const AddtoMyBookmarks = async () : Promise<void> => {
         try{
             setisMarks(!isMarks)
             const uid = myAccount[0].id
-            const getuserpath =  firestore().collection('Users').doc(uid);
+            const getuserpath =  db.collection('Users').doc(uid);
             const bookmarkpath = getuserpath.collection("Bookmark");
             const timestamp = firestore.FieldValue.serverTimestamp();
            
@@ -172,14 +187,54 @@ const NovelContent : React.FC <Pageprops> = () => {
         }catch(error){
             console.log("Add Book to Bookmarks Failed" , error)
         }
-       
-        // dispatch(setMybookmarks(slot : ))
+    }
+
+    const setBookisLiked = async (liked:boolean) : Promise<void> => {
+        try{
+            let increment = novelItem.like
+            let MyfavoriteBooks = [...myAccount[0].favorite];
+            let userDoc = myAccount[0].id
+            if(liked) {
+                increment += 1
+                MyfavoriteBooks.push(id);
+                await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(1)})
+                if (!novelItem.multiproject) {
+                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(1)})
+                }
+                // 
+            }else{
+                increment -= 1
+                const deleteBooks = MyfavoriteBooks.filter(item => item !== id);
+                MyfavoriteBooks = deleteBooks;
+                await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(-1)})
+                if (!novelItem.multiproject) {
+                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
+                }
+            }
+            setisLiked(liked);    
+            setnovelItem({...novelItem , like : increment})
+            
+            
+            // const novelRef = await db.collection('Novels').doc(id)
+            //                 .update({like : increment})
+            //                 ;
+
+
+            const userRef  = await db.collection('Users').doc(userDoc)
+                            .update({favorite : MyfavoriteBooks})
+            
+            // const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
+
+            dispatch(setUser([{...myAccount[0] , favorite : MyfavoriteBooks}]))
+        }catch(error){
+            console.log("Failed To Like a Book",error)
+        }
     }
 
     const setMylibraryBooks = async () : Promise<void> => {
         try{
             const uid = myAccount[0].id
-            const getuserpath =  firestore().collection('Users').doc(uid);
+            const getuserpath =  db.collection('Users').doc(uid);
             const librarypath =  getuserpath.collection("Library")
             const timestamp = firestore.FieldValue.serverTimestamp();
 
@@ -208,9 +263,10 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
 
+ 
     useEffect(() => {
             if(id) fetchNovelandChapter()
-    }, [id])
+    }, [])
 
     useEffect(() => {
         findingBookinMyBookmarks();
@@ -219,6 +275,10 @@ const NovelContent : React.FC <Pageprops> = () => {
     useEffect(() => {
         findingBookinMylibrary();
     },[id])
+
+    useEffect(() => {
+        findinglikeinMyfavorite();
+    },[])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -243,7 +303,7 @@ const NovelContent : React.FC <Pageprops> = () => {
               {Platform.OS == 'android' &&
                 <MemorizedBottomnavigation
                 isLiked={isLiked}
-                setisLiked={setisLiked}
+                setisLiked={setBookisLiked}
                 bottomspace = {BOTTOM_SPACE}
                 myBook = {isMyOwn}
                 setlibrary = {setMylibraryBooks}

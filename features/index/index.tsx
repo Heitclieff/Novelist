@@ -11,7 +11,7 @@ import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks } from '../../systems/redux/action';
+import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
 
 //@Components
 import Indexheader from './header/Indexheader';
@@ -322,15 +322,16 @@ const Index : React.FC = () => {
           });
           
           const mainDocRef = db.collection('Novels').doc(novelDoc.id)
-          const creatorRef = mainDocRef.collection('Creator')
-          await creatorRef.add({
+          const creatorRef1 = mainDocRef.collection('Creator').doc(userDoc[0])
+          const creatorRef2 = mainDocRef.collection('Creator').doc(userDoc[2])
+          await creatorRef1.set({
             userDoc: userDoc[0],
             pf_image: userImage[0],
             username: userName[0],
             pending: false,
             addAt: new Date()
           })
-          await creatorRef.add({
+          await creatorRef2.set({
             userDoc: userDoc[2],
             pf_image: userImage[2],
             username: userName[2],
@@ -539,13 +540,27 @@ const Index : React.FC = () => {
           .where(firestore.FieldPath.documentId() ,'in', librarykeys)
           .get();
 
-
           const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
           dispatch(setMylibrary({book : novelDocs}))
         } catch (error) {
           console.log("fetching Userdata failed" , error)
         }
       };
+
+
+      const getCategoryAndDispatch = async () => {
+        try {
+            const getcategory = await firestore().collection('Category').get()
+            const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
+           
+            dispatch(setCategory({category : categorydocs}));
+  
+  
+          } catch (error) {
+            console.error('Error fetching Category', error);
+        }
+    };
+  
 
       const getBookmarks = async(uid) :Promise<void> => {
         try{
@@ -572,6 +587,7 @@ const Index : React.FC = () => {
         }
       }
   
+      
       const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
           const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
           const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
@@ -589,11 +605,17 @@ const Index : React.FC = () => {
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
+          // callScore();
+        }
       }, [isReduxLoaded]);
 
       useEffect(() => {
         getUserandDispatch();
       },[])
+
+      useEffect(() => {
+        getCategoryAndDispatch();
+      })
 
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>

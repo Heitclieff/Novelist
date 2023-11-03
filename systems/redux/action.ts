@@ -155,7 +155,18 @@ export const setMybookmarks = (slot:any , dockey:any): ThunkAction<void, RootSta
   };
 };
 
-
+export const setMylibrary = (book:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_MY_LIBRARY', 
+        payload : book,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const setTagSection = (tags:any): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
@@ -291,7 +302,7 @@ export const updateUserField = (field:string,newData:any): ThunkAction<void, Roo
         type: 'UPDATE_USERFIELD',
         payload: userData.map(items => ({ ...items, [field]: newData })),
       });
-      console.log('updated')
+      console.log('updated',field)
     } catch (error) {
       console.log(error);
     }
