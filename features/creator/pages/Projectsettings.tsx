@@ -12,6 +12,7 @@ Switch,
 IconButton, 
 Pressable,
 Icon} from 'native-base'
+import { Alert } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
@@ -20,7 +21,7 @@ import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import Rating from '../../project/components/Rating'
 
 // @Redux Tookits
-import { setProjectDocument } from '../../../systems/redux/action'
+import { setProjectContent } from '../../../systems/redux/action'
 import { useDispatch , useSelector } from 'react-redux'
 
 
@@ -40,11 +41,14 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const navigation = useNavigation();
      const dispatch = useDispatch();
 
+     const myproject = useSelector((state) => state.project)
      const projectdocument = useSelector((state) => state.docs.docs);
+     const userdocs = useSelector((state) => state.userData)
      const rating =  useSelector((state) => state.rates);
 
      const [showRating, setShowRating] = useState(false);
      const [selectRating , setSelectRating] = useState<{}>({title : projectdocument?.rating})
+     const [showAlert , setShowAlert] = useState<boolean>(false);
 
 
      const [isEdit , setIsedit] = useState<boolean>(false)
@@ -54,6 +58,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           title : projectdocument.title ,
           overview : projectdocument.overview,
           rating : projectdocument.rating,
+     
           comment_status : projectdocument.comment_status,
           commit_status : projectdocument.commit_status,
           status : projectdocument.status
@@ -68,16 +73,15 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           }))
      }
 
-
      const projectConfigChange = (field:string,target:any) => {
           if(!isEdit) setIsedit(!isEdit);
           
-          Setprojectconfig((prevProjectconfig) => ({
+          Setproject
+          config((prevProjectconfig) => ({
                ...prevProjectconfig,
                [field] : target,
           }))
      }
-
 
      const handleProjectUpdate = () => {
           try{
@@ -99,6 +103,70 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                return false
           }
      }
+
+     const DeleteProject =  async () : Promise<void>   => {
+          try{
+               const firebase = firestore();
+               const batch = firebase.batch();
+
+               const getusers = firebase.collection('Users');
+               const getnovels = firebase.collection('Novels').doc(id);
+
+               const myuser = userdocs[0];
+
+               navigation.navigate('Creator');
+               const updateProject = myproject.docs.filter((doc)=> doc.id !== id);
+               dispatch(setProjectContent({docs : updateProject}))
+
+               if(!projectdocument.multiproject){
+                    console.log("METHOD : Single Project")
+
+                    const NewProject = myuser.project.filter((project) => project !== id)
+                    getusers.doc(myuser.id.toString()).update({project : NewProject});
+               }
+               else{
+                    console.log("METHOD : Multiple Project")
+
+                    const ProjectMember = projectdocument.creators?.map((member) => member.userDoc);
+
+                    if(!ProjectMember?.length > 0){
+                         console.log("Failed To delete Because Not found any Member.")
+                         return
+                    }
+                    const getproject =  await getusers.where(firestore.FieldPath.documentId(), 'in' , ProjectMember).get();
+                    const DeleteUserProject = getproject.docs?.map((doc) => ({
+                         id : doc.id,
+                         project : doc.data().project.filter((project) => project !== id)
+                    })
+                    )
+            
+                    DeleteUserProject.forEach((data) => {
+                         const docRef = getusers.doc(data.id);
+                         batch.update(docRef, { project: data.project });
+                    });
+     
+                    batch.commit()
+               }
+
+               await getnovels.collection('Creator').parent?.delete();
+               await getnovels.collection('Chapters').parent?.delete();
+               await getnovels.delete();
+
+               console.log("Delete Books Success" , id)
+          }catch(error){
+               console.log("Failed To delete This Project" ,error)
+          }
+         
+     }
+ 
+     const DeleteAlertDailog = () => 
+     Alert.alert('Delete', 'you want to save this progress ?', [
+          {
+               text: 'Cancel',
+               style: 'cancel',
+          },
+          {text: 'Delete', onPress: () => DeleteProject()},
+     ]);
 
 
   return (
@@ -189,9 +257,14 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         </HStack>
                                      <VStack space={2} mt =  {2}>
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Delete Project</Text>
-                                        <Button w= {120} size={'sm'} rounded={'full'}  variant={'outline'} borderColor={'red.500'}>
-                                             <Text color={'red.500'} fontSize={'xs'}>Delete Project</Text>
-                                             
+                                        <Button 
+                                        onPress ={DeleteAlertDailog}
+                                        w= {120} 
+                                        size={'sm'} 
+                                        rounded={'full'}  
+                                        variant={'outline'} 
+                                        borderColor={'red.500'}>
+                                             <Text color={'red.500'} fontSize={'xs'}>Delete Project</Text>   
                                         </Button>
                                    </VStack>
                                 </VStack>

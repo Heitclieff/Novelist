@@ -56,7 +56,6 @@ const Creator : React.FC <Pageprops> = () => {
     const navigation = useNavigation();
     const USER_DATA = useSelector((state) => state.userData)
     const projectdocs = useSelector((state) => state.project)
-
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
