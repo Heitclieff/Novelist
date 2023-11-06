@@ -1,4 +1,4 @@
-import React,{useContext, useState} from 'react'
+import React,{useContext, useState, useEffect} from 'react'
 import { 
 VStack , 
 Text,
@@ -21,7 +21,7 @@ import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import Rating from '../../project/components/Rating'
 
 // @Redux Tookits
-import { setProjectContent } from '../../../systems/redux/action'
+import { setProjectContent, setRating } from '../../../systems/redux/action'
 import { useDispatch , useSelector } from 'react-redux'
 
 
@@ -63,6 +63,12 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           commit_status : projectdocument.commit_status,
           status : projectdocument.status
      })
+
+     const fetchingRates = async () : Promise <void> => {
+          const getrates =  await firestore().collection('Rates').get();
+          const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
+          dispatch(setRating({rates : ratesdocs}))
+     }
 
      const setSelectedRating = (target:any) => {
           if(!isEdit) setIsedit(!isEdit);
@@ -168,6 +174,10 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           {text: 'Delete', onPress: () => DeleteProject()},
      ]);
 
+     useEffect(() => {
+          if(rating?.rates) return
+          fetchingRates(); 
+     },[])
 
   return (
        <VStack flex={1} bg={theme.Bg.base}>

@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext, useEffect , useState} from 'react'
 import { 
 Box , 
 VStack ,
@@ -8,21 +8,48 @@ Text ,
 Select} from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
-import { Commitlist } from '../assets/config';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 //@Components
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 import CommitItem from '../components/CommitItem';
-interface Pageprops {}
+
+// @Firestore
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
+interface Pageprops {
+     route : any
+}
 
 const Memorizednavigation = React.memo(Elementnavigation);
 const MemorizedCommitItem = React.memo(CommitItem);
 
-const Commit : React.FC <Pageprops> =  () => {
+const Commit : React.FC <Pageprops> =  ({route}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const firebase = firestore();
+     const {snapshotcontent , id} = route.params;
 
+     const [commitlist , setCommitlist] = useState<any[]>([]);
+ 
+     const fetchingCommit =  async () : Promise <void> => { 
+          try{
+               const getcommit = await snapshotcontent.collection('Commits').get();
+               const commitdocs = getcommit.docs.map((doc) => ({id : doc.id , ...doc.data()}));
+     
+               setCommitlist(commitdocs);
+          }catch(error){
+               console.log("Failed to feching Commit" , error)
+          }
+     }
+
+     // const matchinguserid = () => {
+
+     // }
+     useEffect(() => { 
+          fetchingCommit();
+     } ,[])
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
         <Memorizednavigation title = "Commits" 
@@ -39,10 +66,10 @@ const Commit : React.FC <Pageprops> =  () => {
           </Box>
           <FlatList>
                <VStack mt = {5} space = {3}>
-                    {Commitlist.map((item:any , index:number) =>
-                         <MemorizedCommitItem key = {index} data=  {item}/>
+                    {commitlist?.length > 0 &&
+                         commitlist.map((item:any , index:number) =>
+                              <MemorizedCommitItem key = {index} data= {item} doc_id=  {id}/>
                     )}
-                   
                </VStack>
               
           </FlatList>

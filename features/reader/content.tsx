@@ -36,24 +36,17 @@ const Readcontent : React.FC <pageProps> = () => {
      const toast = useToast();
      const route = useRoute();
      const dispatch = useDispatch();
-     const {
-     doc_id,
-     id , 
-     title , 
-     noveltitle , 
-     content,
-     editable,} :any = route.params;
+     const {doc_id, id , title , noveltitle , editable, commitable,} :any = route.params;
      
      const chapterdocs = useSelector((state) => state.content);
      const useraccount = useSelector((state) => state.userData);
      const contentdocs = useSelector((state) => state.contentdocs);
      const [inputValue ,setinputValue] = useState("");
      const [contentid ,setContentid] = useState<string>('');
+     
      const HandleChange = (text:string) => {
           setinputValue(text)
      }
-
-
 
      const initialContent = async () : Promise <void> => {
           if(contentdocs.docid === id) {
@@ -64,8 +57,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
           if(id){
                getnovelContent();
-          }
-          
+          }      
      }
 
      const getnovelContent =  async () : Promise<void> => {
@@ -125,7 +117,6 @@ const Readcontent : React.FC <pageProps> = () => {
                  return <AlertItem status = {toastStatus} /> 
                }
           })
-
      }
 
      useEffect(() => {
@@ -135,7 +126,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation editable = {editable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}}/>
+          <Chapternavigation editable = {editable} commitable = {commitable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>

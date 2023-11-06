@@ -58,10 +58,7 @@ const Createproject : React.FC = () => {
      const fetchingRates = async () : Promise <void> => {
         const getrates =  await firestore().collection('Rates').get();
         const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
-     
-
         dispatch(setRating({rates : ratesdocs}))
-     //   
      }
 
      const OnOptionChange = (field:string , value:boolean) => {

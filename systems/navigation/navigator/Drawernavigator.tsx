@@ -115,7 +115,7 @@ const Drawernavigator : React.FC = () => {
 
     <Drawer.Screen name="Commit" 
           component={Commit} 
-          initialParams={{id}}
+          initialParams={{snapshotcontent , id}}
           options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <FeatherIcon
