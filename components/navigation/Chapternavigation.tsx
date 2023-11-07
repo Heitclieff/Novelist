@@ -19,72 +19,32 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import { beginEvent } from 'react-native/Libraries/Performance/Systrace';
 
+//@ firebase
+import firestore from '@react-native-firebase/firestore'
+import Chapter from '../creator/pages/chapter';
+
+
 // import * as Haptics from 'expo-haptics';
 
 interface contianerProps {
+     commitable : boolean,
      editable: boolean;
+     isEdit : boolean,
      event: any;
      title: string;
      chapterdocs : any,
+     request: any
 }
 
-interface SaveProps { }
-const SaveButton: React.FC<SaveProps> = ({event}) => {
-     const theme:any = useContext(ThemeWrapper);
 
-     const [isOpen, setIsOpen] = React.useState(false);
-     const cancelRef = React.useRef(null);
-     const onClose = () => setIsOpen(false);
-     
-   
-     return (
-          <Center>
-               <Text color={theme.Text.base} onPress={() => setIsOpen(!isOpen)}>Save</Text>
-               <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
-                    <AlertDialog.Content bg = {theme.Bg.container}>
-                         <AlertDialog.CloseButton />
-                         <AlertDialog.Header bg = {theme.Bg.container} borderBottomColor={theme.Divider.comment} >
-                              <Text color = {theme.Text.heading}>Save</Text>
-                         </AlertDialog.Header>
-                        
-                         <AlertDialog.Body bg = {theme.Bg.container}>
-                            <Text color = {theme.Text.base}>Do you want to Save your progress ?</Text>
-                         </AlertDialog.Body>
-                         <AlertDialog.Footer bg = {theme.Bg.container} borderTopColor={theme.Divider.comment}>
-                              <Button.Group space={2}>
-                                   <Button variant="unstyled" colorScheme="coolGray" onPress={onClose} ref={cancelRef}>
-                                        <Text color = {theme.Text.base}>
-                                             Cancel
-                                        </Text>
-                                        
-                                   </Button>
-                                   <Button colorScheme="teal" onPress={() => {event(); onClose();}}>
-                                        Save
-                                   </Button>
-                              </Button.Group>
-                         </AlertDialog.Footer>
-                    </AlertDialog.Content>
-               </AlertDialog>
-          </Center>
-     )
-}
-
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , chapterdocs}) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, title , commitable , chapterdocs , request}) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
 
      const [showAlert, setShowAlert] = useState(false);
      const [chapterheader ,setChapterheader] = useState(title);
 
-     const handleShowAlert = () => {
-          setShowAlert(true);
-        };
-      
-        const handleHideAlert = () => {
-          setShowAlert(false);
-        };
 
- 
      const SavingAlertDailog = () => 
      Alert.alert('Saving', 'you want to save this progress ?', [
           {
@@ -93,6 +53,16 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
           },
           {text: 'Save', onPress: () => event()},
      ]);
+
+     const PushingDialogs = () => 
+     Alert.alert('Pushing', 'you want to push this progress to Commits ?', [
+          {
+               text: 'No',
+               style: 'cancel',
+          },
+          {text: 'yes', onPress: () => request()},
+     ]);
+
 
      return (
           <Animated.View
@@ -144,6 +114,8 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
                               />
                          </HStack>
                          :
+                     
+
                          <HStack alignItems={'center'} space={2}>
                               <IconButton
                                    size='sm'
@@ -155,7 +127,23 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, title , 
                                              color={theme.Icon.base}
                                              name='settings' />}
                               />
-                              <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
+
+                              {isEdit ?
+                                   <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
+                                   :
+                                   <IconButton
+                                   size='sm'
+                                   rounded={'full'}
+                                   isDisabled = {commitable}
+                                   onPress ={PushingDialogs}
+                                   icon={
+                                        <IonIcon
+                                             size={20}
+                                             color={theme.Icon.base}
+                                             name='push' />}
+                                    />
+                              } 
+                            
                          </HStack>
                       
                     }

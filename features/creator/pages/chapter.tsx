@@ -75,7 +75,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     if (!chapterdocs.content) return { draft: [], other: [] };
   
     const document = chapterdocs.content.reduce((acc, item) => {
-      if (item.status === "Draft") {
+      if (item.status) {
         acc.draft.push(item);
       } else {
         acc.other.push(item);

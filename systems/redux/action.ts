@@ -211,6 +211,7 @@ export const setTags = (tags:any): ThunkAction<void, RootState, unknown, AnyActi
 }
 
 
+
 export const setTempleteCache = (content:any ,path : string): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
@@ -263,7 +264,7 @@ export const setProjectDocument = (docs:any , id:string): ThunkAction<void, Root
   };
 };
 
-export const setChaptercontent = (content:any ,id:string , snapshotchapter:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+export const setChaptercontent = (content:any ,id:string , snapshotchapter:any,chap_id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
@@ -271,6 +272,7 @@ export const setChaptercontent = (content:any ,id:string , snapshotchapter:any):
         payload :content , 
         id,
         snapshotchapter,
+        chap_id,
       });
     } catch (error) {
       console.log(error);
@@ -294,7 +296,18 @@ export const setChapterWriteContent = (content:any ,id:string , docid:string): T
   };
 };
 
-
+export const setprojectCommits = (fields:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+  return async (dispatch: Dispatch<AnyAction>) => {
+    try {
+      dispatch({ 
+        type: 'SET_COMMIT', 
+        payload :fields , 
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 
 export const setProjectTeams = (teams:any): ThunkAction<void, RootState, unknown, AnyAction> => {
 

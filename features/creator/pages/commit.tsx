@@ -10,6 +10,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
+
 //@Components
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 import CommitItem from '../components/CommitItem';
@@ -17,6 +18,10 @@ import CommitItem from '../components/CommitItem';
 // @Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+
+// @Redux tookits
+import { useDispatch , useSelector } from 'react-redux';
+import { setprojectCommits } from '../../../systems/redux/action';
 
 interface Pageprops {
      route : any
@@ -28,27 +33,28 @@ const MemorizedCommitItem = React.memo(CommitItem);
 const Commit : React.FC <Pageprops> =  ({route}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const dispath = useDispatch();     
      const firebase = firestore();
-     const {snapshotcontent , id} = route.params;
 
-     const [commitlist , setCommitlist] = useState<any[]>([]);
- 
+     const projectcommits = useSelector((state) => state.field);
+     const {snapshotcontent , id} = route.params;
+     
      const fetchingCommit =  async () : Promise <void> => { 
           try{
                const getcommit = await snapshotcontent.collection('Commits').get();
-               const commitdocs = getcommit.docs.map((doc) => ({id : doc.id , ...doc.data()}));
+               const commitdocs = getcommit.docs.map((doc) => ({commit_id : doc.id , ...doc.data()}));
      
-               setCommitlist(commitdocs);
+               dispath(setprojectCommits({field : commitdocs}))
+
           }catch(error){
                console.log("Failed to feching Commit" , error)
           }
      }
 
-     // const matchinguserid = () => {
-
-     // }
      useEffect(() => { 
-          fetchingCommit();
+          if(!projectcommits?.field){ 
+               fetchingCommit();
+          }
      } ,[])
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
@@ -66,8 +72,8 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
           </Box>
           <FlatList>
                <VStack mt = {5} space = {3}>
-                    {commitlist?.length > 0 &&
-                         commitlist.map((item:any , index:number) =>
+                    {projectcommits.field?.length > 0 &&
+                         projectcommits.field.map((item:any , index:number) =>
                               <MemorizedCommitItem key = {index} data= {item} doc_id=  {id}/>
                     )}
                </VStack>

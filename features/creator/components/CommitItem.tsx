@@ -45,13 +45,14 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
 
      
      useEffect(() => {
-          const date = new Date(data.commit_date.seconds * 1000 + data.commit_date.nanoseconds / 1000000);
+          const date = new Date(data?.commit_date.seconds * 1000 + data?.commit_date.nanoseconds / 1000000);
           const time = getTimeAgo(date);
           settimeago(time);
      },[data])
 
   return (
      <Pressable onPress = {() => navigation.navigate('Readcontent',{
+          commit_id : data.commit_id,
           id : data.id,
           doc_id: doc_id,
           title: data.title, 
@@ -78,7 +79,7 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
                          </Box>
                          <HStack space = {1}>
                               <Text fontSize={'xs'} color = {theme.Text.description} fontWeight={'medium'}>{`${profile?.username}`}</Text> 
-                              <Text fontSize={'xs'} color = {theme.Text.description}>{`has commited 2 days ago`}</Text> 
+                              <Text fontSize={'xs'} color = {theme.Text.description}>{timeago}</Text> 
                          </HStack>
                     
                     </HStack>

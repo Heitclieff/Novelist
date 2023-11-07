@@ -5,17 +5,19 @@ VStack ,
 Button,
 HStack,
 useToast,
-
+Text,
 } from 'native-base'
+
+import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
-import { TextInput , Text , Alert } from 'react-native'
+import { TextInput  , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
-// import ContentNavigation from '../../../../components/[stack]/Novel/[container]/ContentNavigation'
 import Chapternavigation from '../../components/navigation/Chapternavigation'
 import AlertItem from './components/Alert'
+
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
-import { setChapterWriteContent ,setChaptercontent } from '../../systems/redux/action'
+import { setChapterWriteContent ,setChaptercontent , setprojectCommits } from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
@@ -36,17 +38,46 @@ const Readcontent : React.FC <pageProps> = () => {
      const toast = useToast();
      const route = useRoute();
      const dispatch = useDispatch();
-     const {doc_id, id , title , noveltitle , editable, commitable,} :any = route.params;
+     const firebase = firestore();
+     const navigation = useNavigation();
+
+     const {doc_id, id , title , noveltitle ,  chap_id , editable, commitable, commit_id} :any = route.params;
      
      const chapterdocs = useSelector((state) => state.content);
      const useraccount = useSelector((state) => state.userData);
+     const projectcommits = useSelector((state) => state.field);
      const contentdocs = useSelector((state) => state.contentdocs);
+
+     const [isEdit ,setisEdit] = useState<boolean>(false);
      const [inputValue ,setinputValue] = useState("");
      const [contentid ,setContentid] = useState<string>('');
      
      const HandleChange = (text:string) => {
+          if(!isEdit){
+               setisEdit(true);
+          }
           setinputValue(text)
      }
+     
+     const ApprovedDialogs = () => 
+     Alert.alert('Approved', 'Are you sure you want to Aprroved this request ?', [
+          {
+               text: 'No',
+               style: 'cancel',
+          },
+          {text: 'yes', onPress: () => approvedcommitRequest()},
+     ]);
+
+     const DeleteRequestDialogs = () => 
+     Alert.alert('Delete', 'Are you sure you want to Delete this request ?', [
+          {
+               text: 'No',
+               style: 'cancel',
+          },
+          {text: 'yes', onPress: () => approvedcommitRequest()},
+     ]);
+
+
 
      const initialContent = async () : Promise <void> => {
           if(contentdocs.docid === id) {
@@ -60,10 +91,92 @@ const Readcontent : React.FC <pageProps> = () => {
           }      
      }
 
+     const sendcommitsRequest = async () : Promise <void> => {
+          try{
+               const timestamp = firestore.FieldValue.serverTimestamp();
+               const getnovel = firebase.collection('Novels').doc(doc_id);
+               const getchapter = chapterdocs.snapshotchapter.doc(id);
+
+               const currentDate = new Date();
+               const formattedDate = {
+                   seconds: Math.floor(currentDate.getTime() / 1000),
+                   nanoseconds: (currentDate.getTime() % 1000) * 1000000,
+               };
+               
+               const request = {
+                    title : "Hello",
+                    chap_id : chap_id,
+                    id :id,
+                    doc_id : doc_id,
+                    commit_by : useraccount?.[0].id,
+               }          
+
+
+               const docRef = await getnovel.collection('Commits').add({...request ,commit_date : timestamp});
+               const chapRef = await getchapter.update({commits : true});
+             
+
+               const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
+               currentchapter['commits'] = true;
+
+               const MergeChapters = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter);
+               const ProjectFields = [{...request , commit_id : docRef.id, commit_date : formattedDate}];
+
+               if(projectcommits.field?.length > 0){
+                    ProjectFields.concat(projectcommits.field)
+               }   
+
+               dispatch(setChaptercontent({...chapterdocs , content : MergeChapters  , id : chapterdocs.id}))
+               dispatch(setprojectCommits({field : ProjectFields}))
+
+               navigation.goBack();
+
+               console.log("send Request success" , docRef.id);
+          }catch(error){
+               console.log("Failed to Send Commit request" , error)
+          }
+     }
+
+     const approvedcommitRequest = async () : Promise <void> => {
+          try{
+               if(!commit_id){
+                    console.log("ERROR: Not founds any Commits id")
+                    return
+               }
+
+               const getnovel =  firebase.collection("Novels").doc(doc_id);
+               const getcommits = getnovel.collection("Commits").doc(commit_id);
+
+           
+               const getchapters = chapterdocs.snapshotchapter.doc(id);
+               await getchapters.update({status : false , commits : false});
+               const commitRef = await getcommits.delete();
+
+               
+               const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
+               currentchapter['commits'] = false;
+               currentchapter['status'] = false;
+
+               const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
+               const removecommits = projectcommits.field.filter(commit => commit.commit_id !== commit_id);
+
+               dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
+               dispatch(setprojectCommits({field : removecommits}))
+               
+               navigation.goBack();
+               console.log("Approved this request success");
+               
+          }catch(error){
+               console.log("Failed to Aprroved Commits" , error);
+          }
+     }
+
+
      const getnovelContent =  async () : Promise<void> => {
           try{
-               const content = await chapterdocs.snapshotchapter.doc(id).collection('Content').get();
-               const contentDocs = content.docs?.map(doc =>({id : doc.id ,...doc.data()}));
+               const getchapter =  chapterdocs.snapshotchapter.doc(id)
+               const getcontent = await getchapter.collection('Content').get()
+               const contentDocs = getcontent.docs?.map(doc =>({id : doc.id ,...doc.data()}));
 
                setinputValue(contentDocs?.[0].content)
                setContentid(contentDocs?.[0].id);
@@ -126,15 +239,41 @@ const Readcontent : React.FC <pageProps> = () => {
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation editable = {editable} commitable = {commitable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}}/>
+          <Chapternavigation editable = {editable} isEdit = {isEdit} commitable = {commitable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}} request = {sendcommitsRequest}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
-                    {!editable && <HStack id = "story-heading-wrap" justifyContent={'center'} >
+                    {!editable && 
+                    <HStack id = "story-heading-wrap" justifyContent={'center'} >
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
-                              <Text style = {{color : 'white'}} >{noveltitle}</Text>
-                              <Text style = {{color : 'white' ,fontWeight : 600}} textAlign={'center'}>{`${title}`}</Text>
-                              </VStack>
+                              <Text color = {theme.Text.base} fontWeight={'semibold'} >{noveltitle}</Text>
+                              <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
+                              <HStack space = {1} mt = {2}>
+                                   <Button 
+                                   onPress = {DeleteRequestDialogs}
+                                   variant={'outline'}
+                                   borderColor={'rose.500'}
+                                   colorScheme={'rose'}
+                                   rounded={'full'} 
+                                   p = {1.5} 
+                                   _text={{fontSize : "xs"}} 
+                                   w = "100px" 
+                                   h={8}>Delete request</Button>
+
+                                   <Button 
+                                   onPress={ApprovedDialogs}
+                                   borderColor={'teal.500'}
+                                   colorScheme={'teal'}
+                                   rounded={'full'} 
+                                   p = {1.5} 
+                                   _text={{fontSize : "xs"}}
+                                   variant={'outline'}
+                                   w = "100px" h={8}
+                                   >Approved</Button>
+                              </HStack>
+                         </VStack>
+
+                              
                     </HStack>}
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>

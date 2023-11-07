@@ -22,6 +22,7 @@ export interface RootState {
     book : any
     slot : any
     rates : any
+    field : any
     project : any
     categoryCache : any
 
@@ -71,6 +72,7 @@ const initialState : RootState= {
     tagitem : {},
     category : [],
     theme : {},
+    field : [],
     book : [],
     slot : [],
     project : [],
@@ -130,6 +132,13 @@ const initialState : RootState= {
           ...state,
           project: action.payload,
         }
+
+        case 'SET_COMMIT' : 
+        return {
+          ...state,
+          field : action.payload,
+        }
+
       case 'FETCH_TOP_NEW':
         return {
           ...state,
