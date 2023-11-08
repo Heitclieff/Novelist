@@ -49,6 +49,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
           </HStack>
          <SwipeListView 
             disableRightSwipe
+            disableLeftSwipe = {true}
             data={chapterdocs.content}
             ItemSeparatorComponent={<Box h=  '2'/>}
             renderItem={(item:any , index:number) => {

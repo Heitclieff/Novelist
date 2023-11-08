@@ -141,20 +141,30 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   <VStack mb={4} space={2}>
                     {separatedChapterdocs.draft.map((item:string , index:number) => {
                       const isVisible = item.access?.includes(useraccount?.[0].id) || projectdocs.owner === useraccount?.[0].id
-                      const isDisable = item.createdBy === useraccount?.[0].id || projectdocs.owner === useraccount?.[0].id
+                      let isDisable = false
 
-        
+                      if(projectdocs.owner !== useraccount?.[0].id){
+                        isDisable = true;
+                      } 
+
+                      else if  (item.createdBy === useraccount?.[0].id){
+                        isDisable = false;
+                      }
+
+                      if (item.commits){
+                        isDisable = true;
+                      }
                       if(isVisible)
                         return(
                           <SwipeListView
                             key = {index}
                             disableRightSwipe
-                            disableLeftSwipe = {!isDisable}
+                            disableLeftSwipe = {isDisable}
                             data={[0]}
                             ItemSeparatorComponent={<Box h='2' />}
                             renderItem={() => {
                               return(
-                                <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                                <ChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
                               )
                             }}
                             renderHiddenItem={() => (<Deletebutton id = {item.id} action = {DeleteChapter}/>)}

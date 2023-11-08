@@ -105,6 +105,17 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           </Stack.Screen>
 
           <Stack.Screen 
+          name = "Editchapter"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <EditChapter {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
           name = "EditPage"
           options={{headerShown : false}}
           >

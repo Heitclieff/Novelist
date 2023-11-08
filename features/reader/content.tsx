@@ -41,13 +41,15 @@ const Readcontent : React.FC <pageProps> = () => {
      const firebase = firestore();
      const navigation = useNavigation();
 
-     const {doc_id, id , title , noveltitle ,  chap_id , editable, commitable, commit_id} :any = route.params;
+     const {doc_id, id , title , noveltitle ,  chap_id , editable, commitable, commit_id , status} :any = route.params;
      
      const chapterdocs = useSelector((state) => state.content);
      const useraccount = useSelector((state) => state.userData);
      const projectcommits = useSelector((state) => state.field);
      const contentdocs = useSelector((state) => state.contentdocs);
 
+     const [isDraft , setisDraft] = useState<boolean>(status);
+     const [Editable, setEditable] = useState<boolean>(false);
      const [isEdit ,setisEdit] = useState<boolean>(false);
      const [inputValue ,setinputValue] = useState("");
      const [contentid ,setContentid] = useState<string>('');
@@ -74,18 +76,24 @@ const Readcontent : React.FC <pageProps> = () => {
                text: 'No',
                style: 'cancel',
           },
-          {text: 'yes', onPress: () => approvedcommitRequest()},
+          {text: 'yes', onPress: () => removecommitRequest()},
      ]);
 
 
 
      const initialContent = async () : Promise <void> => {
+          if(editable){
+               if(status){
+                    setEditable(true);
+               }
+          }
+
           if(contentdocs.docid === id) {
                setinputValue(contentdocs.contentdocs);
                setContentid(contentdocs.id);
                return
           }
-
+       
           if(id){
                getnovelContent();
           }      
@@ -126,8 +134,9 @@ const Readcontent : React.FC <pageProps> = () => {
                     ProjectFields.concat(projectcommits.field)
                }   
 
+
                dispatch(setChaptercontent({...chapterdocs , content : MergeChapters  , id : chapterdocs.id}))
-               dispatch(setprojectCommits({field : ProjectFields}))
+               dispatch(setprojectCommits({field : ProjectFields }))
 
                navigation.goBack();
 
@@ -137,22 +146,13 @@ const Readcontent : React.FC <pageProps> = () => {
           }
      }
 
+
      const approvedcommitRequest = async () : Promise <void> => {
           try{
                if(!commit_id){
                     console.log("ERROR: Not founds any Commits id")
                     return
-               }
-
-               const getnovel =  firebase.collection("Novels").doc(doc_id);
-               const getcommits = getnovel.collection("Commits").doc(commit_id);
-
-           
-               const getchapters = chapterdocs.snapshotchapter.doc(id);
-               await getchapters.update({status : false , commits : false});
-               const commitRef = await getcommits.delete();
-
-               
+               }     
                const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
                currentchapter['commits'] = false;
                currentchapter['status'] = false;
@@ -161,9 +161,17 @@ const Readcontent : React.FC <pageProps> = () => {
                const removecommits = projectcommits.field.filter(commit => commit.commit_id !== commit_id);
 
                dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
-               dispatch(setprojectCommits({field : removecommits}))
+               dispatch(setprojectCommits({...projectcommits, field : removecommits}))
                
+               const getnovel =  firebase.collection("Novels").doc(doc_id);
+               const getcommits = getnovel.collection("Commits").doc(commit_id);
+           
+               const getchapters = chapterdocs.snapshotchapter.doc(id);
+               await getchapters.update({status : false , commits : false});
+               const commitRef = await getcommits.delete();
+
                navigation.goBack();
+
                console.log("Approved this request success");
                
           }catch(error){
@@ -171,6 +179,61 @@ const Readcontent : React.FC <pageProps> = () => {
           }
      }
 
+
+     const removecommitRequest = async () : Promise <void> => {
+          try{
+               if(!commit_id){
+                    console.log("ERROR: Not founds any Commits id")
+                    return
+               }    
+
+               const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
+               currentchapter['commits'] = false;
+          
+               const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
+               const removecommits = projectcommits.field.filter(commit => commit.commit_id !== commit_id);
+                  
+               dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
+               dispatch(setprojectCommits({...projectcommits, field : removecommits}));
+
+               const getnovel =  firebase.collection("Novels").doc(doc_id);
+               const getcommits = getnovel.collection("Commits").doc(commit_id);
+           
+               const getchapters = chapterdocs.snapshotchapter.doc(id);
+               await getchapters.update({commits : false});
+               const commitRef = await getcommits.delete();
+
+               navigation.goBack();
+               
+               console.log("Remove this request success");
+          }catch(error){
+               console.log("Failed to Remove this Request." ,error);
+          }
+     }
+
+     const changechapterStatement = async() : Promise<void> => {
+          try{
+               console.log("Chapterdocs",chapterdocs.content)
+
+               const currentchapter = chapterdocs.content.find((doc) => doc.id == id);
+               currentchapter['status'] = true;
+
+               const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter);
+
+               dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}));
+
+               const getnovel =  firebase.collection("Novels").doc(doc_id);
+               const getchapters = chapterdocs.snapshotchapter.doc(id);
+               await getchapters.update({status : true});
+
+               setEditable(true);
+               setisDraft(true);
+               
+               console.log("change chapter statements success");
+          }catch(error){
+               console.log("Failed to change chapter statement", error)
+          }
+     }
 
      const getnovelContent =  async () : Promise<void> => {
           try{
@@ -217,6 +280,7 @@ const Readcontent : React.FC <pageProps> = () => {
                     updatedBy : userdocs.id,
                });
 
+               setisEdit(false);
                console.log("Updated Content Successfull.")
                toastStatus = "success"
           }catch(error) {
@@ -239,7 +303,16 @@ const Readcontent : React.FC <pageProps> = () => {
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
-          <Chapternavigation editable = {editable} isEdit = {isEdit} commitable = {commitable} event = {updatedContent} title = {title} chapterdocs = {{id : id , docid: doc_id}} request = {sendcommitsRequest}/>
+          <Chapternavigation 
+          editable = {editable} 
+          isEdit = {isEdit} 
+          commitable = {commitable} 
+          event = {updatedContent} 
+          chapterstate = {changechapterStatement}
+          title = {title}
+          status = {isDraft}
+          chapterdocs = {{id : id , docid: doc_id}} 
+          request = {sendcommitsRequest}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
@@ -282,7 +355,7 @@ const Readcontent : React.FC <pageProps> = () => {
                          <TextInput        
                          style = {{color : 'white'} }
                          multiline={true}
-                         editable = {editable}
+                         editable = {Editable}
                          textAlignVertical="top"
                          placeholder="พิมพ์ข้อความที่นี่..."
                          placeholderTextColor={'white'}

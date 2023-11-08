@@ -296,12 +296,12 @@ export const setChapterWriteContent = (content:any ,id:string , docid:string): T
   };
 };
 
-export const setprojectCommits = (fields:any): ThunkAction<void, RootState, unknown, AnyAction> => {
+export const setprojectCommits = (fields:any , id:string): ThunkAction<void, RootState, unknown, AnyAction> => {
   return async (dispatch: Dispatch<AnyAction>) => {
     try {
       dispatch({ 
         type: 'SET_COMMIT', 
-        payload :fields , 
+        payload :fields , id
       });
     } catch (error) {
       console.log(error);

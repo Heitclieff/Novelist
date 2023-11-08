@@ -16,7 +16,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
      const [timeago ,settimeago] = useState('');
-
+   
      const getTimeAgo = (timestamp:any) => {
           const currentDate = new Date();
           const timestampDate = new Date(timestamp);
@@ -37,14 +37,13 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
           }
      }
 
-     
-
      useEffect(() => {
           const date = new Date(data.updateAt.seconds * 1000 + data.updateAt.nanoseconds / 1000000);
           const time = getTimeAgo(date);
           settimeago(time);
      },[data])
      
+
   return (
      <Pressable isDisabled = {data?.commits} onPress={() => navigation.navigate('Readcontent',{
           id : data.id,
@@ -53,6 +52,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
           title: data.title , 
           content: data.content,
           editable : true,
+          status : data.status,
           commitable : data.commits,
           })}>
      {({

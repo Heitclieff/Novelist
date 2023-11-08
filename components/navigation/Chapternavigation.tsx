@@ -30,6 +30,8 @@ interface contianerProps {
      commitable : boolean,
      editable: boolean;
      isEdit : boolean,
+     status : booelan,
+     chapterstate : any,
      event: any;
      title: string;
      chapterdocs : any,
@@ -37,7 +39,7 @@ interface contianerProps {
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, title , commitable , chapterdocs , request}) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, title , commitable ,status , chapterstate,  chapterdocs , request}) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
 
@@ -61,6 +63,16 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, 
                style: 'cancel',
           },
           {text: 'yes', onPress: () => request()},
+     ]);
+
+
+     const EditingDialogs = () => 
+     Alert.alert('Edit', 'you want to edit this progress ?', [
+          {
+               text: 'No',
+               style: 'cancel',
+          },
+          {text: 'yes', onPress: () => chapterstate()},
      ]);
 
 
@@ -128,21 +140,38 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, 
                                              name='settings' />}
                               />
 
-                              {isEdit ?
-                                   <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
+                              {
+                              status ? 
+                                   isEdit ?
+                                        <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
+                                        :
+
+                                        <IconButton
+                                        size='sm'
+                                        rounded={'full'}
+                                        isDisabled = {commitable}
+                                        onPress ={PushingDialogs}
+                                        icon={
+                                             <IonIcon
+                                                  size={20}
+                                                  color={theme.Icon.base}
+                                                  name='push' />}
+                                        />
                                    :
+
                                    <IconButton
                                    size='sm'
                                    rounded={'full'}
                                    isDisabled = {commitable}
-                                   onPress ={PushingDialogs}
+                                   onPress ={EditingDialogs}
                                    icon={
-                                        <IonIcon
+                                        <FeatherIcon
                                              size={20}
                                              color={theme.Icon.base}
-                                             name='push' />}
-                                    />
-                              } 
+                                             name='edit' />}
+                                   />
+                                   
+                                   } 
                             
                          </HStack>
                       

@@ -36,15 +36,20 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const dispath = useDispatch();     
      const firebase = firestore();
 
+
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
      
      const fetchingCommit =  async () : Promise <void> => { 
+          if(id === projectcommits.id){
+               return
+          }
+          
           try{
                const getcommit = await snapshotcontent.collection('Commits').get();
                const commitdocs = getcommit.docs.map((doc) => ({commit_id : doc.id , ...doc.data()}));
      
-               dispath(setprojectCommits({field : commitdocs}))
+               dispath(setprojectCommits({field : commitdocs , id : id}))
 
           }catch(error){
                console.log("Failed to feching Commit" , error)
@@ -52,7 +57,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      }
 
      useEffect(() => { 
-          if(!projectcommits?.field){ 
+          if(id){ 
                fetchingCommit();
           }
      } ,[])

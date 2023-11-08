@@ -19,7 +19,7 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
      const navigation = useNavigation();
 
      const [timeago ,settimeago] = useState('');
-     
+
      const teams = useSelector((state) => state.teams);
      const profile = teams?.teams.find((member) => member.id == data.commit_by)
 
@@ -49,7 +49,8 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
           const time = getTimeAgo(date);
           settimeago(time);
      },[data])
-
+     
+   
   return (
      <Pressable onPress = {() => navigation.navigate('Readcontent',{
           commit_id : data.commit_id,
