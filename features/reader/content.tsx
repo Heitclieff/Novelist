@@ -81,6 +81,8 @@ const Readcontent : React.FC <pageProps> = () => {
 
 
 
+
+
      const initialContent = async () : Promise <void> => {
           if(editable){
                if(status){
@@ -112,13 +114,12 @@ const Readcontent : React.FC <pageProps> = () => {
                };
                
                const request = {
-                    title : "Hello",
+                    title : `Request Commit ${title}`,
                     chap_id : chap_id,
                     id :id,
                     doc_id : doc_id,
                     commit_by : useraccount?.[0].id,
                }          
-
 
                const docRef = await getnovel.collection('Commits').add({...request ,commit_date : timestamp});
                const chapRef = await getchapter.update({commits : true});
