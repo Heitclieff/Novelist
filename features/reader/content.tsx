@@ -44,6 +44,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const {doc_id, id , title , noveltitle ,  chap_id , editable, commitable, commit_id , status} :any = route.params;
      
      const chapterdocs = useSelector((state) => state.content);
+     const projectdocs = useSelector((state) => state.docs)
      const useraccount = useSelector((state) => state.userData);
      const projectcommits = useSelector((state) => state.field);
      const contentdocs = useSelector((state) => state.contentdocs);
@@ -301,7 +302,6 @@ const Readcontent : React.FC <pageProps> = () => {
           initialContent();
       }, [id]);
 
-
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -322,6 +322,8 @@ const Readcontent : React.FC <pageProps> = () => {
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
                               <Text color = {theme.Text.base} fontWeight={'semibold'} >{noveltitle}</Text>
                               <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
+                              {
+                              commit_id &&
                               <HStack space = {1} mt = {2}>
                                    <Button 
                                    onPress = {DeleteRequestDialogs}
@@ -334,6 +336,8 @@ const Readcontent : React.FC <pageProps> = () => {
                                    w = "100px" 
                                    h={8}>Delete request</Button>
 
+                              {
+                              projectdocs.docs?.owner === useraccount?.[0].id &&
                                    <Button 
                                    onPress={ApprovedDialogs}
                                    borderColor={'teal.500'}
@@ -344,11 +348,12 @@ const Readcontent : React.FC <pageProps> = () => {
                                    variant={'outline'}
                                    w = "100px" h={8}
                                    >Approved</Button>
+                               }        
                               </HStack>
-                         </VStack>
-
-                              
-                    </HStack>}
+                              }
+                         </VStack>  
+                    </HStack>            
+                    }
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>
                               {/* {`${novelItem[0].overview}`} */}
