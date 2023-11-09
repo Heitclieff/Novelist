@@ -1,12 +1,10 @@
 import React,{useContext, useRef , useEffect, useState} from 'react'
-import { View } from 'react-native'
 import { 
 Box,
 Text,
 VStack } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
-import { Animated } from 'react-native'
-import { ImageBackground } from 'react-native'
+import { Animated , ImageBackground, RefreshControl } from 'react-native'
 import Centernavigation from '../../components/navigation/Centernavigation'
 //@Components
 import Leadheader from './section/header'
@@ -35,7 +33,8 @@ const Leaderboard: React.FC <pageProps> = () => {
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const header = useSelector((state:any) => state.headLeader)
     const item = useSelector((state:any) => state.itemLeader)
-    const isReduxLoaded = useSelector((state:RootState) =>state.isheadLeader )
+    const isReduxLoaded = useSelector((state:RootState) =>state.isheadLeader)
+    const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const MAX_HEIGHT  = 410;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -79,32 +78,42 @@ const Leaderboard: React.FC <pageProps> = () => {
             console.error("Error getting top scores:", error);
         });
     }
+
     const fetchLeaderBoard = async () => {
-        const mainLeaderRef = db.collection('Leaderboards')
-        const snapLeader = await mainLeaderRef.get()
-        const data = snapLeader.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const headerBoard = data[0].leaderboard.slice(0,3)
-        const itemBoard = data[0].leaderboard.slice(3,15)
-        dispatch(setHeadLeader(headerBoard))
-        dispatch(setItemLeader(itemBoard))
+        try{
+            const mainLeaderRef = db.collection('Scores')
+            const snapLeader = await mainLeaderRef.get()
+            const data = snapLeader.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const headerBoard = data.slice(0,3)
+            const itemBoard = data.slice(3,15)
+
+            dispatch(setHeadLeader(headerBoard))
+            dispatch(setItemLeader(itemBoard))
+        }catch(error){
+            console.log("Failed to fetcing leaderboard", error)
+        }
+       
     }  
     
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
+      }, []);
+
     
     useEffect(() => {
-        
-        if (!isReduxLoaded) {
             fetchLeaderBoard()
-            
-            // setLeaderBoard()
-        }
-        // console.log(header,item)
-    } , [header,item,isReduxLoaded])
+    } , [refreshing])
+    
         return (
             <Box flex = {1} >
                 <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
                 <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'}>
                 <Box w = '100%' h = '100%'  position = 'absolute' top = {0}>
-                    <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [
+                    {header?.length > 0 &&
+                       <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [
                         {
                             translateY: scrollY.interpolate({
                             inputRange: [0, 300],
@@ -113,7 +122,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                             }),
                         },
                         ], }]}>
-                        {isReduxLoaded && <AnimatedBackground
+                       <AnimatedBackground
                             id='background-images'
                             source={{uri :header[0].image}}
                             alt="images"
@@ -143,8 +152,10 @@ const Leaderboard: React.FC <pageProps> = () => {
                                 },
                             }}>
                             </Box>
-                        </AnimatedBackground>}
+                        </AnimatedBackground>
                     </Animated.View>
+                    }
+                 
                 </Box>
                 <MemorizedLeadheader data = {header} />
             </Box>
@@ -163,6 +174,9 @@ const Leaderboard: React.FC <pageProps> = () => {
                 {
                     useNativeDriver : true
                 })}
+                refreshControl={
+                    <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                }
                 scrollEventThrottle={16}
                 style ={{
                     zIndex : 3 ,

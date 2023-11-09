@@ -58,7 +58,8 @@ const Creator : React.FC <Pageprops> = () => {
     const projectdocs = useSelector((state) => state.project)
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
-    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
+    const [refreshing ,setRefreshing] = useState<boolean>(false);
+
     const {dismiss} = useBottomSheetModal();
 
     const getProjectContent = async () : Promise<void> => {
@@ -81,9 +82,10 @@ const Creator : React.FC <Pageprops> = () => {
         
         }
     }
+    
     useEffect(() => {
         getProjectContent();
-    }, [])
+    }, [refreshing])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -119,7 +121,7 @@ const Creator : React.FC <Pageprops> = () => {
         </Box>
 
         <Box flex = {1}>
-                <FlatList>
+                <FlatList refreshing = {refreshing} setRefreshing = {setRefreshing}>
                     <Box w= '100%' mt = {3}>
                     <Box pl = {6} pr = {6}>
                         <Input 

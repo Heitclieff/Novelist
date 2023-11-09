@@ -50,6 +50,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclose();
+  const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(true);
   
 
@@ -88,7 +89,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   }, [chapterdocs.content]);
 
   useEffect(() => {
-  }, [separatedChapterdocs])
+  }, [separatedChapterdocs , refreshing])
 
 
   const DeleteChapter = async (id): Promise<void>=> { 
@@ -110,6 +111,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }
   }
 
+
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
@@ -120,7 +122,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       />
 
       <VStack flex={1}>
-        <FlatList>
+        <FlatList setRefreshing = {setRefreshing} refreshing = {refreshing}>
           <Box pl={6} pr={6} mt={5}>
             <Input
               rounded={'full'}

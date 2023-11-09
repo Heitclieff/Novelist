@@ -1,11 +1,12 @@
-import React, {useContext , useEffect}from 'react'
+import React, {useContext , useEffect, useState}from 'react'
 import { 
 Box , 
 Center ,
  VStack} from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
-import { FlatList } from 'react-native'
+// import { FlatList } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view'
+import { FlatList } from '../../components/layout/Flatlist/FlatList'
 
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
@@ -30,28 +31,41 @@ const Bookmarks : React.FC <Pageprops> = () => {
     const userData = useSelector((state) => state.userData)
     const Mybookmarks = useSelector((state) => state.slot)
     const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+    const [refreshing , setRefreshing] = useState<boolean>(false);
+
 
     const fetchingBookmarks = async() :Promise<void> => {
       try{
         const uid = userData[0].id
         const getuserkeys = firestore().collection('Users').doc(uid);
-        const getbookmarks = await getuserkeys.collection('Bookmark').get();
+        const getbookmarks = await getuserkeys.collection('Bookmark').orderBy('date' ,'desc').get();
+  
         const bookmarkKeys = getbookmarks.docs.map(doc => ({id : doc.id , novelDoc : doc.data().novelDoc , date : doc.data().date}))
-        
         const novelDocsMap = await Matchingbookmarks(bookmarkKeys);
-        dispatch(setMybookmarks({slot : novelDocsMap , dockey : bookmarkKeys}));
-
+        
+        const Mybooks = bookmarkKeys.map((bookdoc:any) => {
+          const doc = novelDocsMap.get(bookdoc.novelDoc)?.data();
+          return {
+              docid : bookdoc.id,
+              id : bookdoc.novelDoc,
+              date : bookdoc.date,
+              ...doc
+          }
+        });
+        dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
+        
       }catch(error){
         console.log('Failed to fetching Bookmarks', error)
       }
     }
 
+    
     const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
         const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
         const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
 
-        const novelDocsMap = new Map(getNovels.docs.map(doc => [doc.id , doc]))
-  
+        const novelDocsMap = new Map(getNovels?.docs.map(doc => [doc.id , doc]))
+
         return novelDocsMap;
     }
 
@@ -72,46 +86,39 @@ const Bookmarks : React.FC <Pageprops> = () => {
       }
   
     }
-    
-    const renderItem = React.useCallback(
-        ({ item, index }:any) => {
-           return( 
-            <SwipeListView 
-              key = {index}
-              disableRightSwipe
-              data={[0]}
-              ItemSeparatorComponent={<Box h=  '2'/>}
-              renderItem={(itemdisable:any , index:number) => (
-                <Center>
-                   <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.novelDoc}/>
-                </Center>
-              )}
-              renderHiddenItem={ (data, rowMap) => (<Bookmarkbutton action = {Deletefrombookmarks} docid = {item.docid}/>)}
-              leftOpenValue={60}
-              rightOpenValue={-60}
-              />
-          )
-        },[]
-    ); 
 
     useEffect(() => {
-      if(Mybookmarks.slot?.length <= 0){
+      if(Mybookmarks.slot?.length <= 0 || refreshing){
         fetchingBookmarks();
       }
-    },[])
+    },[refreshing])
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
-        {Mybookmarks.slot?.length > 0 &&
-          <FlatList
-            showsVerticalScrollIndicator = {false}
-            data={Mybookmarks?.slot}
-            renderItem={renderItem}
-            keyExtractor={(item:any) => item.id}
-            style = {{flex:1}}
-            ItemSeparatorComponent={() => <Box h = '2'/>}
-          />
-        }
+        
+          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
+            {Mybookmarks.slot?.length > 0 &&
+              Mybookmarks.slot?.map((item:any , index:number) => {
+                return(
+                    <SwipeListView 
+                    key = {index}
+                    disableRightSwipe
+                    data={[0]}
+                    ItemSeparatorComponent={<Box h=  '2'/>}
+                    renderItem={(itemdisable:any , index:number) => (
+                      <Center>
+                        <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.novelDoc}/>
+                      </Center>
+                    )}
+                    renderHiddenItem={ (data, rowMap) => (<Bookmarkbutton action = {Deletefrombookmarks} docid = {item.docid}/>)}
+                    leftOpenValue={60}
+                    rightOpenValue={-60}
+                  />
+                )
+              })
+            }
+          </FlatList>
+        
     </VStack>
   )
 }

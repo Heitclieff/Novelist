@@ -17,6 +17,7 @@ Image ,
 Animated,
 Dimensions,
 View,
+RefreshControl,
 Platform } from 'react-native'
 
 import { useRoute } from '@react-navigation/native'
@@ -74,7 +75,9 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [novelItem, setnovelItem] = useState({}); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
-    
+    const [refreshing ,setRefreshing] = useState<boolean>(false);
+
+    const [limiters , setlimiters] = useState<boolean>(true);
     const [isMyOwn , setisMyOwn] = useState<boolean>(false);
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
@@ -92,8 +95,12 @@ const NovelContent : React.FC <Pageprops> = () => {
                 return
             }
     
-            const Newviews  = increaseBookView(novelDocs)
-            setnovelItem({...novelDocs , view : Newviews});
+            if(limiters){
+                const Newviews  = increaseBookView(novelDocs)
+                setnovelItem({...novelDocs , view : Newviews});
+                setlimiters(false);
+            }
+           
             // findingBookinMylibrary();
             
             // const snapMainData = db.collection('Novels').doc(documentSnapshot.id)
@@ -267,20 +274,21 @@ const NovelContent : React.FC <Pageprops> = () => {
 
  
     useEffect(() => {
-            if(id) fetchNovelandChapter()
-    }, [])
+        const shouldrefresh = id || refreshing
+            if(shouldrefresh) fetchNovelandChapter()
+    }, [refreshing])
 
     useEffect(() => {
         findingBookinMyBookmarks();
-    },[id])
+    },[id , refreshing])
 
     useEffect(() => {
         findingBookinMylibrary();
-    },[id])
+    },[id, refreshing])
 
     useEffect(() => {
         findinglikeinMyfavorite();
-    },[])
+    },[refreshing])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -293,6 +301,13 @@ const NovelContent : React.FC <Pageprops> = () => {
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
     }, []);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
+      }, []);
 
   return (
       <BottomSheetModalProvider>
@@ -382,6 +397,9 @@ const NovelContent : React.FC <Pageprops> = () => {
                         </Box>
                       <Animated.ScrollView
                           showsVerticalScrollIndicator={false}
+                          refreshControl={
+                            <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                          }
                           onScroll={Animated.event([
                               {
                                   nativeEvent: {

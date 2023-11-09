@@ -36,6 +36,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const dispath = useDispatch();     
      const firebase = firestore();
 
+     const [refreshing , setRefreshing] = useState<boolean>(false);
 
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
@@ -60,7 +61,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
           if(id){ 
                fetchingCommit();
           }
-     } ,[])
+     } ,[refreshing])
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
         <Memorizednavigation title = "Commits" 
@@ -75,7 +76,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
                     <Select.Item label="Chapter 3" value="cross" />
                </Select>
           </Box>
-          <FlatList>
+          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
                <VStack mt = {5} space = {3}>
                     {projectcommits.field?.length > 0 &&
                          projectcommits.field.map((item:any , index:number) =>

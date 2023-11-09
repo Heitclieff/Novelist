@@ -40,13 +40,13 @@ const Index : React.FC = () => {
     const [CollectionHotNew , setCollectionHotNew] = useState<any[]>([])
     const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
+    const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     
     const getTopNewAndDispatch = async () => {
         try {
           const snapshortTop = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get()
           setCollectionTopNew(snapshortTop.docs)
-          setisReduxLoaded(true)
         } catch (error) {
           console.error('Error fetching Top New novels:', error);
         }
@@ -598,16 +598,15 @@ const Index : React.FC = () => {
       }
 
       useEffect(() => {
-        if (!isReduxLoaded) {
           LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
           // test()
           // allData()
+          console.log("Fetching")
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
           // callScore();
-        }
-      }, [isReduxLoaded]);
+      }, [refreshing]);
 
       useEffect(() => {
         getUserandDispatch();
@@ -636,7 +635,7 @@ const Index : React.FC = () => {
         ]}
         />
         {isReduxLoaded && CollectionTopNew.length > 0 || CollectionTopNew ?
-            <FlatList onScroll={scrollHandler}>
+            <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
                 <VStack flex = {1}>
                     <MemorizedIndexheaderitem collections={CollectionMostview}/>
                     <VStack  pl = {3} mt = {4}>

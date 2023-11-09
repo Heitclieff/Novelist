@@ -11,7 +11,7 @@ Icon,
 Skeleton,
 HStack,
  } from 'native-base'
-import { Animated , Dimensions } from 'react-native'
+import { Animated , Dimensions, RefreshControl } from 'react-native'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { useRoute } from '@react-navigation/native'
 
@@ -47,6 +47,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const [isLoading , setIsLoading] = useState<boolean>(true);
     const [HeaderTitle , setHeaderTitle] =  useState<string>('');
     const [currentProfile , setCurrentProfile] = useState<any>();
+    const [refreshing  , setRefreshing] = useState<boolean>(false);
 
     const route = useRoute();
     const navigation = useNavigation();
@@ -124,11 +125,18 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         }
     
     }
-    
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
+      }, []);
+
+
     useEffect(() => {
         ValidateAccount();
         findingfollower();
-    },[])
+    },[refreshing])
 
     useEffect(() => {
         setTimeout(() => {
@@ -149,6 +157,9 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
            
             <Animated.FlatList
             data={[0]}
+            refreshControl={
+                <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+            }
             keyExtractor={(item:any) => item.id}
             numColumns={2}
             showsVerticalScrollIndicator = {false}

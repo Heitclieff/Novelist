@@ -1,13 +1,19 @@
 import React,{useContext , useState, useRef , useEffect , useCallback} from 'react'
 import { Box , VStack , Text , Center , Spinner} from 'native-base'
-import { ImageBackground, ScrollView ,View ,Dimensions } from 'react-native'
+import { 
+ImageBackground, 
+ScrollView ,
+View ,
+Dimensions ,
+RefreshControl, 
+FlatList
+} from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ThemeWrapper } from'../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
 //@Components
-import { FlatList } from 'react-native';
 import Headercontent from './header';
 import Elementnavigation from '../../components/navigation/Elementnavigation';
 
@@ -39,8 +45,9 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const projectdocs = useSelector((state) => state.docs.docs)
   const useraccount = useSelector((state) => state.userData);
 
-  const {projectdocument , snapshotcontent , id , isupdated} :any = route.params;
+  const {projectdocument , snapshotcontent , id , isupdated , mainrefresh} :any = route.params;
   const [isLoading , setisLoading] = useState<boolean>(true);
+  const [refreshing , setRefreshing] = useState<boolean>(false);
 
   const Screenheight = Dimensions.get('window').height;
   const MAX_HEIGHT  = Screenheight / 2.5;
@@ -67,6 +74,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
       dispatch(setProjectTeams({teams : userdocs}))
 
       setisLoading(false);
+
     } catch(error) {
       console.error('Error fetching chapter data:', error);
     }
@@ -100,19 +108,35 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   }
 
 
-  const initailfetchContent = () => {
+  const initailfetchContent = () => {  
+      if(refreshing){
+        console.log("DO TIT")
+        fetchchaptercontent();  
+      }
+
       if(chapterdocs){
         if(chapterdocs.id === id) {
           setisLoading(false)
           return
         }
-      }
-      fetchchaptercontent();
+      }  
+      fetchchaptercontent();  
   }
+
+  
+  const onRefresh = React.useCallback(() => {
+    mainrefresh(true);
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
 
   useEffect(() => {
     initailfetchContent();
-  },[])
+  },[refreshing])
+
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
         {/* <Dashboardbar/> */}
@@ -142,6 +166,9 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
           <FlatList
             data={[0]}
             showsVerticalScrollIndicator = {false}
+            refreshControl={
+              <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+            }
             style={{
               zIndex: 1,
               position: 'relative',

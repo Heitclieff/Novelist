@@ -38,6 +38,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
   const categorydocs = useSelector((state) => state.categoryCache)
 
   const [selectedContent , setSelectedContent] = useState<any[]>(temepletedocs.content)
+  const [refreshing ,setRefreshing] = useState<boolean>(false);
 
   const getDatafromCollection = async() :Promise<void> => {
     try{
@@ -87,7 +88,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
 
   useEffect(() => {
     initailfetching();
-  } , [])
+  } , [refreshing])
 
 
   return (
@@ -96,7 +97,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
           <VStack flex={1} pl = {4} pr = {4}>
             {temepletedocs.content?.length > 0 && 
 
-              <ItemList collection={selectedContent}>
+              <ItemList collection={selectedContent} refreshing = {refreshing} setRefreshing={setRefreshing}>
                {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
              </ItemList>
             } 

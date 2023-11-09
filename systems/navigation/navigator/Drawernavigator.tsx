@@ -40,26 +40,25 @@ const Drawernavigator : React.FC = () => {
   const [chapterdocs , setChapterdocs] = useState<{}>({});
   const [snapshotcontent ,setSnapshotcontent] = useState<[]>([]);
   const [isLoading ,setisLoading] = useState(true)
-  const [ischapter , setisChapter] = useState(true)
+  const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isupdated , setisUpdated] = useState(false)
   
   const getProjectcontent = async () : Promise<void> => {
     try {
-      if(projectdocument.id !== id){
         const snapshotcontent = await firestore().collection('Novels').doc(id);
         const snapshotproject =  await snapshotcontent.get()
         const projectdocs = snapshotproject.data();
   
         const memberdocs = await getProjectmember(snapshotcontent)
     
+   
         const projectkey = {...projectdocs , creators : memberdocs}
         setProjectdocument(projectkey);
         setSnapshotcontent(snapshotcontent)
   
         dispatch(setProjectDocument({docs :projectkey , id : id}));
-      }
       
-      setisLoading(false);
+        setRefreshing(false);
     }catch(error){
       console.error('Error fetching document:', error);
     }
@@ -77,9 +76,13 @@ const Drawernavigator : React.FC = () => {
   }
 
   useEffect(() => {
-    getProjectcontent();
-  },[id])
-
+    const shouldRefresh = refreshing || projectdocument.id !== id;
+  
+    if (shouldRefresh) {
+      getProjectcontent();
+    }
+  },[id , refreshing])
+  
   return (
     !isLoading && 
       <Drawer.Navigator 
@@ -89,7 +92,7 @@ const Drawernavigator : React.FC = () => {
 
           <Drawer.Screen name="Dashboard" 
             component={Creatorcontent} 
-            initialParams={{projectdocument:  projectdocument.docs  ,snapshotcontent , id , isupdated }}
+            initialParams={{projectdocument:  projectdocument.docs  ,snapshotcontent , id , isupdated , mainrefresh : setRefreshing}}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <MaterialIcon
