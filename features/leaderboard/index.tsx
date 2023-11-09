@@ -108,57 +108,59 @@ const Leaderboard: React.FC <pageProps> = () => {
     } , [refreshing])
     
         return (
-            <Box flex = {1} >
-                <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
-                <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'}>
-                <Box w = '100%' h = '100%'  position = 'absolute' top = {0}>
-                    {header?.length > 0 &&
-                       <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [
-                        {
-                            translateY: scrollY.interpolate({
-                            inputRange: [0, 300],
-                            outputRange: [0, -100],
-                            extrapolate: 'clamp',
-                            }),
-                        },
-                        ], }]}>
-                       <AnimatedBackground
-                            id='background-images'
-                            source={{uri :header[0].image}}
-                            alt="images"
-                            style={{ 
-                                width: '100%', 
-                                height: '100%', 
-                                opacity: 1,
-                                position: 'relative',
-
-                                transform: [{
-                                    scale : scrollY.interpolate({
-                                        inputRange : [-500 ,0],
-                                        outputRange : [5,1],
-                                        extrapolateLeft : 'extend',
-                                        extrapolateRight : 'clamp',
-                                    })
-                                }]
-                                }
-                            }
-                            > 
-                            <Box w ='100%' h= '100%' bg = 'black' opacity={0.6} position={'absolute'} zIndex={5}></Box>
-                            <Box w = '100%' h = '100%' position={'absolute'} zIndex={10} bottom = {1}  bg={{
-                                linearGradient: {
-                                    colors: ['transparent', 'transparent', theme.Bg.base],
-                                    start: [1, 0, 0],
-                                    end: [0, 0, 0],
-                                },
-                            }}>
-                            </Box>
-                        </AnimatedBackground>
-                    </Animated.View>
-                    }
-                 
+            <Box flex = {1} position = "relative" bg = {theme.Bg.base}>
+                <Box position={'absolute'} zIndex = {10} w =  '100%'>
+                    <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
                 </Box>
-                <MemorizedLeadheader data = {header} />
-            </Box>
+                <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'} bg = 'red.200' zIndex = {0} overflow = {'hidden'}>
+                    <Box w = '100%' h = '100%'  position = 'absolute' top = {0} >
+                        {header?.length > 0 &&
+                        <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [
+                            {
+                                translateY: scrollY.interpolate({
+                                inputRange: [0, 300],
+                                outputRange: [0, -100],
+                                extrapolate: 'clamp',
+                                }),
+                            },
+                            ], }]}>
+                        <AnimatedBackground
+                                id='background-images'
+                                source={{uri :header[0].image}}
+                                alt="images"
+                                style={{ 
+                                    width: '100%', 
+                                    height: '100%', 
+                                    opacity: 1,
+                                    position: 'relative',
+
+                                    transform: [{
+                                        scale : scrollY.interpolate({
+                                            inputRange : [-500 ,0],
+                                            outputRange : [5,1],
+                                            extrapolateLeft : 'extend',
+                                            extrapolateRight : 'clamp',
+                                        })
+                                    }]
+                                    }
+                                }
+                                > 
+                                <Box w ='100%' h= '100%' bg = 'black' opacity={0.6} position={'absolute'} zIndex={5}></Box>
+                                <Box w = '100%' h = '100%' position={'absolute'} zIndex={10} bottom = {1}  bg={{
+                                    linearGradient: {
+                                        colors: ['transparent', 'transparent', theme.Bg.base],
+                                        start: [1, 0, 0],
+                                        end: [0, 0, 0],
+                                    },
+                                }}>
+                                </Box>
+                            </AnimatedBackground>
+                        </Animated.View>
+                        }
+                    
+                    </Box>
+                    <MemorizedLeadheader data = {header} />
+                </Box>
             <Box flex=  {1}>
                 <Animated.ScrollView
                 showsVerticalScrollIndicator = {false}
@@ -179,26 +181,32 @@ const Leaderboard: React.FC <pageProps> = () => {
                 }
                 scrollEventThrottle={16}
                 style ={{
-                    zIndex : 3 ,
+                    zIndex : 10,
                     marginTop : HEADER_HEIGHT_NARROWED ,
                     paddingTop : HEADER_HEIGHT_EXPANDED,
                 }}
                 >
-                        <VStack  bg = {theme.Bg.base} borderTopLeftRadius={'lg'} borderTopRightRadius={'lg'} pt = {6} pb = {HEADER_HEIGHT_EXPANDED} alignItems={'center'} space = {3}>
-                        {item.length === 0
-                            ? [0, 0, 0, 0, 0, 0, 0].map((item, index) => (
-                                <LeaderItem index={index + 4} item={item} key={index} />
-                                ))
-                            : item.map((item, index) => (
-                                <LeaderItem index={index + 4} item={item} key={index} />
-                                ))
-                            }
+                        <VStack  
+                        flex = {1}
+                        bg = {theme.Bg.base} 
+                        borderTopLeftRadius={'lg'} 
+                        borderTopRightRadius={'lg'} 
+                        pt = {6}
+                        
+                        pb = {HEADER_HEIGHT_EXPANDED} 
+                        alignItems={'center'} 
+                        space = {3}>
+                        
+                            {/* {[0,0,0,0,0,0,0,0,0,].map((item) => 
+                                <LeaderItem item = {item}/>
+                            )} */}
                         </VStack>
+
+
                 </Animated.ScrollView>
             </Box>
-            
-            </Box>
-        
+        </Box>
+      
         )
     
 }
