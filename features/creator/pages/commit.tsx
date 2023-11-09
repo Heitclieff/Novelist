@@ -41,11 +41,11 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const {snapshotcontent , id} = route.params;
      
      const fetchingCommit =  async () : Promise <void> => { 
-          if(id === projectcommits.id){
-               return
-          }
-          
           try{
+               if(id === projectcommits.id){
+                    return
+               }
+               
                const getcommit = await snapshotcontent.collection('Commits').get();
                const commitdocs = getcommit.docs.map((doc) => ({commit_id : doc.id , ...doc.data()}));
      
