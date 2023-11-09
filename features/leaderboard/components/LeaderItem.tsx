@@ -4,29 +4,40 @@ Box,
 HStack,
 VStack ,
 Text,
+Pressable,
 Divider } from 'native-base'
 import { Image } from 'react-native';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import { useNavigation } from '@react-navigation/native';
 
 interface containerProps {
     index: number
+    item : any
 }
 const LeaderItem : React.FC <containerProps> = ({index, item}) => {
     const theme:any = useContext(ThemeWrapper);
-    // console.log('leaderitem', item)
-    const isItemZero = item.score === 0;
+    const navigation = useNavigation();
 
     return (
-        <VStack w="95%" h="85" bg={theme.Bg.container} alignItems="center" justifyContent="center" rounded="lg">
+        <Pressable onPress=  {() => navigation.navigate('ProfileStack', {profile : {pf_image : item.image , bg_image : item.image ,...item}})}>
+        {({
+            isHovered,
+            isFocused,
+            isPressed
+        }) => {
+            return(
+
+            
+        <VStack w="96%" p = {3} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container}  alignItems="center" justifyContent="center" rounded="full">
         <HStack alignItems="center">
-            <Box w="10%" alignItems="center">
+            <Box w = '10%'>
             <Text fontSize="lg" fontWeight="semibold" color={theme.Text.base}>
                 {index}
             </Text>
             </Box>
-            <Box w="20%" alignItems="center">
+            <Box w="15%" alignItems="center">
             <Box w="50" h="50" bg="gray.200" rounded="full">
-                {isItemZero ? (
+                {!item ? (
                 <Text style={{ width: 50, height: 50, borderRadius: 25 }}></Text>
                 ) : (
                 <Image
@@ -38,14 +49,16 @@ const LeaderItem : React.FC <containerProps> = ({index, item}) => {
             </Box>
             <HStack w="70%" space={3} pl={3} justifyContent="space-between" pr={5}>
             <Text color={theme.Text.base} fontSize="md" fontWeight="normal">
-                {isItemZero ? 'Default Username' : item.username}
+                {!item ? 'Default Username' : item.username}
             </Text>
             <Text color={theme.Text.base} fontSize="md" fontWeight="semibold">
-                {isItemZero ? '0' : item.score}
+                {!item ? '0' : item.score}
             </Text>
             </HStack>
         </HStack>
         </VStack>
+    )}}
+    </Pressable>
     );
 }
 

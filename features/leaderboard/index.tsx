@@ -32,8 +32,7 @@ const Leaderboard: React.FC <pageProps> = () => {
    
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const header = useSelector((state:any) => state.headLeader)
-    const item = useSelector((state:any) => state.itemLeader)
-    const isReduxLoaded = useSelector((state:RootState) =>state.isheadLeader)
+    const itemleader = useSelector((state:any) => state.itemLeader)
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const MAX_HEIGHT  = 410;
@@ -84,11 +83,12 @@ const Leaderboard: React.FC <pageProps> = () => {
             const mainLeaderRef = db.collection('Scores')
             const snapLeader = await mainLeaderRef.get()
             const data = snapLeader.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const headerBoard = data.slice(0,3)
-            const itemBoard = data.slice(3,15)
+            data.sort((a, b) => b.score - a.score);
+            const headerBoard = data.slice(0,3);
+
 
             dispatch(setHeadLeader(headerBoard))
-            dispatch(setItemLeader(itemBoard))
+            dispatch(setItemLeader(data))
         }catch(error){
             console.log("Failed to fetcing leaderboard", error)
         }
@@ -104,6 +104,8 @@ const Leaderboard: React.FC <pageProps> = () => {
 
     
     useEffect(() => {
+        const shouldrefresh = itemleader?.length <= 0 || refreshing
+        if(shouldrefresh)
             fetchLeaderBoard()
     } , [refreshing])
     
@@ -197,9 +199,10 @@ const Leaderboard: React.FC <pageProps> = () => {
                         alignItems={'center'} 
                         space = {3}>
                         
-                            {/* {[0,0,0,0,0,0,0,0,0,].map((item) => 
-                                <LeaderItem item = {item}/>
-                            )} */}
+                            {itemleader.map((item:any , index:number) => 
+                                <LeaderItem key= {index} index = {index + 1} item = {item}/>
+                            )}
+
                         </VStack>
 
 
