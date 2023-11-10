@@ -1,6 +1,9 @@
-#import <RCTAppDelegate.h>
 #import <UIKit/UIKit.h>
+@import UserNotifications;
 
-@interface AppDelegate : RCTAppDelegate
+// change this with extra parameter
+@interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
+
+@property (nonatomic, strong) UIWindow *window;
 
 @end
