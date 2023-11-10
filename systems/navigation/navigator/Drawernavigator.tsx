@@ -58,6 +58,7 @@ const Drawernavigator : React.FC = () => {
   
         dispatch(setProjectDocument({docs :projectkey , id : id}));
       
+        setisLoading(false);
         setRefreshing(false);
     }catch(error){
       console.error('Error fetching document:', error);
@@ -76,8 +77,8 @@ const Drawernavigator : React.FC = () => {
   }
 
   useEffect(() => {
-    const shouldRefresh = refreshing || projectdocument.id !== id;
-  
+    const shouldRefresh = refreshing ||  projectdocument.id !== id;
+
     if (shouldRefresh) {
       getProjectcontent();
     }
