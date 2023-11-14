@@ -58,8 +58,8 @@ const Drawernavigator : React.FC = () => {
   
         dispatch(setProjectDocument({docs :projectkey , id : id}));
       
-        setisLoading(false);
         setRefreshing(false);
+        setisLoading(false)
     }catch(error){
       console.error('Error fetching document:', error);
     }
@@ -80,8 +80,11 @@ const Drawernavigator : React.FC = () => {
     const shouldRefresh = refreshing ||  projectdocument.id !== id;
 
     if (shouldRefresh) {
-      getProjectcontent();
+       getProjectcontent();
+    }else {
+      setisLoading(false)
     }
+  
   },[id , refreshing])
   
   return (

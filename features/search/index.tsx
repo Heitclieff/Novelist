@@ -12,7 +12,7 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import { useRoute } from '@react-navigation/native';
-
+import { MessageConfig } from './assets/config';
 // @Components
 import Userfield from './components/Userfield';
 import Itemfield from './components/Itemfield';
@@ -39,6 +39,8 @@ const Searchpage : React.FC =() => {
      const [searchQuery, setsearchQuery] = useState<string>('');
      const [novelResults ,setNovelResults] = useState<[]>([])
      const [searchResults, setSearchResults] = useState<{}>([]);
+
+     const useraccount = useSelector((state) => state.userData)
      const userdocs = useSelector((state) => state.teams);
      const docID = useSelector((state) => state.content)
 
@@ -88,7 +90,7 @@ const Searchpage : React.FC =() => {
           }
      }
 
-     const UpdatedTeams = async (data:any , ) : Promise<void> => {
+     const UpdatedTeams = async (data:any) : Promise<void> => {
           const updateItem = [
                ...userdocs.teams,
                {
@@ -98,6 +100,7 @@ const Searchpage : React.FC =() => {
                }
           ]
           dispatch(setProjectTeams({teams : updateItem}));
+          sendNotification(data?.message_token);
 
           const timestamp = firestore.FieldValue.serverTimestamp();
           const docRef =  await firestore()
@@ -110,8 +113,45 @@ const Searchpage : React.FC =() => {
                               addAt  : timestamp,
                          })
 
+          
           console.log("docRef ID" , docRef.id)
      }
+
+     const sendNotification = async (token:string) => {
+          if(!token) return
+
+          try{
+               const currentuser = useraccount[0];
+               const response = await fetch(MessageConfig.protocol, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `key=${MessageConfig.server_key}`,
+                    },
+                    body: JSON.stringify({
+                      to : token,
+                      notification: {
+                        title: 'Nobelist',
+                        body: `you have a new invited from ${currentuser.username}.`,
+                        icon : currentuser?.pf_image,
+                      },
+                      data: {
+                        custom_key: MessageConfig.custom_key,
+                        icon : currentuser?.pf_image,
+                        title : `you have a new invited from ${currentuser.username}.`,
+                        type : 'invite',
+                        navigate : "project"
+                      },
+                    }),
+                  });
+                
+                  const data = await response.json();
+                  console.log('Notification Response:', data);
+
+          }catch(error){
+               console.log("Failed to send Notification" , error)
+          }
+        };
 
      useEffect(() => {
         

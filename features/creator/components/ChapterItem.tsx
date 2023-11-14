@@ -43,7 +43,6 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
           settimeago(time);
      },[data])
      
-
   return (
      <Pressable isDisabled = {data?.commits} onPress={() => navigation.navigate('Readcontent',{
           id : data.id,

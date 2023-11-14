@@ -5,14 +5,13 @@ import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimat
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import {LogBox} from 'react-native';
+import {LogBox , AppState, Alert} from 'react-native';
 //@Redux tools
 import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../systems/redux/reducer';
 import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
-
 //@Components
 import Indexheader from './header/Indexheader';
 //@Layouts
@@ -22,6 +21,7 @@ import CollectionsField from './components/Collectionsfield';
 //firebase 
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
+import messaging from '@react-native-firebase/messaging';
 
 const MemorizedIndexnavigation = React.memo(Indexnavigation);
 const MemorizedIndexheaderitem = React.memo(Indexheader);
@@ -42,6 +42,7 @@ const Index : React.FC = () => {
     const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
+    const userdata = useSelector((state) => state.userData);
     
     const getTopNewAndDispatch = async () => {
         try {
@@ -469,16 +470,23 @@ const Index : React.FC = () => {
       }
       const getUserandDispatch = async () => {
         // console.log('test')
-        // await auth().signInWithEmailAndPassword('testData1@gmail.com','testData')
+        // await auth().signInWithEmailAndPassword('testdata1@gmail.com','testData')
         // await auth().signOut()
         let uid = auth().currentUser.uid
+  
         const snapUserData = await db.collection('Users').doc(uid).get()
         // console.log('menu', snapUserData.data())
         let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
+
+
+        if(!userData?.[0].message_token){
+          setupMessageToken(uid);
+        }
         // console.log('redux menu',userData)
         dispatch(setUser(userData))
         getLibraryContent(uid);
         getBookmarks(uid);
+
         
 //         const userDocRef = db.collection('Users').doc(uid)
 //         const bookMarkRef = userDocRef.collection('Bookmark')
@@ -597,6 +605,19 @@ const Index : React.FC = () => {
           return novelDocsMap;
       }
 
+      const setupMessageToken = async (uid:string) => {
+        try{
+          await messaging().registerDeviceForRemoteMessages();
+          const token = await messaging().getToken();
+        
+          await firestore().collection('Users').doc(uid).update({message_token : token});
+        }catch(error){
+          console.log('failed to get Token from device' , error)
+        }
+       
+      }
+
+
       useEffect(() => {
           LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
           // test()
@@ -616,24 +637,64 @@ const Index : React.FC = () => {
         getCategoryAndDispatch();
       })
 
+      useEffect(() => {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      
+          if(AppState.currentState === "active"){
+          
+     
+            if(!userdata?.length > 0) {
+              console.log("Not found Any users.")
+              return
+            }
+           
+            const useritem = userdata[0];
+            const getuser = db.collection('Users').doc(useritem.id);
+            const getNotification = getuser.collection('Notification');
+            const timestamp = firestore.FieldValue.serverTimestamp();
+            
+            const Notify_updated = await getuser.update({notify : firestore.FieldValue.increment(1)})
+            const Notification_insert = await getNotification.add({
+                title : remoteMessage.data?.title,
+                date:  timestamp,
+                type : remoteMessage.data?.type,
+                image : remoteMessage.data?.icon,
+            })
+            
+            dispatch(setUser([{notify : useritem.notify += 1  ,...useritem}]))
+            console.log("Success To Add notification" ,Notification_insert.id)
+            
+          }
+     
+        });
+      
+        return unsubscribe;
+      }, [userdata]);
+
   return (
     <Box bg = {theme.Bg.base} flex = {1} position = 'relative'>
-        <MemorizedIndexnavigation 
-        scrollY={scrollY}
-        leftElement = {
-          <Text
-          fontSize={'2xl'}
-          fontWeight={'bold'}
-          color={theme.Icon.static}
-          >Nobelist
-          </Text>     
-         }
+        
+        {userdata?.length > 0 &&
+          <MemorizedIndexnavigation 
+          scrollY={scrollY}
+          notify = {userdata[0].notify}
+          leftElement = {
+            <Text
+            fontSize={'2xl'}
+            fontWeight={'bold'}
+            color={theme.Icon.static}
+            >Nobelist
+            </Text>     
+          }
 
-         rightElement = {[
-          {icon: <AntdesignIcon name = 'search1' color = {theme.Icon.static} size = {15} /> , navigate : 'Search'} ,
-          {icon: <IonIcon name = 'notifications' color = {theme.Icon.static} size = {15} /> , navigate : 'Notification'}
-        ]}
-        />
+          rightElement = {[
+            {id: 1 , icon: <AntdesignIcon name = 'search1' color = {theme.Icon.static} size = {15} /> , navigate : 'Search'} ,
+            {id: 2 ,icon: <IonIcon name = 'notifications' color = {theme.Icon.static} size = {15} /> , navigate : 'Notification'}
+          ]}
+          />
+        }
+        
         {isReduxLoaded && CollectionTopNew.length > 0 || CollectionTopNew ?
             <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
                 <VStack flex = {1}>

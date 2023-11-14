@@ -14,7 +14,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useToast } from 'native-base';
-
+import { MessageConfig } from '../assets/config';
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'

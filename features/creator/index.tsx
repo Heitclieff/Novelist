@@ -109,6 +109,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
 
   const initailfetchContent = () => {  
+    console.log("INITAIL")
       if(refreshing){
         console.log("DO TIT")
         fetchchaptercontent();  
@@ -135,7 +136,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
 
   useEffect(() => {
     initailfetchContent();
-  },[refreshing])
+  },[refreshing ])
 
   return (
       <Box flex = {1} bg = {theme.Bg.base} position={'relative'}>
