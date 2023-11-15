@@ -296,12 +296,16 @@ const NovelContent : React.FC <Pageprops> = () => {
     const BOTTOM_SPACE = Platform.OS == 'android' ? 70 : 0
 
     const scrollY = useRef(new Animated.Value(0)).current;
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  
-    const handlePresentModalPress = useCallback(() => {
-        bottomSheetModalRef.current?.present();
-    }, []);
+    const bottomSheetModalRef = useRef<BottomSheet>(null);
+    const snapPoints = useMemo(() => ['25%', '70%'], []);
 
+    const handleSheetChange = useCallback((index) => {
+        console.log("handleSheetChange", index);
+      }, []);
+
+      const handlePresentModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.present();
+      }, []);
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
@@ -310,7 +314,7 @@ const NovelContent : React.FC <Pageprops> = () => {
       }, []);
 
   return (
-      <BottomSheetModalProvider>
+        <BottomSheetModalProvider>
           <Box flex={1} bg={theme.Bg.base} position={'relative'}>
               <MemorizedContentnavigation
                   isMarks={isMarks}
@@ -461,13 +465,18 @@ const NovelContent : React.FC <Pageprops> = () => {
                                     chapterdata = {chapterItem} 
                                     handleCommentButton={handlePresentModalPress} />
                               </VStack>
-                              {/* <CommentModal BottomRef={bottomSheetModalRef}></CommentModal> */}
+                             
                           </VStack>
                       </Animated.ScrollView>
                       </Box>
-              }
+              }           
           </Box>
-      </BottomSheetModalProvider>
+        <CommentModal 
+        BottomRef={bottomSheetModalRef} 
+        snapPoints = {snapPoints} 
+        handleSheetChange = {handleSheetChange}
+        />
+    </BottomSheetModalProvider>
   )
 }
 
