@@ -14,21 +14,21 @@ import { TextInput  , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
 import Chapternavigation from '../../components/navigation/Chapternavigation'
 import AlertItem from './components/Alert'
-
+import { MessageConfig } from '../search/assets/config'
+import { useRoute } from '@react-navigation/native'
+import Chapter from '../creator/pages/chapter';
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChapterWriteContent ,setChaptercontent , setprojectCommits } from '../../systems/redux/action'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
-import { useRoute } from '@react-navigation/native'
-
-
-// @Redux tookits
+import sendNotification from '../../services/notificationService'
 
 //@ firebase
 import firestore from '@react-native-firebase/firestore'
-import Chapter from '../creator/pages/chapter';
+import messaging from '@react-native-firebase/messaging';
+import auth from '@react-native-firebase/auth'
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
@@ -48,6 +48,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const useraccount = useSelector((state) => state.userData);
      const projectcommits = useSelector((state) => state.field);
      const contentdocs = useSelector((state) => state.contentdocs);
+     const teamsdocs = useSelector((state) => state.teams);
 
      const [isDraft , setisDraft] = useState<boolean>(status);
      const [Editable, setEditable] = useState<boolean>(false);
@@ -140,8 +141,19 @@ const Readcontent : React.FC <pageProps> = () => {
                dispatch(setChaptercontent({...chapterdocs , content : MergeChapters  , id : chapterdocs.id}))
                dispatch(setprojectCommits({field : ProjectFields }))
 
-               navigation.goBack();
+               // send notification to leader of project.
+               const teamsleader = teamsdocs?.teams.find((doc) => doc.id == doc.owner);
 
+               sendNotification({
+                    token : teamsleader.message_token,
+                    target : teamsleader.id,
+                    body : `${useraccount?.[0].username} has commited from ${title}.`,
+                    icon: useraccount?.[0].pf_image,
+                    type : 'notify',
+                    project : doc_id,
+               });
+
+               navigation.goBack();
                console.log("send Request success" , docRef.id);
           }catch(error){
                console.log("Failed to Send Commit request" , error)
@@ -160,7 +172,23 @@ const Readcontent : React.FC <pageProps> = () => {
                currentchapter['status'] = false;
 
                const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
-               const removecommits = projectcommits.field.filter(commit => commit.commit_id !== commit_id);
+          
+               const { matchingCommits, removecommits } = projectcommits.field.reduce((acc, commit) => {
+                    if (commit.commit_id === commit_id) {
+                      acc.matchingCommits.push(commit);
+                    } else {
+                      acc.removecommits.push(commit);
+                    }
+                    return acc;
+                  }, { matchingCommits: [], removecommits: [] });
+
+
+               if(!matchingCommits?.length > 0 ){
+                    console.log("ERRORL Not founds any Commits in list")
+                    return
+               }
+
+               const ownerCommits = teamsdocs?.teams.find((doc) => doc.id == matchingCommits[0].commit_by);
 
                dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
                dispatch(setprojectCommits({...projectcommits, field : removecommits}))
@@ -171,6 +199,16 @@ const Readcontent : React.FC <pageProps> = () => {
                const getchapters = chapterdocs.snapshotchapter.doc(id);
                await getchapters.update({status : false , commits : false});
                const commitRef = await getcommits.delete();
+ 
+
+               sendNotification({
+                    token : ownerCommits.message_token,
+                    target : ownerCommits.id,
+                    body : `${useraccount?.[0].username} has approved your commited.`,
+                    icon: useraccount?.[0].pf_image,
+                    type : 'notify',
+                    project : doc_id,
+               });
 
                navigation.goBack();
 
@@ -193,8 +231,24 @@ const Readcontent : React.FC <pageProps> = () => {
                currentchapter['commits'] = false;
           
                const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
-               const removecommits = projectcommits.field.filter(commit => commit.commit_id !== commit_id);
-                  
+        
+               const { matchingCommits, removecommits } = projectcommits.field.reduce((acc, commit) => {
+                    if (commit.commit_id === commit_id) {
+                      acc.matchingCommits.push(commit);
+                    } else {
+                      acc.removecommits.push(commit);
+                    }
+                    return acc;
+                  }, { matchingCommits: [], removecommits: [] });
+
+
+               if(!matchingCommits?.length > 0 ){
+                    console.log("ERRORL Not founds any Commits in list")
+                    return
+               }
+
+               const ownerCommits = teamsdocs?.teams.find((doc) => doc.id == matchingCommits[0].commit_by);
+
                dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
                dispatch(setprojectCommits({...projectcommits, field : removecommits}));
 
@@ -204,9 +258,18 @@ const Readcontent : React.FC <pageProps> = () => {
                const getchapters = chapterdocs.snapshotchapter.doc(id);
                await getchapters.update({commits : false});
                const commitRef = await getcommits.delete();
+               
+               sendNotification({
+                    token : ownerCommits.message_token,
+                    target : ownerCommits.id,
+                    body : `${useraccount?.[0].username} has Removed your commited.`,
+                    icon: useraccount?.[0].pf_image,
+                    type : 'notify',
+                    project : doc_id,
+               });
+
 
                navigation.goBack();
-               
                console.log("Remove this request success");
           }catch(error){
                console.log("Failed to Remove this Request." ,error);

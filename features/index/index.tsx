@@ -642,26 +642,34 @@ const Index : React.FC = () => {
           console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
       
           if(AppState.currentState === "active"){
-          
-     
+         
             if(!userdata?.length > 0) {
               console.log("Not found Any users.")
               return
             }
-           
             const useritem = userdata[0];
-            const getuser = db.collection('Users').doc(useritem.id);
+            const id_list = [remoteMessage.data?.target];
+
+            // can change later when we need to send multiple device;
+            const getuser = db.collection('Users').doc(remoteMessage.data?.target);
             const getNotification = getuser.collection('Notification');
             const timestamp = firestore.FieldValue.serverTimestamp();
             
             const Notify_updated = await getuser.update({notify : firestore.FieldValue.increment(1)})
-            const Notification_insert = await getNotification.add({
-                title : remoteMessage.data?.title,
-                date:  timestamp,
-                type : remoteMessage.data?.type,
-                image : remoteMessage.data?.icon,
-            })
+            const Notify_task = {
+              title : remoteMessage.data?.title,
+              date:  timestamp,
+              type : remoteMessage.data?.type,
+              image : remoteMessage.data?.icon,
+              project : remoteMessage.data?.project
+            }
             
+            if(remoteMessage.data?.type === 'follow'){
+              Notify_task['id'] = remoteMessage.data?.id;
+            }
+
+            const Notification_insert = await getNotification.add(Notify_task);
+
             dispatch(setUser([{notify : useritem.notify += 1  ,...useritem}]))
             console.log("Success To Add notification" ,Notification_insert.id)
             

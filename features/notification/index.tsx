@@ -13,6 +13,10 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import Deletebutton from '../../components/button/Deletebutton';
 import { PermissionsAndroid , Platform, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { setProjectContent, setUser } from '../../systems/redux/action';
+import { InviteModal } from './components/modal/invite';
+
+
 // @Redux tookits
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -21,8 +25,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-import { setProjectContent, setUser } from '../../systems/redux/action';
-import { InviteModal } from './components/modal/invite';
 
 const MemorizedNotifyItem = React.memo(NotifyItem);
 
@@ -39,7 +41,7 @@ const Notification : React.FC = () => {
     const navigation = useNavigation();
 
     const [inviteShow ,setInviteShow] = useState<any>({status : false , data : {}});
-
+    const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const requestUserPermission = async () => {
       try{
@@ -157,22 +159,11 @@ const Notification : React.FC = () => {
         console.log("Failed to joining project with id" ,error)
       }
     }
-    // useEffect(() => {
-    //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-    //     console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    
-    //     // เข้าถึง custom data
-    //     const customData = remoteMessage.data.custom_key;
-    //     console.log('Custom Data:', customData);
-    //   });
-    
-    //   return unsubscribe;
-    // }, []);
-
 
     useEffect(() => {
+
       getNotification();
-    },[])
+    },[refreshing])
 
     useEffect(() =>{ 
       checkNotification();
@@ -194,7 +185,7 @@ const Notification : React.FC = () => {
       <HStack space = {2} justifyContent={'center'}>
       </HStack>
       
-          <FlatList>
+          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
             {notificationlist &&
               notificationlist.length > 0 &&    
                   <VStack p = {4} flex = {1}>

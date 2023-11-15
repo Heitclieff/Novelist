@@ -13,9 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import { useRoute } from '@react-navigation/native';
 import { MessageConfig } from './assets/config';
+
 // @Components
 import Userfield from './components/Userfield';
 import Itemfield from './components/Itemfield';
+import sendNotification from '../../services/notificationService';
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
@@ -100,8 +102,20 @@ const Searchpage : React.FC =() => {
                }
           ]
           dispatch(setProjectTeams({teams : updateItem}));
-          sendNotification(data?.message_token);
 
+          if(data?.message_token){
+               sendNotification({
+                    token : data?.message_token,
+                    target : data.id,
+                    body : `you have a new invited from ${useraccount[0]?.username}`,
+                    icon : useraccount[0]?.pf_image,
+                    type : 'invite',
+                    project : docID.id
+               });
+          }else{
+               console.log("ERROR : failed to send notification because target device doesn't have message token.")
+          }
+     
           const timestamp = firestore.FieldValue.serverTimestamp();
           const docRef =  await firestore()
                          .collection('Novels')
@@ -117,41 +131,41 @@ const Searchpage : React.FC =() => {
           console.log("docRef ID" , docRef.id)
      }
 
-     const sendNotification = async (token:string) => {
-          if(!token) return
+     // const sendNotification = async (token:string) => {
+     //      if(!token) return
 
-          try{
-               const currentuser = useraccount[0];
-               const response = await fetch(MessageConfig.protocol, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `key=${MessageConfig.server_key}`,
-                    },
-                    body: JSON.stringify({
-                      to : token,
-                      notification: {
-                        title: 'Nobelist',
-                        body: `you have a new invited from ${currentuser.username}.`,
-                        icon : currentuser?.pf_image,
-                      },
-                      data: {
-                        custom_key: MessageConfig.custom_key,
-                        icon : currentuser?.pf_image,
-                        title : `you have a new invited from ${currentuser.username}.`,
-                        type : 'invite',
-                        navigate : "project"
-                      },
-                    }),
-                  });
+     //      try{
+     //           const currentuser = useraccount[0];
+     //           const response = await fetch(MessageConfig.protocol, {
+     //                method: 'POST',
+     //                headers: {
+     //                  'Content-Type': 'application/json',
+     //                  'Authorization': `key=${MessageConfig.server_key}`,
+     //                },
+     //                body: JSON.stringify({
+     //                  to : token,
+     //                  notification: {
+     //                    title: 'Nobelist',
+     //                    body: `you have a new invited from ${currentuser.username}.`,
+     //                    icon : currentuser?.pf_image,
+     //                  },
+     //                  data: {
+     //                    custom_key: MessageConfig.custom_key,
+     //                    icon : currentuser?.pf_image,
+     //                    title : `you have a new invited from ${currentuser.username}.`,
+     //                    type : 'invite',
+     //                    navigate : "project"
+     //                  },
+     //                }),
+     //              });
                 
-                  const data = await response.json();
-                  console.log('Notification Response:', data);
+     //              const data = await response.json();
+     //              console.log('Notification Response:', data);
 
-          }catch(error){
-               console.log("Failed to send Notification" , error)
-          }
-        };
+     //      }catch(error){
+     //           console.log("Failed to send Notification" , error)
+     //      }
+     //    };
 
      useEffect(() => {
         

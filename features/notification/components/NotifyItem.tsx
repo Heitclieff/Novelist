@@ -13,6 +13,10 @@ import { InviteModal } from './modal/invite'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 
+// @Firestore
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
 interface containerProps {
     data : any
     setInviteShow : any
@@ -24,12 +28,14 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
     const navigation = useNavigation();
 
     const [timeago ,settimeago] = useState('');
-    const saperatedNotificationtype = () => {
+    const saperatedNotificationtype = async () => {
 
         if(!userdata?.length > 0){
           console.log("Not found any user data")
           return
         }
+
+        console.log(data.project)
         if(data.type === 'invite'){
           if(!userdata[0].project?.includes(data.project)){
             setInviteShow({
@@ -39,7 +45,27 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
             return
           } 
           navigation.navigate('CreatorContent',{id : data.project})
-        }  
+        } 
+        
+        if(data.type === 'notify'){
+          navigation.navigate('CreatorContent',{id : data.project})
+        }
+
+        if(data.type === 'follow'){
+          try{
+            const getusers =  await firestore().collection("Users").doc(data.id).get()
+            const usersdoc = getusers.data();
+
+            if(usersdoc){
+              usersdoc['id'] = data.id;
+              navigation.navigate('ProfileStack', {profile : usersdoc})
+            }
+          }catch(error){
+            console.log("ERROR: Faied to connect useraccount to profile",error)
+          }
+        
+          
+        }
     }
 
     const getTimeAgo = (timestamp:any) => {

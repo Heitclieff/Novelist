@@ -31,7 +31,7 @@ import Careersection from './section/Careersection'
 //@Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-
+import sendNotification from '../../services/notificationService'
 
 interface StackProps {
     Profiledata : any
@@ -95,11 +95,16 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     }
     const followPeople = async (follow:boolean) : Promise <void> => {
         try{
+            if(!profileRoute){
+                console.log("ERROR : Failed to following because cannot founds this account");
+                return
+            }
+
             const firebase = firestore().collection('Users');      
             let myfollowlist = {...userdata[0]};
             let intrpeople_increment = currentProfile.follower 
             
-            console.log('follwer', myfollowlist.following)
+            console.log("Current Profile" ,profileRoute)
             if(isfollow){
                 intrpeople_increment -= 1 
                 myfollowlist.following -= 1
@@ -116,9 +121,27 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             setisfollow(!isfollow)
             setCurrentProfile({...currentProfile, follower : intrpeople_increment})
             dispatch(setUser([myfollowlist]))
-            
             const userRef = await firebase.doc(currentProfile.id).update({follower : intrpeople_increment})
             const Myref = await firebase.doc(userdata[0].id).update({following : myfollowlist.following , followlist : myfollowlist.followlist})
+            
+            // Notification
+            if(!isfollow){
+                if(profileRoute.message_token){
+                    sendNotification({
+                        token : profileRoute.message_token,
+                        target : profileRoute.id,
+                        body :`${userdata?.[0].username} start following you`,
+                        icon : userdata?.[0].pf_image,
+                        type : "follow",
+                        project : "profile",
+                        id : userdata?.[0].id,
+                    });
+                    return
+                }
+                console.log("ERROR : Failed to send Notification because target doesn't have message token.")
+                return
+            }
+            
 
         }catch(error){
             console.log("Failed to increment follow" , error);
