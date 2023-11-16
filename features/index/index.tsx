@@ -252,6 +252,14 @@ const Index : React.FC = () => {
                 pending: false,
                 addAt: new Date()
               })
+              // const creatorRef = mainDocRef.collection('Comment')
+              // await creatorRef.add({
+              //   userDoc: userDoc[i],
+              //   pf_image: userImage[i],
+              //   username: userName[i],
+              //   pending: false,
+              //   addAt: new Date()
+              // })
               const chapterdocRef = mainDocRef.collection('Chapters')
               for (let a=0; a<4;a++) {
                 let chapData = {
@@ -430,8 +438,45 @@ const Index : React.FC = () => {
         // mainFollow0.add(followDataUser0);
         // mainFollow1.add(followDataUser1);
         // mainFollow2.add(followDataUser2);
-        const mainScoreRef = db.collection('Scores')
-        const snapScoreDoc = await mainScoreRef.get()
+        callScore();
+        const setLeaderBoard = async () => {
+          const leaderboardEntries = [];
+          const mainLeaderRef = db.collection('Leaderboards')
+          await db.collection("Scores").orderBy("score", "desc").limit(15).get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+              const userId = doc.id;
+              const data = doc.data()
+              const score = data.score;
+              const username = data.username;
+              const image = data.image;
+              const entry = {
+                  score,
+                  username,
+                  image,
+              };
+  
+              leaderboardEntries.push(entry);
+              });
+  
+              // Step 5: Update the Leaderboards collection with the array of entries
+              mainLeaderRef.doc('hww60M4MJqjPkLII0C1E')
+              .set({
+                  leaderboard: leaderboardEntries,
+              })
+              .then(() => {
+                  console.log("Leaderboard updated successfully!");
+              })
+              .catch((error) => {
+                  console.error("Error updating leaderboard:", error);
+              });
+          })
+          .catch((error) => {
+              console.error("Error getting top scores:", error);
+          });
+        }
+        setLeaderBoard();
+        // const mainScoreRef = db.collection('Scores')
+        // const snapScoreDoc = await mainScoreRef.get()
         console.log(snapScoreDoc.docs)
         console.log('Done adding data')
       }
@@ -476,6 +521,10 @@ const Index : React.FC = () => {
             })
             await subDoc.ref.delete();
           });
+          const novelCommentCollectionRef = await novelDoc.ref.collection('Comment').get();
+          novelCommentCollectionRef.forEach(async (subDoc) => {
+            await subDoc.ref.delete();
+          })
           const novelCreatorsCollectionRef = await novelDoc.ref.collection('Creator').get();
           novelCreatorsCollectionRef.forEach(async (subDoc) => {
             await subDoc.ref.delete();
@@ -511,6 +560,9 @@ const Index : React.FC = () => {
             
           });
         }
+        const mainNovelCollection = db.collection('Novels').get()
+        const mainNovelDoc = mainNovelCollection
+        console.log(mainNovelCollection)
         console.log('Done deleting data')
       }
       const getUserandDispatch = async () => {
@@ -651,7 +703,6 @@ const Index : React.FC = () => {
           getMostviewAndDispatch();
           getHotNewAndDispatch();
           getTopNewAndDispatch();
-          // callScore();
         }
       }, [isReduxLoaded]);
 
