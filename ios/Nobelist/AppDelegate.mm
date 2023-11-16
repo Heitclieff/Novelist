@@ -1,38 +1,28 @@
 #import "AppDelegate.h"
 
+#import <Firebase.h>
 #import <React/RCTBundleURLProvider.h>
-#import <React/RCTRootView.h>
-#import <Firebase.h> //Add This Line
-#import "RNFirebaseNotifications.h" //Add This Line
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIRApp configure]; //Add This Line
-  [RNFirebaseNotifications configure];  //Add This Line
-  
-  NSURL *jsCodeLocation;
+  [FIRApp configure];
+  self.moduleName = @"Nobelist";
+  // You can add your custom initial props in the dictionary below.
+  // They will be passed down to the ViewController used by React Native.
+  self.initialProps = @{};
 
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"myfcmapp"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
-  rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
-  [self.window makeKeyAndVisible];
-  [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self]; //Add This Line
-  return YES;
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+#if DEBUG
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 }
 
 @end
