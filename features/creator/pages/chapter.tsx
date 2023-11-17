@@ -50,6 +50,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclose();
+  const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(true);
   
 
@@ -75,7 +76,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     if (!chapterdocs.content) return { draft: [], other: [] };
   
     const document = chapterdocs.content.reduce((acc, item) => {
-      if (item.status === "Draft") {
+      if (item.status) {
         acc.draft.push(item);
       } else {
         acc.other.push(item);
@@ -88,7 +89,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   }, [chapterdocs.content]);
 
   useEffect(() => {
-  }, [separatedChapterdocs])
+  }, [separatedChapterdocs , refreshing])
 
 
   const DeleteChapter = async (id): Promise<void>=> { 
@@ -110,6 +111,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }
   }
 
+
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
@@ -120,7 +122,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       />
 
       <VStack flex={1}>
-        <FlatList>
+        <FlatList setRefreshing = {setRefreshing} refreshing = {refreshing}>
           <Box pl={6} pr={6} mt={5}>
             <Input
               rounded={'full'}
@@ -141,20 +143,30 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
                   <VStack mb={4} space={2}>
                     {separatedChapterdocs.draft.map((item:string , index:number) => {
                       const isVisible = item.access?.includes(useraccount?.[0].id) || projectdocs.owner === useraccount?.[0].id
-                      const isDisable = item.createdBy === useraccount?.[0].id || projectdocs.owner === useraccount?.[0].id
+                      let isDisable = false
 
-        
+                      if(projectdocs.owner !== useraccount?.[0].id){
+                        isDisable = true;
+                      } 
+
+                      else if  (item.createdBy === useraccount?.[0].id){
+                        isDisable = false;
+                      }
+
+                      if (item.commits){
+                        isDisable = true;
+                      }
                       if(isVisible)
                         return(
                           <SwipeListView
                             key = {index}
                             disableRightSwipe
-                            disableLeftSwipe = {!isDisable}
+                            disableLeftSwipe = {isDisable}
                             data={[0]}
                             ItemSeparatorComponent={<Box h='2' />}
                             renderItem={() => {
                               return(
-                                <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                                <ChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
                               )
                             }}
                             renderHiddenItem={() => (<Deletebutton id = {item.id} action = {DeleteChapter}/>)}

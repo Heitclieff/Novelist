@@ -14,6 +14,7 @@ Icon
 
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import Animated, {
      useSharedValue,
@@ -25,10 +26,11 @@ interface AppbarProps {
      scrollY : any
      leftElement : any 
      rightElement : any
+     notify : number
 
 }
 
-const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,rightElement = []}) => {
+const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,rightElement = [] ,notify}) => {
     const theme: any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const animatedNavbarStyle = useAnimatedStyle(() => {
@@ -63,18 +65,30 @@ const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,
                     >   
 
                 {
-                    rightElement.length > 0 && rightElement.map((item: never, index: number) => {
-                        return (
-                            <IconButton
-                            key = {index} 
-                            onPress={() => navigation.navigate(item.navigate)}
-                            size = 'sm'
-                            rounded={'full'}
-                            colorScheme={'cyan'}
-                            icon = {item.icon}
-                            />
-                        );
-                    })
+                rightElement.length > 0 && rightElement.map((item: any) => {
+                    const notifyAlert = item.id == 2  && notify > 0;
+                    // const key = notifyAlert ? 'notify_' + item.id :  item.id;
+
+                    return (
+                    <IconButton
+                        key={item.id}
+                        onPress={() => navigation.navigate(item.navigate)}
+                        size='sm'
+                        rounded='full'
+                        colorScheme='cyan'
+                        icon={notifyAlert ? (
+                        <VStack position='relative' alignItems='center' justifyContent='center' pl = {2} pr = {2}>
+                            <Box position='absolute' zIndex={10} pt={5}>
+                            <Box position='absolute' zIndex={10} minW={2} minH={2} bg='red.500' rounded='full' />
+                            </Box>
+                            <Box position='absolute'>
+                            <IonIcon name='notifications' color={theme.Icon.static} size={15} />
+                            </Box>
+                        </VStack>
+                        ) : item.icon}
+                    />
+                    );
+                })
                 }
                     </HStack>
                 </HStack>

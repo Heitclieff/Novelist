@@ -1,4 +1,4 @@
-import React,{useContext, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import { 
 Box, 
 VStack , 
@@ -16,12 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 
 //@Components
 import { setProjectContent } from '../../systems/redux/action';
+import Rating from './components/Rating';
 import CreateProjectbar from '../components/creater/[container]/CreateProjectbar';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import Centernavigation from '../../components/navigation/Centernavigation';
 
 // @Redux tookits
 import { useSelector , useDispatch } from 'react-redux';
+import { setRating } from '../../systems/redux/action';
 
 //@firestore
 import firestore from '@react-native-firebase/firestore'
@@ -31,9 +33,13 @@ const Createproject : React.FC = () => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
 
+     const [showRating, setShowRating] = useState(false);
+     const [selectRating , setSelectRating] = useState<{}>()
+
      const dispatch = useDispatch();
      const useraccount = useSelector((state) => state.userData);
      const projectprev = useSelector((state) => state.project)
+     const rating = useSelector((state) => state.rates)
 
      const [projectdocs ,setprojectdocs] = useState<{}>({
           title : "",
@@ -48,6 +54,12 @@ const Createproject : React.FC = () => {
           status : false , 
           commit_status : false
      })
+
+     const fetchingRates = async () : Promise <void> => {
+        const getrates =  await firestore().collection('Rates').get();
+        const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
+        dispatch(setRating({rates : ratesdocs}))
+     }
 
      const OnOptionChange = (field:string , value:boolean) => {
           setProjectOption({...projectOption , [field] : value})
@@ -79,6 +91,7 @@ const Createproject : React.FC = () => {
                     like : 0,
                     view : 0,
                     tagDoc : tagDocs,
+                    rating : selectRating?.title,
                     ...projectOption,
                     
                }
@@ -101,11 +114,16 @@ const Createproject : React.FC = () => {
                     docs : [{...createDoc , id : docRef.id} , ...projectprev.docs]
                }));
                console.log("Create Project Success id :" ,docRef.id)
+
+               navigation.goBack();
           }catch(error){
                console.log(`Failed to Create Project : ${projectdocs.title}` , error)
           }
          
      }
+     useEffect(() => {
+          fetchingRates();
+     },[])
      return(
      <VStack flex = {1} bg = {theme.Bg.base}>
           <Centernavigation title = {"Create Project"} transparent = {true} Contentfixed = {false}/>
@@ -178,7 +196,7 @@ const Createproject : React.FC = () => {
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
                                         <IconButton 
                                         size = 'md'
-                               
+                                        onPress={() => setShowRating(true)}
                                         rounded={'full'}
                                         icon = {
                                         <AntdesignIcon
@@ -190,7 +208,12 @@ const Createproject : React.FC = () => {
                               />
                                    </HStack>
                                      
-                                   <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
+                                   {selectRating ?
+                                        <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{selectRating?.title}</Text>
+                                   :
+                                        <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
+                                   }
+                                   
                               </VStack>
                               <VStack mt = {2} space = {2}>
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
@@ -230,9 +253,12 @@ const Createproject : React.FC = () => {
                     </VStack>
                </VStack>
           </FlatList>    
-        
-         
-         
+         <Rating 
+         isOpen={showRating} 
+         onClose = {setShowRating} 
+         isselect = {selectRating}
+         selectRating = {setSelectRating}
+         rating=  {rating?.rates}/>
      </VStack>
   )
 }

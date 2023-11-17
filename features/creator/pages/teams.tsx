@@ -14,7 +14,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useToast } from 'native-base';
-
+import { MessageConfig } from '../assets/config';
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -46,6 +46,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
      const [isDisable , setisDisable] = useState<boolean>(false);
+     const [refreshing , setRefreshing] = useState<boolean>(false);
 
      const separatedAccount = (data:any) => {
           const separateditem = {pending : [] , other : []};
@@ -93,7 +94,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      useEffect(() => {
           initalteams();
           DisableAddmember();
-     },[userdocs.teams])
+     },[userdocs.teams , refreshing])
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
@@ -108,7 +109,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                ]}
           />
          <Box flex = {1}>
-          <FlatList>
+          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
             <Box w= '100%' mt = {2}>
               <Box pl = {6} pr = {6}>
                   <Input 

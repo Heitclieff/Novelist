@@ -1,4 +1,4 @@
-import React ,{FC , useEffect ,lazy , Suspense , useMemo , useContext}from 'react'
+import React ,{FC , useEffect ,lazy , Suspense , useMemo , useContext , useState}from 'react'
 import { 
 Box,
 VStack,
@@ -39,10 +39,12 @@ const Library: React.FC <Pageprops> = () => {
   const theme:any = useContext(ThemeWrapper);
   const myBooks = useSelector((state:any) => state.book);
   const userdata = useSelector((state:any) => state.userData)
+  const [refreshing ,setRefreshing] = useState<boolean>(false);
   const userID = userdata[0]?.id; 
 
   const getLibraryContent = async ():Promise<void> => {
     try {
+      console.log("fetch library")
       // fixed userdata to Object
       const snapshotusers = firestore().collection("Users").doc(userID)
       const getlibrarykeys = await snapshotusers.collection("Library").get();
@@ -61,14 +63,15 @@ const Library: React.FC <Pageprops> = () => {
   };
   
   useEffect(() => {
-    if(!myBooks) getLibraryContent();
-  },[userID])
+    const shouldrefresh = !myBooks || refreshing
+    if(shouldrefresh) getLibraryContent();
+  },[userID , refreshing])
 
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
         <MemorizedElementnavigation title = 'Library'/>
         <Box flex = {1}>
-          <FlatList>
+          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
             <Box w= '100%' mt = {4}>
               <Box pl = {6} pr = {6}>
                   <Input 

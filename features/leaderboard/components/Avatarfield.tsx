@@ -2,7 +2,10 @@ import React,{useContext} from 'react'
 import { 
 Box, 
 VStack,
-Text } from 'native-base';
+Text,
+Pressable,
+} from 'native-base';
+
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { Image } from 'react-native';
 interface containerProps {
@@ -17,6 +20,7 @@ interface containerProps {
 const LeaderAvatarfield : React.FC <containerProps> = ({size , image  = null , username = 'unknown', point = 0 , color , index}) => {
     const theme:any = useContext(ThemeWrapper)
   return (
+
     <VStack space= {1} position = 'relative' alignItems={'center'}>
         <Box w = '25' h = '25' rounded = 'full' bg= {color} position=  'absolute' top = {-5} zIndex={'10'} justifyContent={'center'} alignItems={'center'}>
           <Text fontWeight={'semibold'}>{index}</Text>
@@ -29,7 +33,7 @@ const LeaderAvatarfield : React.FC <containerProps> = ({size , image  = null , u
             <Text color = {theme.Text.base}>{point}</Text>
         </VStack>
     </VStack>
-    
+
   )
 }
 
