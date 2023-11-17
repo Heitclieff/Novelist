@@ -15,7 +15,8 @@ FormControl,
 Input , 
 Divider, 
 VStack, 
-HStack } from 'native-base';
+HStack, 
+IconButton} from 'native-base';
 import {
 View,
 Image,
@@ -28,9 +29,8 @@ BottomSheetModal ,
 BottomSheetTextInput} from '@gorhom/bottom-sheet';
 
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
-import { getuserData } from '../../../systems/redux/action';
-import { FlatList } from '../Flatlist/FlatList';
-
+import { getuserData, setUser } from '../../../systems/redux/action';
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { RootState } from '../../../systems/redux/reducer';
@@ -42,6 +42,10 @@ import Commentfield from '../../field/Commentfield';
 // @Redux Tookits
 import { useDispatch , useSelector } from 'react-redux';
 
+// @Firestore
+import database from '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore'
+
 interface Modalprops {
     BottomRef : any
     snapPoints : any
@@ -50,6 +54,12 @@ interface Modalprops {
 const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleSheetChange}) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const theme:any = useContext(ThemeWrapper)
+    const PROJECT_KEY = '2XtMVba8wK8v4tLIMJFf'
+    const InputRef = useRef(null)
+
+    const [LobbyChat ,setLobbyChat] = useState<any[]>([])
+    const [contentInput , setContentInput] = useState<{}>({content : "" , placeholder : "Enter your comment"});
+    const [currentReply , setCurrentReply] = useState<string>('');
 
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const userdata = useSelector((state:any) => state.userData)
@@ -61,17 +71,123 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
     },[dispatch , isReduxLoaded])
 
 
-    const handleClosePress = useCallback(() => {
-        BottomRef.current?.close();
-      }, []);
-    const handleSheetChanges = useCallback((index: number) => {        
-        console.log('handleSheetChanges', index);
-    }, []);
+    const fetchingChat = () => {
+        const reference = database()
+                        .ref(`/comment/${PROJECT_KEY}`)
+                        .orderByChild('timestamp')
+                        .limitToLast(10)
+        
+        const recivedReference = (snapshot:any) => {
+            setLobbyChat(snapshot.val());
+        };
+        reference.on('value' , recivedReference);
 
-    const handleReturnChange = () => {
-        BottomRef.current?.snapToIndex(1);
+        return () => {
+            reference.off('value' , recivedReference);
+        }
     }
-  
+   
+
+    const  PushingChat = async () => {
+        try{
+            if(!contentInput.content){
+                console.log("Not found any Content of comment.")
+                return
+            }
+
+            const newReference = database().ref(`/comment/${PROJECT_KEY}`).push(); 
+            const docRef = await newReference
+                        .set({
+                            content: contentInput.content ,
+                            like : 0,
+                            reply : "",
+                            userid : userdata?.[0].id, 
+                            timestamp: database.ServerValue.TIMESTAMP
+                        })
+            setContentInput({content : "" , placeholder : "Enter your comment"})
+        }catch(error){
+            console.log("ERROR: Failed to Post this comment" ,error)
+        }
+       
+    }  
+
+    const updatedPostliked = (isLiked:boolean , post:string , reply : string) => {
+        try{
+            // Updated to Realtime database.
+            let path = `/comment/${PROJECT_KEY}/${post}`;
+            
+            if(reply){
+                path += `/reply/${reply}`
+            }
+
+            const newReference =  database().ref(path); 
+            newReference.update({
+                like : database.ServerValue.increment(isLiked ? 1 : -1),
+                timestamp: database.ServerValue.TIMESTAMP,
+            })
+            // Updated to firestore
+            const getusers = firestore().collection("Users").doc(userdata?.[0].id);
+            
+            const Posts = reply ? reply : post
+            let removePost = [];
+           
+            if(!isLiked){
+                removePost =  userdata[0].post_like.filter((prev) => prev !==  Posts)
+            }   
+            const userRef = getusers.update({
+                post_like : isLiked  ? [...userdata?.[0].post_like , Posts] : removePost
+            })
+            
+            dispatch(setUser([{...userdata[0] , post_like  : isLiked ? [ ...userdata[0].post_like , Posts] : removePost}]));
+            console.log("Sucess Updated Post like")
+        }catch(error){
+            console.log("ERROR: Failed to Update this comment" ,error)
+        }  
+    }
+
+
+    const replyCurrentPost = async () =>{
+        try{
+               const newReference =  database().ref(`/comment/${PROJECT_KEY}/${currentReply}`); 
+               const CurrentReference = newReference.child('reply').push();
+               
+               const docRef =  await CurrentReference.set({
+                content: contentInput.content ,
+                like : 0,
+                userid : userdata?.[0].id, 
+                timestamp: database.ServerValue.TIMESTAMP
+               })
+
+               setCurrentReply('')
+               setContentInput({content : "" , placeholder : "Enter your comment"})
+               console.log("Reply Sucesss");
+        }catch(error){
+            console.log("ERROR: Faied to Reply this Post" ,error)
+        }
+    }
+
+    const setReplyInputstatus = (id:string , name:string) => {
+        InputRef.current?.focus()
+     
+        setCurrentReply(id);
+        setContentInput((prev) => ({...prev , placeholder : `Reply ${name}`}))   
+    }
+
+    const SetKeyboardDismiss = () => {
+        if(!contentInput.content){
+            setContentInput({content : "" , placeholder : "Enter your comment"})
+        }
+
+        Keyboard.dismiss();
+    }
+
+    useEffect(() => {
+       const unsubscribe =  fetchingChat();
+
+       return () => {
+        unsubscribe();
+       }
+    }, [])
 
     return (
             <BottomSheetModal
@@ -84,20 +200,32 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                 handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
           
             >
-                
-                <TouchableWithoutFeedback onPress ={Keyboard.dismiss}>
+
+                <TouchableWithoutFeedback  onPress ={SetKeyboardDismiss}>
                 <VStack flex=  {1} space = {2} position={'relative'}>
-                    <BottomSheetFlatList
-                        data={[0,0,0,0,0,0,0]}
-                        contentContainerStyle = {{paddingBottom : BOX_HEIGHT , marginTop : 30 }}
-                        ItemSeparatorComponent={<Box h = {7}></Box>}
-                        // keyExtractor={(i) => i}
-                        renderItem={(item:any , round:number) => {
-                            return(
-                                <Commentfield key = {round}/>
-                            )
-                        }}
-                    />
+                    {LobbyChat &&
+                       
+                            <BottomSheetFlatList
+                            data={Object.keys(LobbyChat)}
+                            contentContainerStyle = {{paddingBottom : BOX_HEIGHT + 40 , marginTop : 30 }}
+                            ItemSeparatorComponent={<Box h = {7}></Box>}
+                            // keyExtractor={(i) => i}
+                            renderItem={(key:any) => {
+                                const chatData = LobbyChat[key.item];
+                                return(
+                                    <Commentfield 
+                                    key = {key.item} 
+                                    id = {key.item}
+                                    data ={chatData} 
+                                    setReplyInputstatus = {setReplyInputstatus}
+                                    updatePostliked = {updatedPostliked}
+                                    />
+                                )
+                            }}
+
+                            />
+                    }         
+             
                         <HStack 
                         w = '100%' 
                         position = "absolute" 
@@ -105,17 +233,42 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                         shadow={1}
                         bg = {theme.Bg.comment}
                         >
+                              
                             <KeyboardAvoidingView 
                             w = '100%' 
-                            
+                            position={'relative'}
+                            alignItems={'center'}
                             behavior={Platform.OS === "ios" ? "padding" : "height"}
                             h={{
                                 base: `${BOX_HEIGHT}px`,
                                 lg: "auto"
                             }}
                             >
+                            {currentReply &&
+                                <Button 
+                                onPress = {() => {setCurrentReply(''); setContentInput((prev) =>({...prev , placeholder : "Enter your comment"}))}}
+                                p = {0}
+                                pl = {2}
+                                pr = {2} 
+                                h = '25' 
+                                bg = 'teal.500'
+                                position = 'absolute' 
+                                top = {-7}
+                                rounded={'full'}
+                                alignItems={'center'}
+                                justifyContent={'center'}
+                                >
+                                <Text color = {'white'} fontSize = 'xs'>Cancle Reply</Text>
+                            </Button>    
+                            }
+                            
+                                   
+                                 
                             <HStack w = '100%' h= '100%' space = {2} alignItems={'center'} justifyContent={'center'} pl = {10} pr = {10}>
+                            
                                 <Box w  = '45' h = '45' rounded = 'full' bg = 'gray.600' overflow= 'hidden'>
+                                {userdata?.length > 0 
+                                    &&
                                     <Image 
                                     source={{uri : userdata?.[0].pf_image}} 
                                     style = {{
@@ -125,23 +278,56 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                                         height : '100%' , 
                                         objectFit :'cover'
                                     }}/>
-                                </Box>  
+                                }
+                                    
+                                </Box>
+                                  
                                 <Box w= '100%' h = {'35'}>
+                                   
                                 <Input 
-                                borderColor={theme.Divider.comment}
-                                rounded = "full"
-                                bg = {theme.Divider.comment}
-                                placeholder="Enter your comment" 
-                                pl = {3} 
-                                w='100%' 
-                                h=  '100%' />
+                                  pl = {3} 
+                                  w='100%' 
+                                  h=  '100%'
+                                  rounded = "full"
+                                   ref={InputRef}
+                                  bg = {theme.Divider.comment}
+                                  color = {theme.Text.base}
+                                  borderColor={theme.Divider.comment}
+                                  placeholder= {contentInput.placeholder}
+                                  value = {contentInput.content}
+                                  onChangeText={(e) => setContentInput((prev) => ({...prev , content : e}))}
+                                  
+                                  InputRightElement={
+                                    contentInput.content &&
+                                      <IconButton 
+                                      onPress={currentReply ? replyCurrentPost : PushingChat} 
+                                     
+                                      colorScheme={'teal'}
+                                      p = {0} 
+                                      rounded = 'full'
+                                      w= {'35'} 
+                                      h = {'full'}
+                                      icon={  
+                                        
+                                        <IonIcon
+                                            size={12}
+                                            color={theme.Icon.base}
+                                            name = "send"
+                                        />
+                                      }
+                                     />
+                                          
+                                      
+                                    
+                                }
+                                />
+
                                 </Box>
                                 
                             </HStack>
                             </KeyboardAvoidingView> 
                             </HStack>
-                    {/* </HStack> */}
-                    
+        
                 </VStack>
                 </TouchableWithoutFeedback>
         </BottomSheetModal>

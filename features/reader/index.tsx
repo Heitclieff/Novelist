@@ -49,7 +49,6 @@ import Tagsection from './section/Tag'
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
-import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen';
 
 interface Pageprops {}
 
