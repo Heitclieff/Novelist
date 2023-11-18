@@ -8,7 +8,6 @@ useToast,
 Text,
 } from 'native-base'
 
-import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { TextInput  , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
@@ -16,7 +15,11 @@ import Chapternavigation from '../../components/navigation/Chapternavigation'
 import AlertItem from './components/Alert'
 import { MessageConfig } from '../search/assets/config'
 import { useRoute } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { AppState, AppStateStatus } from 'react-native';
 import Chapter from '../creator/pages/chapter';
+import { Invitemodal } from '../creator/components/Invitemodal'
+
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChapterWriteContent ,setChaptercontent , setprojectCommits } from '../../systems/redux/action'
@@ -26,8 +29,10 @@ import { AnyAction } from 'redux'
 import sendNotification from '../../services/notificationService'
 
 //@ firebase
+
 import firestore from '@react-native-firebase/firestore'
 import messaging from '@react-native-firebase/messaging';
+import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth'
 
 interface pageProps {}
@@ -40,8 +45,9 @@ const Readcontent : React.FC <pageProps> = () => {
      const dispatch = useDispatch();
      const firebase = firestore();
      const navigation = useNavigation();
+     const isFocused = useIsFocused();
 
-     const {doc_id, id , title , noveltitle ,  chap_id , editable, commitable, commit_id , status} :any = route.params;
+     const {doc_id, id , title , noveltitle ,  chap_id , createdBy ,data, editable, commitable, commit_id , status} :any = route.params;
      
      const chapterdocs = useSelector((state) => state.content);
      const projectdocs = useSelector((state) => state.docs)
@@ -51,6 +57,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const teamsdocs = useSelector((state) => state.teams);
 
      const [isDraft , setisDraft] = useState<boolean>(status);
+     const [showModal, setShowModal] = useState(false);
      const [Editable, setEditable] = useState<boolean>(false);
      const [isEdit ,setisEdit] = useState<boolean>(false);
      const [inputValue ,setinputValue] = useState("");
@@ -80,7 +87,6 @@ const Readcontent : React.FC <pageProps> = () => {
           },
           {text: 'yes', onPress: () => removecommitRequest()},
      ]);
-
 
 
 
@@ -361,9 +367,49 @@ const Readcontent : React.FC <pageProps> = () => {
           })
      }
 
+   
+      const reference = database().ref(`/task/${doc_id}/${id}`)
+          
+      const handleFocusChange = () => {
+          reference.update({during : true})
+      };
+    
+      const handleBlurChange = () => {
+          reference.update({during : false})
+      };
+    
+      const handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (!nextAppState === 'active') {
+          reference.update({during : false})
+        }
+      };
+    
+     //  useEffect(() => {
+     //    if (isFocused) {
+     //      // หน้าได้รับการโฟกัส
+     //      handleFocusChange();
+     //      const unsubscribeBlur = navigation.addListener('blur', handleBlurChange);
+     //      AppState.addEventListener('change', handleAppStateChange);
+    
+     //      return () => {
+     //        // Cleanup
+     //        unsubscribeBlur();
+     //        AppState.removeEventListener('change', handleAppStateChange);
+     //      };
+     //    } else {
+     //      // หน้าไม่ได้รับการโฟกัส
+     //      handleBlurChange();
+     //      AppState.removeEventListener('change', handleAppStateChange);
+     //    }
+     //  }, [isFocused, doc_id, navigation]);
+          
      useEffect(() => {
           initialContent();
       }, [id]);
+
+      
+
+
 
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
@@ -374,6 +420,8 @@ const Readcontent : React.FC <pageProps> = () => {
           event = {updatedContent} 
           chapterstate = {changechapterStatement}
           title = {title}
+          openInvite = {setShowModal}
+          createdBy = {createdBy}
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
           request = {sendcommitsRequest}/>
@@ -440,7 +488,12 @@ const Readcontent : React.FC <pageProps> = () => {
           {/*}*/}
                 
           </FlatList>
-
+     <Invitemodal 
+     data = {data}
+     doc_id = {doc_id}
+     createdBy = {createdBy} 
+     showModal = {showModal} 
+     setShowModal = {setShowModal}/>
     </VStack>
   )
 }

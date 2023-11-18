@@ -460,6 +460,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                               <VStack flex={1} pt={7}>
                                   <Chapterfield  
                                     doc_id = {id}
+                                    comment_status = {novelItem.comment_status}
                                     noveltitle = {novelItem.title} 
                                     chapterdata = {chapterItem} 
                                     handleCommentButton={handlePresentModalPress} />
@@ -473,6 +474,7 @@ const NovelContent : React.FC <Pageprops> = () => {
         <CommentModal 
         BottomRef={bottomSheetModalRef} 
         snapPoints = {snapPoints} 
+        id = {id}
         handleSheetChange = {handleSheetChange}
         />
     </BottomSheetModalProvider>

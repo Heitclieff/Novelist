@@ -18,11 +18,12 @@ interface containerProps {
     data : any;
     doc_id : string;
     handleCommentButton  : any
+    comment_status : boolean
 }
 
 const MemorizedChapterItem = React.memo(ChapterItem)
 
-const Chapterfield : React.FC <containerProps> = ({noveltitle ,chapterdata,doc_id, handleCommentButton}) => {
+const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,chapterdata,doc_id, handleCommentButton}) => {
     const theme:any = useContext(ThemeWrapper);
    
   return (
@@ -31,6 +32,7 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,chapterdata,doc_i
             <HStack justifyContent={'space-between'}  pl = {6}  pr = {6} alignItems={'center'}>
                 <Text color = {theme.Text.base} fontWeight={'semibold'}>Chapter</Text>
                 <IconButton 
+                        isDisabled = {!comment_status}
                         size = 'sm'
                         w = '30'
                         h = {30}

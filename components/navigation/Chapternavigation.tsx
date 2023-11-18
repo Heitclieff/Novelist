@@ -8,12 +8,14 @@ Center,
 Button,
 AlertDialog,
 Divider,
-IconButton
+IconButton,
+Menu,
+Pressable,
 } from 'native-base';
 import { Animated, Alert } from 'react-native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
-
+import { useIsFocused } from '@react-navigation/native';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
@@ -35,11 +37,12 @@ interface contianerProps {
      event: any;
      title: string;
      chapterdocs : any,
+     openInvite : any
      request: any
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, title , commitable ,status , chapterstate,  chapterdocs , request}) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , chapterstate, chapterdocs , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
 
@@ -129,16 +132,39 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit, 
                      
 
                          <HStack alignItems={'center'} space={2}>
-                              <IconButton
+                              {/* <IconButton
                                    size='sm'
                                    rounded={'full'}
-                                   onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
+                                  
                                    icon={
                                         <FeatherIcon
                                              size={20}
                                              color={theme.Icon.base}
                                              name='settings' />}
-                              />
+                              /> */}
+
+                              <Box  alignItems="center" >
+                                   <Menu w="150" bg = {theme.Bg.container} trigger={triggerProps => {
+                                        return <Pressable {...triggerProps}>
+                                             <FeatherIcon
+                                               size={20}
+                                               color={theme.Icon.base}
+                                               name='settings' />
+                                        </Pressable>
+                                   }}>
+                                        <Menu.Item 
+                                        _text={{color : theme.Text.base}}
+                                        onPress = {() => openInvite(true)}
+                                        
+                                        >Invite</Menu.Item>
+                                        <Menu.Item 
+                                        _text={{color : theme.Text.base}}
+                                        onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
+                                        >Settings
+                                        </Menu.Item>
+                                        
+                                   </Menu>
+                              </Box> 
 
                               {
                               status ? 

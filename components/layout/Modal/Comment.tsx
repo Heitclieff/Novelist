@@ -50,11 +50,11 @@ interface Modalprops {
     BottomRef : any
     snapPoints : any
     handleSheetChange : any
+    id : string
  }
-const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleSheetChange}) => {
+const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleSheetChange , id}) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const theme:any = useContext(ThemeWrapper)
-    const PROJECT_KEY = '2XtMVba8wK8v4tLIMJFf'
     const InputRef = useRef(null)
 
     const [LobbyChat ,setLobbyChat] = useState<any[]>([])
@@ -72,18 +72,26 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
 
 
     const fetchingChat = () => {
-        const reference = database()
-                        .ref(`/comment/${PROJECT_KEY}`)
-                        .orderByChild('timestamp')
-                        .limitToLast(10)
-        
-        const recivedReference = (snapshot:any) => {
+        try{
+            const reference = database()
+            .ref(`/comment/${id}`)
+            .orderByChild('timestamp')
+            .limitToLast(10)
+         
+            const recivedReference = (snapshot:any) => {
+               
+            if(!snapshot.exists){
+                return false
+            }
             setLobbyChat(snapshot.val());
-        };
-        reference.on('value' , recivedReference);
+            };
+            reference.on('value' , recivedReference);
 
-        return () => {
-            reference.off('value' , recivedReference);
+            return () => {
+                reference.off('value' , recivedReference);
+            }
+        }catch(error){
+            console.log("ERROR: Failed to fetching Chat data" ,error)
         }
     }
    
@@ -95,7 +103,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                 return
             }
 
-            const newReference = database().ref(`/comment/${PROJECT_KEY}`).push(); 
+            const newReference = database().ref(`/comment/${id}`).push(); 
             const docRef = await newReference
                         .set({
                             content: contentInput.content ,
@@ -114,7 +122,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
     const updatedPostliked = (isLiked:boolean , post:string , reply : string) => {
         try{
             // Updated to Realtime database.
-            let path = `/comment/${PROJECT_KEY}/${post}`;
+            let path = `/comment/${id}/${post}`;
             
             if(reply){
                 path += `/reply/${reply}`
@@ -148,7 +156,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
 
     const replyCurrentPost = async () =>{
         try{
-               const newReference =  database().ref(`/comment/${PROJECT_KEY}/${currentReply}`); 
+               const newReference =  database().ref(`/comment/${id}/${currentReply}`); 
                const CurrentReference = newReference.child('reply').push();
                
                const docRef =  await CurrentReference.set({
@@ -184,6 +192,10 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
     useEffect(() => {
        const unsubscribe =  fetchingChat();
 
+        if(!unsubscribe){
+            console.log("ERROR : Not founds any Project id in Comment list");
+            return
+        }
        return () => {
         unsubscribe();
        }
@@ -203,7 +215,7 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
 
                 <TouchableWithoutFeedback  onPress ={SetKeyboardDismiss}>
                 <VStack flex=  {1} space = {2} position={'relative'}>
-                    {LobbyChat &&
+                    {LobbyChat ?
                        
                             <BottomSheetFlatList
                             data={Object.keys(LobbyChat)}
@@ -222,10 +234,15 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                                     />
                                 )
                             }}
-
                             />
+                        :
+                        <Center mt = {5}>
+                            <Text color = {theme.Text.base}>Don't have any comment right now.</Text>
+                        </Center>
+                        
                     }         
              
+            
                         <HStack 
                         w = '100%' 
                         position = "absolute" 

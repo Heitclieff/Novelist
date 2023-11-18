@@ -19,7 +19,7 @@ import { setChaptercontent } from '../../../systems/redux/action'
 // @Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-
+import database from '@react-native-firebase/database';
 
 interface Pageprops {}
 const CreateChapter : React.FC <Pageprops> = () =>{
@@ -45,6 +45,11 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                 const timestamp = firestore.FieldValue.serverTimestamp();
                 const projectpath = firestore().collection("Novels").doc(doc_id);
                 const chapterpath = projectpath.collection('Chapters');
+
+                const getchapter = await chapterpath.orderBy('chap_id', 'desc').limit(1).get()
+                const chapterDOC = getchapter.docs.map((doc) => doc.data());
+                
+                
                 const currentDate = new Date();
                 const formattedDate = {
                     seconds: Math.floor(currentDate.getTime() / 1000),
@@ -52,11 +57,11 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                 };
 
                 const docAdd = { 
-                    chap_id : "10" ,
+                    chap_id : chapterDOC.length > 0 ? chapterDOC[0].chap_id + 1  : 1,
                     access : [userdata[0].id],
-                    status : "Draft",
+                    status : true ,
                     title : ChapterTitle,
-                    content : '',
+                    commits : false,
                     createdBy : userdata[0].id,
                     updatedBy : userdata[0].id,
                     updatedimg : userdata[0].pf_image,
@@ -65,7 +70,15 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                 const docRef = await chapterpath.add({...docAdd , updateAt : timestamp}); 
                 const contentRef = await chapterpath.doc(docRef.id).collection("Content").add({content : ""})
 
-                console.log(docRef.id)
+                
+               const newReference = database().ref(`/task/${doc_id}`).child(docRef.id); 
+
+               const realtimeRef = await newReference
+                         .set({
+                              during :false
+                    })
+
+               console.log(docRef.id)
                 // Create and Add to firestore and waiting for firestore return key id;
                 dispatch(setChaptercontent(  
                     {
@@ -79,7 +92,15 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                     ] ,
 
                }))
-                navigation.navigate('Readcontent', {doc_id : doc_id , id : docRef.id , title : ChapterTitle , content : '' ,editable : true})
+                navigation.navigate('Readcontent', {
+                    doc_id : doc_id , 
+                    id : docRef.id , 
+                    title : ChapterTitle , 
+                    content : '' ,
+                    editable : true,
+                    status : true,
+                    commitable : false,
+               })
           }catch(error){
                console.log("Failed To Create Chapter ", error);
           }
