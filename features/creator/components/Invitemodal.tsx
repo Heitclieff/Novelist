@@ -33,6 +33,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      
      const userData = useSelector((state) => state.userData);
      const userdocs = useSelector((state) => state.teams);
+     const chapterdocs = useSelector((state) => state.content)
      const [userDisplay , setuserDisplay] = useState<any[]>([]);
 
      const dispatch = useDispatch();
@@ -55,6 +56,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      
      const sendInvitetoselected = () => {
           try{
+               setShowModal(false);
                const getnovel = firebase.collection("Novels").doc(doc_id);
                const getchapter = getnovel.collection("Chapters").doc(data.id)
 
@@ -62,8 +64,12 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                     console.log("Not founds anyone in list");
                     return
                }
-     
                getchapter.update({access : selectedInvite});
+
+               const removechapter =  chapterdocs.content
+               ?.filter((doc) => doc.id !== data.id)
+               .concat({ ...data ,  access : selectedInvite});
+
                dispatch(setChaptercontent({...chapterdocs , content : removechapter}))
 
           }catch(error){
@@ -71,32 +77,28 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
           }
      }
 
-  
+
      const validationAccess = async () => {
           try{
                const chapterRef = await getchapter.get();
                const chapterDOC = chapterRef.data()
             
                if(chapterDOC){
-                    console.log("EXIST DATA");
                     setSelectedInvited(chapterDOC?.access)
                }
-
           }catch(error){
                console.log("ERROR: Failed to get Access users" ,error)
           }
-       
-          
-
      }
      
      useEffect(() => {
           filteruserwithoutPending();
      } , [])
 
+
      useEffect(() => {
           validationAccess();
-     },[])
+     },[showModal])
      
   return (
        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
@@ -117,6 +119,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                               isrenderer &&
                                    <Userfieds 
                                    doc_id = {doc_id} 
+                                   isreload = {showModal}
                                    selectedInvite = {selectedInvite}
                                    setSelectedInvited = {setSelectedInvited}
                                    item = {item} 

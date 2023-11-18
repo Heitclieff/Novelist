@@ -20,7 +20,7 @@ interface containerProps {
      doc_id : string
 }
 
-export const Userfieds : React.FC <containerProps> = ({item ,data , doc_id ,selectedInvite, setSelectedInvited}) => {
+export const Userfieds : React.FC <containerProps> = ({item ,data , isreload,  doc_id ,selectedInvite, setSelectedInvited}) => {
      const theme:any = useContext(ThemeWrapper);
      const firebase = firestore()
      const [isSelected , setisSelected] = useState<boolean>(false);
@@ -31,8 +31,9 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , doc_id ,sele
      const createInvited = (join:boolean) =>{
           try{
                if(isJoined) return
-               
+              
                setisSelected(!isSelected);
+
                let updatedInvited = [];
                if(selectedInvite.length > 0){
                     if(selectedInvite?.find((doc) => doc == item.id)){
@@ -52,19 +53,19 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , doc_id ,sele
      }
 
      useEffect(() => {
-          const isjoin = data.access?.includes(item.id)
+          const isjoin = selectedInvite?.includes(item.id)
           let isSelected = false
           
           if(selectedInvite?.length > 0){
                isSelected =  selectedInvite?.includes(item.id);
+               setisSelected(isSelected);
           }
 
           if(isjoin){
                setisJoined(isjoin);
                setisSelected(true);
           }
-          setSelectedInvited(isSelected);    
-     } , [])
+     } , [isreload])
 
   return (
        <Pressable onPress= {() => createInvited(!isJoined)} >
