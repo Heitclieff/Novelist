@@ -198,7 +198,9 @@ const Index : React.FC = () => {
             description: `descrip ${i+1}`,
             following: 0,
             follower: 0,
-            project: []
+            project: [],
+            notification: 1,
+            message_token: ''
           };
           const mainUserRef = db.collection('Users')
           const mainUserdocRef = mainUserRef.doc(userDoc[i])
@@ -251,6 +253,14 @@ const Index : React.FC = () => {
                 pending: false,
                 addAt: new Date()
               })
+              // const creatorRef = mainDocRef.collection('Comment')
+              // await creatorRef.add({
+              //   userDoc: userDoc[i],
+              //   pf_image: userImage[i],
+              //   username: userName[i],
+              //   pending: false,
+              //   addAt: new Date()
+              // })
               const chapterdocRef = mainDocRef.collection('Chapters')
               for (let a=0; a<4;a++) {
                 let chapData = {
@@ -262,7 +272,8 @@ const Index : React.FC = () => {
                   updateAt: new Date(),
                   createdBy: mainUserdocRef.id,
                   updatedBy: mainUserdocRef.id,
-                  access: [mainUserdocRef.id]
+                  access: [mainUserdocRef.id],
+                  commits: false
                 }
                 await chapterdocRef.add(chapData).then(async(ref) => {
                   const contentDocRef = chapterdocRef.doc(ref.id)
@@ -286,6 +297,14 @@ const Index : React.FC = () => {
                   novelDoc: novelDoc.id,
                   type: libra_type[i%4],
                   date: new Date()
+                })
+                const notiUserRef = mainUserdocRef.collection('Notification')
+                const notiUserdocRef = await notiUserRef.add({
+                    date : new Date(),
+                    image: '',
+                    project: '',
+                    title: 'test noti',
+                    type: 'test'
                 })
               }
               
@@ -340,30 +359,38 @@ const Index : React.FC = () => {
             addAt: new Date()
           })
           const chapterdocRef = mainDocRef.collection('Chapters')
-          for (let a=0; a<4;a++) {
-            if (a%2 ==0) {
-              let chapData = {
-                chap_id: `${a+1}`,
-                title: `Chapter title ${a+1}`,
-                content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
-                image: userImage[0],
-                status: chapter_status[a%2],
-                updateAt: new Date(),
-                updatedBy: userDoc[0]
+          for (let a = 0; a < 4; a++) {
+            const isEven = a % 2 === 0;
+            const imageIndex = isEven ? 0 : 2;
+            const userIndex = isEven ? 0 : 2;
+
+            let chapData = {
+              chap_id: `${a + 1}`,
+              title: `Chapter title ${a + 1}`,
+              image: userImage[imageIndex],
+              status: chapter_status[a % 2],
+              updateAt: new Date(),
+              updatedBy: userDoc[userIndex],
+              commits: true,
+            };
+
+            await chapterdocRef.add(chapData).then(async (ref) => {
+              const contentDocRef = chapterdocRef.doc(ref.id);
+              const contentRef = contentDocRef.collection('Content');
+
+              await contentRef.add({
+                content: `lorem asdpoajpo oajspojfp mem paofn paon ${a + 1}`,
+              });
+              const mainCommitRef = mainDocRef.collection('Commits')
+              let commitData = {
+                chap_Id: `${a + 1}`,
+                id: ref.id,
+                title: `ตอนที่ ${a+1}`,
+                commit_by: userDoc[userIndex],
+                commit_date: new Date()
               }
-              await chapterdocRef.add(chapData)
-            } else {
-              let chapData = {
-                chap_id: `${a+1}`,
-                title: `Chapter title ${a+1}`,
-                content: `lorem asdpoajpo  oajspojfp mem paofn paon ${a+1}`,
-                image: userImage[2],
-                status: chapter_status[a%2],
-                updateAt: new Date(),
-                updatedBy: userDoc[2]
-              }
-              await chapterdocRef.add(chapData)
-            }
+            });
+
           }
         })
         await db.collection('Users').doc(userDoc[0]).update({ following: firestore.FieldValue.increment(1) });
@@ -380,26 +407,77 @@ const Index : React.FC = () => {
         const mainUserdocRef1 = mainUserRef.doc(userDoc[1])
         const mainUserdocRef2 = mainUserRef.doc(userDoc[2])
         
-        const mainFollow0 = mainUserdocRef0.collection('Follows');
-        const mainFollow1 = mainUserdocRef1.collection('Follows');
-        const mainFollow2 = mainUserdocRef2.collection('Follows');
-        const followDataUser0 = {
-          following: [userDoc[2]],
-          follower: [userDoc[1]]
-        };
-        const followDataUser1 = {
-          following: [userDoc[0], userDoc[2]],
-          follower: [userDoc[2]]
-        };
-        const followDataUser2 = {
-          following: [userDoc[1]],
-          follower: [userDoc[0],userDoc[1]]
-        };
-        mainFollow0.add(followDataUser0);
-        mainFollow1.add(followDataUser1);
-        mainFollow2.add(followDataUser2);
-        const mainScoreRef = db.collection('Scores')
-        const snapScoreDoc = await mainScoreRef.get()
+        // const mainFollow0 = mainUserdocRef0.collection('Follows');
+        // const mainFollow1 = mainUserdocRef1.collection('Follows');
+        // const mainFollow2 = mainUserdocRef2.collection('Follows');
+        await mainUserdocRef0.update({
+          followlist: [userDoc[2]],
+          favorite: [],
+        })
+
+        await mainUserdocRef1.update({
+          followlist: [userDoc[0], userDoc[2]],
+          favorite: [],
+        })
+
+        await mainUserdocRef2.update({
+          followlist: [userDoc[1]],
+          favorite: [],
+        })
+        // const followDataUser0 = {
+          
+        //   follower: [userDoc[1]]
+        // };
+        // const followDataUser1 = {
+        //   following: ,
+        //   follower: [userDoc[2]]
+        // };
+        // const followDataUser2 = {
+        //   following: [userDoc[1]],
+        //   follower: [userDoc[0],userDoc[1]]
+        // };
+        // mainFollow0.add(followDataUser0);
+        // mainFollow1.add(followDataUser1);
+        // mainFollow2.add(followDataUser2);
+        callScore();
+        const setLeaderBoard = async () => {
+          const leaderboardEntries = [];
+          const mainLeaderRef = db.collection('Leaderboards')
+          await db.collection("Scores").orderBy("score", "desc").limit(15).get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+              const userId = doc.id;
+              const data = doc.data()
+              const score = data.score;
+              const username = data.username;
+              const image = data.image;
+              const entry = {
+                  score,
+                  username,
+                  image,
+              };
+  
+              leaderboardEntries.push(entry);
+              });
+  
+              // Step 5: Update the Leaderboards collection with the array of entries
+              mainLeaderRef.doc('hww60M4MJqjPkLII0C1E')
+              .set({
+                  leaderboard: leaderboardEntries,
+              })
+              .then(() => {
+                  console.log("Leaderboard updated successfully!");
+              })
+              .catch((error) => {
+                  console.error("Error updating leaderboard:", error);
+              });
+          })
+          .catch((error) => {
+              console.error("Error getting top scores:", error);
+          });
+        }
+        setLeaderBoard();
+        // const mainScoreRef = db.collection('Scores')
+        // const snapScoreDoc = await mainScoreRef.get()
         console.log(snapScoreDoc.docs)
         console.log('Done adding data')
       }
@@ -417,7 +495,10 @@ const Index : React.FC = () => {
           userLibraryCollectionRef.forEach(async (subDoc) => {
             await subDoc.ref.delete();
           });
-
+          const userNotificationCollectionRef = await userDoc.ref.collection('Notification').get();
+          userNotificationCollectionRef.forEach(async (subDoc) => {
+            await subDoc.ref.delete();
+          });
           const userFollowsCollectionRef = await userDoc.ref.collection('Follows').get();
           userFollowsCollectionRef.forEach(async (subDoc) => {
             await subDoc.ref.delete();
@@ -441,8 +522,22 @@ const Index : React.FC = () => {
             })
             await subDoc.ref.delete();
           });
+          const novelCommentCollectionRef = await novelDoc.ref.collection('Comment').get();
+          novelCommentCollectionRef.forEach(async (subDoc) => {
+            await subDoc.ref.delete();
+          })
           const novelCreatorsCollectionRef = await novelDoc.ref.collection('Creator').get();
           novelCreatorsCollectionRef.forEach(async (subDoc) => {
+            await subDoc.ref.delete();
+          });
+          try {
+            await novelDoc.ref.delete()
+          } catch(e) {
+            console.log(e)
+          }
+
+          const novelCommitsCollectionRef = await novelDoc.ref.collection('Commits').get();
+          novelCommitsCollectionRef.forEach(async (subDoc) => {
             await subDoc.ref.delete();
           });
           try {
@@ -466,11 +561,15 @@ const Index : React.FC = () => {
             
           });
         }
+        const mainNovelCollection = db.collection('Novels').get()
+        const mainNovelDoc = mainNovelCollection
+        console.log(mainNovelCollection)
         console.log('Done deleting data')
       }
       const getUserandDispatch = async () => {
         // console.log('test')
-        // await auth().signInWithEmailAndPassword('testdata1@gmail.com','testData')
+
+        // await auth().signInWithEmailAndPassword('testData1@gmail.com','Newpass')
         // await auth().signOut()
         let uid = auth().currentUser.uid
   
@@ -540,11 +639,11 @@ const Index : React.FC = () => {
       const getLibraryContent = async (uid):Promise<T> => {
         try {
           // fixed userdata to Object
-          const snapshotusers = firestore().collection("Users").doc(uid)
+          const snapshotusers = db.collection("Users").doc(uid)
           const getlibrarykeys = await snapshotusers.collection("Library").get();
           const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
 
-          const findingNovels = await firestore().collection("Novels")
+          const findingNovels = await db.collection("Novels")
           .where(firestore.FieldPath.documentId() ,'in', librarykeys)
           .get();
 
@@ -558,7 +657,7 @@ const Index : React.FC = () => {
 
       const getCategoryAndDispatch = async () => {
         try {
-            const getcategory = await firestore().collection('Category').get()
+            const getcategory = await db.collection('Category').get()
             const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
            
             dispatch(setCategory({category : categorydocs}));
@@ -572,7 +671,7 @@ const Index : React.FC = () => {
 
       const getBookmarks = async(uid) :Promise<void> => {
         try{
-          const getuserkeys = firestore().collection('Users').doc(uid);
+          const getuserkeys = db.collection('Users').doc(uid);
           const getbookmarks = await getuserkeys.collection('Bookmark').orderBy('date' ,'desc').get();
     
           const bookmarkKeys = getbookmarks.docs.map(doc => ({id : doc.id , novelDoc : doc.data().novelDoc , date : doc.data().date}))
@@ -597,7 +696,7 @@ const Index : React.FC = () => {
   
       
       const Matchingbookmarks = async (bookmarkKeys:any) : Promise<T> => {
-          const getNovels = await firestore().collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
+          const getNovels = await db.collection('Novels').where(firestore.FieldPath.documentId(), 'in' , bookmarkKeys.map(doc => doc.novelDoc)).get();
           const novelDocs = getNovels.docs.map(doc => ({id:doc.id, ...doc.data()}))
   
           const novelDocsMap = new Map(getNovels?.docs.map(doc => [doc.id , doc]))
@@ -628,6 +727,7 @@ const Index : React.FC = () => {
           getTopNewAndDispatch();
           // callScore();
       }, [refreshing]);
+
 
       useEffect(() => {
         getUserandDispatch();
