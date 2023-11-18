@@ -152,11 +152,15 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                                name='settings' />
                                         </Pressable>
                                    }}>
+                                        {
+                                        status &&
                                         <Menu.Item 
                                         _text={{color : theme.Text.base}}
                                         onPress = {() => openInvite(true)}
-                                        
-                                        >Invite</Menu.Item>
+                      
+                                        >Invite
+                                        </Menu.Item>
+                                        }
                                         <Menu.Item 
                                         _text={{color : theme.Text.base}}
                                         onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}

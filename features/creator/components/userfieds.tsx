@@ -30,14 +30,10 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , doc_id ,sele
 
      const createInvited = (join:boolean) =>{
           try{
-               if(isJoined){
-                    return
-               }
+               if(isJoined) return
+               
                setisSelected(!isSelected);
-             
-           
                let updatedInvited = [];
-
                if(selectedInvite.length > 0){
                     if(selectedInvite?.find((doc) => doc == item.id)){
                          updatedInvited = selectedInvite.filter((doc) => doc !== item.id);
@@ -50,45 +46,24 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , doc_id ,sele
                }
            
                setSelectedInvited(updatedInvited);
-               // setisJoined(join);
-               // const getnovel  = firebase.collection("Novels").doc(doc_id);
-               // const getchapter = getnovel.collection("Chapters").doc(data.id)
-     
-               // let updated = [...data.access];
-               
-               // if(!join){
-               //      updated.filter((doc) => doc !== item.id);
-               // }else{
-               //      updated = [...data?.access , item.id]
-               // }
-
-
-               // console.log(updated)
-               // const removechapter = chapterdocs.content.filter((doc) => doc.id !== data.id).concat({...data , access: updated});
-          
-               // getchapter.update({access : updated});
-
-               // // 
-               // dispatch(setChaptercontent({...chapterdocs , content : removechapter}))
           }catch(error){
                console.log("ERROR: Failed to Create Invitation to this Users." ,error)
           }
      }
 
-
      useEffect(() => {
           const isjoin = data.access?.includes(item.id)
           let isSelected = false
-          if(selectedInvite.length > 0){
+          
+          if(selectedInvite?.length > 0){
                isSelected =  selectedInvite?.includes(item.id);
           }
+
           if(isjoin){
                setisJoined(isjoin);
                setisSelected(true);
           }
-
-          setSelectedInvited(isSelected);
-          
+          setSelectedInvited(isSelected);    
      } , [])
 
   return (

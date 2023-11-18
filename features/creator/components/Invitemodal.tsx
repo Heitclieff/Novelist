@@ -58,7 +58,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                const getnovel = firebase.collection("Novels").doc(doc_id);
                const getchapter = getnovel.collection("Chapters").doc(data.id)
 
-               if(!selectedInvite.length > 0){
+               if(!selectedInvite?.length > 0){
                     console.log("Not founds anyone in list");
                     return
                }
@@ -127,7 +127,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                </VStack>
                  </Modal.Body>
                  <Modal.Footer bg = {theme.Bg.container} borderTopWidth={0}>
-                      {selectedInvite.length > 0 &&
+                      {selectedInvite?.length > 0 &&
                          <Button 
                          w= '100%' 
                          p = {1} 

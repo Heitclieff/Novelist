@@ -487,13 +487,15 @@ const Readcontent : React.FC <pageProps> = () => {
                
           {/*}*/}
                 
-          </FlatList>
-     <Invitemodal 
-     data = {data}
-     doc_id = {doc_id}
-     createdBy = {createdBy} 
-     showModal = {showModal} 
-     setShowModal = {setShowModal}/>
+          </FlatList>    
+     {editable &&
+          <Invitemodal 
+          data = {data}
+          doc_id = {doc_id}
+          createdBy = {createdBy} 
+          showModal = {showModal} 
+          setShowModal = {setShowModal}/>
+     }
     </VStack>
   )
 }
