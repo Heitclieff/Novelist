@@ -118,6 +118,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                          return(
                               isrenderer &&
                                    <Userfieds 
+                                   key = {item.id}
                                    doc_id = {doc_id} 
                                    isreload = {showModal}
                                    selectedInvite = {selectedInvite}

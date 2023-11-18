@@ -5,7 +5,8 @@ VStack ,
 HStack , 
 Icon , 
 Text , 
-Select} from 'native-base';
+Select,
+Center} from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
@@ -68,20 +69,26 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
             rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
      <VStack pl ={6} pt = {5} pr = {6} flex= {1}>
-          <Box w = '100%' h= {8}>
-               <Select h={'100%'} borderColor={theme.Divider.base} bg = {theme.Bg.container} color={theme.Text.base}>
+          <Box w = '100%' h= {5}>
+               {/* <Select h={'100%'} borderColor={theme.Divider.base} bg = {theme.Bg.container} color={theme.Text.base}>
                <Select.Item label="All" value="ux" />
                     <Select.Item label="Chapter 1" value="ux" />
                     <Select.Item label="Chapter 2" value="web" />
                     <Select.Item label="Chapter 3" value="cross" />
-               </Select>
+               </Select> */}
           </Box>
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
                <VStack mt = {5} space = {3}>
-                    {projectcommits.field?.length > 0 &&
+                    {projectcommits.field?.length > 0 ? 
                          projectcommits.field.map((item:any , index:number) =>
                               <MemorizedCommitItem key = {index} data= {item} doc_id=  {id}/>
-                    )}
+                         )
+                    :
+                    <Center>
+                         <Text color = {theme.Text.base}>Nothing to commit righ now.</Text>
+                    </Center>
+                    
+               }
                </VStack>
               
           </FlatList>

@@ -1,4 +1,4 @@
-import React,{useContext, useEffect, useState} from 'react'
+import React,{useContext, useEffect, useRef, useState} from 'react'
 import { 
 Box , 
 VStack , 
@@ -16,7 +16,7 @@ import AlertItem from './components/Alert'
 import { MessageConfig } from '../search/assets/config'
 import { useRoute } from '@react-navigation/native'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState, AppStateStatus , BackHandler  } from 'react-native';
 import Chapter from '../creator/pages/chapter';
 import { Invitemodal } from '../creator/components/Invitemodal'
 
@@ -40,6 +40,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const DOC_ID = "7xV6Am2tw5bII2xsHunR";
      const EDITABLE = true;
      const theme:any = useContext(ThemeWrapper)
+     const appState = useRef(AppState.currentState);
      const toast = useToast();
      const route = useRoute();
      const dispatch = useDispatch();
@@ -370,47 +371,71 @@ const Readcontent : React.FC <pageProps> = () => {
    
       const reference = database().ref(`/task/${doc_id}/${id}`)
           
-      const handleFocusChange = () => {
+    
+      const GoBackwithReference = () => {
+          navigation.goBack();
+          reference.update({during : false})
+      }
+
+      useEffect(() => {
           reference.update({during : true})
-      };
-    
-      const handleBlurChange = () => {
-          reference.update({during : false})
-      };
-    
-      const handleAppStateChange = (nextAppState: AppStateStatus) => {
-        if (!nextAppState === 'active') {
-          reference.update({during : false})
-        }
-      };
-    
-     //  useEffect(() => {
-     //    if (isFocused) {
-     //      // หน้าได้รับการโฟกัส
-     //      handleFocusChange();
-     //      const unsubscribeBlur = navigation.addListener('blur', handleBlurChange);
-     //      AppState.addEventListener('change', handleAppStateChange);
-    
-     //      return () => {
-     //        // Cleanup
-     //        unsubscribeBlur();
-     //        AppState.removeEventListener('change', handleAppStateChange);
-     //      };
-     //    } else {
-     //      // หน้าไม่ได้รับการโฟกัส
-     //      handleBlurChange();
-     //      AppState.removeEventListener('change', handleAppStateChange);
-     //    }
-     //  }, [isFocused, doc_id, navigation]);
-          
+          const subscription = AppState.addEventListener('change', nextAppState => {
+            if (
+              appState.current.match(/inactive|background/) &&
+              nextAppState === 'active'
+            ) {
+              console.log('App has come to the foreground!');
+            }
+
+            if (nextAppState === 'inactive') {
+               console.log('App has gone soon.');
+            }
+      
+
+            appState.current = nextAppState;
+            
+            if(appState.current === 'active'){
+               reference.update({during : true})
+            }else{
+               reference.update({during : false})
+            }
+
+            console.log('AppState', appState.current);
+
+        
+          });
+      
+          return () => {
+            subscription.remove();
+          };
+        }, []);
+
+        useEffect(() => {
+          const backAction = () => {
+            Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
+              {
+                text: 'Cancel',
+                onPress: () => null,
+                style: 'cancel',
+              },
+              {text: 'YES', onPress: () => GoBackwithReference()},
+            ]);
+            return true;
+          };
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+          );
+      
+          return () => backHandler.remove();
+        }, []);
+
      useEffect(() => {
           initialContent();
       }, [id]);
 
-      
-
-
-
+     
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -424,6 +449,7 @@ const Readcontent : React.FC <pageProps> = () => {
           createdBy = {createdBy}
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
+          GoBackwithReference = {GoBackwithReference}
           request = {sendcommitsRequest}/>
           <FlatList>
           {/* {novelItem.length > 0 &&  */}

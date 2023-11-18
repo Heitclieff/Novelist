@@ -21,7 +21,7 @@ import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import Rating from '../../project/components/Rating'
 
 // @Redux Tookits
-import { setProjectContent, setRating } from '../../../systems/redux/action'
+import { setProjectContent, setProjectDocument ,setRating } from '../../../systems/redux/action'
 import { useDispatch , useSelector } from 'react-redux'
 
 
@@ -82,8 +82,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const projectConfigChange = (field:string,target:any) => {
           if(!isEdit) setIsedit(!isEdit);
           
-          Setproject
-          config((prevProjectconfig) => ({
+          Setprojectconfig((prevProjectconfig) => ({
                ...prevProjectconfig,
                [field] : target,
           }))
@@ -91,6 +90,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const handleProjectUpdate = () => {
           try{
+               setIsedit(false);
                const firestoreConfig = {};
                const updateDocument = {...projectdocument};
                for(const key in projectconfig){

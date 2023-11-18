@@ -1,4 +1,4 @@
-import React,{useContext} from 'react'
+import React,{useContext, useState , useEffect} from 'react'
 import { 
 VStack , 
 HStack ,
@@ -10,11 +10,10 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { useNavigation } from '@react-navigation/native'
-import { teamsdata } from '../assets/config'
 
 // @Redux toolkits
 import { useSelector , useDispatch } from 'react-redux'
-import { connect } from 'react-redux'
+
 //@Components
 import Deletebutton from '../../../components/button/Deletebutton'
 import ChapterItem from '../components/ChapterItem'
@@ -27,9 +26,19 @@ interface  containerProps {
 const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
-     const chapterdocs = useSelector((state) => state.content)
+     const chapterdocs = useSelector((state) => state.content);
 
+     const [saperatedChapter , setSaperatedChapter] = useState([]);
 
+     const saperatedChapterWithdraft = () => {
+         const filterchapter = chapterdocs.content?.filter((doc) => doc.status !== true);
+
+         setSaperatedChapter(filterchapter);
+      }
+
+      useEffect(() => {
+         saperatedChapterWithdraft();
+      } , [doc_id])
   return (
      <VStack pl = {5} pr= {5} pt = {5} space = {2}>
           <HStack justifyContent={'space-between'}>
@@ -47,25 +56,32 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
                     }
           />
           </HStack>
-         <SwipeListView 
-            disableRightSwipe
-            disableLeftSwipe = {true}
-            data={chapterdocs.content}
-            ItemSeparatorComponent={<Box h=  '2'/>}
-            renderItem={(item:any , index:number) => {
-               return(              
-                  <MemorizedChapterItem 
-                  key = {item.id}  
-                  data = {item.item}
-                  doc_id = {doc_id}
-               />
-               )
-            }
-            }
-            renderHiddenItem={ (data, rowMap) => (<Deletebutton/>)}
-            leftOpenValue={60}
-            rightOpenValue={-60}
+        {saperatedChapter?.length > 0 &&
+           <SwipeListView
+              disableRightSwipe
+              disableLeftSwipe={true}
+              data={saperatedChapter}
+              ItemSeparatorComponent={<Box h='2' />}
+              renderItem={(item: any, index: number) => {
+                 return (
+
+                    <ChapterItem
+                       key={item.id}
+                       data={item.item}
+                       doc_id={doc_id}
+                    />
+                 )
+              }}
+               
+        renderHiddenItem={(data, rowMap) => {
+           return (
+              <Deletebutton />
+           )
+        }}
+        leftOpenValue={60}
+        rightOpenValue={-60}
          />
+      }
    </VStack>
   )
 }

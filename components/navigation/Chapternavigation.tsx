@@ -12,7 +12,7 @@ IconButton,
 Menu,
 Pressable,
 } from 'native-base';
-import { Animated, Alert } from 'react-native';
+import { Animated, Alert  } from 'react-native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
@@ -39,16 +39,21 @@ interface contianerProps {
      chapterdocs : any,
      openInvite : any
      request: any
+     GoBackwithReference : any
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , chapterstate, chapterdocs , request }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , chapterstate,GoBackwithReference ,chapterdocs , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
 
      const [showAlert, setShowAlert] = useState(false);
      const [chapterheader ,setChapterheader] = useState(title);
 
+     const BackHandler = () => {
+          navigation.goBack()
+
+     }
 
      const SavingAlertDailog = () => 
      Alert.alert('Saving', 'you want to save this progress ?', [
@@ -68,6 +73,18 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
           {text: 'yes', onPress: () => request()},
      ]);
 
+     const backAction = () => {
+          Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            {text: 'YES', onPress: () => GoBackwithReference()},
+          ]);
+          return true;
+        };
+    
 
      const EditingDialogs = () => 
      Alert.alert('Edit', 'you want to edit this progress ?', [
@@ -92,7 +109,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                               <IconButton
                                    size='sm'
                                    rounded={'full'}
-                                   onPress={() => navigation.goBack()}
+                                   onPress={() => backAction()}
                                    icon={
                                         <EntypoIcon
                                              name='chevron-left'
