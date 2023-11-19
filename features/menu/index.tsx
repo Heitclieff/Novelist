@@ -76,9 +76,10 @@ const Menu :React.FC <Pageprops> = () => {
           h = {200}
           justifyContent={'center'}
           >​ 
-            {React.useMemo(() => {
-              return <Memorizeuserfield data = {userdata}/> 
-            }, [userdata])}
+            {
+            userdata?.length > 0 &&
+              <Userfield data = {userdata}/> 
+            }
           </Box>
           <VStack
           id = 'Options-section'

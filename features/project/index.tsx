@@ -68,15 +68,16 @@ const Creator : React.FC <Pageprops> = () => {
             const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
             const projectkey = snapshotprojectkey.data();
 
-            const projectID = projectkey?.project;
-            const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
-            const getProjectDocs = await snapshotproject.get();
-            
-            const projectdocs =  getProjectDocs.docs.map(doc => ({id : doc.id , ...doc.data()}));
-
-            dispatch(setProjectContent({docs : projectdocs}))
-            setDocument(projectdocs);
-
+            if(projectkey?.length > 0){
+                const projectID = projectkey?.project;
+                const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
+                const getProjectDocs = await snapshotproject.get();
+                
+                const projectdocs =  getProjectDocs.docs?.map(doc => ({id : doc.id , ...doc.data()}));
+                dispatch(setProjectContent({docs : projectdocs}))
+                setDocument(projectdocs);
+            }
+    
         }catch(error) {    
             console.error("Error fetching document:", error);
         
@@ -157,69 +158,6 @@ const Creator : React.FC <Pageprops> = () => {
                 </VStack> 
             </FlatList>
         </Box>
-        <Fab 
-        renderInPortal={false} 
-        shadow={2} bg ={'teal.600'} 
-        size="sm" 
-        onPress={() => navigation.navigate('CreateProject')}
-        icon={<AntdesignIcon color="white" name="plus" size= {15} />} />
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        >
-            <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            enablePanDownToClose = {true}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            backgroundStyle = {{backgroundColor : theme.Bg.comment}}
-            handleIndicatorStyle = {{backgroundColor : theme.Indicator.base}}
-            >
-                <VStack flex=  {1} space = {2}>
-                <Box justifyContent={'center'} alignItems={'center'}>
-                        <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Create Project</Text>
-                </Box>
-                <HStack space = {3} p = {4}>
-                        {ProjectType.map((item:any ,index:number) => {
-                            return(
-                                <Pressable flex = {1} key=  {index}  onPress={() => setProjectype(item.type)}>
-                                {({
-                                    isHovered,
-                                    isFocused,
-                                    isPressed
-                                }) => {
-                                    return(
-                                        <Box w= '100%'  h= '50' borderWidth={Projectype == item.type ? 2 : 1} borderColor={Projectype == item.type ? 'teal.600' :theme.Divider.comment} rounded={'full'} justifyContent={'center'} alignItems={'center'}>
-                                            <Text color = {theme.Text.base} fontWeight={'semibold'}>{item.title}</Text>
-                                        </Box>
-                                    )}}
-                                </Pressable>
-                            )
-                        })}
-                    </HStack>
-                <VStack w = '100%' p = {4} space = {5}>
-                    <FormControl mb="5" >
-                        <Text color = {theme.Text.base} fontWeight={'semibold'} pb = {2} >Project Title</Text>
-                        <BottomSheetTextInput 
-                        onSubmitEditing={handleReturnChange}     
-                        placeholder='Enter your Project title'
-                        placeholderTextColor={'#a3a3a3'}
-                        style ={{
-                            width : '100%' , 
-                            height :35, 
-                            borderRadius : 100 ,
-                            color : 'white', 
-                            backgroundColor : theme.Divider.comment , 
-                            paddingLeft : 10}}/>
-                        <FormControl.HelperText>
-                        Give your a Project title.
-                        </FormControl.HelperText>
-                    </FormControl>
-                <Button rounded={'full'} colorScheme={'teal'} onPress={() => {navigation.navigate('CreateProject'); dismiss();}}>Create</Button>
-            </VStack>
-                </VStack>
-        </BottomSheetModal>
-    </KeyboardAvoidingView>
     </VStack>
   )
 }

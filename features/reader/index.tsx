@@ -136,19 +136,20 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
     const findingBookinMylibrary = () => {
-        const findingBooks = myBooks?.book.find((doc) => doc.id === id)?.id
+        const findingBooks = myBooks.book?.find((doc) => doc.id === id)?.id
         if(!findingBooks) return
         setisMyOwn(true);
     }   
 
     const findingBookinMyBookmarks = () => {
-        const findingBookmarks = Mybookmarks?.slot.find((doc) => doc.id === id)?.id
+        
+        const findingBookmarks = Mybookmarks.slot?.find((doc) => doc.id === id)?.id
         if(!findingBookmarks) return
         setisMarks(true);
     }
 
     const findinglikeinMyfavorite = () => {
-        const findinglike = myAccount[0].favorite.includes(id);
+        const findinglike = myAccount[0].favorite?.includes(id);
         if(!findinglike) return
         setisLiked(true);   
     }

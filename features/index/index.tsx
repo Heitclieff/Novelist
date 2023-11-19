@@ -637,14 +637,16 @@ const Index : React.FC = () => {
           const getlibrarykeys = await snapshotusers.collection("Library").get();
           const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
 
-          const findingNovels = await db.collection("Novels")
-          .where(firestore.FieldPath.documentId() ,'in', librarykeys)
-          .get();
-
-          const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
-          dispatch(setMylibrary({book : novelDocs}))
+          if(librarykeys?.length > 0){
+            const findingNovels = await db.collection("Novels")
+            .where(firestore.FieldPath.documentId() ,'in', librarykeys)
+            .get();
+  
+            const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
+            dispatch(setMylibrary({book : novelDocs}))
+          }
         } catch (error) {
-          console.log("fetching Userdata failed" , error)
+          console.log("fetching Library content failed" , error)
         }
       };
 
@@ -669,19 +671,22 @@ const Index : React.FC = () => {
           const getbookmarks = await getuserkeys.collection('Bookmark').orderBy('date' ,'desc').get();
     
           const bookmarkKeys = getbookmarks.docs.map(doc => ({id : doc.id , novelDoc : doc.data().novelDoc , date : doc.data().date}))
-          const novelDocsMap = await Matchingbookmarks(bookmarkKeys);
           
-          const Mybooks = bookmarkKeys.map((bookdoc:any) => {
-            const doc = novelDocsMap.get(bookdoc.novelDoc)?.data();
-            return {
-                docid : bookdoc.id,
-                id : bookdoc.novelDoc,
-                date : bookdoc.date,
-                ...doc
-            }
-          });
-
-          dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
+          if(bookmarkKeys?.length > 0){
+            const novelDocsMap = await Matchingbookmarks(bookmarkKeys);
+            const Mybooks = bookmarkKeys.map((bookdoc:any) => {
+              const doc = novelDocsMap.get(bookdoc.novelDoc)?.data();
+              return {
+                  docid : bookdoc.id,
+                  id : bookdoc.novelDoc,
+                  date : bookdoc.date,
+                  ...doc
+              }
+            });
+  
+            dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
+          }
+        
           
         }catch(error){
           console.log('Failed to fetching Bookmarks', error)
@@ -801,7 +806,7 @@ const Index : React.FC = () => {
             <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
                 <VStack flex = {1}>
                     <MemorizedIndexheaderitem collections={CollectionMostview}/>
-                    <Button onPress = {() => navigation.navigate("Login")}>Login</Button>
+                    
                     <VStack  pl = {3} mt = {4}>
                         <MemorizedCollectionField
                         title="Hot New Novels"
