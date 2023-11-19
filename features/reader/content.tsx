@@ -49,7 +49,9 @@ const Readcontent : React.FC <pageProps> = () => {
      const isFocused = useIsFocused();
 
      const {doc_id, id , title , noveltitle ,  chap_id , createdBy ,data, editable, commitable, commit_id , status} :any = route.params;
-     
+        
+     const reference = database().ref(`/task/${doc_id}/${id}`)
+          
      const chapterdocs = useSelector((state) => state.content);
      const projectdocs = useSelector((state) => state.docs)
      const useraccount = useSelector((state) => state.userData);
@@ -163,8 +165,10 @@ const Readcontent : React.FC <pageProps> = () => {
                navigation.goBack();
                console.log("send Request success" , docRef.id);
           }catch(error){
-               console.log("Failed to Send Commit request" , error)
+               console.log("Failed to Send Commit request" , error);
           }
+
+          reference.update({during : false});
      }
 
 
@@ -285,6 +289,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const changechapterStatement = async() : Promise<void> => {
           try{
+               reference.update({during : true});
                console.log("Chapterdocs",chapterdocs.content)
 
                const currentchapter = chapterdocs.content.find((doc) => doc.id == id);
@@ -368,9 +373,7 @@ const Readcontent : React.FC <pageProps> = () => {
           })
      }
 
-   
-      const reference = database().ref(`/task/${doc_id}/${id}`)
-          
+
     
       const GoBackwithReference = () => {
           navigation.goBack();
@@ -420,7 +423,7 @@ const Readcontent : React.FC <pageProps> = () => {
           if(!editable || !status){
                return
           }
-          
+
           const backAction = () => {
             Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
               {
