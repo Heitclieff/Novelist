@@ -56,6 +56,7 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,ch
                     id={document.id}
                     doc_id = {doc_id}
                     episode ={document.chap_id}
+                    data = {document}
                     noveltitle = {noveltitle}
                     content = {document.content}
                     title={document.title}

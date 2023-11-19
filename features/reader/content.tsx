@@ -95,6 +95,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
 
      const initialContent = async () : Promise <void> => {
+          let setContent = contentdocs.contentdocs;
           if(editable){
                if(status){
                     setEditable(true);
@@ -108,6 +109,7 @@ const Readcontent : React.FC <pageProps> = () => {
           }
        
           if(id){
+               console.log("DOTHIS")
                getnovelContent();
           }      
      }
@@ -325,7 +327,8 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const getnovelContent =  async () : Promise<void> => {
           try{
-               const getchapter =  chapterdocs.snapshotchapter.doc(id)
+               const getnovel =  firebase.collection("Novels").doc(doc_id);
+               const getchapter =  getnovel.collection("Chapters").doc(id);
                const getcontent = await getchapter.collection('Content').get()
                const contentDocs = getcontent.docs?.map(doc =>({id : doc.id ,...doc.data()}));
 

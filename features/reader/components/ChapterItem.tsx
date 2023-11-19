@@ -12,13 +12,14 @@ import { useNavigation } from '@react-navigation/native'
 interface Fieldprops {
     id : number,
     p_id : number | string
+    data : any
     doc_id : string;
     title : string
     noveltitle : string
     content : string;
     timestamp : any;
 }
-const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id ,title, noveltitle,  timestamp , content}) => {
+const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id, data ,title, noveltitle,  timestamp , content}) => {
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
     const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
@@ -28,10 +29,11 @@ const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id ,title, novelt
   
   return (
     <Pressable onPress={() => navigation.navigate('Readcontent',{
-      id,
-      doc_id,
+      id : id,
+      doc_id : doc_id,
+      chap_id : data.chap_id,
       title , 
-      content,
+      data : data,
       noveltitle,
       editable:false,
       })}>
