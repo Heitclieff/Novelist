@@ -84,8 +84,11 @@ const Createproject : React.FC = () => {
           if (result.docs.length > 0) {
                console.log('title exist')
                // alert here
-          } else if (255 < projectdocs.title.length < 6) {
+          } else if (projectdocs.title.length < 6) {
                console.log('minimum title is 6 charactors')
+               // alert here
+          } else if (projectdocs.title.length > 255) {
+               console.log('maximum title is 255 charactors')
                // alert here
           } else {
                OnCreateProject()
