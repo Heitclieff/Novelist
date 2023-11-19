@@ -33,16 +33,16 @@ const Tagsection : React.FC  <containerProps> = ({tag}) => {
   }, [tag])
   return (
     <VStack w= '100%' pl ={6} pt = {5} space = {1}>
-        <Text fontSize={'md'} fontWeight={'semibold'} color = {theme.Text.base}>TAGS</Text>
+        <Text fontSize={'md'} fontWeight={'semibold'} color = {theme.Text.heading}>Tags</Text>
         
-        <HStack space = {2}>
+        <HStack space = {2} mt = {1}>
           {tag?.length > 0 && 
             tagdocs?.map((item:any, index:number) => (
               <Button
                 key={index}
                 rounded={'2xl'}
                 size='xs'
-                colorScheme={'gray'}
+                colorScheme={'teal'}
               >
                 {item.title}
               </Button>

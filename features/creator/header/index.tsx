@@ -85,10 +85,13 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
-          <Text color={theme.Text.base} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
-          <HStack mt = {1}>
-            <Box rounded={'full'} pl = {1} pr = {1} borderColor={theme.Text.description} borderWidth={1}>
-              <Text color={theme.Text.description} fontSize={'xs'}>{data.status ? "Public" : "Private"}</Text>
+          <Text color={theme.Text.heading} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
+          <HStack  pb =  {1} mt = {1} space = {1}>
+            <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!data.status ? "red.500" : "teal.500"} borderWidth={1}>
+              <Text fontSize={'xs'} color =   {!data.status ? "red.500" : "teal.500"} >{data.status ? "Public" : "Private"}</Text>
+            </Box>
+            <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!data.novel_status ? "orange.500" : "teal.500"} borderWidth={1}>
+              <Text  fontSize={'xs'} color = {!data.novel_status ? "orange.500" : "teal.500"} >{data.novel_status ? "Finished" : "Release"}</Text>
             </Box>
           </HStack>
           <HStack mt = {1} space={1} alignItems={'center'}>
@@ -120,7 +123,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
         <Divider mt = {2} bg = {theme.Divider.base}/>
         <VStack pl = {5} pr = {5} space = {1}>
           <HStack justifyContent={'space-between'}>
-            <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
+            <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
           </HStack>
           <Text  color={theme.Text.description}>
             {data.overview}
@@ -133,7 +136,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
                 {Tagdocs.length > 0 &&
                   <>
                   <HStack justifyContent={'space-between'}>
-                    <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
+                    <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
                   
                     <IconButton 
                       onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , handleTagupdate})}
@@ -152,7 +155,13 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
                   <HStack space=  {2}>
                     {Tagdocs.map((item:any,index:number) =>{
                       return(
-                        <Button key = {index} size = 'xs' rounded={'full'} bg = {'gray.700'}>{item.title}</Button>
+                        <Button 
+                        key = {index} 
+                        size = 'xs' 
+                        rounded={'full'}
+                        colorScheme={'teal'}
+                        _text={{fontWeight : 'medium'}}
+                        >{item.title}</Button>
                     )})}  
               </HStack>
               </>
@@ -162,7 +171,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
          
 
         <VStack pl = {5} pr= {5} pt = {2} space = {2} >
-          <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
+          <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
        
           <VStack space=  {2}>
                 <Text color = {theme.Text.description}>{`Date: ${formattedDate.createAt}`}</Text>

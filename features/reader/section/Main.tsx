@@ -38,8 +38,10 @@ const Mainsection : React.FC <containerProps> = ({isLiked ,setisLiked, collectio
                             name={isLiked ? 'heart' : 'hearto'} />}
                 />
                 }
+       
           </HStack>
-          <HStack space={2} alignItems={'center'}>
+
+          <HStack space={2} alignItems={'center'} mt = {1}>
             <HStack space= {1}  alignItems={'center'}>
                 <Text fontSize={'sm'} color={theme.Text.description}>
                     {collection.view}
@@ -64,6 +66,9 @@ const Mainsection : React.FC <containerProps> = ({isLiked ,setisLiked, collectio
                     />
                 </Box>
             </HStack>
+            <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!collection.novel_status ? "orange.500" : "teal.500"} borderWidth={1}>
+              <Text  fontSize={'xs'} color = {!collection.novel_status ? "orange.500" : "teal.500"} >{collection.novel_status ? "Finished" : "Release"}</Text>
+            </Box>
             
           </HStack>
       </Box>

@@ -51,7 +51,10 @@ const Index : React.FC = () => {
 
     const getTopNewAndDispatch = async () => {
         try {
-          const snapshortTop = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get()
+          const snapshortTop = await db.collection('Novels')
+          .orderBy('createAt', 'desc')
+          .limit(10)
+          .get()
           setCollectionTopNew(snapshortTop.docs)
         } catch (error) {
           console.error('Error fetching Top New novels:', error);
@@ -576,6 +579,7 @@ const Index : React.FC = () => {
           // await auth().signOut()
           let uid = auth().currentUser?.uid;
           if(uid){
+            console.log(uid)
             const snapUserData = await db.collection('Users').doc(uid).get()
             let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
             if(!userData?.[0].message_token){

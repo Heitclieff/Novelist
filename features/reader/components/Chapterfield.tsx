@@ -30,7 +30,7 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,ch
     <VStack space = {1} position={'relative'} >
         <Box w = '100%' h = {10}  justifyContent={'center'} >
             <HStack justifyContent={'space-between'}  pl = {6}  pr = {6} alignItems={'center'}>
-                <Text color = {theme.Text.base} fontWeight={'semibold'}>Chapter</Text>
+                <Text fontSize={'md'} color = {theme.Text.heading} fontWeight={'semibold'}>Chapter</Text>
                 <IconButton 
                         isDisabled = {!comment_status}
                         size = 'sm'

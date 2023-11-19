@@ -42,7 +42,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
   return (
      <VStack pl = {5} pr= {5} pt = {5} space = {2}>
           <HStack justifyContent={'space-between'}>
-          <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Chapter</Text>
+          <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Chapter</Text>
           <IconButton 
                     onPress={() => navigation.navigate('Chapters')}
                     size = 'md'

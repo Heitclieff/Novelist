@@ -67,9 +67,8 @@ const Creator : React.FC <Pageprops> = () => {
             const projectCollection = firestore().collection('Novels');
             const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
             const projectkey = snapshotprojectkey.data();
-
-            if(projectkey?.length > 0){
-                const projectID = projectkey?.project;
+            const projectID = projectkey?.project;
+            if(projectID?.length > 0){
                 const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
                 const getProjectDocs = await snapshotproject.get();
                 

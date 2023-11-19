@@ -62,6 +62,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      
           comment_status : projectdocument.comment_status,
           commit_status : projectdocument.commit_status,
+          novel_status : projectdocument.novel_status,
           status : projectdocument.status
      })
 
@@ -264,6 +265,14 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              </VStack>
                                         
                                              <Switch size={'sm'} value = {projectconfig.status} onToggle={(target) => projectConfigChange('status' , target)}/>
+                                        </HStack>
+                                        <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                             <VStack>
+                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Finshed Project</Text>
+                                                  <Text color = {theme.Text.description} fontSize={'xs'}>for finished your project</Text>
+                                             </VStack>
+                                        
+                                             <Switch size={'sm'} value = {projectconfig.novel_status} onToggle={(target) => projectConfigChange('novel_status' , target)}/>
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
                                              <VStack>
