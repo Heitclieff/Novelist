@@ -3,7 +3,6 @@ import { Box , IconButton ,Icon , HStack , Text , Pressable } from 'native-base'
 import { useNavigation } from '@react-navigation/native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
-import { RollInLeft } from 'react-native-reanimated';
 
 interface containerProps {
     title : string

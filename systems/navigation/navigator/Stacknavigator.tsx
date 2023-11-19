@@ -25,7 +25,8 @@ const Createproject = lazy(() => import('../../../features/project/Createproject
 const CreateChapter = lazy(() => import ('../../../features/creator/pages/createchapter'))
 const Tag = lazy(() => import('../../../features/creator/pages/Tag'));
 const Readcontent = lazy(() => import('../../../features/reader/content'));
-
+const Loginpage = lazy(() => import('../../../features/validation/login'));
+const Registerpage = lazy(() => import('../../../features/validation/register'));
 
 interface navigatorProps {
     theme:any
@@ -60,6 +61,30 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             </Suspense>
             }
           </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Login"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Loginpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+
+          <Stack.Screen 
+          name = "Register"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<Box>Loading..</Box>}>
+              <Registerpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
 
           <Stack.Screen 
           name = "Notification"

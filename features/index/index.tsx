@@ -1,6 +1,6 @@
 import React,{useContext , useEffect, useState} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
-import { Box , Text, VStack } from 'native-base';
+import { Box , Text, VStack , Button} from 'native-base';
 import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimated';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
@@ -10,10 +10,13 @@ import {LogBox , AppState, Alert} from 'react-native';
 import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { useNavigation } from '@react-navigation/native';
 import { RootState } from '../../systems/redux/reducer';
 import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
+
+
 //@Layouts
 import { Indexnavigation } from '../../components/navigation/Indexnavigation';
 import CollectionsField from './components/Collectionsfield';
@@ -31,6 +34,7 @@ const Index : React.FC = () => {
     const db = firestore()
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
+    const navigation = useNavigation();
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
@@ -43,7 +47,8 @@ const Index : React.FC = () => {
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const userdata = useSelector((state) => state.userData);
-    
+      
+
     const getTopNewAndDispatch = async () => {
         try {
           const snapshortTop = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get()
@@ -567,37 +572,26 @@ const Index : React.FC = () => {
         console.log('Done deleting data')
       }
       const getUserandDispatch = async () => {
-        // console.log('test')
-
-        // await auth().signInWithEmailAndPassword('testData1@gmail.com','Newpass')
-        // await auth().signOut()
-        let uid = auth().currentUser.uid
-  
-        const snapUserData = await db.collection('Users').doc(uid).get()
-        // console.log('menu', snapUserData.data())
-        let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
-
-
-        if(!userData?.[0].message_token){
-          setupMessageToken(uid);
+        try{
+          // await auth().signOut()
+          let uid = auth().currentUser?.uid;
+          if(uid){
+            const snapUserData = await db.collection('Users').doc(uid).get()
+            let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
+            if(!userData?.[0].message_token){
+              setupMessageToken(uid);
+            }
+            dispatch(setUser(userData))
+            getLibraryContent(uid);
+            getBookmarks(uid);
+            return
+          }
+          navigation.navigate("Login");
+        }catch(error){
+          console.log("Error to get Authentication User" ,error);
         }
-        // console.log('redux menu',userData)
-        dispatch(setUser(userData))
-        getLibraryContent(uid);
-        getBookmarks(uid);
-
+        // await auth().signInWithEmailAndPassword('testData1@gmail.com','Newpass')
         
-//         const userDocRef = db.collection('Users').doc(uid)
-//         const bookMarkRef = userDocRef.collection('Bookmark')
-//         const snapBMdata = await bookMarkRef.get()
-//         const snapbmdatanovel = snapBMdata.docs[0].data()
-//         // console.log(snapbmdatanovel)
-//         const novelDocRef = db.collection('Novels').doc(snapbmdatanovel.novelDoc)
-//         const snapcreatorRef = novelDocRef.collection('Creator')
-//         const snapcreatorData = await snapcreatorRef.get()
-//         const creatorData = snapcreatorData.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-//         const bookMarkdata = snapBMdata.docs.map(doc => ({ id: doc.id, ...doc.data(), creator: creatorData }));
-//         dispatch(setBookmark(bookMarkdata))
       }
       
       const callScore = async () => {
@@ -807,6 +801,7 @@ const Index : React.FC = () => {
             <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
                 <VStack flex = {1}>
                     <MemorizedIndexheaderitem collections={CollectionMostview}/>
+                    <Button onPress = {() => navigation.navigate("Login")}>Login</Button>
                     <VStack  pl = {3} mt = {4}>
                         <MemorizedCollectionField
                         title="Hot New Novels"
