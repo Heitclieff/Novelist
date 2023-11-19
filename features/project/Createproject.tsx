@@ -32,6 +32,7 @@ import auth from '@react-native-firebase/auth'
 const Createproject : React.FC = () => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const db = firestore()
 
      const [showRating, setShowRating] = useState(false);
      const [selectRating , setSelectRating] = useState<{}>()
@@ -46,7 +47,7 @@ const Createproject : React.FC = () => {
           overview : "",
           tagDoc : [],
           cateDoc : [],
-          rating : 'ผู้ใหญ่',
+          rating : '',
      })
      const [projectOption , setProjectOption] = useState({
           comment_status : false , 
@@ -56,7 +57,7 @@ const Createproject : React.FC = () => {
      })
 
      const fetchingRates = async () : Promise <void> => {
-        const getrates =  await firestore().collection('Rates').get();
+        const getrates =  await db.collection('Rates').get();
         const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
         dispatch(setRating({rates : ratesdocs}))
      }
@@ -75,12 +76,34 @@ const Createproject : React.FC = () => {
           return  true
      }
 
-     const OnCreateProject = async() : Promise<void> => {
+     const validAndCreate = async() => {
+          console.log(projectdocs.title)
+          const checkTitle = db.collection('Novels').where('title', '==', projectdocs.title)
+          const result = await checkTitle.get()
+          console.log(result)
+          console.log(result.docs.length)
+          if (result.docs.length > 0) {
+               console.log('title exist')
+               // alert here
+          } else if (projectdocs.title.length < 6) {
+               console.log('minimum title is 6 charactors')
+               // alert here
+          } else if (projectdocs.title.length > 255) {
+               console.log('maximum title is 255 charactors')
+               // alert here
+          } else {
+               OnCreateProject()
+          }
+     }
+
+     const OnCreateProject = async() : Promise<void> => { 
+          // console.log('click create project')
           try{
                const userdocs = useraccount?.[0]
                const timestamp = firestore.FieldValue.serverTimestamp();
-               const getusers = firestore().collection('Users');
-               const getnovel = firestore().collection('Novels')
+               const rating = selectRating?.title || '';
+               const getusers = db.collection('Users');
+               const getnovel = db.collection('Novels')
 
                const tagDocs = projectdocs.tagDoc.map(doc => doc.id)
                const createDoc = {
@@ -92,17 +115,18 @@ const Createproject : React.FC = () => {
                     like : 0,
                     view : 0,
                     tagDoc : tagDocs,
-                    rating : selectRating?.title,
+                    rating : rating,
                     ...projectOption,
                     
                }
 
                const docRef = await getnovel.add({...createDoc});
-               const getChapter =  await getnovel.doc(docRef.id).collection('Chapters');
-               const getCreator =  await getnovel.doc(docRef.id).collection('Creator');
+               const getChapter =  getnovel.doc(docRef.id).collection('Chapters');
+               const getCreator =  getnovel.doc(docRef.id).collection('Creator');
                const getUsers   =  getusers.doc(userdocs.id);
 
-               const UsersRef   = await getUsers.update({project : [...userdocs.project , docRef.id]})
+               // const UsersRef   = await getUsers.update({project : [...userdocs.project , docRef.id]})
+               const UsersRef   = await getUsers.update({project: firestore.FieldValue.arrayUnion(docRef.id)})
                const CreatorRef = await getCreator.add({
                     addAt : timestamp,
                     pending : false,
@@ -250,7 +274,7 @@ const Createproject : React.FC = () => {
                                         <Switch size={'sm'} value = {projectOption.commit_status} isDisabled = {!projectOption.multiproject} onToggle={(event) => OnOptionChange('commit_status' , event)}/>
                                    </HStack> */}
                               </VStack>
-                              <Button rounded={'full'} variant={'outline'} colorScheme={'teal'} borderColor={'teal.600'} onPress={OnCreateProject}>Create</Button>
+                              <Button rounded={'full'} variant={'outline'} colorScheme={'teal'} borderColor={'teal.600'} onPress={validAndCreate}>Create</Button>
                     </VStack>
                </VStack>
           </FlatList>    
