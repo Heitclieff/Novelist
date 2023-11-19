@@ -32,18 +32,21 @@ interface contianerProps {
      commitable : boolean,
      editable: boolean;
      isEdit : boolean,
-     status : booelan,
+     status : boolean,
+     multiproject : boolean
      chapterstate : any,
      event: any;
      title: string;
      chapterdocs : any,
      openInvite : any
+     approveproject : any
      request: any
+
      GoBackwithReference : any
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , chapterstate,GoBackwithReference ,chapterdocs , request }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite  ,approveproject, chapterstate,GoBackwithReference ,chapterdocs , multiproject , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
 
@@ -61,7 +64,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                text: 'Cancel',
                style: 'cancel',
           },
-          {text: 'Save', onPress: () => event()},
+          {text: 'Save', onPress: () =>  event()},
      ]);
 
      const PushingDialogs = () => 
@@ -70,7 +73,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                text: 'No',
                style: 'cancel',
           },
-          {text: 'yes', onPress: () => request()},
+          {text: 'yes', onPress: () =>  multiproject ? request() : approveproject()},
      ]);
 
      const backAction = () => {
@@ -195,9 +198,10 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                               {
                               status ? 
                                    isEdit ?
+                                        
                                         <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
                                         :
-
+                                        
                                         <IconButton
                                         size='sm'
                                         rounded={'full'}

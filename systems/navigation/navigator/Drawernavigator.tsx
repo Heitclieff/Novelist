@@ -119,32 +119,36 @@ const Drawernavigator : React.FC = () => {
                 />
             )}}
           />
+      {projectdocument.docs?.multiproject &&
+          <>
+                <Drawer.Screen name="Commit" 
+                component={Commit} 
+                initialParams={{snapshotcontent , id}}
+                options={{headerShown : false , 
+                  drawerIcon : ({focused , size}) => (
+                    <FeatherIcon
+                      name='git-commit'
+                      size={15}
+                      color = {focused ? theme.Icon.drawer : theme.Icon.base}
+                      />
+                  )}}
+            />
 
-    <Drawer.Screen name="Commit" 
-          component={Commit} 
-          initialParams={{snapshotcontent , id}}
-          options={{headerShown : false , 
-            drawerIcon : ({focused , size}) => (
-              <FeatherIcon
-                name='git-commit'
-                size={15}
-                color = {focused ? theme.Icon.drawer : theme.Icon.base}
-                />
-            )}}
-      />
-
-    <Drawer.Screen name="Teams" 
-        component={Team} 
-        initialParams={{projectdocument : projectdocument.docs}}
-        options={{headerShown : false , 
-          drawerIcon : ({focused , size}) => (
-            <IonIcon
-              name='people'
-              size={15}
-              color = {focused ? theme.Icon.drawer : theme.Icon.base}
-              />
-          )}}
-      />
+            <Drawer.Screen name="Teams" 
+              component={Team} 
+              initialParams={{projectdocument : projectdocument.docs}}
+              options={{headerShown : false , 
+                drawerIcon : ({focused , size}) => (
+                  <IonIcon
+                    name='people'
+                    size={15}
+                    color = {focused ? theme.Icon.drawer : theme.Icon.base}
+                    />
+                )}}
+            />
+          </>
+      }
+   
       <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
         initialParams={{projectdocument : projectdocument.docs, id }}

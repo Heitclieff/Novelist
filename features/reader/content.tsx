@@ -174,52 +174,63 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const approvedcommitRequest = async () : Promise <void> => {
           try{
-               if(!commit_id){
-                    console.log("ERROR: Not founds any Commits id")
-                    return
-               }     
-               const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
-               currentchapter['commits'] = false;
-               currentchapter['status'] = false;
-
-               const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
-          
-               const { matchingCommits, removecommits } = projectcommits.field.reduce((acc, commit) => {
-                    if (commit.commit_id === commit_id) {
-                      acc.matchingCommits.push(commit);
-                    } else {
-                      acc.removecommits.push(commit);
-                    }
-                    return acc;
-                  }, { matchingCommits: [], removecommits: [] });
-
-
-               if(!matchingCommits?.length > 0 ){
-                    console.log("ERRORL Not founds any Commits in list")
-                    return
-               }
-
-               const ownerCommits = teamsdocs?.teams.find((doc) => doc.id == matchingCommits[0].commit_by);
-
-               dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
-               dispatch(setprojectCommits({...projectcommits, field : removecommits}))
-               
                const getnovel =  firebase.collection("Novels").doc(doc_id);
                const getcommits = getnovel.collection("Commits").doc(commit_id);
-           
-               const getchapters = chapterdocs.snapshotchapter.doc(id);
-               await getchapters.update({status : false , commits : false});
-               const commitRef = await getcommits.delete();
- 
+               reference.update({during : false});
 
-               sendNotification({
-                    token : ownerCommits.message_token,
-                    target : ownerCommits.id,
-                    body : `${useraccount?.[0].username} has approved your commited.`,
-                    icon: useraccount?.[0].pf_image,
-                    type : 'notify',
-                    project : doc_id,
-               });
+               if(projectdocs.docs?.multiproject){
+                    if(!commit_id){
+                         console.log("ERROR: Not founds any Commits id")
+                         return
+                    }     
+
+                    const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
+                    currentchapter['commits'] = false;
+                    currentchapter['status'] = false;
+     
+                    const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
+               
+                    const { matchingCommits, removecommits } = projectcommits.field.reduce((acc, commit) => {
+                         if (commit.commit_id === commit_id) {
+                           acc.matchingCommits.push(commit);
+                         } else {
+                           acc.removecommits.push(commit);
+                         }
+                         return acc;
+                       }, { matchingCommits: [], removecommits: [] });
+     
+     
+                    if(!matchingCommits?.length > 0 ){
+                         console.log("ERRORL Not founds any Commits in list")
+                         return
+                    }
+     
+                    const ownerCommits = teamsdocs?.teams.find((doc) => doc.id == matchingCommits[0].commit_by);
+     
+                    dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
+                    dispatch(setprojectCommits({...projectcommits, field : removecommits}))
+                    
+                  
+                    const getchapters = chapterdocs.snapshotchapter.doc(id);
+                    await getchapters.update({status : false , commits : false});
+                    const commitRef = await getcommits.delete();
+      
+     
+                    sendNotification({
+                         token : ownerCommits.message_token,
+                         target : ownerCommits.id,
+                         body : `${useraccount?.[0].username} has approved your commited.`,
+                         icon: useraccount?.[0].pf_image,
+                         type : 'notify',
+                         project : doc_id,
+                    });
+
+               }else{
+                     const getchapters = chapterdocs.snapshotchapter.doc(id);
+                     await getchapters.update({status : false});
+               }
+
+          
 
                navigation.goBack();
 
@@ -448,7 +459,6 @@ const Readcontent : React.FC <pageProps> = () => {
           initialContent();
       }, [id]);
 
-     
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -459,6 +469,8 @@ const Readcontent : React.FC <pageProps> = () => {
           chapterstate = {changechapterStatement}
           title = {title}
           openInvite = {setShowModal}
+          multiproject = {projectdocs.docs?.multiproject}
+          approveproject = {approvedcommitRequest}
           createdBy = {createdBy}
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
