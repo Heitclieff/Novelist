@@ -74,6 +74,11 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
      ]);
 
      const backAction = () => {
+          if(!status){
+               navigation.goBack();
+               return
+          }
+
           Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
             {
               text: 'Cancel',

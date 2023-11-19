@@ -378,6 +378,11 @@ const Readcontent : React.FC <pageProps> = () => {
       }
 
       useEffect(() => {
+
+          if(!editable || !status){
+               return
+          }
+
           reference.update({during : true})
           const subscription = AppState.addEventListener('change', nextAppState => {
             if (
@@ -411,6 +416,11 @@ const Readcontent : React.FC <pageProps> = () => {
         }, []);
 
         useEffect(() => {
+          
+          if(!editable || !status){
+               return
+          }
+          
           const backAction = () => {
             Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
               {
