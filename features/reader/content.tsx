@@ -523,7 +523,6 @@ const Readcontent : React.FC <pageProps> = () => {
                     </VStack>
                     {/* <Button colorScheme={'teal'} onPress = {uploadtoFirestore}>Test Save</Button> */}
                </VStack>
-               
           {/*}*/}
                 
           </FlatList>    

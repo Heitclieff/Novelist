@@ -43,6 +43,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const myproject = useSelector((state) => state.project)
      const projectdocument = useSelector((state) => state.docs.docs);
+     const chapterdocs = useSelector((state) => state.content);
      const userdocs = useSelector((state) => state.userData)
      const rating =  useSelector((state) => state.rates);
 
@@ -81,6 +82,13 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const projectConfigChange = (field:string,target:any) => {
           if(!isEdit) setIsedit(!isEdit);
+
+          if (field === 'status'){
+               if(chapterdocs.content?.length <= 0) {
+                    console.log("cannot updated Because Project need atless 1 chapter.")
+                    return
+               }
+          }
           
           Setprojectconfig((prevProjectconfig) => ({
                ...prevProjectconfig,

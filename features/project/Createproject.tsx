@@ -62,6 +62,7 @@ const Createproject : React.FC = () => {
      }
 
      const OnOptionChange = (field:string , value:boolean) => {
+
           setProjectOption({...projectOption , [field] : value})
      }
 
@@ -232,22 +233,22 @@ const Createproject : React.FC = () => {
                                    
                                         <Switch size={'sm'} value = {projectOption.multiproject} onToggle={(event) => OnOptionChange('multiproject' , event)}/>
                                    </HStack>
-                                   <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                   {/* <HStack alignItems={'center'} justifyContent={'space-between'}>
                                         <VStack>
                                              <Text color={theme.Text.description} fontWeight={'semibold'}>Public Project</Text>
                                              <Text color = {theme.Text.description} fontSize={'xs'}>for people can see your project</Text>
                                         </VStack>
                                    
                                         <Switch size={'sm'} value = {projectOption.status} onToggle={(event) => OnOptionChange('status' , event)}/>
-                                   </HStack>
-                                   <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                   </HStack> */}
+                                   {/* <HStack alignItems={'center'} justifyContent={'space-between'}>
                                         <VStack>
                                              <Text color={theme.Text.description} fontWeight={'semibold'}>Commit</Text>
                                              <Text color = {theme.Text.description} fontSize={'xs'}>for Check your project progress</Text>
                                         </VStack>
                                    
                                         <Switch size={'sm'} value = {projectOption.commit_status} isDisabled = {!projectOption.multiproject} onToggle={(event) => OnOptionChange('commit_status' , event)}/>
-                                   </HStack>
+                                   </HStack> */}
                               </VStack>
                               <Button rounded={'full'} variant={'outline'} colorScheme={'teal'} borderColor={'teal.600'} onPress={OnCreateProject}>Create</Button>
                     </VStack>
