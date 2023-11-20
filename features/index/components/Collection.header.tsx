@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from 'react'
 import { Box, Text, VStack, HStack ,View, theme } from 'native-base'
 import { ImageBackground,Image } from 'react-native'
+
 import { Dimensions } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'

@@ -85,8 +85,8 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
-          <Text color={theme.Text.heading} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
-          <HStack  pb =  {1} mt = {1} space = {1}>
+          <Text color={theme.Text.heading} fontSize={'xl'} fontWeight={'semibold'}>{data.title}</Text>
+          <HStack  pb =  {1} mt = {2} space = {1}>
             <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!data.status ? "red.500" : "teal.500"} borderWidth={1}>
               <Text fontSize={'xs'} color =   {!data.status ? "red.500" : "teal.500"} >{data.status ? "Public" : "Private"}</Text>
             </Box>
@@ -131,7 +131,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
         </VStack>
           {
             data.tagDoc &&
-            <VStack pl = {5} pr= {5} pt = {5} space = {2}>
+            <VStack pl = {5} pr= {5} pt = {3} space = {2}>
               
                 {Tagdocs.length > 0 &&
                   <>

@@ -133,10 +133,10 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
               placeholder='Seacrh your Chapter name'
             />
           </Box>
-          {chapterdocs.content ? 
+          {chapterdocs.content?.length > 0 ? 
             !isLoading ?
             <VStack space={2} m={5} mt={6}>
-              {separatedChapterdocs.draft &&
+              {separatedChapterdocs.draft?.length > 0 &&
                 <>
                   <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
                   <VStack mb={4} space={2}>
@@ -213,7 +213,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
             </Center>
             :
             <Center>
-                <Text color = {theme.Text.base} mt = {10}>No Chapter content.</Text>
+                <Text color = {theme.Text.description} mt = {10} fontSize = 'sm'>Not found chapter content.</Text>
             </Center> 
           }
         </FlatList>

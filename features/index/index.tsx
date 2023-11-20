@@ -594,8 +594,7 @@ const Index : React.FC = () => {
             if(!userData?.[0].message_token){
               setupMessageToken(uid);
             }
-            
-            console.log(userData)
+
             dispatch(setUser(userData))
             getLibraryContent(uid);
             getBookmarks(uid);
@@ -733,16 +732,18 @@ const Index : React.FC = () => {
 
       useEffect(() => {
           LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
-          // test()
-          // allData()
           console.log("Fetching")
           getMostviewAndDispatch();
-          getHotNewAndDispatch();
-          getTopNewAndDispatch();
-          // callScore();
       }, [refreshing]);
 
+      useEffect(() => {
+        getHotNewAndDispatch();
+      } ,[refreshing])
 
+      useEffect(() => {
+        getTopNewAndDispatch();
+      } , [refreshing])
+      
       useEffect(() => {
         getUserandDispatch();
       },[Auth.currentUser])

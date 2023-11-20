@@ -6,7 +6,9 @@ Text ,
 Input, 
 Button,
 useToast,
-HStack} from 'native-base'
+Spinner,
+HStack,
+Center} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation , useRoute } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
@@ -15,6 +17,7 @@ import { Categorydata } from '../../../assets/content/VisualCollectionsdata'
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setTags } from '../../../systems/redux/action'
+import { SpinnerItem } from '../../../components/Spinner'
 import AlertItem from '../../reader/components/Alert'
 //@Components
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
@@ -44,6 +47,7 @@ const Tag: React.FC <Pageprops> = () => {
      
      const [selectedTags , setSelectedTags] = useState<[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
+     const [isLoading , setisLoading] = useState(true);
 
      const fetchingTags =  async () :Promise<void> => {
           console.log("Fetching Tags")
@@ -52,6 +56,8 @@ const Tag: React.FC <Pageprops> = () => {
           
           dispatch(setTags({tags : tagdocs}));
           setCurrentTags();
+
+         
      }
 
      const setCurrentTags = () => {
@@ -71,6 +77,7 @@ const Tag: React.FC <Pageprops> = () => {
           if(Object.keys(tagdocs).length == 0 ){
                fetchingTags();
           }     
+          setisLoading(false);
      }, [])
 
      useEffect(() => { 
@@ -140,19 +147,22 @@ const Tag: React.FC <Pageprops> = () => {
                          </HStack>
                     </VStack>
                     <HStack w = '100%' overflow={'hidden'} space = {2} flexWrap={'wrap'}>
-                         {Object.keys(tagdocs).length > 0 &&
-                              tagdocs.tags.map((item:any , index:number) =>{
-                                   const isFocused = current_tags ? current_tags.some(currentTag => currentTag.id === item.id) : false;
+                         {isLoading ?
+                              <SpinnerItem/>
+                              :
+                              Object.keys(tagdocs).length > 0 &&
+                                   tagdocs.tags.map((item:any , index:number) =>{
+                                        const isFocused = current_tags ? current_tags.some(currentTag => currentTag.id === item.id) : false;
 
-                                   return(
-                                        <TagItem 
-                                        key = {index} 
-                                        id = {item.id} 
-                                        title = {item.title} 
-                                        onAction = {OnTagsAction}
-                                        onFocused = {isFocused}
-                                        />
-                                   )
+                                        return(
+                                             <TagItem 
+                                             key = {index} 
+                                             id = {item.id} 
+                                             title = {item.title} 
+                                             onAction = {OnTagsAction}
+                                             onFocused = {isFocused}
+                                             />
+                                        )
                          })}
                         
                     </HStack>

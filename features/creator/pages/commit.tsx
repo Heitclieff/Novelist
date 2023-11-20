@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 //@Components
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 import CommitItem from '../components/CommitItem';
+import { SpinnerItem } from '../../../components/Spinner';
 
 // @Firestore
 import auth from '@react-native-firebase/auth'
@@ -38,6 +39,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const firebase = firestore();
 
      const [refreshing , setRefreshing] = useState<boolean>(false);
+     const [isLoading , setisLoading] = useState<boolean>(true); 
 
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
@@ -62,6 +64,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
           if(id){ 
                fetchingCommit();
           }
+          setisLoading(false);
      } ,[refreshing])
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
@@ -70,24 +73,26 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
         />
      <VStack pl ={6} pt = {5} pr = {6} flex= {1}>
           <Box w = '100%' h= {5}>
-               {/* <Select h={'100%'} borderColor={theme.Divider.base} bg = {theme.Bg.container} color={theme.Text.base}>
-               <Select.Item label="All" value="ux" />
-                    <Select.Item label="Chapter 1" value="ux" />
-                    <Select.Item label="Chapter 2" value="web" />
-                    <Select.Item label="Chapter 3" value="cross" />
-               </Select> */}
           </Box>
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
                <VStack mt = {5} space = {3}>
-                    {projectcommits.field?.length > 0 ? 
-                         projectcommits.field.map((item:any , index:number) =>
-                              <MemorizedCommitItem key = {index} data= {item} doc_id=  {id}/>
-                         )
+                    {
+                    isLoading ?
+                         <SpinnerItem/>
                     :
-                    <Center>
-                         <Text color = {theme.Text.base}>Nothing to commit righ now.</Text>
-                    </Center>
-                    
+                         projectcommits.field?.length > 0 ? 
+                              projectcommits.field.map((item:any , index:number) =>
+                                   <MemorizedCommitItem 
+                                   key = {index} 
+                                   data= {item} 
+                                   doc_id=  {id}
+                                   />
+                              )
+                         :
+
+                         <Center>
+                              <Text color = {theme.Text.base} fontSize={'xs'}>Nothing to commit right now.</Text>
+                         </Center>   
                }
                </VStack>
               
