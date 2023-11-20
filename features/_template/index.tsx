@@ -43,7 +43,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
   const getDatafromCollection = async() :Promise<void> => {
     try{
       const getpath = firestore().collection(path);
-      const getsnapshot = await getpath.get();
+      const getsnapshot = await getpath.where("status" , '==' ,true).get();
       const getdocs = getsnapshot.docs.map((doc) => ({id : doc.id , ...doc.data()}));
       
       dispatch(setTempleteCache({content : getdocs , path : path}))

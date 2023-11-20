@@ -53,6 +53,7 @@ const Index : React.FC = () => {
     const getTopNewAndDispatch = async () => {
         try {
           const snapshortTop = await db.collection('Novels')
+          .where("status" , '==' ,true)
           .orderBy('createAt', 'desc')
           .limit(10)
           .get()
@@ -64,7 +65,10 @@ const Index : React.FC = () => {
     
       const getHotNewAndDispatch = async () => {
         try {
-          const snapshortHot = await db.collection('Novels').orderBy('createAt', 'desc').limit(10).get();
+          const snapshortHot = await db.collection('Novels')
+          .where("status" , '==' ,true)
+          .orderBy('createAt', 'desc')
+          .limit(10).get();
           setCollectionHotNew(snapshortHot.docs)
           // newestNovels.sort((a, b) => b.view - a.view);
         } catch (error) {
@@ -74,7 +78,11 @@ const Index : React.FC = () => {
       
       const getMostviewAndDispatch = async () => {
         try {
-          const snapshortMost = await db.collection('Novels').orderBy('view', 'desc').limit(10).get();
+          const snapshortMost = await db.collection('Novels')
+          .where("status" , '==' ,true)
+          .orderBy('view', 'desc')
+          .limit(10)
+          .get();
           setCollectionMostview(snapshortMost.docs)
       
         } catch (error) {
