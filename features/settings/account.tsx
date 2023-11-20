@@ -70,7 +70,8 @@ const AccountSettings : React.FC <Pageprops> = () => {
   const Logout = async () => {
     try{
       await auth().signOut()
-      navigation.navigate("Login")
+      navigation.navigate("Index")
+      console.log("Log out success")
     }catch(error){
       console.log("ERROR: faied to sign Out" ,error)
     }

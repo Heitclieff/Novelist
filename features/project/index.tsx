@@ -157,6 +157,13 @@ const Creator : React.FC <Pageprops> = () => {
                 </VStack> 
             </FlatList>
         </Box>
+        <Fab 
+        renderInPortal={false} 
+        shadow={2} 
+        size="sm" 
+        onPress =  {() => navigation.navigate('CreateProject')}
+        colorScheme = {'teal'} 
+        icon={<AntdesignIcon name="plus" color = {"white"}/>} />
     </VStack>
   )
 }

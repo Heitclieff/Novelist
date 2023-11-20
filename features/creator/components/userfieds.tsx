@@ -35,7 +35,7 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , isreload,  d
                setisSelected(!isSelected);
 
                let updatedInvited = [];
-               if(selectedInvite.length > 0){
+               if(selectedInvite?.length > 0){
                     if(selectedInvite?.find((doc) => doc == item.id)){
                          updatedInvited = selectedInvite.filter((doc) => doc !== item.id);
                     }else{
@@ -45,7 +45,6 @@ export const Userfieds : React.FC <containerProps> = ({item ,data , isreload,  d
                else{
                     updatedInvited = [item.id]
                }
-           
                setSelectedInvited(updatedInvited);
           }catch(error){
                console.log("ERROR: Failed to Create Invitation to this Users." ,error)

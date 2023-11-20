@@ -34,7 +34,7 @@ const LoginPage: FC<LoginPageProps> = () => {
       }
 
       auth().signInWithEmailAndPassword(getforms.email, getforms.password).then((target)=>{
-        navigation.navigate("MainStack")
+        navigation.navigate("Index")
         console.log('sign in success' ,target.user.uid)
     }).catch((error)=>{
         console.log('Error"', error)

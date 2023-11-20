@@ -27,6 +27,7 @@ import CreatorAlert from '../components/Alert';
 //@Redux
 import { useSelector , useDispatch } from 'react-redux';
 import { setProjectTeams } from '../../../systems/redux/action';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)
@@ -43,6 +44,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      const userdocs = useSelector((state) => state.teams);
      const useraccount = useSelector((state) => state.userData);
      const projectdocs = useSelector((state) => state.content)
+     const projectkeys =  useSelector((state) => state.docs)
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
      const [isLoading , setisLoading] = useState<boolean>(true)
      const [isDisable , setisDisable] = useState<boolean>(false);
@@ -57,7 +59,6 @@ const Team : React.FC <pageprops> = ({route}) => {
                     separateditem.other.push(item)
                }
           });
-          setisLoading(false);
           setCreators(separateditem);
      }
 
@@ -66,6 +67,44 @@ const Team : React.FC <pageprops> = ({route}) => {
                separatedAccount(userdocs.teams)
           }
      }
+
+     const fetchmemberAccount = async () => {
+          try { 
+               const getnovel =  firestore().collection("Novels").doc(projectdocs.id)
+               const getCreator = await getnovel.collection("Creator").get()
+               const createorDocsData =   getCreator.docs.map((doc) => ({id : doc.id , ...doc.data()}));
+               const creatorDocs = getCreator.docs.map((doc) => doc.data().userDoc);
+               
+  
+               const snapshotuser = await firestore().collection('Users')
+               .where(firestore.FieldPath.documentId() , 'in' ,  creatorDocs)
+               .get();
+      
+               
+               const snapshotuserMap = new Map(snapshotuser?.docs.map(doc => [doc.id, doc]));
+
+               const userdocs = creatorDocs.map((doc_id:string , index:number) => {
+                const doc = snapshotuserMap.get(doc_id)?.data();
+                const pendingdoc = createorDocsData.find((doc) => doc.userDoc === doc_id)
+                  return {
+                      id : doc_id ,
+                      doc_id : projectkeys.docs.creators[index].doc_id,
+                      isleader : projectkeys.docs.owner === doc_id,
+                      owner : projectkeys.docs.owner,
+                      isyou : doc_id === useraccount[0].id,
+                      pending : pendingdoc?.pending,
+                      ...doc
+                    }
+                    });
+     
+               separatedAccount(userdocs)
+               setRefreshing(false);
+           }catch(error) {    
+               console.error("Error fetching document:", error);
+           }
+        }
+
+        
      const DisableAddmember = () => {
           if(userdocs.teams.length >= 3) {
                setisDisable(true);
@@ -91,11 +130,19 @@ const Team : React.FC <pageprops> = ({route}) => {
           }
      }
 
-     useEffect(() => {
-          initalteams();
-          DisableAddmember();
-     },[userdocs.teams , refreshing])
+     useEffect(() => {   
+          if(!refreshing){
+               initalteams();
+               DisableAddmember();
+          }
+     },[userdocs.teams])
 
+     useEffect(() => {
+          if (refreshing){
+               fetchmemberAccount();
+          }
+         
+     } , [refreshing])
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title="Teams"
@@ -128,7 +175,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                     <CreatorAlert/>
                }
                <VStack mb = {4} space = {1}>
-                    {creators.pending.length  > 0 &&
+                    {creators.pending?.length  > 0 &&
                          <>
                          <HStack justifyContent = {'space-between'}>
                               <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>

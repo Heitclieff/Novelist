@@ -95,6 +95,7 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                 navigation.navigate('Readcontent', {
                     doc_id : doc_id , 
                     id : docRef.id , 
+                    data : docAdd,
                     title : ChapterTitle , 
                     content : '' ,
                     editable : true,

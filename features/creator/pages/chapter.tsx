@@ -91,8 +91,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   useEffect(() => {
   }, [separatedChapterdocs , refreshing])
 
-
-  const DeleteChapter = async (id): Promise<void>=> { 
+  const DeleteChapter = async (id:string): Promise<void>=> { 
     try { 
       const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
       const chapterpath = projectpath.collection("Chapters").doc(id);

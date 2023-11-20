@@ -156,7 +156,6 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         setregisterFormsError((prev) => ({...prev , [filed] : error_message}))
         setRegisterFormsStatus((prev) => ({...prev , [filed] : isSecured}))
       }else if (filed === "BirthDate"){
-        console.log("BIRTH DATE")
         Keyboard.dismiss();
         setDatapickerOpen(false);
 
@@ -213,7 +212,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
       };
       
       db.collection('Users').doc(authRef.user.uid).set(Newdata).then(()=>{
-          navigation.navigate("MainStack");
+          navigation.navigate("Index");
           console.log('add document success')
       }).catch((error)=>{
           console.log('Error add document',error)

@@ -32,6 +32,7 @@ const MemorizedCollectionField = React.memo(CollectionsField);
 
 const Index : React.FC = () => {
     const db = firestore()
+    const Auth = auth()
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
     const navigation = useNavigation();
@@ -579,12 +580,14 @@ const Index : React.FC = () => {
           // await auth().signOut()
           let uid = auth().currentUser?.uid;
           if(uid){
-            console.log(uid)
             const snapUserData = await db.collection('Users').doc(uid).get()
+            
             let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
             if(!userData?.[0].message_token){
               setupMessageToken(uid);
             }
+            
+            console.log(userData)
             dispatch(setUser(userData))
             getLibraryContent(uid);
             getBookmarks(uid);
@@ -734,7 +737,7 @@ const Index : React.FC = () => {
 
       useEffect(() => {
         getUserandDispatch();
-      },[])
+      },[Auth.currentUser])
 
       useEffect(() => {
         getCategoryAndDispatch();
