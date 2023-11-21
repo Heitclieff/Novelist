@@ -16,7 +16,7 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import Librarynavigation from '../../components/navigation/Librarynaviation';
 import Elementnavigation from '../../components/navigation/Elementnavigation';
 import Libraryitem from './components/Libraryitem';
-
+import { SpinnerItem } from '../../components/Spinner';
 //@Redux toolkit
 import { useDispatch, useSelector } from 'react-redux';
 // import { getCollectionData , getuserData} from '../../systems/redux/action'
@@ -31,6 +31,7 @@ import auth from '@react-native-firebase/auth'
 interface Pageprops {
 }
 
+
 const MemorizedElementnavigation = React.memo(Elementnavigation)
 const MemorizedLibraryitem = React.memo(Libraryitem)
 
@@ -40,6 +41,7 @@ const Library: React.FC <Pageprops> = () => {
   const myBooks = useSelector((state:any) => state.book);
   const userdata = useSelector((state:any) => state.userData)
   const [refreshing ,setRefreshing] = useState<boolean>(false);
+  const [isLoading ,setLoading] = useState<boolean>(true);
   const userID = userdata[0]?.id; 
 
   const getLibraryContent = async ():Promise<void> => {
@@ -65,36 +67,44 @@ const Library: React.FC <Pageprops> = () => {
   useEffect(() => {
     const shouldrefresh = !myBooks || refreshing
     if(shouldrefresh) getLibraryContent();
+    setLoading(false);
   },[userID , refreshing])
 
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
         <MemorizedElementnavigation title = 'Library'/>
         <Box flex = {1}>
-          <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
-            <Box w= '100%' mt = {4}>
-              <Box pl = {6} pr = {6}>
-                  <Input 
-                  rounded={'full'} 
-                  bg = {theme.Bg.container} 
-                  borderColor={theme.Bg.comment} 
-                  color={theme.Text.base}
-                  h  = {9}
-                  InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
-                  placeholder='Enter your library Novel'
-                  />
-              </Box> 
+          {isLoading ?
+            <Box mt = {10}>
+              <SpinnerItem/>
             </Box> 
-            <VStack space = {1} m ={5} mt = {6}>
-              {myBooks && 
-                myBooks.book?.length > 0 ?
-                      myBooks.book.map((item:any , index:number) => (       
-                          <MemorizedLibraryitem key = {index} id = {item.id} data= {item}/>        
-                          )) 
-                      : <Text color = {theme.Text.base}>No data</Text>
-                  }
-            </VStack>
+            :
+            <FlatList refreshing={refreshing} setRefreshing={setRefreshing}>
+              <Box w='100%' mt={4}>
+                <Box pl={6} pr={6}>
+                  <Input
+                    rounded={'full'}
+                    bg={theme.Bg.container}
+                    borderColor={theme.Bg.comment}
+                    color={theme.Text.base}
+                    h={9}
+                    InputRightElement={<Icon as={<EvilIcon name='search' />} size={5} mr={2} />}
+                    placeholder='Enter your library Novel'
+                  />
+                </Box>
+              </Box>
+              <VStack space={1} m={5} mt={6}>
+                {myBooks &&
+                  myBooks.book?.length > 0 ?
+                  myBooks.book.map((item: any, index: number) => (
+                    <MemorizedLibraryitem key={index} id={item.id} data={item} />
+                  ))
+                  : <Text color={theme.Text.base}>No data</Text>
+                }
+              </VStack>
             </FlatList>
+        }
+          
         </Box>
     </VStack>
   )

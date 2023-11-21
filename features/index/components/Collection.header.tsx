@@ -10,12 +10,14 @@ import { Pressable } from 'native-base'
 import Animated from 'react-native-reanimated'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient'
+import { HeaderSkelton } from '../../../components/skelton/index/header';
 interface containerProps {
     data: any
     id: number,
     translateX: any
+    isLoading : boolean
 }
-const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) => {
+const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height

@@ -1,6 +1,7 @@
 import React,{lazy , Suspense} from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Box } from 'native-base';
+import { AppSkeleton } from '../../../components/skelton/app';
 
 import Tabsnavigator from './Tabsnavigator';
 import Drawernavigator from './Drawernavigator';
@@ -56,7 +57,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             headerShown : false,
             }}>
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <NovelContent {...props}/>
             </Suspense>
             }
@@ -67,7 +68,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Loginpage {...props}/>
             </Suspense>
             }
@@ -79,7 +80,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Registerpage {...props}/>
             </Suspense>
             }
@@ -90,7 +91,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           name = "Notification"
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Notification {...props}/>
             </Suspense>
             }
@@ -101,7 +102,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Search {...props}/>
             </Suspense>
             }
@@ -112,7 +113,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Profile {...props}/>
             </Suspense>
             }
@@ -123,7 +124,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Editprofile {...props}/>
             </Suspense>
             }
@@ -134,7 +135,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <EditChapter {...props}/>
             </Suspense>
             }
@@ -145,7 +146,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Editpage {...props}/>
             </Suspense>
             }
@@ -156,7 +157,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Leaderboard {...props}/>
             </Suspense>
             }
@@ -167,7 +168,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Bookmarks {...props}/>
             </Suspense>
             }
@@ -178,7 +179,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Settings {...props}/>
             </Suspense>
             }
@@ -189,7 +190,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <AccountSettings {...props}/>
             </Suspense>
             }
@@ -200,7 +201,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true , headerTitle : "Notification"}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <NotificationSettings {...props}/>
             </Suspense>
             }
@@ -211,7 +212,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Template {...props}/>
             </Suspense>
             }
@@ -222,7 +223,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false }}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Createproject {...props}/>
             </Suspense>
             }
@@ -233,7 +234,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false, animation : 'slide_from_bottom'}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <CreateChapter {...props}/>
             </Suspense>
             }
@@ -245,7 +246,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Drawernavigator {...props}/>
             </Suspense>
             }
@@ -256,7 +257,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Readcontent {...props}/>
             </Suspense>
             }
@@ -267,7 +268,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Tag {...props}/>
             </Suspense>
             }

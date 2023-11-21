@@ -11,7 +11,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-
+import { AppSkeleton } from '../../../components/skelton/app';
 //@Components
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
 import CommitItem from '../components/CommitItem';
@@ -40,7 +40,8 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
 
      const [refreshing , setRefreshing] = useState<boolean>(false);
      const [isLoading , setisLoading] = useState<boolean>(true); 
-
+     const [initial , setInitial] = useState<boolean>(true);
+     
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
      
@@ -66,6 +67,16 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
           }
           setisLoading(false);
      } ,[refreshing])
+
+     useEffect(() => {
+          setTimeout(() => {
+            setInitial(false);
+          },0)
+        },[])
+
+  if(isLoading) return(
+     <AppSkeleton/>
+  )
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
         <Memorizednavigation title = "Commits" 

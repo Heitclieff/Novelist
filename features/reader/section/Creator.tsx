@@ -7,6 +7,7 @@ HStack ,
 Box , 
 Text } from 'native-base'
 import { useNavigation } from '@react-navigation/native'
+import FastImage from 'react-native-fast-image'
 //firestore
 import firestore from '@react-native-firebase/firestore'
 
@@ -22,20 +23,27 @@ const Creatorsection : React.FC <containerProps> = ({collection}) => {
     <HStack space= {2}>
     {collection && collection.map((item:any , key:number) => {
         return(
-            <Pressable onPress= {() => navigation.navigate('ProfileStack', {profile : item})}>
+            <Pressable 
+            key = {key} 
+            onPress= {() => navigation.navigate('ProfileStack', {profile : item})}>
                 {({
                   isHovered,
                   isFocused,
                   isPressed
                 }) => {
                         return(
-                            <HStack h= '30' key = {key} alignItems={'center'} rounded = 'md' space = {1} bg= {isPressed ? theme.Bg.container : isHovered ? theme.Bg.container  : null} >
+                            <HStack h= '30'  alignItems={'center'} rounded = 'md' space = {1} bg= {isPressed ? theme.Bg.container : isHovered ? theme.Bg.container  : null} >
                                 <Box  bg = 'black' h = '7' w ='7' rounded = 'full' overflow = 'hidden' alignItems={'center'}>
-                                    <Image
-                                        style={{width : '100%', height : '100%'}}
-                                        source={{uri :item.pf_image}}
-                                        alt = "images"
-                                    />
+                                <FastImage
+                                    id = "cover-image"
+                                    style={{width : '100%', height : '100%' }}
+                                    source={{
+                                        uri : item.pf_image  , 
+                                        header :{Authorization : "someAuthToken"},
+                                        priority : FastImage.priority.normal}}
+                                    alt = "images"
+                                    resizeMode={FastImage.resizeMode.cover}
+                                />
                                 </Box>
                                 <Text color = {theme.Text.description}>{item.username}</Text>
                             </HStack>  

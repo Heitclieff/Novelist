@@ -32,6 +32,7 @@ import Careersection from './section/Careersection'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import sendNotification from '../../services/notificationService'
+import { SpinnerItem } from '../../components/Spinner'
 
 interface StackProps {
     Profiledata : any
@@ -177,7 +178,8 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             <Box w = '100%' h = {MAX_HEIGHT} position={'absolute'}>
                 <ParallaxBackground background={currentProfile?.bg_image} scrollY={scrollY}/>
             </Box>
-           
+            
+          
             <Animated.FlatList
             data={[0]}
             refreshControl={
@@ -221,24 +223,14 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                                     <Text fontWeight={'semibold'}  color={theme.Text.base}>Careers</Text>
                                 </HStack>
                                 <VStack mb={HEADER_HEIGHT_EXPANDED}>
-                                    {isLoading ?
-                                        <Center w='100%' h='100%' justifyContent={'flex-start'} mt={10}>
-                                            <VStack w='100%' rounded="md">
-                                                <VStack w='100%' flex={1} pb={1} alignItems={'center'}>
-                                                    <Skeleton w='90%' h='150' rounded='md' startColor={theme.Bg.container} />
-                                                    <Skeleton.Text lines={2} alignItems="flex-start" mt={-70} px="12" startColor={theme.Text.skelton} />
-                                                    <Skeleton w='90%' h='150' rounded='md' mt={50} startColor={theme.Bg.container} />
-                                                    <Skeleton.Text lines={2} alignItems="flex-start" mt={-70} px="12" startColor={theme.Text.skelton} />
-                                                </VStack>
-                                            </VStack>
-                                        </Center> :
-                                        <Careersection id = {currentProfile.id}/>}
+                                    <Careersection id = {currentProfile.id}/>
                                 </VStack>
                             </VStack>
                         </VStack>
                   )
                 },[isLoading , isfollow])}
             >   
+         
             </Animated.FlatList>
         </Box>
     )

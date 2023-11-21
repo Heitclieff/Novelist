@@ -40,7 +40,8 @@ import Contentnavigation from '../../components/navigation/Contentnavigation'
 import ForegroundItem from './components/ForegroundItem'
 import Chapterfield from './components/Chapterfield'
 import CommentModal from '../../components/layout/Modal/Comment'
-
+import { ReaderSkeleton } from '../../components/skelton/reader';
+import { CreatorSkeleton } from '../../components/skelton/reader/creator';
 //@Sections
 import Mainsection from './section/Main'
 import Overviewsection from './section/Overview'
@@ -49,6 +50,7 @@ import Tagsection from './section/Tag'
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
+import { SpinnerItem } from '../../components/Spinner';
 
 interface Pageprops {}
 
@@ -69,8 +71,6 @@ const NovelContent : React.FC <Pageprops> = () => {
     // console.log('reader content',myAccount[0].id)
     const ScreenHeight = Dimensions.get('window').height;
     const AnimatedBackground = Animated.createAnimatedComponent(FastImage)
-
-    const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState({}); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
@@ -80,10 +80,17 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [isMyOwn , setisMyOwn] = useState<boolean>(false);
     const [isLiked , setisLiked] = useState<boolean>(false)
     const [isMarks , setisMarks] = useState<boolean>(false);
+    const [isLoading , setLoading]=  useState<boolean>({
+        start : true,
+        novel : true,
+        chapter : true,
+        creator : true,
+    })
+
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
     
 
-    const fetchNovelandChapter = async () : Promise<void> => {
+    const fetchingNovels = async () : Promise<void> => {
         try {
             // fetch SnapshortContent from Novel
             const SnapshotContent = db.collection('Novels').doc(id);
@@ -100,23 +107,37 @@ const NovelContent : React.FC <Pageprops> = () => {
                 setlimiters(false);
             }
            
+            setLoading((prev) => ({...prev , novel : false}))
+
+        } catch (error) {
+            console.error("Error fetching document:", error);
+        }
+    }
+
+    const fetchingCreator = async () => {
             // findingBookinMylibrary();
-            
+            const SnapshotContent = db.collection('Novels').doc(id);
             // const snapMainData = db.collection('Novels').doc(documentSnapshot.id)
             const snapSubData = await SnapshotContent.collection('Creator').get();
             const creatorkey = snapSubData?.docs.map(doc => doc.data().userDoc);
             const creatorDocs = await matchingUserwithId(creatorkey);
             
             setnovelId(creatorDocs);
-            // fetch SnapshortContent from Chapter
+            setLoading((prev) => ({...prev , creator : false}))
+    }
+
+    const fetchingChapter = async () => {
+        try{
+            const SnapshotContent = db.collection('Novels').doc(id);
             const SnapshotChapter = await SnapshotContent.collection('Chapters').orderBy('updateAt','desc').get();
             const Chapterdocument = SnapshotChapter.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
             setchapterItem(Chapterdocument);
-
-        } catch (error) {
-            console.error("Error fetching document:", error);
+            setLoading((prev) => ({...prev , chapter : false}))
+        }catch(error){
+            console.error("Error fetching chapters:", error);
         }
+
     }
 
     const matchingUserwithId = async (creatorkeys : any) :Promise<T> => {
@@ -271,20 +292,28 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisMyOwn(!isMyOwn);
     }
 
-
- 
     useEffect(() => {
         const shouldrefresh = id || refreshing
-            if(shouldrefresh) fetchNovelandChapter()
+            if(shouldrefresh) fetchingNovels()
     }, [refreshing])
 
     useEffect(() => {
+        const shouldrefresh = id || refreshing
+        if(shouldrefresh) fetchingChapter()
+    },[refreshing])
+
+    useEffect(() => {
+        const shouldrefresh = id || refreshing
+        if(shouldrefresh) fetchingCreator()
+    },[refreshing])
+
+    useEffect(() => {
         findingBookinMyBookmarks();
-    },[id , refreshing])
+    },[refreshing])
 
     useEffect(() => {
         findingBookinMylibrary();
-    },[id, refreshing])
+    },[refreshing])
 
     useEffect(() => {
         findinglikeinMyfavorite();
@@ -313,6 +342,17 @@ const NovelContent : React.FC <Pageprops> = () => {
         }, 1000);
       }, []);
 
+
+    useEffect(() => {
+        setTimeout(() => {
+           setLoading((prev) => ({...prev , start : false}))
+          },0)
+    },[])
+
+  if(isLoading.start) return(
+    <ReaderSkeleton/>
+  )
+
   return (
         <BottomSheetModalProvider>
           <Box flex={1} bg={theme.Bg.base} position={'relative'}>
@@ -330,7 +370,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 setlibrary = {setMylibraryBooks}
               />
               }
-              {novelItem &&
+              { novelItem &&
                   <Box>
                           <Box w='100%' h={MAX_HEIGHT} position={'absolute'}>
                               <VStack alignItems={'center'} position='relative' overflow='hidden'>
@@ -400,8 +440,9 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 })}}>
                 
                                 <ForegroundItem
-                                        collection={novelItem}
-                                    />
+                                    isLoading = {isLoading}
+                                    collection={novelItem}
+                                />
                             </Animated.View>}
                         </Box>
                       <Animated.ScrollView
@@ -458,18 +499,30 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   />
                               </VStack>
                               <VStack w='100%' pl={6} space={2}>
-                                  <Creatorsection collection={novelId} />
+                                {isLoading.creator ? 
+                                    <CreatorSkeleton/>
+                                    :
+                                    <Creatorsection collection={novelId} />
+                                }
                               </VStack>
                               <Divider bg={theme.Divider.base} mt={3} />
                               <Overviewsection overview = {novelItem.overview}/>
                               <Tagsection tag = {novelItem.tagDoc}/>
                               <VStack flex={1} pt={7}>
-                                  <Chapterfield  
+                                {isLoading.chapter ?
+
+                                    <SpinnerItem/> 
+                                    :
+
+                                    <Chapterfield  
                                     doc_id = {id}
                                     comment_status = {novelItem.comment_status}
                                     noveltitle = {novelItem.title} 
                                     chapterdata = {chapterItem} 
-                                    handleCommentButton={handlePresentModalPress} />
+                                    handleCommentButton={handlePresentModalPress} 
+                                    />
+                                }
+                                
                               </VStack>
                              
                           </VStack>
@@ -477,6 +530,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                       </Box>
               }           
           </Box>
+        
         <CommentModal 
         BottomRef={bottomSheetModalRef} 
         snapPoints = {snapPoints} 

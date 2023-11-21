@@ -15,7 +15,6 @@ Icon,
 Center,
 Spinner
 } from 'native-base'
-import { teamsdata } from '../assets/config'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { BottomSheetModalProvider, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { useNavigation } from '@react-navigation/native'
@@ -37,6 +36,7 @@ import firestore from '@react-native-firebase/firestore'
 //@redux
 import { useSelector , useDispatch } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
+import { AppSkeleton } from '../../../components/skelton/app'
 
 interface Pageprops {
   route: any
@@ -52,6 +52,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(true);
+  const [initial , setInitial] = useState<boolean>(true);
   
 
   const projectdocs = useSelector((state) => state.docs.docs)
@@ -96,9 +97,6 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
       const chapterpath = projectpath.collection("Chapters").doc(id);
       const Contentpath = chapterpath.collection('Content')
-
-      
-
       const removechapter = chapterdocs.content.filter(doc => doc.id !== id)
       dispatch(setChaptercontent({...chapterdocs , content : removechapter  , id : chapterdocs.id}))
       
@@ -110,7 +108,15 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      setInitial(false);
+    },0)
+},[])
 
+if(initial) return(
+  <AppSkeleton/>
+)
   return (
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"

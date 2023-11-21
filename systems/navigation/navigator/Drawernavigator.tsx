@@ -2,6 +2,7 @@ import React, {useContext , useEffect , useState , lazy , Suspense} from 'react'
 import { ThemeWrapper } from '../../theme/Themeprovider';
 import { useRoute } from '@react-navigation/native';
 import { Box } from 'native-base';
+import { CreatorSkeleton } from '../../../components/skelton/creator';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -75,7 +76,6 @@ const Drawernavigator : React.FC = () => {
       console.error('Error fetching Member:', error);
     }
   }
-
   useEffect(() => {
     const shouldRefresh = refreshing ||  projectdocument.id !== id;
 
@@ -87,8 +87,10 @@ const Drawernavigator : React.FC = () => {
   
   },[id , refreshing])
   
+  if(isLoading) return(
+    <CreatorSkeleton/>
+  )
   return (
-    !isLoading && 
       <Drawer.Navigator 
       initialRouteName="Home" 
       drawerContent={props => <Customdrawer {...props}/>}

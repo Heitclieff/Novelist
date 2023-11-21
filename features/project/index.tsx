@@ -37,7 +37,7 @@ import { setProjectContent } from '../../systems/redux/action';
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { RootState } from '../../systems/redux/reducer'
-
+import { SpinnerItem } from '../../components/Spinner';
 // firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -59,6 +59,7 @@ const Creator : React.FC <Pageprops> = () => {
     const [Projectype , setProjectype] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
     const [refreshing ,setRefreshing] = useState<boolean>(false);
+    const [isLoading ,setLoading] = useState<boolean>(true);
 
     const {dismiss} = useBottomSheetModal();
 
@@ -75,6 +76,8 @@ const Creator : React.FC <Pageprops> = () => {
                 const projectdocs =  getProjectDocs.docs?.map(doc => ({id : doc.id , ...doc.data()}));
                 dispatch(setProjectContent({docs : projectdocs}))
                 setDocument(projectdocs);
+
+                setLoading(false);
             }
     
         }catch(error) {    
@@ -121,41 +124,47 @@ const Creator : React.FC <Pageprops> = () => {
         </Box>
 
         <Box flex = {1}>
+            {isLoading ? 
+                <Box mt = {10}>
+                       <SpinnerItem/>
+                </Box>
+                :
                 <FlatList refreshing = {refreshing} setRefreshing = {setRefreshing}>
                     <Box w= '100%' mt = {3}>
-                    <Box pl = {6} pr = {6}>
-                        <Input 
-                        rounded={'full'} 
-                        bg = {theme.Bg.container} 
-                        borderColor={theme.Bg.comment} 
-                        color={theme.Text.base}
-                        h  = {9}
-                        InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
-                        placeholder='Enter your Project name'
-                        />
-                    </Box>   
-            </Box> 
-                <VStack space = {1} m ={5} mt = {5}>
-                {projectdocs && projectdocs.docs?.length > 0  ?
-                    projectdocs.docs?.map((item:any , index:number) => {
-                        return(
-                            <MemorizedCreatorItemfield 
-                            key = {index} 
-                            id = {item.id} 
-                            title = {item.title}
-                            status = {item.status}
-                            image = {item.image}
-                            creator = {item.creators}
-                            /> 
-                        )
-                       
-                    }
-                        
-                        ) 
-                    : null
-                }
-                </VStack> 
-            </FlatList>
+                        <Box pl = {6} pr = {6}>
+                            <Input 
+                            rounded={'full'} 
+                            bg = {theme.Bg.container} 
+                            borderColor={theme.Bg.comment} 
+                            color={theme.Text.base}
+                            h  = {9}
+                            InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
+                            placeholder='Enter your Project name'
+                            />
+                        </Box>   
+                    </Box> 
+                    <VStack space = {1} m ={5} mt = {5}>
+                        {projectdocs && projectdocs.docs?.length > 0  ?
+                            projectdocs.docs?.map((item:any , index:number) => {
+                                return(
+                                    <MemorizedCreatorItemfield 
+                                    key = {index} 
+                                    id = {item.id} 
+                                    title = {item.title}
+                                    status = {item.status}
+                                    image = {item.image}
+                                    creator = {item.creators}
+                                    /> 
+                                )
+                            
+                            }
+                                
+                                ) 
+                            : null
+                        }
+                    </VStack> 
+                </FlatList>
+            }
         </Box>
         <Fab 
         renderInPortal={false} 

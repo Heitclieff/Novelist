@@ -1,4 +1,4 @@
-import React,{FC, useEffect , useCallback , Suspense} from 'react'
+import React,{FC, useEffect , useCallback , Suspense , useState} from 'react'
 import { Box, VStack } from 'native-base'
 import { useContext } from 'react';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
@@ -13,6 +13,7 @@ import CategoryItems from './components/Categoryitem';
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
+import { SpinnerItem } from '../../components/Spinner';
 
 interface Pageprops {
 }
@@ -24,6 +25,7 @@ const Category: React.FC <Pageprops> = () => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const Categorydata = useSelector((state:any)=> state.category)
   const isReduxLoaded = useSelector((state: RootState) => state.iscategoryLoaded);
+  const [isLoading , setLoading] = useState<boolean>(true);
   
   const getCategoryAndDispatch = async () => {
       try {
@@ -31,8 +33,6 @@ const Category: React.FC <Pageprops> = () => {
           const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
          
           dispatch(setCategory({category : categorydocs}));
-
-
         } catch (error) {
           console.error('Error fetching Category', error);
       }
@@ -40,7 +40,7 @@ const Category: React.FC <Pageprops> = () => {
 
   useEffect(() => {
     if(!Categorydata.category) getCategoryAndDispatch();
-    
+    setLoading(false);
   },[])
 
   return (
@@ -50,7 +50,12 @@ const Category: React.FC <Pageprops> = () => {
     pr = {2}
     bg = {theme.Bg.base}
     >
-    <Suspense fallback = {<Box>Loading...</Box>}>
+    {isLoading ?
+      <Box mt = {10}>
+        <SpinnerItem/>
+      </Box>
+      :
+      <Suspense fallback = {<Box>Loading...</Box>}>
       {
         <ItemList collection={Categorydata.category}>
             {(item:any, index:number) => (
@@ -64,6 +69,8 @@ const Category: React.FC <Pageprops> = () => {
           </ItemList>       
         }
     </Suspense>
+    }
+   
     </Box>
   )
 }

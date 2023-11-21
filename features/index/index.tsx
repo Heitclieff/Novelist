@@ -6,7 +6,7 @@ import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import {LogBox , AppState, Alert} from 'react-native';
-
+import { HeaderSkelton } from '../../components/skelton/index/header';
 //@Redux tools
 import { useDispatch , useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -45,7 +45,11 @@ const Index : React.FC = () => {
     const [CollectionMostview , setCollectionMostview] = useState<any[]>([]);
     const [CollectionHotNew , setCollectionHotNew] = useState<any[]>([])
     const [CollectionTopNew  , setCollectionTopNew] = useState<any[]>([]);
-    const [isReduxLoaded, setisReduxLoaded] = useState<Boolean>(false)
+    const [isLoading, setLoading] = useState<Boolean>({
+        heading : true,
+        top : true,
+        second : true
+    });
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const userdata = useSelector((state) => state.userData);
@@ -59,6 +63,8 @@ const Index : React.FC = () => {
           .limit(10)
           .get()
           setCollectionTopNew(snapshortTop.docs)
+
+          setLoading((prev) => ({...prev , second : false}));
         } catch (error) {
           console.error('Error fetching Top New novels:', error);
         }
@@ -72,6 +78,8 @@ const Index : React.FC = () => {
           .limit(10).get();
           setCollectionHotNew(snapshortHot.docs)
           // newestNovels.sort((a, b) => b.view - a.view);
+
+          setLoading((prev) => ({...prev , top : false}));
         } catch (error) {
           console.error('Error fetching hot new novels:', error);
         }
@@ -85,6 +93,8 @@ const Index : React.FC = () => {
           .limit(10)
           .get();
           setCollectionMostview(snapshortMost.docs)
+
+          setLoading((prev) => ({...prev , heading : false}));
       
         } catch (error) {
           console.error('Error fetching most view novels:', error);
@@ -819,24 +829,30 @@ const Index : React.FC = () => {
           />
         }
         
-        {isReduxLoaded && CollectionTopNew.length > 0 || CollectionTopNew ?
-            <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
-                <VStack flex = {1}>
-                    <MemorizedIndexheaderitem collections={CollectionMostview}/>
-                    
-                    <VStack  pl = {3} mt = {4}>
-                        <MemorizedCollectionField
-                        title="Hot New Novels"
-                        collections={CollectionHotNew}
-                        />
-                        <MemorizedCollectionField
-                        title="Top new Novels"
-                        collections={CollectionTopNew}
-                        />
-                </VStack>
-                </VStack>
-            </FlatList>      
-        :null }
+        {CollectionTopNew.length > 0 || CollectionTopNew ?
+                <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
+                    <VStack flex = {1}>
+                        <MemorizedIndexheaderitem
+                         collections={CollectionMostview}
+                         isLoading = {isLoading.heading}
+                         />
+                        
+                        <VStack  pl = {3} mt = {4}>
+                            <MemorizedCollectionField
+                            title="Hot New Novels"
+                            collections={CollectionHotNew}
+                            isLoading = {isLoading.top}
+                            />
+                            <MemorizedCollectionField
+                            title="Top new Novels"
+                            collections={CollectionTopNew}
+                            isLoading = {isLoading.second}
+                            />
+                        </VStack>
+                    </VStack>
+                </FlatList>      
+            :null 
+      }
     </Box>
   )
 }

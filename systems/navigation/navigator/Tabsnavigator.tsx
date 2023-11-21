@@ -4,11 +4,11 @@ import React,{
 } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Box , Icon } from 'native-base';
+import { AppSkeleton } from '../../../components/skelton/app';
 import FontAwesomeIcon  from 'react-native-vector-icons/FontAwesome5'
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-
 //@Pages
 const Index = lazy(() => import('../../../pages/Index'));
 const Category = lazy(() => import('../../../pages/Category'));
@@ -45,7 +45,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
          {(props:any) => (
-                <Suspense fallback={<Box>Loading...</Box>}>
+                <Suspense fallback={<AppSkeleton/>}>
                   <Index {...props}/>
                 </Suspense> 
           )}
@@ -67,7 +67,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Category {...props}/>
           </Suspense>
         )}
@@ -89,7 +89,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Creator {...props}/>
           </Suspense>
         )}
@@ -111,7 +111,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Library {...props}/>
           </Suspense>
         )}
@@ -133,7 +133,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Menu {...props}/>
           </Suspense>
         )}

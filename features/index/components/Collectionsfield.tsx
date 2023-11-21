@@ -14,6 +14,7 @@ import { FlatList } from 'native-base'
 import { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
+import { CollectionSkelton } from '../../../components/skelton/index/collection';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 const LazyCollectionItems = React.lazy(() => import('./Collectionitem'));
@@ -29,11 +30,12 @@ interface Collections {
   title : string,
   images : string[ ];
   view : number;
+  isLoading : boolean
 }
 
 const MemorizedColletionItems = React.memo(LazyCollectionItems)
 
-const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
+const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoading}) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
   const renderCollectionItem = useCallback(
@@ -53,6 +55,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
   
     },[]
   );
+
   return (
     <Box
     w =  '100%'
@@ -80,16 +83,19 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections}) => {
             />
           </Box>
         </HStack>
-        {React.useMemo(() => {
-          return <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={collections}
-          renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
-          ItemSeparatorComponent={() => <View style={{width: 0}} />}
-          onEndReachedThreshold={0.5}
-        />
-        } , [collections])}
+
+        {isLoading ?
+            <CollectionSkelton/>
+            :
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={collections}
+              renderItem={({ item, index }:any) => renderCollectionItem(item, index)}
+              ItemSeparatorComponent={() => <View style={{width: 0}} />}
+              onEndReachedThreshold={0.5}
+            />
+          }
       </VStack> 
     </Box>
   )

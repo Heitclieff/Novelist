@@ -8,7 +8,7 @@ import { AnyAction } from "redux";
 import { FlatList } from "react-native";
 import { ItemList } from "../../../components/layout/Flatlist/ItemList";
 import Itemfield from "../../../components/field/Itemfield";
-
+import { SpinnerItem } from "../../../components/Spinner";
 //firebase
 import firestore from '@react-native-firebase/firestore'
 
@@ -32,7 +32,7 @@ const Careersection : React.FC <Pageprops> = ({id}) => {
 
 
     const [snapProject, setsnapProject] = useState<any[]>([])
-    const [isReduxLoaded , setisReduxLoaded] = useState<boolean>(false);
+    const [isLoading , setLoading] = useState<boolean>(true);
 
     const findingProjectwithid = async () => {
       try{
@@ -42,21 +42,21 @@ const Careersection : React.FC <Pageprops> = ({id}) => {
   
         const noveldocs = getnovel.docs.map((doc => ({id : doc.id , ...doc.data()})))
         setsnapProject(noveldocs)
+        setLoading(false);
       }catch(error){
         console.log("Failed To find Project" ,error)
       }
     }
-
-
     useEffect(() => {
-
       findingProjectwithid()
     },[id])
   
+    if(isLoading) return(
+      <SpinnerItem/>
+    )
     return (
         <>
         {snapProject &&    
-  
           <Center>
             <ItemList collection = {snapProject}>
                 {(item:any , index:number) => <MemorizedCollectionItems item={item} index={index} />}

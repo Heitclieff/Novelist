@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import { SpinnerItem } from '../../components/Spinner';
 
 const MemorizedNotifyItem = React.memo(NotifyItem);
 
@@ -42,6 +43,7 @@ const Notification : React.FC = () => {
 
     const [inviteShow ,setInviteShow] = useState<any>({status : false , data : {}});
     const [refreshing ,setRefreshing] = useState<boolean>(false);
+    const [isLoading , setLoading] = useState<boolean>(true);
 
     const requestUserPermission = async () => {
       try{
@@ -108,14 +110,13 @@ const Notification : React.FC = () => {
       if(!useraccount){
         return
       }
-      
       try{
         const getuser = firebase.collection('Users').doc(useritem.id);
         const getnotification = await getuser.collection('Notification').orderBy('date','desc').get();
-
         const notificationdocs = getnotification.docs.map((doc) =>({id : doc.id , ...doc.data()}));
 
         setNotificationList(notificationdocs);
+        setLoading(false);
       }catch(error){
         console.log("Failed to get notification task" , error)
       }
@@ -161,7 +162,6 @@ const Notification : React.FC = () => {
     }
 
     useEffect(() => {
-
       getNotification();
     },[refreshing])
 
@@ -178,15 +178,15 @@ const Notification : React.FC = () => {
                 <VStack minW = {5} minH = {5} p = {0.6} alignItems={'center'}  justifyItems={'center'} rounded = "full"  bg=  'red.500'>
                   <Text color = {'gray.100'} fontSize={'xs'} fontWeight={'medium'} rounded = "full" >{useritem?.notify}</Text>
                </VStack>
-
             }
-         
        </HStack>
       <HStack space = {2} justifyContent={'center'}>
       </HStack>
       
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
-            {notificationlist &&
+            {isLoading ?
+              <SpinnerItem/>
+              :
               notificationlist.length > 0 &&    
                   <VStack p = {4} flex = {1}>
                     <SwipeListView 

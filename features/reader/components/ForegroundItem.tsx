@@ -1,14 +1,15 @@
 import React, { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-import { Box , VStack , Button, Text , Icon } from 'native-base'
+import { Box , VStack , Button, Text , Icon , Skeleton } from 'native-base'
 import { Image , Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import FastImage from 'react-native-fast-image'
 interface containerProps {
     collection: any
+    isLoading : boolean
 }
 
-const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
+const ForegroundItem: React.FC<containerProps> = ({ collection , isLoading}) => {
     const theme:any = useContext(ThemeWrapper)
     
     return (
@@ -21,18 +22,25 @@ const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
             zIndex={10}
             space={2}
         >
-            <Box w='150' h='220' bg='gray.300' overflow='hidden'>
+            {isLoading ?
+                <Skeleton
+                    w = "150"
+                    h = '220'
+                    startColor = {theme.Bg.container}
+                />
+            :
+            <Box w='150' h='220' bg= {theme.Bg.container} overflow='hidden'>
                 <FastImage
-                  style={{width : '100%', height : '100%' }}
-                  source={{
+                style={{width : '100%', height : '100%' }}
+                source={{
                     uri : collection.image  , 
                     priority : FastImage.priority.normal,
-                    cache: FastImage.cacheControl.cacheOnly
-                  }}
-                  alt = "images"
-                  resizeMode={FastImage.resizeMode.cover}
+                }}
+                alt = "images"
+                resizeMode={FastImage.resizeMode.cover}
                 />
             </Box>
+            }
             <Box w='140'>
                 {Platform.OS == 'ios' &&
                     <Button
