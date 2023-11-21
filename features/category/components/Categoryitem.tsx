@@ -7,6 +7,7 @@ Center,
 Pressable,
  } from 'native-base'
 import { Image } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
@@ -38,11 +39,16 @@ const CategoryItems : React.FC <Itemsprops> = ({images , title , id}) =>{
             p = {2}
             >
               <Box overflow={'hidden'} h = {180}>
-                <Image
-                  style={{width : '100%' , height : '100%'}}
-                  contentFit = 'cover'
-                  source={{uri:images}}
-                  alt = "images"/>
+                <FastImage
+                  style={{width : '100%', height : '100%' }}
+                  source={{
+                    uri : images  , 
+                    header :{Authorization : "someAuthToken"},
+                    priority : FastImage.priority.normal
+                  }}
+                  alt = "images"
+                  resizeMode={FastImage.resizeMode.cover}
+                />
               </Box>
               <Box p = {2}>
                 <Center>

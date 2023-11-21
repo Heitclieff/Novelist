@@ -11,7 +11,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
-
+import FastImage from 'react-native-fast-image';
 //@Components
 import Avatarfield from '../../../components/field/Avatarfield'
 
@@ -71,10 +71,18 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
           return (
           <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}>
                <Box w= '25%' h= '100%' bg=  'gray.200' mr = {2} overflow={'hidden'}>
-                    <Image
+                    <FastImage
                          id = 'item-image'
-                         style={{width : '100%' , height : '100%'}}
-                         source={{uri: image}}
+                         alt = "images"
+                         resizeMode={FastImage.resizeMode.cover}
+                         source={{
+                              uri : image  , 
+                              header :{Authorization : "someAuthToken"},
+                              priority : FastImage.priority.normal}}
+                         style={{
+                              width : '100%' , 
+                              height : '100%'
+                         }}
                     />
                </Box>
                <VStack w = '75%' h=  '100%'  bg = {theme.Bg.container} rounded={'md'} space = {2} pl = {3}>

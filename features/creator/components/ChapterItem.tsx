@@ -6,6 +6,7 @@ Text,
 Pressable,
 VStack } from 'native-base'
 import { Image } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 
@@ -117,10 +118,14 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                     :
                     <HStack space = {1} alignItems={'center'}>
                     <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
-                         <Image
+                         <FastImage
                          id = 'Profile-Image'
-                         style={{width : '100%' ,height :'100%' , objectFit : 'cover'}}
-                         source={{uri :data.updatedimg}}
+                         style={{width : '100%' ,height :'100%'}}
+                         resizeMode={FastImage.resizeMode.cover}
+                         source={{
+                              uri : data.updatedimg  , 
+                              priority : FastImage.priority.normal
+                            }}
                          />
                     </Box>
                          <Text  color={theme.Text.base} fontSize={'xs'}>{timeago}</Text>

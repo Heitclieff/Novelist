@@ -26,7 +26,7 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-
+import FastImage from 'react-native-fast-image';
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { AnyAction } from 'redux'
@@ -68,7 +68,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const Mybookmarks = useSelector((state) => state.slot)
     // console.log('reader content',myAccount[0].id)
     const ScreenHeight = Dimensions.get('window').height;
-    const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+    const AnimatedBackground = Animated.createAnimatedComponent(FastImage)
 
     const [isReduxLoaded, setisReduxLoaded] = useState<boolean>(false)
     const [novelItem, setnovelItem] = useState({}); //<any[]>
@@ -347,7 +347,12 @@ const NovelContent : React.FC <Pageprops> = () => {
                                   }]}>
                                       <AnimatedBackground
                                           id='background-images'
-                                          source={{ uri: novelItem.image }}
+                                          source={{ 
+                                            uri: novelItem.image,
+                                            priority : FastImage.priority.high,
+                                            cache: FastImage.cacheControl.cacheOnly,
+                                            }}
+                                          resizeMode={FastImage.resizeMode.cover}
                                           alt="images"
                                           style={{
                                               width: '100%',

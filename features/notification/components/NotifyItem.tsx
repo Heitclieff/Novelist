@@ -9,6 +9,7 @@ Icon,
 Pressable,
 IconButton } from 'native-base'
 import { Image } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { InviteModal } from './modal/invite'
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
@@ -105,12 +106,15 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
           <HStack w='100%' h={70} mt={2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container} rounded={'full'} justifyContent={'center'}>
             <Box w='20%' h='100%' justifyContent={'center'} alignItems={'center'}>
               <Box w='50' h='50' overflow={'hidden'} rounded="full">
-                <Image
-                  id='background-images'
-                  style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
-                  contentFit='cover'
-                  source={{ uri: data.image }}
-                  alt="images"
+                <FastImage
+                  style={{width : '100%', height : '100%' }}
+                  source={{
+                    uri : data.image  , 
+                    priority : FastImage.priority.normal,
+                    cache: FastImage.cacheControl.cacheOnly
+                  }}
+                  alt = "images"
+                  resizeMode={FastImage.resizeMode.cover}
                 />
               </Box>
             </Box>

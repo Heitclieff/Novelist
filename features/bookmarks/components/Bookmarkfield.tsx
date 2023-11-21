@@ -8,6 +8,7 @@ VStack} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import FastImage from 'react-native-fast-image'
 
 interface containerProps{
     data  :any,
@@ -32,8 +33,15 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
         return(
             <HStack w = '90%' h = {110} bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeractionaction  : theme.Bg.container} rounded={'md'} overflow = 'hidden'>
             <Box w = '23%' h = '100%' bg = 'gray.200' overflow={'hidden'}>
-                <Image style={{width : '100%' , height : '100%'}} source={{uri :data.image}}/>
-    
+                <FastImage
+                  style={{width : '100%', height : '100%' }}
+                  source={{
+                    uri : data.image  , 
+                    priority : FastImage.priority.normal,
+                  }}
+                  alt = "images"
+                  resizeMode={FastImage.resizeMode.cover}
+                />
             </Box>
             <VStack w = '77%' h = '100%' pl = {2} justifyContent={'center'}>
                 <Text color = {theme.Text.base} numberOfLines={2} fontWeight={'semibold'}>{data.title}</Text>

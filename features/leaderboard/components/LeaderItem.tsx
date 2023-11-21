@@ -9,7 +9,7 @@ Divider } from 'native-base'
 import { Image } from 'react-native';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native';
-
+import FastImage from 'react-native-fast-image';
 interface containerProps {
     index: number
     item : any
@@ -40,10 +40,16 @@ const LeaderItem : React.FC <containerProps> = ({index, item}) => {
                 {!item ? (
                 <Text style={{ width: 50, height: 50, borderRadius: 25 }}></Text>
                 ) : (
-                <Image
-                    source={{ uri: item.image }}
-                    style={{ width: 50, height: 50, borderRadius: 25 }}
-                />
+                <FastImage
+                style={{ width: 50, height: 50, borderRadius: 25 }}
+                source={{
+                  uri : item.image  , 
+                  priority : FastImage.priority.normal
+                }}
+                alt = "images"
+                resizeMode={FastImage.resizeMode.cover}
+              />
+
                 )}
             </Box>
             </Box>

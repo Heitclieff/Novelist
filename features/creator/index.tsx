@@ -8,6 +8,7 @@ Dimensions ,
 RefreshControl, 
 FlatList
 } from 'react-native'
+import FastImage from 'react-native-fast-image';
 import { useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ThemeWrapper } from'../../systems/theme/Themeprovider';
@@ -149,18 +150,24 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         {projectdocs  && 
         <>
           <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
-            <ImageBackground
+            <FastImage
               id='background-images'
-              source={{ uri: projectdocs.image}}
-              alt="images"
               style={{
                 width: '100%',
                 height: '100%',
                 opacity: 1,
                 position: 'relative',
-              }}>
+              }}
+              source={{
+                uri : projectdocs.image  , 
+                priority : FastImage.priority.normal
+              }}
+              alt = "images"
+              resizeMode={FastImage.resizeMode.cover}
+            >
+                
               <Box width='100%' h={MAX_HEIGHT} bg='black' opacity={0.4} />
-            </ImageBackground>
+            </FastImage>
           </Box>
 
           <FlatList

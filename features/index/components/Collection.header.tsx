@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from 'react'
 import { Box, Text, VStack, HStack ,View, theme } from 'native-base'
 import { ImageBackground,Image } from 'react-native'
+import FastImage from 'react-native-fast-image';
 
 import { Dimensions } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
@@ -32,17 +33,18 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                 return (
                     <Box w={ScreenWidth} h={HEADER_HEIGHT} overflow={'hidden'} alignItems={'center'} position='relative'>
                         <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={'trueGray.800'}>
-                            <AnimatedBackground
-                                id='background-images'
-                                source={{ uri: data.image }}
-                                alt="images"
-                                blurRadius={3}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    opacity: 0.6,
-                                    position: 'relative',
-                                }} />
+                            <FastImage
+                             id='background-images'
+                             source={{ uri: data.image }}
+                             alt = "images"
+                             blurRadius = {3}
+                             style = {{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.6,
+                                position: 'relative',
+                             }}
+                            />
                         </Box>
                         <Box w='100%' h='100%' position='absolute' zIndex={10}>
                             <LinearGradient colors={['transparent',theme.Bg.header]} style = {{width : '100%' , height : HEADER_HEIGHT}}/>           
@@ -52,11 +54,15 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                         <Box safeAreaTop w='100%' h='100%' position={'absolute'} mt={2} zIndex={10}>
                             <VStack w="100%" h='100%' justifyContent={'center'} alignItems={'center'} >
                                 <Box w='60%' h='70%' bg='gray.200' rounded={'xs'} overflow={'hidden'} >
-                                    <Image
-                                        id='Item-image'
-                                        style={{ width: '100%', height: '100%' }}
-                                        source={{uri : data.image}}
-                                        alt="images"
+                                    <FastImage
+                                        id = "Item-image"
+                                        style={{width : '100%', height : '100%' }}
+                                        source={{
+                                            uri : data.image  , 
+                                            header :{Authorization : "someAuthToken"},
+                                            priority : FastImage.priority.normal}}
+                                        alt = "images"
+                                        resizeMode={FastImage.resizeMode.cover}
                                     />
                                 </Box>
                                 <VStack w='60%' mt={2} >

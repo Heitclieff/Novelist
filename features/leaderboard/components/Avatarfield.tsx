@@ -8,6 +8,8 @@ Pressable,
 
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { Image } from 'react-native';
+import FastImage from 'react-native-fast-image';
+
 interface containerProps {
     size  : number,
     image : string,
@@ -26,7 +28,16 @@ const LeaderAvatarfield : React.FC <containerProps> = ({size , image  = null , u
           <Text fontWeight={'semibold'}>{index}</Text>
         </Box>
         <Box w = {size} h = {size}  bg = 'gray.200' borderWidth={'3'} borderColor={color} rounded = 'full' overflow={'hidden'}>
-          <Image source={{uri :image}} style={{width : '100%' , height : '100%'}}/>
+          <FastImage
+                  style={{width : '100%', height : '100%' }}
+                  source={{
+                    uri : image  ,
+                    priority : FastImage.priority.normal,
+                    cache: FastImage.cacheControl.cacheOnly,
+                  }}
+                  alt = "images"
+                  resizeMode={FastImage.resizeMode.cover}
+                />
         </Box>
         <VStack alignItems={'center'}>
             <Text fontWeight={'semibold'} color = {theme.Text.base}>{username}</Text>

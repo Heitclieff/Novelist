@@ -11,6 +11,7 @@ Pressable,
  } from 'native-base'
 import { Image } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -44,11 +45,14 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, l
             id = "Displaycase"
             h = {210}
             >
-              <Image
-              style={{width : '100%', height : '100%'}}
-              contentFit= 'cover'
-              source={{uri : images}}
+              <FastImage
+              style={{width : '100%', height : '100%' }}
+              source={{
+                uri : images  , 
+                header :{Authorization : "someAuthToken"},
+                priority : FastImage.priority.normal}}
               alt = "images"
+              resizeMode={FastImage.resizeMode.cover}
               />
             </Box>
             <HStack justifyContent={'space-between'} w = '100%'>

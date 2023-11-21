@@ -5,6 +5,7 @@ Text,
 VStack } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { Animated , ImageBackground, RefreshControl } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import Centernavigation from '../../components/navigation/Centernavigation'
 //@Components
 import Leadheader from './section/header'
@@ -40,7 +41,7 @@ const Leaderboard: React.FC <pageProps> = () => {
     const HEADER_HEIGHT_EXPANDED = 300; 
    
     const scrollY = useRef(new Animated.Value(0)).current;
-    const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+    const AnimatedBackground = Animated.createAnimatedComponent(FastImage);
 
     const setLeaderBoard = async () => {
         const leaderboardEntries = [];
@@ -128,7 +129,12 @@ const Leaderboard: React.FC <pageProps> = () => {
                             ], }]}>
                         <AnimatedBackground
                                 id='background-images'
-                                source={{uri :header[0].image}}
+                                source={{
+                                    uri :header[0].image ,
+                                    priority : FastImage.priority.normal,
+                                    cache: FastImage.cacheControl.cacheOnly,
+                                }}
+                                resizeMode={FastImage.resizeMode.cover}
                                 alt="images"
                                 style={{ 
                                     width: '100%', 

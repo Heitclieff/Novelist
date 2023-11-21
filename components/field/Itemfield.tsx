@@ -7,6 +7,7 @@ Text ,
 Icon , 
 Pressable} from 'native-base';
 import { Image } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
@@ -27,10 +28,14 @@ const Itemfield : React.FC <containerProps>= ({id, data}) => {
      return (
           <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}>
                <Box w= '25%' h = '100%' overflow={'hidden'}>
-                    <Image 
-                    id = "Background-image"
-                    style={{width : '100%' ,height : '100%'}}
-                    source={{uri : data.image}}
+                    <FastImage
+                    style={{width : '100%', height : '100%' }}
+                    source={{
+                         uri : data.image  , 
+                         priority : FastImage.priority.normal
+                    }}
+                    alt = "images"
+                    resizeMode={FastImage.resizeMode.cover}
                     />
                </Box>
                <VStack w= '75%'  pl = {2} pr = {2}  ml = {2}  rounded={'md'} space = {1}>

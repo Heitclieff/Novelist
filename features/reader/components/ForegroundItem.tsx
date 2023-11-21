@@ -3,7 +3,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Box , VStack , Button, Text , Icon } from 'native-base'
 import { Image , Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-
+import FastImage from 'react-native-fast-image'
 interface containerProps {
     collection: any
 }
@@ -22,10 +22,15 @@ const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
             space={2}
         >
             <Box w='150' h='220' bg='gray.300' overflow='hidden'>
-                <Image
-                    style={{ width: '100%', height: '100%'}}
-                    source={{uri :collection.image}}
-                    alt="images"
+                <FastImage
+                  style={{width : '100%', height : '100%' }}
+                  source={{
+                    uri : collection.image  , 
+                    priority : FastImage.priority.normal,
+                    cache: FastImage.cacheControl.cacheOnly
+                  }}
+                  alt = "images"
+                  resizeMode={FastImage.resizeMode.cover}
                 />
             </Box>
             <Box w='140'>

@@ -2,7 +2,7 @@ import React, {useRef} from 'react'
 import { Box } from 'native-base'
 import { Animated } from 'react-native'
 import { ImageBackground } from 'react-native'
-
+import FastImage from 'react-native-fast-image'
 
 interface containerProps {
     background : string,
@@ -10,7 +10,7 @@ interface containerProps {
 }
 
 const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) => {
-  const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+  const AnimatedBackground = Animated.createAnimatedComponent(FastImage)
   // console.log('background',background)
   const handleImageLoad = () => {
     console.log('Image loaded successfully');
@@ -29,7 +29,13 @@ const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) 
     >
         <AnimatedBackground
         id='background-images'
-        source={{uri : background}}  
+        source={{
+          uri : background,
+          priority : FastImage.priority.normal,
+          cache: FastImage.cacheControl.cacheOnly
+        }}  
+        alt = "images"
+        resizeMode={FastImage.resizeMode.cover}
         // onLoad={handleImageLoad}
         // onError={handleImageError}  
         style={{ 
