@@ -11,8 +11,10 @@ Button,
 Switch, 
 IconButton, 
 Pressable,
+useToast,
 Icon} from 'native-base'
 import { Alert } from 'react-native'
+import AlertItem from '../../reader/components/Alert'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
@@ -40,7 +42,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const dispatch = useDispatch();
-
+     const toast = useToast();
      const myproject = useSelector((state) => state.project)
      const projectdocument = useSelector((state) => state.docs.docs);
      const chapterdocs = useSelector((state) => state.content);
@@ -98,6 +100,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      }
 
      const handleProjectUpdate = () => {
+          let status  = "error"
           try{
                setIsedit(false);
                const firestoreConfig = {};
@@ -112,14 +115,17 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                firestore().collection('Novels').doc(id).update(firestoreConfig);
                dispatch(setProjectDocument({docs :updateDocument}));
                console.log("Sucessfull Updated Configuration.");
-       
+               status = "success"
           }catch(error){
                console.error("Error Update Novel Tag :", error);
                return false
           }
+
+          ToastAlert(status , "Saved changes" , "Saving failed")
      }
 
      const DeleteProject =  async () : Promise<void>   => {
+          let status = 'error'
           try{
                const firebase = firestore();
                const batch = firebase.batch();
@@ -167,11 +173,12 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                await getnovels.collection('Chapters').parent?.delete();
                await getnovels.delete();
 
+               status = "success";
                console.log("Delete Books Success" , id)
           }catch(error){
                console.log("Failed To delete This Project" ,error)
           }
-         
+          ToastAlert(status , "Deleted project" , "Delete failed")
      }
  
      const DeleteAlertDailog = () => 
@@ -183,6 +190,23 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           {text: 'Delete', onPress: () => DeleteProject()},
      ]);
 
+     const ToastAlert = (status:string, success:string , failed:string ) => {
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText = {success}
+                 failedText = {failed}
+                 /> 
+               }
+          })
+
+     }
+
      useEffect(() => {
           if(rating?.rates) return
           fetchingRates(); 
@@ -191,7 +215,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
   return (
        <VStack flex={1} bg={theme.Bg.base}>
             <Memorizednavigation title = "Project Settings"  editable = {isEdit} isAction  = {handleProjectUpdate}
-            rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+            rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
             />
             <Box flex={1}>
                  <FlatList>
@@ -249,9 +273,9 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                    }
                                    
                               </VStack>
-                                <VStack space={2} >
-                                   <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                             <VStack>
+                                <VStack  space={2} >
+                                   <HStack   alignItems={'center'} justifyContent={'space-between'}>
+                                             <VStack w = {'80%'}>
                                                   <Text color={theme.Text.description} fontWeight={'semibold'}>Enable Comment</Text>           
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for people can comment your Novel</Text>                    
                                              </VStack>
@@ -259,7 +283,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                             <VStack>
+                                             <VStack w = {'80%'}>
                                                   <Text color={theme.Text.description} fontWeight={'semibold'}>Public Project</Text>
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for people can see your project</Text>
                                              </VStack>
@@ -267,7 +291,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              <Switch size={'sm'} value = {projectconfig.status} onToggle={(target) => projectConfigChange('status' , target)}/>
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                             <VStack>
+                                             <VStack w = {'80%'}>
                                                   <Text color={theme.Text.description} fontWeight={'semibold'}>Finshed Project</Text>
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for finished your project</Text>
                                              </VStack>
@@ -275,9 +299,9 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              <Switch size={'sm'} value = {projectconfig.novel_status} onToggle={(target) => projectConfigChange('novel_status' , target)}/>
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                             <VStack>
+                                             <VStack w = {'80%'}>
                                                   <Text color={theme.Text.description} fontWeight={'semibold'}>Commit</Text>
-                                                  <Text color = {theme.Text.description} fontSize={'xs'}>this feature for single creator to commited your project</Text>
+                                                  <Text  color = {theme.Text.description} fontSize={'xs'}>this feature for single creator to commited your project</Text>
                                              </VStack>
                                         
                                              <Switch size={'sm'} value = {projectconfig.commit_status} onToggle={(target) => projectConfigChange('commit_status' , target)}/>

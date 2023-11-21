@@ -111,7 +111,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                     zIndex: 10
                }]
                }>
-               <HStack w='100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl={5} pr={5}>
+               <HStack w='100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl={5} mt = {2} pr={5}>
                     <Box>
                          <HStack alignItems={'center'}>
                               <IconButton
@@ -121,7 +121,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                    icon={
                                         <EntypoIcon
                                              name='chevron-left'
-                                             size={20}
+                                             size={25}
                                              color={theme.Icon.base}
                                         />
                                    }
@@ -199,7 +199,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                               status ? 
                                    isEdit ?
                                         
-                                        <Text color = {theme.Text.base} onPress = {SavingAlertDailog}>Save</Text>
+                                        <Text color = {theme.Text.heading} fontWeight={'semibold'} onPress = {SavingAlertDailog}>Save</Text>
                                         :
                                         
                                         <IconButton

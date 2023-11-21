@@ -1,9 +1,9 @@
 import React,{useContext , useEffect , useState} from 'react'
-import { VStack , Text , FormControl , Input , } from 'native-base'
+import { VStack , Text , FormControl , Input , useToast} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import { useRoute } from '@react-navigation/native'
-
+import AlertItem from '../../reader/components/Alert'
 // @Redux Tookits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
@@ -15,7 +15,7 @@ interface pageProps {}
 const EditChapter : React.FC <pageProps> = () => {
      const route = useRoute();
      const dispatch = useDispatch();
-
+     const toast = useToast();
      const chaptercontent  = useSelector((state) => state.content)
      const useraccount = useSelector((state) => state.userData);
 
@@ -27,6 +27,7 @@ const EditChapter : React.FC <pageProps> = () => {
 
    
      const SavingEditChapter = async () => {
+          let status = "error"
           try{
                const saperatedchapter = {updated : {} , still : []}
                chaptercontent.content.forEach(doc => {
@@ -59,10 +60,28 @@ const EditChapter : React.FC <pageProps> = () => {
                     updatedAt : timestamp,
                     updatedBy : useraccount[0].id,
                });
+               status = "success"
           }catch(error){
                console.log("Failed To update title name",error)
           }
-         
+          ToastAlert(status , "Saved Changes" , "Saving failed")
+     }
+
+     const ToastAlert = (status:string, success:string , failed:string ) => {
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText = {success}
+                 failedText = {failed}
+                 /> 
+               }
+          })
+
      }
 
   return (

@@ -5,21 +5,21 @@ VStack,
 Input , 
 Icon ,
 HStack,
+useToast,
 Text } from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
 import { useNavigation } from '@react-navigation/native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
-import { teamsdata } from '../assets/config';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { useToast } from 'native-base';
-import { MessageConfig } from '../assets/config';
+
 //@Firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
 //@components
+import AlertItem from '../../reader/components/Alert';
 import TeamItem from '../components/TeamItem';
 import Deletebutton from '../../../components/button/Deletebutton';
 import Elementnavigation from '../../../components/navigation/Elementnavigation';
@@ -114,6 +114,7 @@ const Team : React.FC <pageprops> = ({route}) => {
      }
 
      const RemoveMember = async (id:string , doc_id:string) : Promise<void> => {
+          let status = "error"
           try{
                const removedSelecteduser = userdocs.teams.filter(user => user.id !== id);
                dispatch(setProjectTeams({teams: removedSelecteduser}));
@@ -124,11 +125,31 @@ const Team : React.FC <pageprops> = ({route}) => {
                               .collection('Creator')
                               .doc(doc_id)
                               .delete()
-                              
+               
+               status = "success"
           }catch(error) {
                console.log("Remove Failed " , error)
           }
+          ToastAlert(status , "Removed" , "Removed failed")
      }
+
+     const ToastAlert = (status:string, success:string , failed:string ) => {
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText = {success}
+                 failedText = {failed}
+                 /> 
+               }
+          })
+
+     }
+     
 
      useEffect(() => {   
           if(!refreshing){
@@ -149,10 +170,10 @@ const Team : React.FC <pageprops> = ({route}) => {
                rightElement={[
                     {
                          status: isDisable,
-                         icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />,
+                         icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />,
                          navigate: () => navigation.navigate('Search', { fixedsearch: true })
                     },
-                    { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
+                    { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
                ]}
           />
          <Box flex = {1}>

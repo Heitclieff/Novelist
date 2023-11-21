@@ -115,6 +115,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
      const sendcommitsRequest = async () : Promise <void> => {
+          let status = "error"
           try{
                const timestamp = firestore.FieldValue.serverTimestamp();
                const getnovel = firebase.collection('Novels').doc(doc_id);
@@ -165,16 +166,18 @@ const Readcontent : React.FC <pageProps> = () => {
                });
 
                navigation.goBack();
+               status = "success"
                console.log("send Request success" , docRef.id);
           }catch(error){
                console.log("Failed to Send Commit request" , error);
           }
-
           reference.update({during : false});
+          ToastAlert(status , "Pushed Commits" , "Push failed")
      }
 
 
      const approvedcommitRequest = async () : Promise <void> => {
+          let status = "error"
           try{
                const getnovel =  firebase.collection("Novels").doc(doc_id);
                const getcommits = getnovel.collection("Commits").doc(commit_id);
@@ -227,24 +230,25 @@ const Readcontent : React.FC <pageProps> = () => {
                          project : doc_id,
                     });
 
+                    status = "success"
                }else{
                      const getchapters = chapterdocs.snapshotchapter.doc(id);
                      await getchapters.update({status : false});
                }
 
-          
-
                navigation.goBack();
-
                console.log("Approved this request success");
+               ToastAlert(status , "Approved" , "Approve failed")
                
           }catch(error){
                console.log("Failed to Aprroved Commits" , error);
+               reference.update({during : false})
           }
      }
 
 
      const removecommitRequest = async () : Promise <void> => {
+          let status = "error"
           try{
                if(!commit_id){
                     console.log("ERROR: Not founds any Commits id")
@@ -295,12 +299,16 @@ const Readcontent : React.FC <pageProps> = () => {
 
                navigation.goBack();
                console.log("Remove this request success");
+               status = "success"
           }catch(error){
                console.log("Failed to Remove this Request." ,error);
+               reference.update({during : false})
           }
+          ToastAlert(status , "Removed" , "Remove failed")
      }
 
      const changechapterStatement = async() : Promise<void> => {
+          let status = "error"
           try{
                reference.update({during : true});
                console.log("Chapterdocs",chapterdocs.content)
@@ -319,10 +327,14 @@ const Readcontent : React.FC <pageProps> = () => {
                setEditable(true);
                setisDraft(true);
                
+               status = "success"
                console.log("change chapter statements success");
           }catch(error){
                console.log("Failed to change chapter statement", error)
+               reference.update({during : false})
           }
+          ToastAlert(status , "Edit Mode" , "Changes failed")
+
      }
 
      const getnovelContent =  async () : Promise<void> => {
@@ -337,6 +349,8 @@ const Readcontent : React.FC <pageProps> = () => {
                dispatch(setChapterWriteContent({contentdocs : contentDocs?.[0].content, docid : id , id : contentDocs?.[0].id}));
           }catch(error){
                console.log("Failed to get Novels content" , error);
+               reference.update({during : false})
+               
           }
      }
 
@@ -376,19 +390,28 @@ const Readcontent : React.FC <pageProps> = () => {
                toastStatus = "success"
           }catch(error) {
                console.error("Update Content Problem ", error);
+               reference.update({during : false})
           }
+          ToastAlert(toastStatus , "Saved" , "Saving failed")
+     }
 
+
+     const ToastAlert = (status : string , success : string , failed : string) => {
           toast.show({
+               placement : 'top',
                render: ({
                  id
                }) => {
-                 return <AlertItem status = {toastStatus} /> 
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText= {success}
+                 failedText= {failed}
+                 /> 
                }
           })
      }
 
-
-    
       const GoBackwithReference = () => {
           navigation.goBack();
           reference.update({during : false})
@@ -543,6 +566,7 @@ const Readcontent : React.FC <pageProps> = () => {
           </FlatList>    
      {editable &&
           <Invitemodal 
+          theme = {theme}
           data = {data}
           doc_id = {doc_id}
           createdBy = {createdBy} 

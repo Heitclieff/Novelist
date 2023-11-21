@@ -144,8 +144,8 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         <Memorizednavigation 
             Contentfixed = {false}
             rightElement={[
-            {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
-            {icon : <AntdesignIcon size = {15} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+            {icon : <AntdesignIcon size = {20} color = {theme.Icon.static} name = 'setting'/> , navigate : () => Redirectnavigation('Project Settings')} ,
+            {icon : <AntdesignIcon size = {20} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
         {projectdocs  && 
         <>

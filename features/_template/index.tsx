@@ -2,6 +2,8 @@ import React,{useContext , useEffect, useState} from 'react'
 import { 
 Box , 
 Button, 
+Text,
+Center,
 VStack} from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { ItemList } from '../../components/layout/Flatlist/ItemList'
@@ -17,7 +19,7 @@ import { RootState } from '../../systems/redux/reducer'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { setTempleteCache ,setCategoryCache } from '../../systems/redux/action'
-
+import { SpinnerItem } from '../../components/Spinner'
 //firebase
 import firestore from '@react-native-firebase/firestore'
 
@@ -39,6 +41,7 @@ const Template : React.FC <Pageprops> = ({collections}) => {
 
   const [selectedContent , setSelectedContent] = useState<any[]>(temepletedocs.content)
   const [refreshing ,setRefreshing] = useState<boolean>(false);
+  const [isLoading , setLoading] = useState<boolean>(true);
 
   const getDatafromCollection = async() :Promise<void> => {
     try{
@@ -86,20 +89,34 @@ const Template : React.FC <Pageprops> = ({collections}) => {
     }
   }
 
-  useEffect(() => {
+  useEffect(() => {``
     initailfetching();
+    setLoading(false);
   } , [refreshing])
-
 
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title = {title} fixed/>
           <VStack flex={1} pl = {4} pr = {4}>
-            {temepletedocs.content?.length > 0 && 
 
-              <ItemList collection={selectedContent} refreshing = {refreshing} setRefreshing={setRefreshing}>
-               {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
-             </ItemList>
+            {isLoading ?
+              <Box mt = {5}>
+                <SpinnerItem/>
+              </Box>
+             
+              :
+              selectedContent?.length > 0 ? 
+                <ItemList collection={selectedContent} refreshing = {refreshing} setRefreshing={setRefreshing}>
+                  {(item:any , index:number) => <MemorizedItemfields key = {index} id = {item.id} data= {item}/> }
+                </ItemList>
+
+              :
+              <Center mt = {5}>
+                <Text color = {theme.Text.description}>Not founds any Books of {option}</Text>
+              </Center>
+                
+              
+             
             } 
           </VStack>
          

@@ -6,17 +6,18 @@ Box ,
 Text, 
 Input , 
 Icon,
+useToast,
 Pressable} from 'native-base';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import { useRoute } from '@react-navigation/native';
-import { MessageConfig } from './assets/config';
 
 // @Components
 import Userfield from './components/Userfield';
 import Itemfield from './components/Itemfield';
+import AlertItem from '../reader/components/Alert';
 import sendNotification from '../../services/notificationService';
 
 //@Firestore
@@ -35,7 +36,8 @@ const Searchpage : React.FC =() => {
      const navigation = useNavigation();
      const dispatch = useDispatch();
      const route = useRoute();
-     
+     const toast = useToast();
+
      const fixedsearch = route.params?.fixedsearch ? true : false;
 
      const [searchQuery, setsearchQuery] = useState<string>('');
@@ -93,91 +95,78 @@ const Searchpage : React.FC =() => {
      }
 
      const UpdatedTeams = async (data:any) : Promise<void> => {
-          const updateItem = [
-               ...userdocs.teams,
-               {
-                    ...data,
-                    pending: true,
-                    isleader : false,
-               }
-          ]
-          dispatch(setProjectTeams({teams : updateItem}));
-
-          if(data?.message_token){
-               sendNotification({
-                    token : data?.message_token,
-                    target : data.id,
-                    body : `you have a new invited from ${useraccount[0]?.username}`,
-                    icon : useraccount[0]?.pf_image,
-                    type : 'invite',
-                    project : docID.id
-               });
-          }else{
-               console.log("ERROR : failed to send notification because target device doesn't have message token.")
-          }
+          let status = "error"
+          try{
+               const updateItem = [
+                    ...userdocs.teams,
+                    {
+                         ...data,
+                         pending: true,
+                         isleader : false,
+                    }
+               ]
+               dispatch(setProjectTeams({teams : updateItem}));
      
-          const timestamp = firestore.FieldValue.serverTimestamp();
-          const docRef =  await firestore()
-                         .collection('Novels')
-                         .doc(docID.id)
-                         .collection('Creator')
-                         .add({
-                              pending : true,
-                              userDoc : data.id,
-                              addAt  : timestamp,
-                         })
-
+               if(data?.message_token){
+                    sendNotification({
+                         token : data?.message_token,
+                         target : data.id,
+                         body : `you have a new invited from ${useraccount[0]?.username}`,
+                         icon : useraccount[0]?.pf_image,
+                         type : 'invite',
+                         project : docID.id
+                    });
+               }else{
+                    console.log("ERROR : failed to send notification because target device doesn't have message token.")
+               }
           
-          console.log("docRef ID" , docRef.id)
+               const timestamp = firestore.FieldValue.serverTimestamp();
+               const docRef =  await firestore()
+                              .collection('Novels')
+                              .doc(docID.id)
+                              .collection('Creator')
+                              .add({
+                                   pending : true,
+                                   userDoc : data.id,
+                                   addAt  : timestamp,
+                              })
+     
+               
+               console.log("docRef ID" , docRef.id)
+               status = "success";
+          }catch(error){
+               console.log("ERROR: failed to update teams" ,error)
+          }
+
+          ToastAlert(status , "Added" , "Add failed")
      }
 
-     // const sendNotification = async (token:string) => {
-     //      if(!token) return
+     const ToastAlert = (status:string, success:string , failed:string ) => {
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText = {success}
+                 failedText = {failed}
+                 /> 
+               }
+          })
 
-     //      try{
-     //           const currentuser = useraccount[0];
-     //           const response = await fetch(MessageConfig.protocol, {
-     //                method: 'POST',
-     //                headers: {
-     //                  'Content-Type': 'application/json',
-     //                  'Authorization': `key=${MessageConfig.server_key}`,
-     //                },
-     //                body: JSON.stringify({
-     //                  to : token,
-     //                  notification: {
-     //                    title: 'Nobelist',
-     //                    body: `you have a new invited from ${currentuser.username}.`,
-     //                    icon : currentuser?.pf_image,
-     //                  },
-     //                  data: {
-     //                    custom_key: MessageConfig.custom_key,
-     //                    icon : currentuser?.pf_image,
-     //                    title : `you have a new invited from ${currentuser.username}.`,
-     //                    type : 'invite',
-     //                    navigate : "project"
-     //                  },
-     //                }),
-     //              });
-                
-     //              const data = await response.json();
-     //              console.log('Notification Response:', data);
-
-     //      }catch(error){
-     //           console.log("Failed to send Notification" , error)
-     //      }
-     //    };
+     }
 
      useEffect(() => {
-        
           searchnovel();
-          
           searchUsers();
      } , [searchQuery])
   return (
      <VStack flex = {1} bg=  {theme.Bg.base} space = {5}>
-          <HStack pl = {6} pr = {6} pt = {3} safeAreaTop space = {2}>
+          <HStack  pl = {3} pr = {3} pt = {3} safeAreaTop space = {2}>
                   <Input
-                  w = '85%'
+                  w = '80%'
                   rounded={'full'} 
                   bg = {theme.Bg.container} 
                   borderColor={theme.Bg.comment}  

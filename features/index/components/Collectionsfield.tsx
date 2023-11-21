@@ -76,7 +76,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
             icon = {
                 <EntypoIcon 
                 name = 'chevron-right'
-                size=  {20}
+                size=  {25}
                 color = {theme.Icon.base}
                 />
             }

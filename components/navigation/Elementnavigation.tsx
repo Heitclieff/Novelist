@@ -16,7 +16,7 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
     const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
   return (
-    <HStack safeAreaTop w = '100%'  position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {3} pl = {4} pr = {4}>
+    <HStack safeAreaTop w = '100%' alignItems = "center"  position ={Contentfixed ? 'relative' : 'absolute'}  zIndex={1} justifyContent={'space-between'} pt = {3} pl = {4} pr = {4}>
          <Box >
             {title ? 
                 <Text
@@ -34,7 +34,7 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
             icon = {
                 <EntypoIcon
                 name='chevron-left'
-                size = {20}
+                size = {25}
                 color = {theme.Icon.static}
                 />
                 }
@@ -65,8 +65,9 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
                         }) => {
                         return(
                             <Text
-                            fontSize={'xs'}
+                            fontSize={'sm'}
                             fontWeight={'normal'}
+                            
                             color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
                             >save
                             </Text>

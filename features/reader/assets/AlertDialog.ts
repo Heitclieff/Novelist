@@ -1,9 +1,9 @@
 export const StatusDialog = [{
      status: "success",
-     title: "Update your Chapter Successfully."
+     title: "Saved"
 }, {
      status: "error",
-     title: "Update your Chapter Error."
+     title: "Saving failed"
 }, {
      status: "info",
      title: "We are going live in July!"

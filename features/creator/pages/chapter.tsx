@@ -13,7 +13,8 @@ IconButton,
 FormControl,
 Icon,
 Center,
-Spinner
+Spinner,
+useToast,
 } from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { BottomSheetModalProvider, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
@@ -24,7 +25,7 @@ import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import ChapterItem from '../components/ChapterItem'
 import Deletebutton from '../../../components/button/Deletebutton'
-
+import AlertItem from '../../reader/components/Alert'
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -93,6 +94,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   }, [separatedChapterdocs , refreshing])
 
   const DeleteChapter = async (id:string): Promise<void>=> { 
+    let status = 'error'
     try { 
       const projectpath = firestore().collection('Novels').doc(chapterdocs.id);
       const chapterpath = projectpath.collection("Chapters").doc(id);
@@ -103,10 +105,29 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       await Contentpath.parent?.delete();
       const docRef = await chapterpath.delete();
       console.log("Remove Chapter Success" , id)
+      status = "success"
     }catch(error){
       console.log("Failed To Remove This Chapter" , error)
     }
+    ToastAlert(status , "Deleted" , "Delete failed")
   }
+
+  const ToastAlert = (status:string, success:string , failed:string ) => {
+    toast.show({
+         placement : 'top',
+         render: ({
+           id
+         }) => {
+           return <AlertItem 
+           theme=  {theme} 
+           status = {status}
+           successText = {success}
+           failedText = {failed}
+           /> 
+         }
+    })
+
+}
 
   useEffect(() => {
     setTimeout(() => {
@@ -121,8 +142,8 @@ if(initial) return(
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
         rightElement={[
-          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id}) },
-          { icon: <AntdesignIcon size={15} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
+          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id}) },
+          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />
 

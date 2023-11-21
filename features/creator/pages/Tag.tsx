@@ -116,7 +116,11 @@ const Tag: React.FC <Pageprops> = () => {
                render: ({
                     id
                }) => {
-                    return <AlertItem status = {isSuccess ? "success" : "error"}/> 
+                    return <AlertItem 
+                    status = {isSuccess ? "success" : "error"} 
+                    successText = "Tags Added"
+                    failedText='Add failed'
+                    /> 
                }
           })
      }

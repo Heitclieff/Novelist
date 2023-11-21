@@ -10,13 +10,15 @@ Modal,
 Text,
 VStack,
 Pressable,
+useToast,
 } from 'native-base'
 import { Image } from 'react-native'
+
 import { Userfieds } from './userfieds'
+import AlertItem from '../../reader/components/Alert'
 // @Redux tookits
 import { useSelector , useDispatch } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
-
 //@ firebase
 import firestore from '@react-native-firebase/firestore'
 
@@ -30,14 +32,14 @@ interface containerProps {
 
 export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModal , createdBy , data , doc_id}) => {
      const theme:any = useContext(ThemeWrapper);
-     
+
      const userData = useSelector((state) => state.userData);
      const userdocs = useSelector((state) => state.teams);
      const chapterdocs = useSelector((state) => state.content)
      const [userDisplay , setuserDisplay] = useState<any[]>([]);
 
      const dispatch = useDispatch();
-
+     const toast = useToast();
      const firebase = firestore();
      const getnovel = firebase.collection("Novels").doc(doc_id);
      const getchapter = getnovel.collection("Chapters").doc(data.id)
@@ -55,6 +57,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      }
      
      const sendInvitetoselected = () => {
+          let toastStatus = "error";
           try{
                setShowModal(false);
                const getnovel = firebase.collection("Novels").doc(doc_id);
@@ -71,10 +74,25 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                .concat({ ...data ,  access : selectedInvite});
 
                dispatch(setChaptercontent({...chapterdocs , content : removechapter}))
-
+               toastStatus = "success"
           }catch(error){
                console.log("ERROR: Failed to send Invite to users",error)
           }
+
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {toastStatus}
+                 successText = "Send invited"
+                 failedText = "invited failed"
+                 /> 
+               }
+          })
+
      }
 
 
@@ -115,16 +133,18 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                     userDisplay.map((item) => {
                          const isrenderer = item.id !== createdBy;
              
+                         if(isrenderer)
                          return(
-                              isrenderer &&
-                                   <Userfieds 
-                                   key = {item.id}
-                                   doc_id = {doc_id} 
-                                   isreload = {showModal}
-                                   selectedInvite = {selectedInvite}
-                                   setSelectedInvited = {setSelectedInvited}
-                                   item = {item} 
-                                   data = {data}/>
+                         
+                              <Userfieds 
+                              theme = {theme}
+                              key = {item.id}
+                              doc_id = {doc_id} 
+                              isreload = {showModal}
+                              selectedInvite = {selectedInvite}
+                              setSelectedInvited = {setSelectedInvited}
+                              item = {item} 
+                              data = {data}/>
                          )
                     })
                }

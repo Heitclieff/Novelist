@@ -5,12 +5,13 @@ VStack ,
 Text,
 Input,
 FormControl,
+useToast,
 Button } from 'native-base'
 import { useRoute } from '@react-navigation/native'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import Chapter from './chapter'
 import { useNavigation } from '@react-navigation/native'
-
+import AlertItem from '../../reader/components/Alert'
 
 // @Redux toolkits
 import { useSelector , useDispatch } from 'react-redux'
@@ -25,6 +26,7 @@ interface Pageprops {}
 const CreateChapter : React.FC <Pageprops> = () =>{
      const theme:any = useContext(ThemeWrapper);     
      const navigation = useNavigation();
+     const toast = useToast();
      const route = useRoute();
      const dispatch = useDispatch();
      const chapterdocs = useSelector((state) => state.content);
@@ -35,6 +37,7 @@ const CreateChapter : React.FC <Pageprops> = () =>{
      const {doc_id} = route.params
 
      const CreateChapter = async () : Promise <void> => {
+          let status=  "error"
           try{
                if(!ChapterTitle){
                     console.log("INSERT TITLE")
@@ -102,11 +105,31 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                     status : true,
                     commitable : false,
                })
+               status = "success"
           }catch(error){
                console.log("Failed To Create Chapter ", error);
-          }
-      
+           }
+          
+          ToastAlert(status , "Created" , "Create failed")
      }
+
+     const ToastAlert = (status:string, success:string , failed:string ) => {
+          toast.show({
+               placement : 'top',
+               render: ({
+                 id
+               }) => {
+                 return <AlertItem 
+                 theme=  {theme} 
+                 status = {status}
+                 successText = {success}
+                 failedText = {failed}
+                 /> 
+               }
+          })
+
+     }
+
 
   return (
      <VStack flex=  {1} bg = {theme.Bg.base}>
