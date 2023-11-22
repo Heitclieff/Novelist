@@ -16,10 +16,11 @@ interface containerProps {
      failedText : string
 }
 
-const AlertItem: React.FC<containerProps> = ({ status ,successText , failedText , theme }) => {
+const AlertItem: React.FC<containerProps> = ({ status ,successText , failedText }) => {
+
      return (
      <Stack space={3} w="100%" maxW="200" >
-          <Alert w="100%"  p = {2}  rounded = "full" bg = {'teal.600'} _text = {{color : theme.Text.heading}}>
+          <Alert w="100%"  p = {2}  rounded = "full" bg = {'teal.600'} _text = {{color : 'gray.100'}}>
                {status == "success" ? successText: failedText}
           </Alert>
      </Stack>

@@ -24,6 +24,7 @@ import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import TagItem from '../components/Tagitem'
 import { StatusDialog } from '../assets/toastStatus'
+import SendAlert from '../../../services/alertService'
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
@@ -111,18 +112,7 @@ const Tag: React.FC <Pageprops> = () => {
           const selectedCategory = await MatchingTagsWithcategory();
           const isSuccess = await handleTagupdate(selectedTags , selectedCategory);
          
-          toast.show({
-               placement : 'top',
-               render: ({
-                    id
-               }) => {
-                    return <AlertItem 
-                    status = {isSuccess ? "success" : "error"} 
-                    successText = "Tags Added"
-                    failedText='Add failed'
-                    /> 
-               }
-          })
+          SendAlert(isSuccess ? "succes" : "error" ,  "Tags Added" , "Add failed" , toast);
      }
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>

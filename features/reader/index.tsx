@@ -10,7 +10,9 @@ Box ,
 Button,
 VStack , 
 Text,
-Divider } from 'native-base'
+Divider,
+useToast,
+} from 'native-base'
 import { 
 ImageBackground , 
 Image , 
@@ -29,6 +31,7 @@ import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
+import SendAlert from '../../services/alertService';
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
@@ -61,6 +64,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const db = firestore()
     const theme:any = useContext(ThemeWrapper);
     const route = useRoute()
+    const toast = useToast();
     const {id}:any = route.params
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -175,8 +179,11 @@ const NovelContent : React.FC <Pageprops> = () => {
         setisLiked(true);   
     }
     const AddtoMyBookmarks = async () : Promise<void> => {
+        const Prevmarks = isMarks;
+        let status  = "error"
+        setisMarks(!isMarks)
         try{
-            setisMarks(!isMarks)
+ 
             const uid = myAccount[0].id
             const getuserpath =  db.collection('Users').doc(uid);
             const bookmarkpath = getuserpath.collection("Bookmark");
@@ -189,7 +196,8 @@ const NovelContent : React.FC <Pageprops> = () => {
             };
             let BookSlot  = [];
 
-            if(!isMarks){
+            if(!Prevmarks){
+                status = "success"
                 const docRef = await bookmarkpath.add({
                     date : timestamp,
                     novelDoc : id, 
@@ -197,6 +205,7 @@ const NovelContent : React.FC <Pageprops> = () => {
 
                 BookSlot = [{docid : docRef.id , id : id , date : formattedDate , ...novelItem} ,...Mybookmarks.slot]
                 console.log("Sucess" ,docRef.id)
+                SendAlert(status , "Added success" , "Add failed" , toast)
             }else {
                 const BookmarksStore = {removeBooks : [] , keepBooks : []};
                 Mybookmarks.slot.forEach(book => {
@@ -210,6 +219,7 @@ const NovelContent : React.FC <Pageprops> = () => {
 
                 BookSlot = BookmarksStore.keepBooks;
                 await bookmarkpath.doc(BookmarksStore.removeBooks[0]?.docid).delete();
+      
             }
            
             dispatch(setMybookmarks({slot : BookSlot}))
@@ -217,6 +227,8 @@ const NovelContent : React.FC <Pageprops> = () => {
         }catch(error){
             console.log("Add Book to Bookmarks Failed" , error)
         }
+    
+       
     }
 
     const setBookisLiked = async (liked:boolean) : Promise<void> => {
@@ -262,20 +274,25 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
     const setMylibraryBooks = async () : Promise<void> => {
+        let status = "error";
+        const prevOwn = isMyOwn;
+        setisMyOwn(!isMyOwn);
         try{
             const uid = myAccount[0].id
             const getuserpath =  db.collection('Users').doc(uid);
             const librarypath =  getuserpath.collection("Library")
             const timestamp = firestore.FieldValue.serverTimestamp();
-
-            if(!isMyOwn){
+           
+            if(!prevOwn){
                 dispatch(setMylibrary({book : [{id : id , ...novelItem}, ...myBooks.book]}))
                 const docRef = await librarypath.add({           
                     date : timestamp,
                     novelDoc : id,
                     type : 'Bought'
                     });
+                status = "success"
                 console.log('Add success', docRef.id)
+                SendAlert(status , "Added success" , "Add failed" , toast)
             }else{
                 const removeBooks = Mybookmarks.slot.filter((book) => book.id !== id)
                 dispatch(setMylibrary({book: removeBooks}));
@@ -286,10 +303,12 @@ const NovelContent : React.FC <Pageprops> = () => {
                 console.log("Remove" , id , 'success');
                 
             }
+
+          
         }catch(error){
             console.log("Add Book to library Failed" , error)
         }
-        setisMyOwn(!isMyOwn);
+       
     }
 
     useEffect(() => {

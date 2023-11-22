@@ -29,7 +29,7 @@ import AlertItem from '../../reader/components/Alert'
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
-
+import SendAlert from '../../../services/alertService'
 // @Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -50,6 +50,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const theme: any = useContext(ThemeWrapper);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(true);
@@ -109,25 +110,8 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }catch(error){
       console.log("Failed To Remove This Chapter" , error)
     }
-    ToastAlert(status , "Deleted" , "Delete failed")
+    SendAlert(status , "Deleted" , "Delete failed" , toast)
   }
-
-  const ToastAlert = (status:string, success:string , failed:string ) => {
-    toast.show({
-         placement : 'top',
-         render: ({
-           id
-         }) => {
-           return <AlertItem 
-           theme=  {theme} 
-           status = {status}
-           successText = {success}
-           failedText = {failed}
-           /> 
-         }
-    })
-
-}
 
   useEffect(() => {
     setTimeout(() => {

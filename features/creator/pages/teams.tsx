@@ -28,6 +28,7 @@ import CreatorAlert from '../components/Alert';
 import { useSelector , useDispatch } from 'react-redux';
 import { setProjectTeams } from '../../../systems/redux/action';
 import { RefreshControl } from 'react-native-gesture-handler';
+import SendAlert from '../../../services/alertService';
 
 const MemorizedTeamitem = React.memo(TeamItem);
 const Memorizednavigation = React.memo(Elementnavigation)
@@ -130,26 +131,8 @@ const Team : React.FC <pageprops> = ({route}) => {
           }catch(error) {
                console.log("Remove Failed " , error)
           }
-          ToastAlert(status , "Removed" , "Removed failed")
+          SendAlert(status , "Removed" , "Removed failed" , toast)
      }
-
-     const ToastAlert = (status:string, success:string , failed:string ) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText = {success}
-                 failedText = {failed}
-                 /> 
-               }
-          })
-
-     }
-     
 
      useEffect(() => {   
           if(!refreshing){

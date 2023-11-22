@@ -19,7 +19,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { AppState, AppStateStatus , BackHandler  } from 'react-native';
 import Chapter from '../creator/pages/chapter';
 import { Invitemodal } from '../creator/components/Invitemodal'
-
+import SendAlert from '../../services/alertService'
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChapterWriteContent ,setChaptercontent , setprojectCommits } from '../../systems/redux/action'
@@ -172,7 +172,7 @@ const Readcontent : React.FC <pageProps> = () => {
                console.log("Failed to Send Commit request" , error);
           }
           reference.update({during : false});
-          ToastAlert(status , "Pushed Commits" , "Push failed")
+          SendAlert(status , "Pushed Commits" , "Push failed" , toast)
      }
 
 
@@ -238,12 +238,13 @@ const Readcontent : React.FC <pageProps> = () => {
 
                navigation.goBack();
                console.log("Approved this request success");
-               ToastAlert(status , "Approved" , "Approve failed")
-               
+   
           }catch(error){
                console.log("Failed to Aprroved Commits" , error);
                reference.update({during : false})
           }
+
+          SendAlert(status , "Approved" , "Approve failed" , toast)     
      }
 
 
@@ -304,7 +305,7 @@ const Readcontent : React.FC <pageProps> = () => {
                console.log("Failed to Remove this Request." ,error);
                reference.update({during : false})
           }
-          ToastAlert(status , "Removed" , "Remove failed")
+          SendAlert(status , "Removed" , "Remove failed" , toast)
      }
 
      const changechapterStatement = async() : Promise<void> => {
@@ -333,7 +334,7 @@ const Readcontent : React.FC <pageProps> = () => {
                console.log("Failed to change chapter statement", error)
                reference.update({during : false})
           }
-          ToastAlert(status , "Edit Mode" , "Changes failed")
+          SendAlert(status , "Edit Mode" , "Changes failed" , toast)
 
      }
 
@@ -392,25 +393,10 @@ const Readcontent : React.FC <pageProps> = () => {
                console.error("Update Content Problem ", error);
                reference.update({during : false})
           }
-          ToastAlert(toastStatus , "Saved" , "Saving failed")
+          SendAlert(toastStatus , "Saved" , "Saving failed" , toast)
      }
 
 
-     const ToastAlert = (status : string , success : string , failed : string) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText= {success}
-                 failedText= {failed}
-                 /> 
-               }
-          })
-     }
 
       const GoBackwithReference = () => {
           navigation.goBack();

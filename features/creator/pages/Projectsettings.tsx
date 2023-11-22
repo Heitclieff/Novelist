@@ -21,6 +21,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import Rating from '../../project/components/Rating'
+import SendAlert from '../../../services/alertService'
 
 // @Redux Tookits
 import { setProjectContent, setProjectDocument ,setRating } from '../../../systems/redux/action'
@@ -121,7 +122,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                return false
           }
 
-          ToastAlert(status , "Saved changes" , "Saving failed")
+          SendAlert(status , "Saved changes" , "Saving failed" , toast)
      }
 
      const DeleteProject =  async () : Promise<void>   => {
@@ -178,7 +179,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           }catch(error){
                console.log("Failed To delete This Project" ,error)
           }
-          ToastAlert(status , "Deleted project" , "Delete failed")
+          SendAlert(status , "Deleted project" , "Delete failed" , toast)
      }
  
      const DeleteAlertDailog = () => 
@@ -189,23 +190,6 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           },
           {text: 'Delete', onPress: () => DeleteProject()},
      ]);
-
-     const ToastAlert = (status:string, success:string , failed:string ) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText = {success}
-                 failedText = {failed}
-                 /> 
-               }
-          })
-
-     }
 
      useEffect(() => {
           if(rating?.rates) return

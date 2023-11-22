@@ -12,7 +12,7 @@ import Centernavigation from '../../../components/navigation/Centernavigation'
 import Chapter from './chapter'
 import { useNavigation } from '@react-navigation/native'
 import AlertItem from '../../reader/components/Alert'
-
+import SendAlert from '../../../services/alertService'
 // @Redux toolkits
 import { useSelector , useDispatch } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
@@ -110,26 +110,8 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                console.log("Failed To Create Chapter ", error);
            }
           
-          ToastAlert(status , "Created" , "Create failed")
+          SendAlert(status , "Created" , "Create failed" , toast)
      }
-
-     const ToastAlert = (status:string, success:string , failed:string ) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText = {success}
-                 failedText = {failed}
-                 /> 
-               }
-          })
-
-     }
-
 
   return (
      <VStack flex=  {1} bg = {theme.Bg.base}>

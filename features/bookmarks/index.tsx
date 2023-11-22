@@ -52,6 +52,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
               ...doc
           }
         });
+
         dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
         
       }catch(error){
@@ -93,6 +94,8 @@ const Bookmarks : React.FC <Pageprops> = () => {
       }
     },[refreshing])
 
+    console.log(Mybookmarks.slot)
+
   return (
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
         
@@ -107,7 +110,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
                     ItemSeparatorComponent={<Box h=  '2'/>}
                     renderItem={(itemdisable:any , index:number) => (
                       <Center>
-                        <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.novelDoc}/>
+                        <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.id}/>
                       </Center>
                     )}
                     renderHiddenItem={ (data, rowMap) => (<Bookmarkbutton action = {Deletefrombookmarks} docid = {item.docid}/>)}

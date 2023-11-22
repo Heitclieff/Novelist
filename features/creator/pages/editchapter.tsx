@@ -4,6 +4,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import { useRoute } from '@react-navigation/native'
 import AlertItem from '../../reader/components/Alert'
+import SendAlert from '../../../services/alertService'
 // @Redux Tookits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
@@ -64,24 +65,7 @@ const EditChapter : React.FC <pageProps> = () => {
           }catch(error){
                console.log("Failed To update title name",error)
           }
-          ToastAlert(status , "Saved Changes" , "Saving failed")
-     }
-
-     const ToastAlert = (status:string, success:string , failed:string ) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText = {success}
-                 failedText = {failed}
-                 /> 
-               }
-          })
-
+          SendAlert(status , "Saved Changes" , "Saving failed" , toast)
      }
 
   return (

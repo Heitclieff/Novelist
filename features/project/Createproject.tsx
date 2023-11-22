@@ -9,6 +9,7 @@ HStack ,
 IconButton , 
 Icon, 
 Switch,
+useToast,
 Button } from 'native-base';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
@@ -24,7 +25,7 @@ import Centernavigation from '../../components/navigation/Centernavigation';
 // @Redux tookits
 import { useSelector , useDispatch } from 'react-redux';
 import { setRating } from '../../systems/redux/action';
-
+import SendAlert from '../../services/alertService';
 //@firestore
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
@@ -32,6 +33,7 @@ import auth from '@react-native-firebase/auth'
 const Createproject : React.FC = () => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
+     const toast = useToast();
      const db = firestore()
 
      const [showRating, setShowRating] = useState(false);
@@ -98,6 +100,7 @@ const Createproject : React.FC = () => {
 
      const OnCreateProject = async() : Promise<void> => { 
           // console.log('click create project')
+          let status  = "error"
           try{
                const userdocs = useraccount?.[0]
                const timestamp = firestore.FieldValue.serverTimestamp();
@@ -139,12 +142,13 @@ const Createproject : React.FC = () => {
                     docs : [{...createDoc , id : docRef.id} , ...projectprev.docs]
                }));
                console.log("Create Project Success id :" ,docRef.id)
-
+               status = "success";
                navigation.goBack();
+          
           }catch(error){
                console.log(`Failed to Create Project : ${projectdocs.title}` , error)
           }
-         
+          SendAlert(status ,  "Created Project" , "Create failed" , toast);
      }
      useEffect(() => {
           fetchingRates();

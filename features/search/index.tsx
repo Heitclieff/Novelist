@@ -18,6 +18,7 @@ import { useRoute } from '@react-navigation/native';
 import Userfield from './components/Userfield';
 import Itemfield from './components/Itemfield';
 import AlertItem from '../reader/components/Alert';
+import SendAlert from '../../services/alertService';
 import sendNotification from '../../services/notificationService';
 
 //@Firestore
@@ -138,24 +139,7 @@ const Searchpage : React.FC =() => {
                console.log("ERROR: failed to update teams" ,error)
           }
 
-          ToastAlert(status , "Added" , "Add failed")
-     }
-
-     const ToastAlert = (status:string, success:string , failed:string ) => {
-          toast.show({
-               placement : 'top',
-               render: ({
-                 id
-               }) => {
-                 return <AlertItem 
-                 theme=  {theme} 
-                 status = {status}
-                 successText = {success}
-                 failedText = {failed}
-                 /> 
-               }
-          })
-
+          SendAlert(status , "Added" , "Add failed" , toast)
      }
 
      useEffect(() => {

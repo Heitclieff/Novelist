@@ -21,6 +21,8 @@ const Bookmarkfield : React.FC <containerProps> = ({data ,id}) => {
 
     const date = new Date(data.date.seconds * 1000 + data.date.nanoseconds / 1000000);
 
+    console.log("Bookmark id" , id)
+
     const timezoneOffset = date.getTimezoneOffset();
     const formattedDate = date.toLocaleString();
   return (
