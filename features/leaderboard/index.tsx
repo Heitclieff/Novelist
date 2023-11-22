@@ -115,7 +115,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                 <Box position={'absolute'} zIndex = {10} w =  '100%'>
                     <Memorizednavigation title = "Leaderboard" transparent = {true} Contentfixed = {false}/>
                 </Box>
-                <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'} bg = 'red.200' zIndex = {0} overflow = {'hidden'}>
+                <Box w = '100%' h = {MAX_HEIGHT}  position={'absolute'} justifyContent={'center'} bg = {theme.Bg.container} zIndex = {0} overflow = {'hidden'}>
                     <Box w = '100%' h = '100%'  position = 'absolute' top = {0} >
                         {header?.length > 0 &&
                         <Animated.View style = {[{width : '100%' , height : '100%'}, { transform: [

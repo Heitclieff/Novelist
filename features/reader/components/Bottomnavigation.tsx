@@ -10,6 +10,7 @@ IconButton,
 VStack , 
 Divider} from 'native-base'
 
+import { CheckCircleIcon } from 'native-base';
 // import * as Haptics from 'expo-haptics';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
@@ -31,43 +32,44 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
             <IconButton
                   size='sm'
                   w='15%'
-                  h='9'
-                  bg = {isLiked ? 'red.500' : theme.Bg.base}
-                  variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
-                  borderColor={isLiked ? 'red.500' : theme.Icon.base}
-                  rounded={'md'}
+                  _pressed={{ bg : '#ef4444'}}
+                  bg = {isLiked ? '#ef4444' : theme.Bg.base}
+                  rounded={'full'}
                   onPress={() => { setisLiked(!isLiked);}}
                   icon={
                       <AntdesignIcon
-                          size= {15}
-                          color={isLiked ? 'red.500' : theme.Icon.base}
+                          size= {25}
+                          color={isLiked ? 'white' : theme.Icon.base}
                           name={isLiked ? 'heart' : 'hearto'} />}
           />
-          <Button
-               w = "70%"
-               h='9'
-               size='sm'
-               onPress = {setlibrary}
-               variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
-               bg={theme.themeMode === 'dark' ? myBook ? 'amber.400' : null :  'amber.400'}
-               borderColor={'amber.400'}
-               opacity={myBook ? theme.themeMode === 'dark' ?   0.9 : 0.5 : 1}
-               leftIcon={
-                    myBook? 
-                         <EntypoIcon
-                         size={15}
-                         color={'green'}
-                         name= {'check'}
-                         />
-                         :
-                         <IonIcon
-                         size={15}
-                         color={theme.themeMode === 'dark' ? '#fbbf24' : 'black'}
-                         name= {'library-outline' }
-                    />}
-          >
-               <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? myBook ? 'black' :'amber.400' : null}>{!myBook ? `Add to Library`: `On Your Library`}</Text>
-          </Button>    
+          <Box w = "70%" alignItems={'center'}>
+               <Button
+                    w = "100%"
+                    _pressed={{ bg : 'amber.500'}}
+                    size='sm'
+                    rounded={'full'}
+                    onPress = {setlibrary}
+                    variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
+                    bg={theme.themeMode === 'dark' ? myBook ? 'amber.400' : null :  'amber.400'}
+                    borderColor={'amber.400'}
+                    opacity={myBook ? theme.themeMode === 'dark' ?   0.9 : 0.5 : 1}
+                    
+                    rightIcon={
+                         myBook? 
+                              <CheckCircleIcon
+                              size={"20px"}
+                              color={theme.Bg.base}
+                              />
+                              :
+                              <CheckCircleIcon
+                              size={"20px"}
+                              color={theme.themeMode === 'dark' ? '#fbbf24' : 'black'}
+                         />}
+               >
+                    <Text fontWeight={'medium'} mr  = {2} fontSize={'sm'} color={theme.themeMode === 'dark' ? myBook ? 'black' :'amber.400' : null}>{!myBook ? `Add to Library`: `On Your Library`}</Text>
+               </Button>    
+          </Box>
+          
           
      </HStack>
      </VStack>
