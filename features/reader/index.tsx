@@ -440,7 +440,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 })}}>
                 
                                 <ForegroundItem
-                                    isLoading = {isLoading}
+                                    isLoading = {isLoading.start}
                                     collection={novelItem}
                                 />
                             </Animated.View>}
@@ -480,7 +480,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                             })}}>
                                 
                                 <ForegroundItem
-                                        collection={novelItem}
+                                    isLoading = {isLoading.start}
+                                    collection={novelItem}
                                     />
                            
                         </Animated.View>

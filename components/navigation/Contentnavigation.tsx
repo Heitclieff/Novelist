@@ -31,7 +31,7 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
       position : 'absolute', 
       zIndex: 10 }]
     }>
-    <HStack w = '100%' h = {'70%'}  safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5}> 
+    <HStack w = '100%' h = {'100%'}  safeAreaTop justifyContent={'space-between'} alignItems={'center'}  pl = {5} pr = {5}> 
             <Box>
                 <IconButton 
                     size = 'sm'
