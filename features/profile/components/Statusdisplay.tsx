@@ -12,11 +12,12 @@ interface containerProps {
     follower : string | number,
     following : string | number,
     career : string | number,
+    careersAmout : string
 }
 
-const Statusdisplay : React.FC <containerProps> = ({follower, following , career}) => {
+const Statusdisplay : React.FC <containerProps> = ({follower, following , career  ,careersAmout}) => {
     const theme:any = useContext(ThemeWrapper);    
-    const MenuVariant = {  follower : follower , following :following , Career : career?.length > 0 ? career.length : 0}
+    const MenuVariant = {  follower : follower , following :following , Career : careersAmout ?  careersAmout : 0}
 
     useEffect(() => {
 

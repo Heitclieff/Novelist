@@ -876,7 +876,6 @@ const Index : React.FC = () => {
                          collections={CollectionMostview}
                          isLoading = {isLoading.heading}
                          />
-                         <Button onPress={onDisplayNotification}>Test noti</Button>
                         <VStack  pl = {3} mt = {4}>
                             <MemorizedCollectionField
                             title="Hot New Novels"

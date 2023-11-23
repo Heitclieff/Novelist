@@ -17,13 +17,14 @@ const Statusdisplay = React.lazy(() =>import('../components/Statusdisplay'));
 
 interface contianerProps {
     currentProfile : any,
+    careersAmout : string
     isOwner : boolean
     isfollow : boolean,
     action : any
 
 }
 
-const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action}) =>{
+const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action , careersAmout}) =>{
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
   return (
@@ -54,6 +55,7 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
                 </Box>
             </HStack>
         </Box>
+        
         <VStack flex = {1} paddingY={-5} paddingX={9} justifyContent={'flex-start'} >
                     <Text
                         color={theme.Text.base}
@@ -73,9 +75,10 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
                                     follower = {currentProfile.follower}
                                     following = {currentProfile.following}
                                     career = {currentProfile.project}
+                                    careersAmout = {careersAmout}
                                 />
                             )
-                        },[currentProfile])}
+                        },[currentProfile , careersAmout])}
                     </Suspense>
                 </Box>
         </VStack>

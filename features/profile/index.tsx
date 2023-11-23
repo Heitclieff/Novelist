@@ -46,6 +46,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const [isOwner, setisOwner] = useState<boolean>(false);
     const [isfollow ,setisfollow] = useState<boolean>(false);
     const [isLoading , setIsLoading] = useState<boolean>(true);
+    const [careersAmout ,setCareersAmount] = useState<number>(0);
     const [HeaderTitle , setHeaderTitle] =  useState<string>('');
     const [currentProfile , setCurrentProfile] = useState<any>();
     const [refreshing  , setRefreshing] = useState<boolean>(false);
@@ -68,6 +69,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         // dispatch(getuserData());
         // console.log('profile',userdata[0].bg_image)
     } , [userdata])
+
 
     const ValidateAccount = () => {
         let current_profile = userdata[0];
@@ -214,6 +216,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                         <VStack flex={1}>
                             <Headersection 
                             currentProfile={currentProfile} 
+                            careersAmout = {careersAmout}
                             isfollow = {isfollow}
                             isOwner = {isOwner} 
                             action = {followPeople}/>
@@ -223,12 +226,12 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                                     <Text fontWeight={'semibold'}  color={theme.Text.base}>Careers</Text>
                                 </HStack>
                                 <VStack mb={HEADER_HEIGHT_EXPANDED}>
-                                    <Careersection id = {currentProfile.id}/>
+                                    <Careersection id = {currentProfile.id} setCareerAmout = {setCareersAmount}/>
                                 </VStack>
                             </VStack>
                         </VStack>
                   )
-                },[isLoading , isfollow])}
+                },[isLoading , isfollow , careersAmout])}
             >   
          
             </Animated.FlatList>

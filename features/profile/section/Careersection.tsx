@@ -14,6 +14,7 @@ import firestore from '@react-native-firebase/firestore'
 
 interface Pageprops {
   id : string
+  setCareerAmout : any
 }
 
 const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
@@ -26,7 +27,7 @@ const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
     );
   });
 
-const Careersection : React.FC <Pageprops> = ({id}) => {
+const Careersection : React.FC <Pageprops> = ({id , setCareerAmout}) => {
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const collectionsData = useSelector((state:any) => state.userData)
 
@@ -38,8 +39,10 @@ const Careersection : React.FC <Pageprops> = ({id}) => {
       try{
         const getnovel = await firestore().collection('Novels')
         .where('owner' ,'==' , id)
+        .where('status' , '==' , false)
         .get()
   
+        setCareerAmout(getnovel.docs.length);
         const noveldocs = getnovel.docs.map((doc => ({id : doc.id , ...doc.data()})))
         setsnapProject(noveldocs)
         setLoading(false);
