@@ -13,7 +13,8 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useNavigation } from '@react-navigation/native';
 import { RootState } from '../../systems/redux/reducer';
-import { fetchHotNew, fetchMostview, fetchTopNew, setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
+import notifee from '@notifee/react-native';
+import {setUser , setMylibrary ,setMybookmarks, setCategory } from '../../systems/redux/action';
 //@Components
 import Indexheader from './header/Indexheader';
 
@@ -762,15 +763,54 @@ const Index : React.FC = () => {
         getCategoryAndDispatch();
       })
 
+      const onDisplayNotification = async (notification:any) => {
+         await notifee.requestPermission();
+
+         const channelId = await notifee.createChannel({
+          id: 'default',
+          name: 'Default Channel',
+        });
+
+        await notifee.displayNotification({
+          title: 'Nobelist',
+          body: notification.title,
+          android: {
+            channelId,
+            largeIcon : notification.image,
+            smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+            pressAction: {
+              id: 'default',
+            },
+          },
+
+          ios: {
+            attachments: [
+              {
+                url: 'local-image.png',
+                thumbnailHidden: true,
+              },
+              {
+                url: 'notification.image',
+              },
+            ],
+          },
+        });
+      
+      }
+
       useEffect(() => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {
-          console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+          console.log('A new FCM message arrived!');
       
           if(AppState.currentState === "active"){
-         
+            onDisplayNotification({
+              title : remoteMessage.data?.title,
+              image : remoteMessage.data?.icon
+            });
             if(!userdata?.length > 0) {
               console.log("Not found Any users.")
               return
+
             }
             const useritem = userdata[0];
             const id_list = [remoteMessage.data?.target];
@@ -830,12 +870,13 @@ const Index : React.FC = () => {
         
         {CollectionTopNew.length > 0 || CollectionTopNew ?
                 <FlatList onScroll={scrollHandler} refreshing = {refreshing} setRefreshing={setRefreshing}>
+                   
                     <VStack flex = {1}>
                         <MemorizedIndexheaderitem
                          collections={CollectionMostview}
                          isLoading = {isLoading.heading}
                          />
-                        
+                         <Button onPress={onDisplayNotification}>Test noti</Button>
                         <VStack  pl = {3} mt = {4}>
                             <MemorizedCollectionField
                             title="Hot New Novels"
