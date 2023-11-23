@@ -9,12 +9,13 @@ HStack ,
 IconButton , 
 Icon, 
 Switch,
+FormControl,
 useToast,
 Button } from 'native-base';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
-
+import { CheckCircleIcon , WarningOutlineIcon } from 'native-base';
 //@Components
 import { setProjectContent } from '../../systems/redux/action';
 import Rating from './components/Rating';
@@ -43,6 +44,23 @@ const Createproject : React.FC = () => {
      const useraccount = useSelector((state) => state.userData);
      const projectprev = useSelector((state) => state.project)
      const rating = useSelector((state) => state.rates)
+     const [allowCreate ,setAllowCreate] = useState<boolean>(false);
+     
+     const [projectdocsError, setprojectdocsError] = useState({
+          title : "Try different from previous project name.",
+          overview : "",
+          tagDoc :"",
+          cateDoc : "",
+          rating : ""
+        })
+      
+     const [projectdocsStatus, setProjectdocsStatus] = useState<{}>({
+          title : false,
+          overview : false,
+          tagDoc : false,
+          cateDoc : false,
+          rating : false
+     })
 
      const [projectdocs ,setprojectdocs] = useState<{}>({
           title : "",
@@ -69,33 +87,42 @@ const Createproject : React.FC = () => {
           setProjectOption({...projectOption , [field] : value})
      }
 
-     const OnProjectdocsChange = (field :string , value:boolean) => {
-          setprojectdocs({...projectdocs , [field] : value})
-     }
 
      const handleSelectedTags = (selectedTags:any , selectedCategory:any) => {
           setprojectdocs({...projectdocs , tagDoc : selectedTags , cateDoc : selectedCategory})
           return  true
      }
 
-     const validAndCreate = async() => {
-          console.log(projectdocs.title)
-          const checkTitle = db.collection('Novels').where('title', '==', projectdocs.title)
-          const result = await checkTitle.get()
-          console.log(result)
-          console.log(result.docs.length)
-          if (result.docs.length > 0) {
-               console.log('title exist')
-               // alert here
-          } else if (projectdocs.title.length < 6) {
-               console.log('minimum title is 6 charactors')
-               // alert here
-          } else if (projectdocs.title.length > 255) {
-               console.log('maximum title is 255 charactors')
-               // alert here
-          } else {
-               OnCreateProject()
+     const OnProjectdocsChange = async (field :string , value:string) => {
+          let allow = false;
+          setprojectdocs({...projectdocs , [field] : value})
+          if(field === "title"){
+               let isAlert = false;
+               let error_message = "Try different from previous project name."
+               
+               if(value){
+                    if(value.length > 6 || value.length > 255){
+                         const isExists = await db.collection('Novels')
+                         .where('title', '==', value)
+                         .get();
+          
+                         if(isExists.docs?.length > 0) {
+                              isAlert = true;
+                         }
+                    }else{
+                         isAlert = true;
+                         error_message = "Project name must have more 6 to 255 charecters";
+                    }
+               }
+               setProjectdocsStatus((prev) => ({...prev , title : isAlert}))
+               setprojectdocsError((prev) => ({...prev , [field] : error_message}))
+
           }
+
+          if(!projectdocsStatus.title){
+               allow = true;
+          }
+          setAllowCreate(allow);
      }
 
      const OnCreateProject = async() : Promise<void> => { 
@@ -150,6 +177,18 @@ const Createproject : React.FC = () => {
           }
           SendAlert(status ,  "Created Project" , "Create failed" , toast);
      }
+
+     const renderCheckIcon = (field:string) => {
+          const isAlert =  projectdocsStatus[field];
+          if(projectdocs?.[field]){
+               return(
+                    <CheckCircleIcon 
+                    mr = {2}
+                    color = {isAlert ? "red.500" : "teal.500"}
+                    />
+               )
+          }
+     }
      useEffect(() => {
           fetchingRates();
      },[])
@@ -162,16 +201,23 @@ const Createproject : React.FC = () => {
                     <VStack space={5}  p = {4}>
                                 <VStack space={2} >
                                      <Text color={theme.Text.description} fontWeight={'semibold'}>Project name</Text>
+                                     <FormControl isInvalid = {projectdocsStatus.title}>
                                      <Input
                                           rounded={'full'}
                                           bg={theme.Bg.container}
                                           borderColor={theme.Bg.comment}
                                           color={theme.Text.base}
                                           h={9}
+                                          
                                           placeholder='Enter your project name'
                                           value={projectdocs.title}
                                           onChangeText={(text) => OnProjectdocsChange('title' , text)}
-                                     />
+                                          InputRightElement={renderCheckIcon('title')}
+                                    />
+                                        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                                            {projectdocsError.title}
+                                        </FormControl.ErrorMessage>
+                                    </FormControl>
                                 </VStack>
 
                                 <VStack space={2} >
@@ -278,7 +324,19 @@ const Createproject : React.FC = () => {
                                         <Switch size={'sm'} value = {projectOption.commit_status} isDisabled = {!projectOption.multiproject} onToggle={(event) => OnOptionChange('commit_status' , event)}/>
                                    </HStack> */}
                               </VStack>
-                              <Button rounded={'full'} variant={'outline'} colorScheme={'teal'} borderColor={'teal.600'} onPress={validAndCreate}>Create</Button>
+                              <Button 
+                                   w="100%" 
+                                   //     isLoading = {isLoading}
+                                   rounded = "full"
+                                   onPress = {OnCreateProject}
+                                   isDisabled = {!allowCreate}
+                                   bg = {theme.Button.follow.base}  
+                                   _text = {{color : theme.Text.between , fontWeight : 'semibold' }} 
+                                   p = {2} 
+                                   mt={5} 
+                                   >
+                                   Create
+                               </Button>
                     </VStack>
                </VStack>
           </FlatList>    

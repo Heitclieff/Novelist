@@ -11,6 +11,7 @@ Button,
 Switch, 
 IconButton, 
 Pressable,
+FormControl,
 useToast,
 Icon} from 'native-base'
 import { Alert } from 'react-native'
@@ -22,6 +23,7 @@ import { useNavigation } from '@react-navigation/native'
 import Elementnavigation from '../../../components/navigation/Elementnavigation'
 import Rating from '../../project/components/Rating'
 import SendAlert from '../../../services/alertService'
+import { CheckCircleIcon , WarningOutlineIcon } from 'native-base';
 
 // @Redux Tookits
 import { setProjectContent, setProjectDocument ,setRating } from '../../../systems/redux/action'
@@ -40,6 +42,7 @@ const Memorizednavigation = React.memo(Elementnavigation)
 
 const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const {id} = route.params
+     const db = firestore()
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const dispatch = useDispatch();
@@ -57,7 +60,8 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const [isEdit , setIsedit] = useState<boolean>(false)
      const [isnotEmpty , setisnotEmpty] = useState<boolean>(false);
-     
+     const [allowCreate ,setAllowCreate] = useState<boolean>(false);
+
      const [projectconfig , Setprojectconfig] = useState<{}>({
           title : projectdocument.title ,
           overview : projectdocument.overview,
@@ -67,6 +71,24 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           commit_status : projectdocument.commit_status,
           novel_status : projectdocument.novel_status,
           status : projectdocument.status
+     })
+
+ 
+     
+     const [projectdocsError, setprojectdocsError] = useState({
+          title : "Try different from previous project name.",
+          overview : "",
+          tagDoc :"",
+          cateDoc : "",
+          rating : ""
+        })
+      
+     const [projectdocsStatus, setProjectdocsStatus] = useState<{}>({
+          title : false,
+          overview : false,
+          tagDoc : false,
+          cateDoc : false,
+          rating : false
      })
 
      const fetchingRates = async () : Promise <void> => {
@@ -84,8 +106,16 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           }))
      }
 
-     const projectConfigChange = (field:string,target:any) => {
-          if(!isEdit) setIsedit(!isEdit);
+     const projectConfigChange = async (field:string,target:any) => {
+          // if(!isEdit) setIsedit(!isEdit);
+          setIsedit(false)
+          if(target){
+               setIsedit(true)
+          }
+          Setprojectconfig((prevProjectconfig) => ({
+               ...prevProjectconfig,
+               [field] : target,
+          }))
 
           if (field === 'status'){
                if(chapterdocs.content?.length <= 0) {
@@ -93,11 +123,35 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                     return
                }
           }
-          
-          Setprojectconfig((prevProjectconfig) => ({
-               ...prevProjectconfig,
-               [field] : target,
-          }))
+
+          else if(field === "title"){
+               let isAlert = false;
+               let error_message = "Try different from previous project name."
+               
+               if(target){
+                    if(target.length > 6 || target.length > 255){
+                         if(projectdocument.title === target){
+                              return
+                         }
+
+                         const isExists = await db.collection('Novels')
+                         .where('title', '==', target)
+                         .get();
+
+                         if(isExists.docs?.length > 0) {
+                              isAlert = true;
+                         }
+                    }else{
+                         isAlert = true;
+                         error_message = "Project name must have more 6 to 255 charecters";
+                    }
+               }
+               setProjectdocsStatus((prev) => ({...prev , title : isAlert}))
+               setprojectdocsError((prev) => ({...prev , [field] : error_message}))
+
+          }
+
+
      }
 
      const handleProjectUpdate = () => {
@@ -191,6 +245,18 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           {text: 'Delete', onPress: () => DeleteProject()},
      ]);
 
+     const renderCheckIcon = (field:string) => {
+          const isAlert =  projectdocsStatus[field];
+          if(projectconfig?.[field]){
+               return(
+                    <CheckCircleIcon 
+                    mr = {2}
+                    color = {isAlert ? "red.500" : "teal.500"}
+                    />
+               )
+          }
+     }
+
      useEffect(() => {
           if(rating?.rates) return
           fetchingRates(); 
@@ -208,6 +274,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                            <VStack space={4} >
                                 <VStack space={2} >
                                      <Text color={theme.Text.description} fontWeight={'semibold'}>Project name</Text>
+                                     <FormControl isInvalid = {projectdocsStatus.title}>
                                      <Input
                                           onChange={() => setisnotEmpty(true)}
                                           rounded={'full'}
@@ -218,7 +285,12 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                           value={projectconfig.title}
                                           onChangeText={(target)=>projectConfigChange('title' , target)}
                                           placeholder='Enter your project name'
+                                          InputRightElement={renderCheckIcon('title')}
                                      />
+                                         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+                                            {projectdocsError.title}
+                                         </FormControl.ErrorMessage>
+                                     </FormControl>
                                 </VStack>
 
                                 <VStack space={2} >

@@ -1,6 +1,7 @@
 import React , {useContext , useEffect, useState} from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import OctIcon from 'react-native-vector-icons/Octicons'
+import FontAwesome5Icon  from 'react-native-vector-icons/FontAwesome5'
 import { 
 Box , 
 HStack ,
@@ -34,15 +35,14 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,ch
                 <IconButton 
                         isDisabled = {!comment_status}
                         size = 'sm'
-                        w = '30'
-                        h = {30}
+        
                         rounded={'full'}
                         onPress={handleCommentButton}
                         icon = {
-                            <OctIcon 
+                            <FontAwesome5Icon 
                             size = {15}
                             color = {theme.Icon.base}
-                            name = {'comment-discussion'}/>}
+                            name = {'comment-alt'}/>}
                 />
             </HStack>
             <Divider mt = {2} bg = {theme.Divider.base}/>

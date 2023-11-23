@@ -659,7 +659,7 @@ const Index : React.FC = () => {
         try {
           // fixed userdata to Object
           const snapshotusers = db.collection("Users").doc(uid)
-          const getlibrarykeys = await snapshotusers.collection("Library").get();
+          const getlibrarykeys = await snapshotusers.collection("Library").orderBy("date" , "desc").get();
           const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
 
           if(librarykeys?.length > 0){
@@ -682,8 +682,7 @@ const Index : React.FC = () => {
             const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
            
             dispatch(setCategory({category : categorydocs}));
-  
-  
+
           } catch (error) {
             console.error('Error fetching Category', error);
         }

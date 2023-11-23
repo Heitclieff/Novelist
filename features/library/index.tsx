@@ -49,7 +49,7 @@ const Library: React.FC <Pageprops> = () => {
       console.log("fetch library")
       // fixed userdata to Object
       const snapshotusers = firestore().collection("Users").doc(userID)
-      const getlibrarykeys = await snapshotusers.collection("Library").get();
+      const getlibrarykeys = await snapshotusers.collection("Library").orderBy("date" , "desc").get();
       const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
 
       const findingNovels = await firestore().collection("Novels")

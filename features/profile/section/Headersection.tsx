@@ -72,7 +72,7 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
                                 <Statusdisplay 
                                     follower = {currentProfile.follower}
                                     following = {currentProfile.following}
-                                    career = {0}
+                                    career = {currentProfile.project}
                                 />
                             )
                         },[currentProfile])}

@@ -16,7 +16,7 @@ interface containerProps {
 
 const Statusdisplay : React.FC <containerProps> = ({follower, following , career}) => {
     const theme:any = useContext(ThemeWrapper);    
-    const MenuVariant = {  follower : follower , following :following , Career : career}
+    const MenuVariant = {  follower : follower , following :following , Career : career?.length > 0 ? career.length : 0}
 
     useEffect(() => {
 
