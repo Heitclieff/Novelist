@@ -13,7 +13,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation , useRoute } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { Categorydata } from '../../../assets/content/VisualCollectionsdata'
-
+import { Alert } from 'react-native'
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setTags } from '../../../systems/redux/action'
@@ -42,64 +42,61 @@ const Tag: React.FC <Pageprops> = () => {
      const dispatch = useDispatch();
      const toast = useToast();
 
-     const {current_tags , handleTagupdate} = route.params;
+     const {current_tags , handleTagupdate , status} = route.params;
      const tagdocs = useSelector((state) => state.tags)
      const catedocs = useSelector((state) => state.category)
      
-     const [selectedTags , setSelectedTags] = useState<[]>([]);
+     const [selectedTags , setSelectedTags] = useState<any[]>([]);
      const [isEdit , setisEdit] = useState<boolean>(false);
      const [isLoading , setisLoading] = useState(true);
 
      const fetchingTags =  async () :Promise<void> => {
-          console.log("Fetching Tags")
           const snapshotTags = await firestore().collection('Tags').get();
           const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}));
           
           dispatch(setTags({tags : tagdocs}));
-          setCurrentTags();
-
+          setCurrentTags(tagdocs);
          
      }
 
-     const setCurrentTags = () => {
-          if(!current_tags || current_tags.length <= 0  || Object.keys(tagdocs).length === 0){
-               return
+     const setCurrentTags = (current:any) => {
+          if(current?.length <= 0 || current_tags?.length <= 0){
+               console.log("Set Current Failed" , current_tags , Object.keys(tagdocs).length)
+              return
           }
 
-          const matchingTags = tagdocs.tags
-          .filter(tagdoc => current_tags.some(currentTag => currentTag.id === tagdoc.id))
-          .map(tagdoc => ({id : tagdoc.id , title : tagdoc.title}));
-
-          setSelectedTags(matchingTags)
+          if(typeof(current) === "object"){
+               const matchingTags = current
+               .filter((tagdoc:any) => current_tags.some((currentTag:any) => currentTag.id === tagdoc.id))
+               .map((tagdoc:any) => ({id : tagdoc.id , title : tagdoc.title}));
+               setSelectedTags(matchingTags)
+          }
      }
-
 
      useEffect(() => {
           if(Object.keys(tagdocs).length == 0 ){
                fetchingTags();
-          }     
+          }else{
+               setCurrentTags(tagdocs.tags);   
+          }   
           setisLoading(false);
      }, [])
-
-     useEffect(() => { 
-          setCurrentTags();   
-     } ,[])
 
      const OnTagsAction = (id:string, title:string) => {
           if(!isEdit) setisEdit(true);
           
-          if (!selectedTags.some(tag => tag.id === id)) {
-               setSelectedTags([...selectedTags , {id , title}]);
+          if (!selectedTags.some((tag:any) => tag.id === id)) {
+               setSelectedTags(prevTags => [...prevTags , {id , title}]);
           }else { 
-               const updatedSelectedTags = selectedTags.filter(tag => tag.id !== id);
+               const updatedSelectedTags : any[] = selectedTags.filter((tag:any) => tag.id !== id);
                setSelectedTags(updatedSelectedTags); 
           }
      }
 
      const MatchingTagsWithcategory = async () : Promise<T> => {
-          const selectedCategory = [];
+          const selectedCategory : string[] = [];
           selectedTags.map((tags:any , index : number) => {
-               const inGroup = catedocs?.category.find(category => category.group.includes(tags.id));
+               const inGroup = catedocs?.category.find((category:any) => category.group.includes(tags.id));
                if(inGroup){
                     if(!selectedCategory.includes(inGroup.id)){
                          selectedCategory.push(inGroup.id);
@@ -110,9 +107,19 @@ const Tag: React.FC <Pageprops> = () => {
      }
      const handleTagSaving = async () : Promise<void> => {
           const selectedCategory = await MatchingTagsWithcategory();
+
+          if(status){
+               Alert.alert("Error", "Cannot Remove all tags because your project was public.")
+               return
+          }
+
           const isSuccess = await handleTagupdate(selectedTags , selectedCategory);
-         
-          SendAlert(isSuccess ? "succes" : "error" ,  "Tags Added" , "Add failed" , toast);
+          
+          if(isSuccess){
+               navigation.goBack();
+          }
+
+          SendAlert(isSuccess ? "success" : "error" ,  "Tags Added" , "Add failed" , toast);
      }
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
@@ -123,6 +130,7 @@ const Tag: React.FC <Pageprops> = () => {
                          <Text color = {theme.Text.base} fontWeight={'semibold'}>
                               Selected Tags
                          </Text>
+                         {!isLoading &&
                          <HStack rounded={'full'} minHeight={10}  p = {1} space= {2} flexWrap = {'wrap'} bg={theme.Bg.container} borderWidth={0}>
                               {selectedTags.length > 0  && 
                                    selectedTags.map((item:any , index:number) => {
@@ -139,6 +147,7 @@ const Tag: React.FC <Pageprops> = () => {
                                    })
                               }
                          </HStack>
+                         }
                     </VStack>
                     <HStack w = '100%' overflow={'hidden'} space = {2} flexWrap={'wrap'}>
                          {isLoading ?

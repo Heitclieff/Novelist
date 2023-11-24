@@ -53,6 +53,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const userdocs = useSelector((state) => state.userData)
      const rating =  useSelector((state) => state.rates);
 
+     const [currentSnapshot, setCurrentSnapshot] = useState<any>("");
      const [showRating, setShowRating] = useState(false);
      const [selectRating , setSelectRating] = useState<{}>({title : projectdocument?.rating})
      const [showAlert , setShowAlert] = useState<boolean>(false);
@@ -73,7 +74,6 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           status : projectdocument.status
      })
 
- 
      
      const [projectdocsError, setprojectdocsError] = useState({
           title : "Try different from previous project name.",
@@ -109,18 +109,53 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      const projectConfigChange = async (field:string,target:any) => {
           // if(!isEdit) setIsedit(!isEdit);
           setIsedit(false)
-          if(target){
+          if(typeof(target) === "boolean" || typeof(target) === "string"){
                setIsedit(true)
           }
+    
           Setprojectconfig((prevProjectconfig) => ({
                ...prevProjectconfig,
                [field] : target,
           }))
 
           if (field === 'status'){
+               let current_tags = [];
+               let isFailed = false;
+
                if(chapterdocs.content?.length <= 0) {
-                    console.log("cannot updated Because Project need atless 1 chapter.")
-                    return
+                    Alert.alert("Error" , "You need to have 1 chapters on your project.")
+                    isFailed = true;
+               }
+
+               if(!projectconfig?.rating){
+                    Alert.alert("Error" , "You need to  Select Rating Before Saving")
+                    isFailed = true
+               }
+
+
+               console.log(typeof(currentSnapshot));
+               console.log(currentSnapshot)
+               if(typeof(currentSnapshot) !== "object"){
+                    const snapshotTags = await firestore().collection('Novels').doc(id).get();
+                    const get_current_tags = snapshotTags?.data().tagDoc
+
+                    current_tags = get_current_tags;                    
+                    setCurrentSnapshot(get_current_tags);
+               }
+               else{
+                    current_tags = currentSnapshot;
+               }
+
+               if(current_tags?.length <= 0){
+                    isFailed = true;
+                    Alert.alert("Error" , "You need to Select some Tags for your project.")
+               }
+
+               if(isFailed){
+                    Setprojectconfig((prevProjectconfig) => ({
+                         ...prevProjectconfig,
+                         [field] : false,
+                    }))
                }
           }
 

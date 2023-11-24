@@ -17,6 +17,7 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
 
+
 //@BottomSheetModal
 import { 
 BottomSheetModal , 
@@ -57,6 +58,7 @@ const Creator : React.FC <Pageprops> = () => {
     const USER_DATA = useSelector((state) => state.userData)
     const projectdocs = useSelector((state) => state.project)
     const [Projectype , setProjectype] = useState<string>('');
+    const [serchingKey ,setSearchingKey] = useState<string>('');
     const [document , setDocument] = useState<any[]>([]);
     const [refreshing ,setRefreshing] = useState<boolean>(false);
     const [isLoading ,setLoading] = useState<boolean>(true);
@@ -85,11 +87,24 @@ const Creator : React.FC <Pageprops> = () => {
         
         }
     }
+
+    const getFilterObject = (value:string) => {
+        setSearchingKey(value);
+
+        if (typeof (value) == "string") {
+            const results = projectdocs.docs.filter((item:any) =>
+                item.title.toLowerCase().includes(value.toLowerCase())
+            )
+            setDocument(results);
+        }
+    }
     
     useEffect(() => {
         getProjectContent();
     }, [refreshing])
 
+
+    
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['20%', '45%'], [windowHeight]);
@@ -134,18 +149,20 @@ const Creator : React.FC <Pageprops> = () => {
                         <Box pl = {6} pr = {6}>
                             <Input 
                             rounded={'full'} 
+                            value = {serchingKey}
                             bg = {theme.Bg.container} 
                             borderColor={theme.Bg.comment} 
                             color={theme.Text.base}
                             h  = {9}
+                            onChangeText={(e) => getFilterObject(e)}
                             InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
                             placeholder='Enter your Project name'
                             />
                         </Box>   
                     </Box> 
                     <VStack space = {1} m ={5} mt = {5}>
-                        {projectdocs && projectdocs.docs?.length > 0  ?
-                            projectdocs.docs?.map((item:any , index:number) => {
+                        {projectdocs && document?.length > 0  ?
+                            document.map((item:any , index:number) => {
                                 return(
                                     <MemorizedCreatorItemfield 
                                     key = {index} 
@@ -172,7 +189,7 @@ const Creator : React.FC <Pageprops> = () => {
         size="sm" 
         onPress =  {() => navigation.navigate('CreateProject')}
         colorScheme = {'teal'} 
-        icon={<AntdesignIcon name="plus" color = {"white"}/>} />
+        icon={<AntdesignIcon size ={15} name="plus" color = {"white"}/>} />
     </VStack>
   )
 }

@@ -21,11 +21,13 @@ interface navigatorProps {
   theme:any
 }
 const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
+  
   return (
     <Tab.Navigator screenOptions={{
       tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
       headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
       headerTitleStyle : {color : theme.Text.tabbar} ,
+      tabBarHideOnKeyboard : true,
       lazy : true,
     }}
     >

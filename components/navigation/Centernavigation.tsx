@@ -70,7 +70,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
             {onEditcontent &&
-                <Pressable onPress={() => {isAction(); navigation.goBack()}}>
+                <Pressable onPress={() => {isAction()}}>
                 {({
                 isHovered,
                 isFocused,

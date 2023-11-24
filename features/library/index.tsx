@@ -40,7 +40,10 @@ const Library: React.FC <Pageprops> = () => {
   const theme:any = useContext(ThemeWrapper);
   const myBooks = useSelector((state:any) => state.book);
   const userdata = useSelector((state:any) => state.userData)
+
+  const [serchingKey , setSearchingKey] = useState<string>("");
   const [refreshing ,setRefreshing] = useState<boolean>(false);
+  const [BookSlot , setBookSlot] = useState<any[]>([]);
   const [isLoading ,setLoading] = useState<boolean>(true);
   const userID = userdata[0]?.id; 
 
@@ -57,6 +60,7 @@ const Library: React.FC <Pageprops> = () => {
       .get();
     
       const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
+      setBookSlot(novelDocs);
       dispatch(setMylibrary({book : novelDocs}))
 
     } catch (error) {
@@ -64,12 +68,29 @@ const Library: React.FC <Pageprops> = () => {
     }
   };
   
+  const getFilterObject = (value:string) => {
+    setSearchingKey(value);
+    
+    if(typeof(value) == "string"){
+      const results = myBooks.book.filter((item:any) =>
+      item.title.toLowerCase().includes(value.toLowerCase())
+      )
+      setBookSlot(results);
+    }
+  }
+  
   useEffect(() => {
     const shouldrefresh = !myBooks || refreshing
+
+    if(myBooks){
+      setBookSlot(myBooks.book);
+    }
+
     if(shouldrefresh) getLibraryContent();
     setLoading(false);
   },[userID , refreshing])
 
+  
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
         <MemorizedElementnavigation title = 'Library'/>
@@ -87,7 +108,9 @@ const Library: React.FC <Pageprops> = () => {
                     bg={theme.Bg.container}
                     borderColor={theme.Bg.comment}
                     color={theme.Text.base}
+                    value = {serchingKey}
                     h={9}
+                    onChangeText={(e) => getFilterObject(e)}
                     InputRightElement={<Icon as={<EvilIcon name='search' />} size={5} mr={2} />}
                     placeholder='Enter your library Novel'
                   />
@@ -95,8 +118,8 @@ const Library: React.FC <Pageprops> = () => {
               </Box>
               <VStack space={1} m={5} mt={6}>
                 {myBooks &&
-                  myBooks.book?.length > 0 ?
-                  myBooks.book.map((item: any, index: number) => (
+                  BookSlot?.length > 0 ?
+                  BookSlot.map((item: any, index: number) => (
                     <MemorizedLibraryitem key={index} id={item.id} data={item} />
                   ))
                   : <Text color={theme.Text.base}>No data</Text>

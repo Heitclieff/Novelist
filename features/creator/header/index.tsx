@@ -47,11 +47,13 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
   const fetchingTagsTitle = async () : Promise<void> => {
       try{ 
         const tagsID =  data.tagDoc;
-        const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
-  
-        const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}))
 
-        setTagsdocs(tagdocs)
+        if(tagsID?.length > 0){
+          const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
+          const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}))
+          setTagsdocs(tagdocs)
+        }
+      
       }catch(error) {
         console.error("Error fetching Tag title :", error);
       }
@@ -133,13 +135,13 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
             data.tagDoc &&
             <VStack pl = {5} pr= {5} pt = {3} space = {2}>
               
-                {Tagdocs.length > 0 &&
+             
                   <>
                   <HStack justifyContent={'space-between'}>
                     <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
-                  
+           
                     <IconButton 
-                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , handleTagupdate})}
+                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , handleTagupdate , status : data.status})}
                       size = 'md'
                       rounded={'full'}
                       icon = {
@@ -150,22 +152,29 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
                           />
                         }
                     />
+                  
                   </HStack>
-        
-                  <HStack space=  {2}>
-                    {Tagdocs.map((item:any,index:number) =>{
-                      return(
-                        <Button 
-                        key = {index} 
-                        size = 'xs' 
-                        rounded={'full'}
-                        colorScheme={'teal'}
-                        _text={{fontWeight : 'medium'}}
-                        >{item.title}</Button>
-                    )})}  
-              </HStack>
+                  {Tagdocs.length > 0 ?
+                    <HStack space=  {2}>
+                      {Tagdocs.map((item:any,index:number) =>{
+                        return(
+                          <Button 
+                          key = {index} 
+                          size = 'xs' 
+                          rounded={'full'}
+                          colorScheme={'teal'}
+                          _text={{fontWeight : 'medium'}}
+                          >{item.title}</Button>
+                      )}) 
+                    } 
+                      
+                      
+                  </HStack>
+                  :
+                  <Text color = {theme.Text.description}>Create New Tags*</Text>
+                }
               </>
-             }
+             
           </VStack>
           }
          
