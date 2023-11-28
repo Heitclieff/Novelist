@@ -30,11 +30,11 @@ const Mainsection : React.FC <containerProps> = ({isLiked ,setisLiked, collectio
                     w='30'
                     h={30}
                     rounded={'full'}
-                    onPress={() => { setisLiked(!isLiked); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light) }}
+                    onPress={() => { setisLiked(!isLiked);}}
                     icon={
                         <AntdesignIcon
                             size= {15}
-                            color={isLiked ? 'red.500' : theme.Icon.base}
+                            color={isLiked ? '#ef4444' : theme.Icon.base}
                             name={isLiked ? 'heart' : 'hearto'} />}
                 />
                 }

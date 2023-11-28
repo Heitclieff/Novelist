@@ -20,7 +20,8 @@ Animated,
 Dimensions,
 View,
 RefreshControl,
-Platform } from 'react-native'
+Platform, 
+Alert} from 'react-native'
 
 import { useRoute } from '@react-navigation/native'
 import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -78,6 +79,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [novelItem, setnovelItem] = useState({}); //<any[]>
     const [novelId, setnovelId] = useState([]);
     const [chapterItem, setchapterItem] = useState([])
+    const [pageID  , setPageID] = useState("");
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
     const [limiters , setlimiters] = useState<boolean>(true);
@@ -93,6 +95,7 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
     
+    
 
     const fetchingNovels = async () : Promise<void> => {
         try {
@@ -100,6 +103,9 @@ const NovelContent : React.FC <Pageprops> = () => {
             const SnapshotContent = db.collection('Novels').doc(id);
             const documentSnapshot = await SnapshotContent.get();
             const novelDocs = documentSnapshot.data();
+            setPageID(id);
+            findingAgeRestricted(novelDocs);
+
             if (!documentSnapshot.exists) {
                 console.log("Not found this document.");
                 return
@@ -108,11 +114,15 @@ const NovelContent : React.FC <Pageprops> = () => {
             if(limiters){
                 const Newviews  = increaseBookView(novelDocs)
                 setnovelItem({...novelDocs , view : Newviews});
-                setlimiters(false);
+                // setlimiters(false);
             }
            
+            if(id !== pageID){
+                setLoading((prev) => ({...prev , start : false}));
+            }
+            
             setLoading((prev) => ({...prev , novel : false}))
-
+            
         } catch (error) {
             console.error("Error fetching document:", error);
         }
@@ -178,6 +188,36 @@ const NovelContent : React.FC <Pageprops> = () => {
         if(!findinglike) return
         setisLiked(true);   
     }
+
+    const findingAgeRestricted = async (docs:any) => {
+        try{
+            const age  = findinguserAge(myAccount?.[0].birthDate);
+            const getrating = await docs.rating.get();
+            const rating = getrating.data();
+            
+            if(age >= rating.range){
+                return
+            }
+            if(rating.range >= 18){             
+                Alert.alert("Access Denied", " This content is age restricted.", [{text: 'OK', onPress: () => navigation.goBack()},]);
+            }else if (rating.range >= 16){
+                Alert.alert("Warning", " This content is violent. Please use discretion when reading.");
+            }
+        }catch(error){
+            console.log("ERROR: failed to get Rating" ,error.message)
+        }
+    }
+
+    const findinguserAge = (timestamp:any) => {
+        if(timestamp){
+          const birthConvert = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+          
+          const today = new Date();
+          const age = today.getFullYear() - birthConvert.getFullYear();
+          return age;
+        }
+    }
+
     const AddtoMyBookmarks = async () : Promise<void> => {
         const Prevmarks = isMarks;
         let status  = "error"
@@ -232,7 +272,10 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
     const setBookisLiked = async (liked:boolean) : Promise<void> => {
+        setisLiked(liked);    
+      
         try{
+            
             let increment = novelItem.like
             let MyfavoriteBooks = [...myAccount[0].favorite];
             let userDoc = myAccount[0].id
@@ -253,19 +296,12 @@ const NovelContent : React.FC <Pageprops> = () => {
                     await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
                 }
             }
-            setisLiked(liked);    
             setnovelItem({...novelItem , like : increment})
-            
-            
-            // const novelRef = await db.collection('Novels').doc(id)
-            //                 .update({like : increment})
-            //                 ;
-
 
             const userRef  = await db.collection('Users').doc(userDoc)
                             .update({favorite : MyfavoriteBooks})
             
-            // const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
+            const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
 
             dispatch(setUser([{...myAccount[0] , favorite : MyfavoriteBooks}]))
         }catch(error){
@@ -308,35 +344,43 @@ const NovelContent : React.FC <Pageprops> = () => {
         }catch(error){
             console.log("Add Book to library Failed" , error)
         }
-       
     }
 
     useEffect(() => {
-        const shouldrefresh = id || refreshing
-            if(shouldrefresh) fetchingNovels()
-    }, [refreshing])
+        if(id !== pageID){
+            setLoading((prev) => ({...prev , start : true}))
+        }
+    } , [id])
+
 
     useEffect(() => {
-        const shouldrefresh = id || refreshing
+        const shouldrefresh = id  || refreshing
+        if(shouldrefresh) fetchingNovels()
+    }, [refreshing ,id])
+
+
+    useEffect(() => {
+        const shouldrefresh = id  || refreshing
         if(shouldrefresh) fetchingChapter()
-    },[refreshing])
+    },[refreshing , id])
+
 
     useEffect(() => {
         const shouldrefresh = id || refreshing
         if(shouldrefresh) fetchingCreator()
-    },[refreshing])
+    },[refreshing, id])
 
     useEffect(() => {
         findingBookinMyBookmarks();
-    },[refreshing])
+    },[refreshing, id])
 
     useEffect(() => {
         findingBookinMylibrary();
-    },[refreshing])
+    },[refreshing, id])
 
     useEffect(() => {
         findinglikeinMyfavorite();
-    },[refreshing])
+    },[refreshing, id])
 
     const MAX_HEIGHT  = ScreenHeight / 1.7;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -461,6 +505,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 <ForegroundItem
                                     isLoading = {isLoading.start}
                                     collection={novelItem}
+                                    myBook = {isMyOwn}
+                                    setlibrary = {setMylibraryBooks}
                                 />
                             </Animated.View>}
                         </Box>
@@ -501,6 +547,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 <ForegroundItem
                                     isLoading = {isLoading.start}
                                     collection={novelItem}
+                                    myBook = {isMyOwn}
+                                    setlibrary = {setMylibraryBooks}
                                     />
                            
                         </Animated.View>
@@ -514,7 +562,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                               <VStack w='100%'>
                                   <Mainsection
                                       isLiked={isLiked}
-                                      setisLiked={setisLiked}
+                                      setisLiked={setBookisLiked}
                                       collection={novelItem}
                                   />
                               </VStack>
