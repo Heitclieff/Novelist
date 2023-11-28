@@ -34,12 +34,12 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
 
         <Box h = {100}>
             <HStack w = '100%' h = '100%' position={'relative'} justifyContent={'space-between'}>
-                <VStack w = {100} h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >
-                    <Suspense fallback={<Box>Loading..</Box>}>
-                        {currentProfile &&
-                            <Avatarfield image={currentProfile.pf_image} size = {'100%'} />
-                        }
-                    </Suspense>
+                <VStack w = {100} h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >                
+                    
+                    {currentProfile &&
+                        <Avatarfield image={currentProfile.pf_image} size = {85} />
+                    }
+
                 </VStack>
                
                 <Box w = '100%' h = '50%' justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>

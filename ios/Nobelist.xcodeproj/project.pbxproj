@@ -80,6 +80,7 @@
 		666F973B2AA4FE0F004898FE /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		666F973C2AA4FE0F004898FE /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome6_Brands.ttf; sourceTree = "<group>"; };
 		666F973D2AA4FE0F004898FE /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		66ADF9742B14C31E003A954B /* RNReactNativeHapticFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RNReactNativeHapticFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DB75052AFE3F060099D231 /* Nobelist.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Nobelist.entitlements; path = Nobelist/Nobelist.entitlements; sourceTree = "<group>"; };
 		66E31B0D2AC57D3600678D49 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Nobelist/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -145,6 +146,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66ADF9742B14C31E003A954B /* RNReactNativeHapticFeedback.framework */,
 				664235412B0646F400B76CAD /* UserNotifications.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				C074E0C47DC601D6E3874E4B /* Pods_Nobelist.framework */,

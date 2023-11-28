@@ -16,13 +16,22 @@ interface contianerProps {
     onEditcontent : boolean
     transparent : boolean
     Contentfixed : boolean
+    isAction : any
+    isDisable : boolean
     // onSave : any
 }
 
-const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null}) => {
+const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null , isDisable = true}) => {
 
   const navigation:any  = useNavigation();
   const theme:any = useContext(ThemeWrapper);
+
+  const onSavingPress = () => {
+    if(isDisable){
+        return
+    }
+    isAction(title);
+  }
   return (
     <Animated.View
       style={[{
@@ -70,7 +79,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
             {onEditcontent &&
-                <Pressable onPress={() => {isAction()}}>
+                <Pressable  onPress={onSavingPress}>
                 {({
                 isHovered,
                 isFocused,
@@ -80,7 +89,7 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
                     <Text
                     fontSize={'md'}
                     fontWeight={'medium'}
-                    color = {isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading}
+                    color = {!isDisable ? isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading : theme.Text.action}
                     >save
                     </Text>
                 )

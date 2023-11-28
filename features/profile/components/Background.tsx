@@ -32,7 +32,6 @@ const ParallaxBackground : React.FC <containerProps> = ({background , scrollY}) 
         source={{
           uri : background,
           priority : FastImage.priority.normal,
-          cache: FastImage.cacheControl.cacheOnly
         }}  
         alt = "images"
         resizeMode={FastImage.resizeMode.cover}

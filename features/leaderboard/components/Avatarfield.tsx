@@ -33,7 +33,6 @@ const LeaderAvatarfield : React.FC <containerProps> = ({size , image  = null , u
                   source={{
                     uri : image  ,
                     priority : FastImage.priority.normal,
-                    cache: FastImage.cacheControl.cacheOnly,
                   }}
                   alt = "images"
                   resizeMode={FastImage.resizeMode.cover}

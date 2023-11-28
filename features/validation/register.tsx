@@ -180,7 +180,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     try{
       setisLoading(true);
       const birthDateParts = registerForms.BirthDate.split('/');
-      const formattedDate = `${birthDateParts[2]}-${birthDateParts[1]}-${birthDateParts[0]}`;
+      const formattedDate = `${birthDateParts[0]}-${birthDateParts[1]}-${birthDateParts[2]}`;
       const selectedDate = new Date(formattedDate);
 
       const timestamp = firestore.Timestamp.fromDate(selectedDate);
@@ -222,6 +222,8 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     }
     setisLoading(false)
   };
+
+  
 
   return (
     <VStack w="100%" h="100%" p={2} alignItems="center" bg = {theme.Bg.base}>

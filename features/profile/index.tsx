@@ -58,6 +58,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const profileRoute = route.params?.profile;
     const Screenheight = Dimensions.get('window').height
     const userdata = useSelector((state:any) => state.userData)
+    const useritem = userdata[0];
     const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
  
 
@@ -68,7 +69,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     useEffect(() => {
         // dispatch(getuserData());
         // console.log('profile',userdata[0].bg_image)
-    } , [userdata])
+    } , [useritem])
 
 
     const ValidateAccount = () => {
@@ -161,14 +162,16 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
 
     useEffect(() => {
         ValidateAccount();
-        findingfollower();
-    },[refreshing])
+       
+    },[refreshing , useritem])
+
 
     useEffect(() => {
         setTimeout(() => {
           setIsLoading(false);
         },0)
     },[])
+
 
     return ( 
         <Box bg={theme.Bg.base} flex={1}>
