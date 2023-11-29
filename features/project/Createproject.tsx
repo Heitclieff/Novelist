@@ -184,6 +184,7 @@ const Createproject : React.FC = () => {
           const ImageURL : string | undefined = await uploadBackgroundImage(projectdocs?.background);
 
           let status  = "error"
+
           try{
 
                const userdocs = useraccount?.[0]
@@ -194,7 +195,10 @@ const Createproject : React.FC = () => {
 
                const tagDocs = projectdocs.tagDoc.map(doc => doc.id)
                const createDoc = {
-                    ...projectdocs,
+                    title : projectdocs.title,
+                    overview : projectdocs.overview,
+                    tagDoc : projectdocs.tagDoc,
+                    cateDoc : projectdocs.cateDoc,
                     image : ImageURL ?  ImageURL : "",
                     createAt : timestamp,
                     owner : userdocs.id,

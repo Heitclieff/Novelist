@@ -10,10 +10,12 @@ IconButton ,
 Divider,
 Icon} from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import AlertItem from '../../reader/components/Alert'
+
 
 //@Firebase
 import auth from '@react-native-firebase/auth'
@@ -22,10 +24,12 @@ import firestore from '@react-native-firebase/firestore'
 interface containerProps {
   data : any,
   timestamp : any,
+  userid : string
   id : string,
+  onModalPress : any
 }
 
-const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
+const Headercontent : React.FC <containerProps> = ({data , timestamp , id , onModalPress , userid})=> {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
 
@@ -84,6 +88,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
     fetchingTagsTitle();
   } , [data.tagDoc])
 
+  
 
   return (
    data && <VStack w = '100%' space = {2}>
@@ -97,30 +102,58 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
               <Text  fontSize={'xs'} color = {!data.novel_status ? "orange.500" : "teal.500"} >{data.novel_status ? "Finished" : "Release"}</Text>
             </Box>
           </HStack>
-          <HStack mt = {1} space={1} alignItems={'center'}>
-              <Box>
-                  <AntdesignIcon
-                      size={15}
-                      color={theme.Text.description}
-                      name='eyeo'
+          <HStack justifyContent=  "space-between" mr = {2} alignItems = 'center'>
+            <VStack>
+              <HStack mt = {1} space={1} alignItems={'center'}>
+                    <Box>
+                        <AntdesignIcon
+                            size={15}
+                            color={theme.Text.description}
+                            name='eyeo'
+                        />
+                    </Box>
+                    <Text fontSize={'xs'} color={theme.Text.description}>
+                        {data.view}
+                    </Text>
+                </HStack>
+                <HStack mt = {1} space={1} alignItems={'center'}>
+                    <Box>
+                      <AntdesignIcon
+                          size={15}
+                          color={theme.Text.description}
+                          name='heart'
+                      />
+                    </Box>
+                    <Text fontSize={'xs'} color={theme.Text.description}>
+                        {data.like}
+                    </Text>
+                
+                </HStack>
+            </VStack>
+            {userid &&
+              data.owner === userid &&
+                <Button 
+                onPress= {onModalPress}
+                _pressed={{bg : theme.Bg.container}}
+                rounded = 'full' 
+                variant={'outline'} 
+                p = {0} 
+                _text={{fontSize : 'sm' , color : theme.Text.base}}
+                h = {"25px"}
+                pl = {2}
+                pr = {2}
+                leftIcon={
+                  <FontAwesomeIcon
+                  name = "camera"
+                  size = {15}
+                  color = {theme.Icon.static}
                   />
-              </Box>
-              <Text fontSize={'xs'} color={theme.Text.description}>
-                  {data.view}
-              </Text>
-          </HStack>
-          <HStack mt = {1} space={1} alignItems={'center'}>
-              <Box>
-                <AntdesignIcon
-                    size={15}
-                    color={theme.Text.description}
-                    name='heart'
-                />
-              </Box>
-              <Text fontSize={'xs'} color={theme.Text.description}>
-                  {data.like}
-              </Text>
-            
+                }
+                >
+                  Edit photos
+                </Button>
+              }
+          
           </HStack>
         </VStack>
         <Divider mt = {2} bg = {theme.Divider.base}/>

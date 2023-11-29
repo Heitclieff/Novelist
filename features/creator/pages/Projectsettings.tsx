@@ -95,6 +95,8 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           const getrates =  await firestore().collection('Rates').get();
           const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
           dispatch(setRating({rates : ratesdocs}))
+
+          return ratesdocs;
      }
 
      const setSelectedRating = (target:any) => {
@@ -102,7 +104,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           
           Setprojectconfig((prevProjectconfig) => ({
                ...prevProjectconfig,
-               rating : target.title,
+               rating : target,
           }))
      }
 
@@ -197,6 +199,10 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                const updateDocument = {...projectdocument};
                for(const key in projectconfig){
                     if(projectconfig[key] !== projectdocument[key]){
+                         if(key === "rating"){
+                              firestoreConfig[key] = firestore().doc(`Rates/${projectconfig[key]?.id}`);
+                              continue;
+                         }
                          firestoreConfig[key] = projectconfig[key];
                          updateDocument[key] = projectconfig[key];
                     }
@@ -358,7 +364,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                    
                                    {projectdocument?.rating &&
                                         projectconfig ? 
-                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{projectconfig?.rating}</Text>
+                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{projectconfig.rating?.title}</Text>
                                     :     
                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
                                    }

@@ -1,4 +1,4 @@
-import React,{useContext , useState, useRef , useEffect , useCallback} from 'react'
+import React,{useContext , useState, useRef , useEffect , useCallback , useMemo} from 'react'
 import { Box , VStack , Text , Center , Spinner} from 'native-base'
 import { 
 ImageBackground, 
@@ -14,9 +14,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ThemeWrapper } from'../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+
 //@Components
 import Headercontent from './header';
 import Elementnavigation from '../../components/navigation/Elementnavigation';
+import Background from './components/Background';
+import Photochoice from '../../components/layout/Modal/Photochoice';
 
 //@Sections
 import EpisodeSection from './section/Episode';
@@ -26,10 +31,14 @@ import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
 import { useSelector , useDispatch } from 'react-redux';
 import { RootState } from '../../systems/redux/reducer';
-import { setChaptercontent , setProjectTeams} from '../../systems/redux/action';
+import { setChaptercontent , setProjectTeams , setProjectDocument} from '../../systems/redux/action';
+import { BottomSheetModal} from '@gorhom/bottom-sheet'
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage';
+import { userdata } from '../../assets/content/VisualCollectionsdata';
+
 
 interface Pageprops {
   route : any
@@ -41,6 +50,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const reference = storage();
 
   const chapterdocs = useSelector((state) => state.content);
   const projectdocs = useSelector((state) => state.docs.docs)
@@ -54,6 +64,20 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const MAX_HEIGHT  = Screenheight / 2.5;
   const HEADER_HEIGHT_NARROWED = 90;
   const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ['25%', '25%'], []);
+  
+  const handlePresentModalPress = useCallback(() => {
+  bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handlePresentModalClose = useCallback(() => {
+       bottomSheetModalRef.current?.close();
+       }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+  console.log('handleSheetChanges', index);
+  }, []);
 
   const Redirectnavigation = (direction:never) => {
         navigation.navigate(direction);
@@ -109,6 +133,83 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   }
 
 
+  const getdeviceLibrary =  async () => {
+    const result =  await launchImageLibrary({
+      presentationStyle : 'formSheet',
+      mediaType : 'photo' ,
+      maxWidth : 300 , 
+      maxHeight : 400
+    });
+
+    if(result){
+         setSelectedImages(result);
+    }
+
+    handlePresentModalClose();
+  }
+
+  const getPhotos = async () => {
+    const result =  await launchCamera({
+      mediaType : 'photo',
+      maxWidth : 300 , 
+      maxHeight : 400
+    })
+
+     if(result){
+         setSelectedImages(result);
+    }
+    handlePresentModalClose();
+}
+
+
+  const setSelectedImages = async (image : string) => {
+    const background_assets = image.assets?.[0];
+    const background_uri =  background_assets.uri;
+    
+  
+    try{
+      const downloadURL =  await uploadBackgroundImage({
+        image : background_uri , 
+        name : background_assets.fileName
+      })
+  
+      const projectUpdate = {
+        ...projectdocs , 
+        image : downloadURL,
+      }
+
+     const isUpdate = await  firestore().collection("Novels").doc(id).update({image : downloadURL})
+     dispatch(setProjectDocument({docs : projectUpdate , id : id}));
+    }catch(error){
+      console.log("ERROR: failed to upload Image" , error);
+    }
+  }
+
+  const uploadBackgroundImage = async (background : string) => {
+    if(!background?.image){
+         return
+    }
+    try{
+         const reference_path = `novel-image/${background.name}`
+   
+         const upload_result = await reference
+         .ref(reference_path)
+         .putFile(background.image);
+         
+         console.log(upload_result.state , `to upload ${background.name}`);
+   
+         if(upload_result.state === "success"){
+           const downloadURL = await reference.ref(reference_path).getDownloadURL();
+           return downloadURL;
+         }
+       }catch(error){
+         console.log("failed to Upload image to storage" ,error.message);
+       }
+}
+
+
+
+
 
   const initailfetchContent = () => {  
       if(refreshing){
@@ -149,27 +250,12 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         />
         {projectdocs  && 
         <>
-          <Box w = '100%' h = {MAX_HEIGHT} bg = 'gray.200' position={'absolute'} zIndex={0} >
-            <FastImage
-              id='background-images'
-              style={{
-                width: '100%',
-                height: '100%',
-                opacity: 1,
-                position: 'relative',
-              }}
-              source={{
-                uri : projectdocs.image  , 
-                priority : FastImage.priority.normal
-              }}
-              alt = "images"
-              resizeMode={FastImage.resizeMode.cover}
-            >
-                
-              <Box width='100%' h={MAX_HEIGHT} bg='black' opacity={0.4} />
-            </FastImage>
-          </Box>
-
+          <Background 
+          MAX_HEIGHT={MAX_HEIGHT} 
+          image = {projectdocs.image}
+         
+          />
+       
           <FlatList
             data={[0]}
             showsVerticalScrollIndicator = {false}
@@ -185,10 +271,11 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             ListFooterComponent={<View style={{ height: HEADER_HEIGHT_EXPANDED }} />}
             renderItem={({ item, index }) => (
               <VStack flex={1} bg={theme.Bg.base}>
-              
                 <Headercontent 
                 data={projectdocs} 
+                onModalPress={handlePresentModalPress}
                 id = {id}
+                userid = {useraccount?.[0].id}
                 timestamp = {{createAt : projectdocs.createAt , updatedAt : projectdocs.lastUpdate}}
                 />
                 {isLoading ? 
@@ -202,7 +289,16 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
           />
         </>
         }
+      <Photochoice
+        BottomRef={bottomSheetModalRef}
+        snapPoints={snapPoints}
+        handleSheetChange={handleSheetChanges}
+
+        DevicePhotos={getdeviceLibrary}
+        photosMode={getPhotos}
+      />
       </Box>
+ 
   )
 }
 

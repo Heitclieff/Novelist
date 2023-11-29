@@ -25,7 +25,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 
 //@Redux Toolkits
-import { setProjectDocument } from '../../redux/action';
+import { setProjectDocument, setRating } from '../../redux/action';
 import { useSelector , useDispatch } from 'react-redux';
 const Drawer = createDrawerNavigator();
 
@@ -33,7 +33,9 @@ const Drawernavigator : React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const dispatch = useDispatch()
+
   const projectdocument = useSelector((state) => state.docs)
+  const rating =  useSelector((state) => state.rates);
 
   const {id}:any = route.params;
   const theme:any = useContext(ThemeWrapper)
@@ -51,9 +53,16 @@ const Drawernavigator : React.FC = () => {
         const projectdocs = snapshotproject.data();
   
         const memberdocs = await getProjectmember(snapshotcontent)
-    
-   
-        const projectkey = {...projectdocs , creators : memberdocs}
+
+        let Ratingdocs = projectdocs.rating
+
+        if(typeof(Ratingdocs) !== 'string'){
+          const getRates = await projectdocs?.rating.get();
+          Ratingdocs = getRates.data();
+        }
+        
+        const projectkey = {...projectdocs , rating : Ratingdocs , creators : memberdocs}
+  
         setProjectdocument(projectkey);
         setSnapshotcontent(snapshotcontent)
   
@@ -64,6 +73,12 @@ const Drawernavigator : React.FC = () => {
     }catch(error){
       console.error('Error fetching document:', error);
     }
+  }
+
+  const fetchingRates = async () : Promise <void> => {
+    const getrates =  await firestore().collection('Rates').get();
+    const ratesdocs = getrates.docs.map((doc) =>({id : doc.id,  ...doc.data()}))
+    dispatch(setRating({rates : ratesdocs}))
   }
 
   const getProjectmember = async (snapshotcontent:any) : Promise<void> => {
