@@ -143,7 +143,11 @@ const NovelContent : React.FC <Pageprops> = () => {
     const fetchingChapter = async () => {
         try{
             const SnapshotContent = db.collection('Novels').doc(id);
-            const SnapshotChapter = await SnapshotContent.collection('Chapters').orderBy('updateAt','desc').get();
+            const SnapshotChapter = await SnapshotContent
+            .collection('Chapters')
+            .where('status' , '==' , false)
+            .orderBy('updateAt','desc')
+            .get();
             const Chapterdocument = SnapshotChapter.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
             setchapterItem(Chapterdocument);
