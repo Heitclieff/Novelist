@@ -84,6 +84,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id})=> {
     fetchingTagsTitle();
   } , [data.tagDoc])
 
+
   return (
    data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>

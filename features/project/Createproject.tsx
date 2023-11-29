@@ -285,7 +285,6 @@ const Createproject : React.FC = () => {
           }
      }
 
-
      useEffect(() => {
           fetchingRates();
      },[])
@@ -341,7 +340,7 @@ const Createproject : React.FC = () => {
                                             name='plus'
                                             size={15}
                                             color = {theme.Icon.base}
-                                            onPress= {() => navigation.navigate('Tags' , {current_tags : projectdocs.tagDoc , handleTagupdate : handleSelectedTags})}
+                                            onPress= {() => navigation.navigate('Tags' , {current_tags : projectdocs.tagDoc , handleTagupdate : handleSelectedTags ,  status : false})}
                                         />
                                         }
                               />

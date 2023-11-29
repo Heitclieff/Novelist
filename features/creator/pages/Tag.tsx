@@ -60,7 +60,9 @@ const Tag: React.FC <Pageprops> = () => {
      }
 
      const setCurrentTags = (current:any) => {
-          if(current?.length <= 0 || current_tags?.length <= 0){
+          console.log("Current type" , typeof(current));
+
+          if(current?.length <= 0 || !current_tags ||current_tags?.length <= 0){
                console.log("Set Current Failed" , current_tags , Object.keys(tagdocs).length)
               return
           }
@@ -113,6 +115,7 @@ const Tag: React.FC <Pageprops> = () => {
                return
           }
 
+          console.log(selectedTags , selectedCategory);
           const isSuccess = await handleTagupdate(selectedTags , selectedCategory);
           
           if(isSuccess){
@@ -123,7 +126,7 @@ const Tag: React.FC <Pageprops> = () => {
      }
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
-          <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {handleTagSaving}/>
+          <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {handleTagSaving} isDisable = {false}/>
           <FlatList>
                <VStack flex=  {1} p = {5} space = {5}>
                     <VStack space = {2}>
