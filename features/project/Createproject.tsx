@@ -1,4 +1,4 @@
-import React,{useContext, useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState , useRef , useMemo , useCallback} from 'react'
 import { 
 Box, 
 VStack , 
@@ -16,35 +16,62 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import { CheckCircleIcon , WarningOutlineIcon } from 'native-base';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
 //@Components
+import Background from './components/Background';
 import { setProjectContent } from '../../systems/redux/action';
+import Photochoice from '../../components/layout/Modal/Photochoice';
 import Rating from './components/Rating';
 import CreateProjectbar from '../components/creater/[container]/CreateProjectbar';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
 import Centernavigation from '../../components/navigation/Centernavigation';
+import { BottomSheetModalProvider , BottomSheetModal} from '@gorhom/bottom-sheet'
 
 // @Redux tookits
 import { useSelector , useDispatch } from 'react-redux';
 import { setRating } from '../../systems/redux/action';
 import SendAlert from '../../services/alertService';
+
+
 //@firestore
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
+import storage from '@react-native-firebase/storage';
 
 const Createproject : React.FC = () => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const toast = useToast();
+     
      const db = firestore()
+     const reference = storage()
 
      const [showRating, setShowRating] = useState(false);
      const [selectRating , setSelectRating] = useState<{}>()
+
 
      const dispatch = useDispatch();
      const useraccount = useSelector((state) => state.userData);
      const projectprev = useSelector((state) => state.project)
      const rating = useSelector((state) => state.rates)
      const [allowCreate ,setAllowCreate] = useState<boolean>(false);
+
+
+     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+     const snapPoints = useMemo(() => ['25%', '25%'], []);
+     
+     const handlePresentModalPress = useCallback(() => {
+     bottomSheetModalRef.current?.present();
+     }, []);
+
+     const handlePresentModalClose = useCallback(() => {
+          bottomSheetModalRef.current?.close();
+          }, []);
+     const handleSheetChanges = useCallback((index: number) => {
+     console.log('handleSheetChanges', index);
+     }, []);
+
      
      const [projectdocsError, setprojectdocsError] = useState({
           title : "Try different from previous project name.",
@@ -63,6 +90,10 @@ const Createproject : React.FC = () => {
      })
 
      const [projectdocs ,setprojectdocs] = useState<{}>({
+          background : {
+               image : "",
+               name : "",
+          },
           title : "",
           overview : "",
           tagDoc : [],
@@ -125,29 +156,54 @@ const Createproject : React.FC = () => {
           setAllowCreate(allow);
      }
 
+
+     const uploadBackgroundImage = async (background : string) => {
+          if(!background?.image){
+               return
+          }
+          try{
+               const reference_path = `novel-image/${background.name}`
+         
+               const upload_result = await reference
+               .ref(reference_path)
+               .putFile(background.image);
+               
+               console.log(upload_result.state , `to upload ${background.name}`);
+         
+               if(upload_result.state === "success"){
+                 const downloadURL = await reference.ref(reference_path).getDownloadURL();
+                 return downloadURL;
+               }
+             }catch(error){
+               console.log("failed to Upload image to storage" ,error.message);
+             }
+     }
+
      const OnCreateProject = async() : Promise<void> => { 
           // console.log('click create project')
+          const ImageURL : string | undefined = await uploadBackgroundImage(projectdocs?.background);
+
           let status  = "error"
           try{
+
                const userdocs = useraccount?.[0]
                const timestamp = firestore.FieldValue.serverTimestamp();
-               const rating = selectRating?.title || '';
+               const rates = selectRating? selectRating?.id : '' ;
                const getusers = db.collection('Users');
-               const getnovel = db.collection('Novels')
+               const getnovel = db.collection('Novels');
 
                const tagDocs = projectdocs.tagDoc.map(doc => doc.id)
                const createDoc = {
                     ...projectdocs,
+                    image : ImageURL ?  ImageURL : "",
                     createAt : timestamp,
-                    image : 'https://wallpapers.com/images/featured/non-copyrighted-ia4f27yk6qnz364p.jpg',
                     owner : userdocs.id,
                     lastUpdate : timestamp,
                     like : 0,
                     view : 0,
                     tagDoc : tagDocs,
-                    rating : rating,
-                    ...projectOption,
-                    
+                    rating : rates ? db.doc(`Rates/${rates}`) : "", 
+                    ...projectOption, 
                }
 
                const docRef = await getnovel.add({...createDoc});
@@ -178,6 +234,45 @@ const Createproject : React.FC = () => {
           SendAlert(status ,  "Created Project" , "Create failed" , toast);
      }
 
+     const setSelectedImages = (image : any) => {
+          const background_assets = image.assets?.[0];
+          const background_uri =  background_assets.uri;
+
+          setprojectdocs((prev) => ({...prev , 
+               background : { 
+               image : background_uri,
+               name : background_assets.fileName
+          }}))
+     }
+     
+     const getdeviceLibrary =  async () => {
+          const result =  await launchImageLibrary({
+            presentationStyle : 'formSheet',
+            mediaType : 'photo' ,
+            maxWidth : 300 , 
+            maxHeight : 400
+          });
+      
+          if(result){
+               setSelectedImages(result);
+          }
+          handlePresentModalClose();
+        }
+      
+      const getPhotos = async () => {
+          const result =  await launchCamera({
+            mediaType : 'photo',
+            maxWidth : 300 , 
+            maxHeight : 400
+          })
+      
+          if(result){
+               setSelectedImages(result);
+          }
+          handlePresentModalClose();
+      }
+     
+     
      const renderCheckIcon = (field:string) => {
           const isAlert =  projectdocsStatus[field];
           if(projectdocs?.[field]){
@@ -189,6 +284,8 @@ const Createproject : React.FC = () => {
                )
           }
      }
+
+
      useEffect(() => {
           fetchingRates();
      },[])
@@ -197,7 +294,7 @@ const Createproject : React.FC = () => {
           <Centernavigation title = {"Create Project"} transparent = {true} Contentfixed = {false}/>
           <FlatList>
                <VStack flex = {1}>
-                    <Box w=  '100%' h = {200} bg = {theme.Bg.container}></Box>
+                    <Background image = {projectdocs.background?.image} onModalPress= {handlePresentModalPress}/>
                     <VStack space={5}  p = {4}>
                                 <VStack space={2} >
                                      <Text color={theme.Text.description} fontWeight={'semibold'}>Project name</Text>
@@ -340,12 +437,24 @@ const Createproject : React.FC = () => {
                     </VStack>
                </VStack>
           </FlatList>    
+
          <Rating 
          isOpen={showRating} 
          onClose = {setShowRating} 
          isselect = {selectRating}
          selectRating = {setSelectRating}
-         rating=  {rating?.rates}/>
+         rating=  {rating?.rates}
+         />
+
+
+     <Photochoice
+        BottomRef = {bottomSheetModalRef}
+        snapPoints={snapPoints}
+        handleSheetChange={handleSheetChanges}
+
+        DevicePhotos = {getdeviceLibrary}
+        photosMode = {getPhotos}
+      />
      </VStack>
   )
 }
