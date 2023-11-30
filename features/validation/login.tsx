@@ -13,6 +13,7 @@ import { Alert } from 'react-native';
 import auth from '@react-native-firebase/auth'
 import { useNavigation } from '@react-navigation/native';
 import { WarningOutlineIcon } from 'native-base';
+import FastImage from 'react-native-fast-image';
 
 interface LoginPageProps {
 }
@@ -56,14 +57,30 @@ const LoginPage: FC<LoginPageProps> = () => {
 
   return (
     <VStack w="100%" h="100%" p={2} justifyContent="center" alignItems="center" bg = {theme.Bg.base}>
-    
-          <Box w = '80%' h = {"25%"} justifyContent={'start'} alignItems={'center'} >
+          <Box w = '100%'  h = "30%" overflow ='hidden' justifyContent=  'flex-end' alignItems=  'center'>
+              <FastImage
+                id='background-images'
+                alt="images"
+                source={require("../../assets/logo/Nobelist_icon.png")}
+                resizeMode={FastImage.resizeMode.cover}
+                style={{
+                    width: '60%',
+                    height: '100%',
+                    opacity : 1,
+                    position : 'relative'
+                }}
+
+              />
+            </Box>
+
+          <Box w = '80%' justifyContent={'start'} alignItems={'center'} >
+           
             <Text fontSize={'3xl'} fontWeight={'bold'} color = {theme.Text.heading}>Nobelist</Text>
           </Box>
 
       {getforms &&
         <>
-          <FormControl w="80%" >
+          <FormControl w="80%" mt = {5}>
           <Input
             rounded = "full"
             variant={'filled'}
