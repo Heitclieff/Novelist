@@ -13,16 +13,20 @@ FormControl
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import Centernavigation from '../../components/navigation/Centernavigation'
 
-import { useDispatch , useSelector } from 'react-redux'
-import { RootState } from '../../systems/redux/reducer'
-import { ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
+// @Components
 import { updateUserField } from '../../systems/redux/action';
 import DatePicker from 'react-native-modern-datepicker';
 import { CheckCircleIcon , WarningOutlineIcon } from 'native-base';
 import ChangePassword from '../validation/password';
 
-//firebase
+// @Redux toolkits
+import { setUser } from '../../systems/redux/action';
+import { useDispatch , useSelector } from 'react-redux'
+import { RootState } from '../../systems/redux/reducer'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
+
+//@firebase
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
@@ -32,6 +36,7 @@ interface Pageprops {
 }
 const Editfield : React.FC <Pageprops> =() => {
   const navigation:any  = useNavigation();
+
   const route = useRoute()
   const db = firestore();
 
@@ -101,6 +106,7 @@ const Editfield : React.FC <Pageprops> =() => {
   }
 
   const handleUpdatebyFields = async (field:string) => {
+    let fieldname  = ""
     if(!input.length > 0){
         Alert.alert(options.title , `should have more than 1 letter.`);
         return
@@ -109,14 +115,16 @@ const Editfield : React.FC <Pageprops> =() => {
     const db_connect = db.collection("Users").doc(userdata?.[0].id)
     try{
       if(field === "Username"){
+        fieldname  = 'username'
         const isUpdated =  await db_connect.update({username : input});
         console.log("Success", isUpdated);
-        
       }else if (field === "description"){
         const isUpdated = await db_connect.update({description : input});
         console.log("Success" , isUpdated)
+
       
       }else if (field === "Birthdate"){
+        fieldname  = 'birthDate'
         const birthDateParts = input.split('/');
         const formattedDate = `${birthDateParts[0]}-${birthDateParts[1]}-${birthDateParts[2]}`;
         const selectedDate = new Date(formattedDate)
@@ -126,11 +134,11 @@ const Editfield : React.FC <Pageprops> =() => {
         console.log("Success" , isUpdated)
 
       }else if (field === "Phone"){
+        fieldname  = 'phone'
         const isUpdated =  await db_connect.update({phone : input});
         console.log("Success" , isUpdated)
 
       }else if(field === 'Password'){
-        
         if(formError.current && formError.new_password && formError.confirm_password){
           Alert.alert("Password" , "should have more than 6 letter.")
           return
@@ -151,6 +159,9 @@ const Editfield : React.FC <Pageprops> =() => {
         }
       }
 
+      if(fieldname){
+        dispatch(setUser([{...userdata[0] , [fieldname] : input}]));
+      }
       navigation.goBack();
     }catch(error){
       console.log("ERROR: failed to update Users" , error);

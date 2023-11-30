@@ -12,6 +12,7 @@ Divider,
 Input,
 Pressable
  } from 'native-base'
+import FastImage from 'react-native-fast-image'
  
 import { Image, Platform , TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -171,6 +172,7 @@ const UploadPhotos =  async (result:any) => {
         <VStack flex = {1} mt = {1}  space = {2}> 
             <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>
               <Center>
+               
                   <Pressable 
                   w=  '100%' 
                   onPress = {() => handlePresentModalPress("bg_image")}
@@ -181,11 +183,19 @@ const UploadPhotos =  async (result:any) => {
                   isPressed
                 }) => {
                   return(
-                  <Box w = '100%' h = {160} overflow={'hidden'} bg = {theme.Bg.base}>
-                      <Image 
-                      style={{width : '100%' ,height : '100%' , opacity : isPressed ? 0.3 : isHovered ? 0.3  : 1 }}
-                      source={{uri : currentProfile?.bg_image}}
-                      />
+                  <Box w = '100%' h = {160} overflow={'hidden'} bg = {theme.Bg.container}>
+                    {currentProfile?.bg_image &&
+                         <FastImage 
+                         style={{width : '100%' ,height : '100%' , opacity : isPressed ? 0.3 : isHovered ? 0.3  : 1 }}
+                         source={{
+                          uri : currentProfile?.bg_image,
+                          priority: FastImage.priority.normal,
+                        }}
+                        alt="images"
+                        resizeMode={FastImage.resizeMode.cover}
+                         />
+                    }
+                 
                   </Box> 
                 )}}
                 </Pressable>

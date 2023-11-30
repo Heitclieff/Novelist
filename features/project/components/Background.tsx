@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-import { Box, Pressable } from 'native-base'
+import { Box, Center, Pressable , VStack , Text } from 'native-base'
 import FastImage from 'react-native-fast-image';
-
+import FeatherIcon from 'react-native-vector-icons/Feather'
 interface containerProps {
     image : string
     onModalPress : any
@@ -22,7 +22,7 @@ const Background: React.FC<containerProps> = ({image , onModalPress}) => {
             }) => {
                 return (
                     <Box w='100%' h={200} bg={theme.themeMode === 'dark' ? isPressed ? 'trueGray.600' :  'trueGray.800' : "trueGray.300"} overflow ='hidden'>
-                       {image && 
+                       {image ? 
                             <FastImage
                             id = 'item-image'
                             alt = "images"
@@ -37,8 +37,16 @@ const Background: React.FC<containerProps> = ({image , onModalPress}) => {
                                  opacity : isPressed ? 0.6 : 1
                             }}
                         />
+                        :
+                        <VStack h = '100%' mt = {5} alignItems=  'center' justifyContent = 'center'>
+                            <FeatherIcon
+                            size = {25}
+                            name = "camera"
+                            color = {theme.Icon.base}
+                            />
+                            <Text color = {theme.Text.base}>Upload Image</Text>
+                        </VStack>
                        }
-                  
                     </Box>
                 )
             }}

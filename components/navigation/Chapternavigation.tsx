@@ -21,6 +21,11 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import { beginEvent } from 'react-native/Libraries/Performance/Systrace';
 
+// @Redux toolkits
+import { useDispatch , useSelector } from 'react-redux';
+import { Themelight , Themedark } from '../../systems/theme/theme';
+import { setTheme , saveThemetoStorage } from '../../systems/redux/action';
+
 //@ firebase
 import firestore from '@react-native-firebase/firestore'
 import Chapter from '../creator/pages/chapter';
@@ -49,15 +54,23 @@ interface contianerProps {
 const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite  ,approveproject, chapterstate,GoBackwithReference ,chapterdocs , multiproject , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
+     const dispatch = useDispatch();
 
+     const [darkmode , setdarkmode]  = useState(theme.themeMode === 'dark');
      const [showAlert, setShowAlert] = useState(false);
      const [chapterheader ,setChapterheader] = useState(title);
+
+     const toggleSwitch = () => { 
+          const selectedTheme = darkmode ? Themelight : Themedark;
+          dispatch(setTheme(selectedTheme))
+          dispatch(saveThemetoStorage(selectedTheme))
+          setdarkmode(!darkmode);
+     }
 
      const BackHandler = () => {
           navigation.goBack()
 
      }
-
      const SavingAlertDailog = () => 
      Alert.alert('Saving', 'you want to save this progress ?', [
           {
@@ -133,13 +146,14 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                     {!editable ?
                          <HStack>
                               <IconButton
+                                   onPress={toggleSwitch}
                                    size='sm'
                                    rounded={'full'}
                                    icon={
                                         <FeatherIcon
                                              size={20}
                                              color={theme.Icon.base}
-                                             name='moon' />}
+                                             name= {darkmode ? 'sun' : 'moon'} />}
                               />
 
                               <IconButton

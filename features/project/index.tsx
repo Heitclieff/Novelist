@@ -103,8 +103,6 @@ const Creator : React.FC <Pageprops> = () => {
         getProjectContent();
     }, [refreshing])
 
-
-    
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['20%', '45%'], [windowHeight]);
@@ -167,6 +165,7 @@ const Creator : React.FC <Pageprops> = () => {
                                     <MemorizedCreatorItemfield 
                                     key = {index} 
                                     id = {item.id} 
+                                    refreshing = {refreshing}
                                     title = {item.title}
                                     status = {item.status}
                                     image = {item.image}

@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		661FA39E2B18C34F00644432 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 661FA3A02B18C34F00644432 /* LaunchScreen.storyboard */; };
 		664235422B0646F400B76CAD /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 664235412B0646F400B76CAD /* UserNotifications.framework */; };
 		666F973E2AA4FE0F004898FE /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 666F972B2AA4FE0F004898FE /* Fontisto.ttf */; };
 		666F973F2AA4FE0F004898FE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 666F972C2AA4FE0F004898FE /* Octicons.ttf */; };
@@ -33,7 +34,6 @@
 		666F974F2AA4FE0F004898FE /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 666F973C2AA4FE0F004898FE /* FontAwesome6_Brands.ttf */; };
 		666F97502AA4FE0F004898FE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 666F973D2AA4FE0F004898FE /* MaterialIcons.ttf */; };
 		66E31B0E2AC57D3600678D49 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66E31B0D2AC57D3600678D49 /* GoogleService-Info.plist */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CE7E903F8FB5307F2C699054 /* Pods_Nobelist_NobelistTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E70A53875C2E6237F66BA991 /* Pods_Nobelist_NobelistTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +60,8 @@
 		3B4392A12AC88292D35C810B /* Pods-Nobelist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Nobelist.debug.xcconfig"; path = "Target Support Files/Pods-Nobelist/Pods-Nobelist.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Nobelist.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Nobelist.release.xcconfig"; path = "Target Support Files/Pods-Nobelist/Pods-Nobelist.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Nobelist-NobelistTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Nobelist-NobelistTests.debug.xcconfig"; path = "Target Support Files/Pods-Nobelist-NobelistTests/Pods-Nobelist-NobelistTests.debug.xcconfig"; sourceTree = "<group>"; };
+		661FA39F2B18C34F00644432 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		661FA3A22B18C35400644432 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		664235412B0646F400B76CAD /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		666F972B2AA4FE0F004898FE /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		666F972C2AA4FE0F004898FE /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
@@ -83,7 +85,6 @@
 		66ADF9742B14C31E003A954B /* RNReactNativeHapticFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RNReactNativeHapticFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DB75052AFE3F060099D231 /* Nobelist.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Nobelist.entitlements; path = Nobelist/Nobelist.entitlements; sourceTree = "<group>"; };
 		66E31B0D2AC57D3600678D49 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Nobelist/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Nobelist-NobelistTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Nobelist-NobelistTests.release.xcconfig"; path = "Target Support Files/Pods-Nobelist-NobelistTests/Pods-Nobelist-NobelistTests.release.xcconfig"; sourceTree = "<group>"; };
 		C074E0C47DC601D6E3874E4B /* Pods_Nobelist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Nobelist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E70A53875C2E6237F66BA991 /* Pods_Nobelist_NobelistTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Nobelist_NobelistTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,7 +138,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				661FA3A02B18C34F00644432 /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = Nobelist;
@@ -324,7 +325,7 @@
 				666F97472AA4FE0F004898FE /* Ionicons.ttf in Resources */,
 				666F97482AA4FE0F004898FE /* FontAwesome5_Solid.ttf in Resources */,
 				666F97422AA4FE0F004898FE /* Entypo.ttf in Resources */,
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				661FA39E2B18C34F00644432 /* LaunchScreen.storyboard in Resources */,
 				666F97452AA4FE0F004898FE /* AntDesign.ttf in Resources */,
 				666F974B2AA4FE0F004898FE /* Zocial.ttf in Resources */,
 				666F97462AA4FE0F004898FE /* Foundation.ttf in Resources */,
@@ -501,6 +502,19 @@
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		661FA3A02B18C34F00644432 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				661FA39F2B18C34F00644432 /* Base */,
+				661FA3A22B18C35400644432 /* en */,
+			);
+			name = LaunchScreen.storyboard;
+			path = Nobelist;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
@@ -689,10 +703,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
@@ -770,10 +781,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

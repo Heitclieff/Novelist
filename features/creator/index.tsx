@@ -38,6 +38,7 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage';
 import { userdata } from '../../assets/content/VisualCollectionsdata';
+import { LogBox } from 'react-native';
 
 
 interface Pageprops {
@@ -82,6 +83,11 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const Redirectnavigation = (direction:never) => {
         navigation.navigate(direction);
   }
+
+
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
 
   const fetchchaptercontent = async () : Promise <void> => {
     try {
@@ -260,7 +266,11 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
             data={[0]}
             showsVerticalScrollIndicator = {false}
             refreshControl={
-              <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+              <RefreshControl 
+              refreshing = {refreshing} 
+              onRefresh={onRefresh}
+              tintColor={'white'}
+              />
             }
             style={{
               zIndex: 1,

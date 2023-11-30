@@ -13,7 +13,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation , useRoute } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { Categorydata } from '../../../assets/content/VisualCollectionsdata'
-import { Alert } from 'react-native'
+import { Alert, LogBox} from 'react-native'
 //@Redux toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setTags } from '../../../systems/redux/action'
@@ -24,7 +24,7 @@ import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import TagItem from '../components/Tagitem'
 import { StatusDialog } from '../assets/toastStatus'
-import SendAlert from '../../../services/alertService'
+
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
@@ -50,6 +50,12 @@ const Tag: React.FC <Pageprops> = () => {
      const [isEdit , setisEdit] = useState<boolean>(false);
      const [isLoading , setisLoading] = useState(true);
 
+
+     LogBox.ignoreLogs([
+          'Non-serializable values were found in the navigation state',
+     ]);
+
+        
      const fetchingTags =  async () :Promise<void> => {
           const snapshotTags = await firestore().collection('Tags').get();
           const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}));
@@ -127,7 +133,7 @@ const Tag: React.FC <Pageprops> = () => {
   return (
     <VStack flex = {1} bg = {theme.Bg.base}>
           <Memorizednavigation title = "Tags" onEditcontent = {isEdit} isAction = {handleTagSaving} isDisable = {false}/>
-          <FlatList>
+          <FlatList disableRefresh = {true}>
                <VStack flex=  {1} p = {5} space = {5}>
                     <VStack space = {2}>
                          <Text color = {theme.Text.base} fontWeight={'semibold'}>

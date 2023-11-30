@@ -1,8 +1,8 @@
-import React , {useCallback , Suspense} from "react"
+import React , {useCallback , Suspense , useContext} from "react"
 import {Box ,VStack } from "native-base"
 import Animated from "react-native-reanimated"
 import { RefreshControl } from "react-native"
-
+import { ThemeWrapper } from "../../../systems/theme/Themeprovider"
 interface Provider {
     children : any,
     collection: any[ ],
@@ -10,16 +10,20 @@ interface Provider {
     horizontal : any,
     refreshing : boolean ,
     setRefreshing : any,
+    disableRefresh : boolean
  }
 
 const ItemList :React.FC <Provider> = ({
     children , 
     collection,
+    disableRefresh = false,
     onScroll = null ,
     horizontal = false,
     refreshing,
     setRefreshing
     }) => {
+
+    const theme : any = useContext(ThemeWrapper);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -36,7 +40,12 @@ const ItemList :React.FC <Provider> = ({
             scrollEventThrottle={16}
             onScroll= {onScroll}
             refreshControl={
-                <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                !disableRefresh &&
+                    <RefreshControl 
+                    refreshing = {refreshing} 
+                    onRefresh={onRefresh}
+                    tintColor={theme.Icon.base}
+                    />
             }
 
             renderItem={({ item, index }) => children(item, index)}

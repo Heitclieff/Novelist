@@ -517,7 +517,11 @@ const NovelContent : React.FC <Pageprops> = () => {
                       <Animated.ScrollView
                           showsVerticalScrollIndicator={false}
                           refreshControl={
-                            <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                            <RefreshControl 
+                            refreshing = {refreshing} 
+                            onRefresh={onRefresh}
+                            tintColor={'white'}
+                            />
                           }
                           onScroll={Animated.event([
                               {

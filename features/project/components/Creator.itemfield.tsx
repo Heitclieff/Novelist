@@ -17,6 +17,7 @@ import Avatarfield from '../../../components/field/Avatarfield'
 
 //firebase
 import firestore from '@react-native-firebase/firestore'
+import { userdata } from '../../../assets/content/VisualCollectionsdata'
 
 interface containerProps {
      id : number,
@@ -24,10 +25,11 @@ interface containerProps {
      image :string,
      status: string,
      creator : any,
+     refreshing : boolean
 
 
 }
-const CreatorItemfield : React.FC <containerProps> = ({id, title , image , status , creator})=> {
+const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , image , status , creator})=> {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
      const [creatorlist ,setCreatorlist] = useState<any[]>([]);
@@ -45,6 +47,7 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
 
 
      const fetchingcreator = async (): Promise<void> => {
+          console.log("Fetching Creators");
           try{
                const projectkey = firestore().collection('Novels').doc(id);
                const creatorkey = await projectkey.collection("Creator").get();
@@ -59,7 +62,7 @@ const CreatorItemfield : React.FC <containerProps> = ({id, title , image , statu
      useEffect(() => {
           fetchingcreator();
           // MatchingUserid()
-     }, [id])
+     }, [id , refreshing])
 
      return ( 
      <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>

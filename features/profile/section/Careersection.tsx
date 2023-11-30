@@ -39,7 +39,7 @@ const Careersection : React.FC <Pageprops> = ({id , setCareerAmout}) => {
       try{
         const getnovel = await firestore().collection('Novels')
         .where('owner' ,'==' , id)
-        .where('status' , '==' , false)
+        .where('status' , '==' , true)
         .get()
   
         setCareerAmout(getnovel.docs.length);

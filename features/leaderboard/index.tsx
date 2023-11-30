@@ -185,7 +185,11 @@ const Leaderboard: React.FC <pageProps> = () => {
                     useNativeDriver : true
                 })}
                 refreshControl={
-                    <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                    <RefreshControl 
+                    refreshing = {refreshing} 
+                    onRefresh={onRefresh}
+                    tintColor={'white'}
+                    />
                 }
                 scrollEventThrottle={16}
                 style ={{

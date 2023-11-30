@@ -309,7 +309,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
             rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
             />
             <Box flex={1}>
-                 <FlatList>
+                 <FlatList disableRefresh = {true}>
                       <VStack p={6} space={4}>
                            <Text color={theme.Text.base} fontWeight={'semibold'}>General</Text>
                            <VStack space={4} >

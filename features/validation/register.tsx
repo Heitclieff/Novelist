@@ -195,8 +195,8 @@ const RegisterPage: FC<RegisterPageProps> = () => {
       const Newdata = {
         username: registerForms.username,
         email: registerForms.email,
-        bg_image: 'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/3.jpeg?alt=media&token=356ae7fd-5926-4248-aa06-7879c630deff',
-        pf_image : 'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/3.jpeg?alt=media&token=356ae7fd-5926-4248-aa06-7879c630deff',
+        bg_image: '',
+        pf_image : 'https://firebasestorage.googleapis.com/v0/b/novel-app-test.appspot.com/o/User-avatar.svg.png?alt=media&token=65f4cf0f-1235-469d-831b-e40e479302c5',
         description : "",
         favorite : [],
         post_like : [],

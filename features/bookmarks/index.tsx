@@ -94,8 +94,6 @@ const Bookmarks : React.FC <Pageprops> = () => {
       }
     },[refreshing])
 
-    console.log(Mybookmarks.slot)
-
   return (
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
         

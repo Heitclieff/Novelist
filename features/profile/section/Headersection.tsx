@@ -27,6 +27,7 @@ interface contianerProps {
 const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action , careersAmout}) =>{
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
+
   return (
     <VStack w = '100%'>
         <Box w = '100%' h = {5} bg = {'transparent'}></Box>

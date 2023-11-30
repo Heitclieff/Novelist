@@ -57,7 +57,7 @@ const Category: React.FC <Pageprops> = () => {
       :
       <Suspense fallback = {<Box>Loading...</Box>}>
       {
-        <ItemList collection={Categorydata.category}>
+        <ItemList collection={Categorydata.category} disableRefresh = {true}>
             {(item:any, index:number) => (
                 <MemorizedCategoryItems 
                     key = {index} 

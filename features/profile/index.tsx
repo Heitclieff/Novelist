@@ -43,6 +43,7 @@ const ParallaxBackground  = React.lazy(() =>import('./components/Background'));
 const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const theme:any = useContext(ThemeWrapper)
 
+  
     const [isOwner, setisOwner] = useState<boolean>(false);
     const [isfollow ,setisfollow] = useState<boolean>(false);
     const [isLoading , setIsLoading] = useState<boolean>(true);
@@ -61,7 +62,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const useritem = userdata[0];
     const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
  
-
     const scrollY = useRef(new Animated.Value(0)).current;
     const MAX_HEIGHT  = Screenheight / 3.5;
     const HEADER_HEIGHT_NARROWED = 90;
@@ -76,6 +76,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         let current_profile = userdata[0];
         let PROFILE_TITLE = userdata[0].username
 
+     
         if(profileRoute){
             if(profileRoute.id !== userdata[0].id) {
                 current_profile = profileRoute;
@@ -86,7 +87,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         }else{
             setisOwner(true);
         }
-
         findingfollower(current_profile.id);
         setCurrentProfile(current_profile)
         setHeaderTitle(PROFILE_TITLE);
@@ -107,8 +107,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             const firebase = firestore().collection('Users');      
             let myfollowlist = {...userdata[0]};
             let intrpeople_increment = currentProfile.follower 
-            
-            console.log("Current Profile" ,profileRoute)
+
             if(isfollow){
                 intrpeople_increment -= 1 
                 myfollowlist.following -= 1
@@ -188,7 +187,11 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             <Animated.FlatList
             data={[0]}
             refreshControl={
-                <RefreshControl refreshing = {refreshing} onRefresh={onRefresh}/>
+                <RefreshControl 
+                refreshing = {refreshing} 
+                onRefresh={onRefresh}
+                tintColor={'white'}
+                />
             }
             keyExtractor={(item:any) => item.id}
             numColumns={2}
@@ -234,7 +237,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                             </VStack>
                         </VStack>
                   )
-                },[isLoading , isfollow , careersAmout])}
+                },[isLoading , isfollow , careersAmout , currentProfile])}
             >   
          
             </Animated.FlatList>
