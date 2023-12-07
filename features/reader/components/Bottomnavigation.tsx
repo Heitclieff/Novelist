@@ -17,13 +17,15 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 interface containerProps {
-     isLiked : boolean , 
+     isLiked : boolean ,
+     isLoading : boolean, 
      setisLiked : any,
      setisMyOwn : any,
      bottomspace : number,
      myBook : boolean
+     setlibrary : any
 }
-const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bottomspace, myBook , setlibrary}) => {
+const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bottomspace, myBook , isLoading , setlibrary}) => {
      const theme:any = useContext(ThemeWrapper)
   return (
      <VStack safeAreaBottom w = '100%'  h = {bottomspace}   zIndex={10} position={'absolute'} bottom={0} alignItems={'center'} bg= {theme.Bg.base} space = {2}>
@@ -45,6 +47,8 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
           <Box w = "70%" alignItems={'center'}>
                <Button
                     w = "100%"
+                    isLoading = {isLoading}
+                    _spinner={{color : 'amber.500'}}
                     _pressed={{ bg : 'amber.500'}}
                     size='sm'
                     rounded={'full'}

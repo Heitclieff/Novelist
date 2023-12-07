@@ -36,10 +36,18 @@ const LoginPage: FC<LoginPageProps> = () => {
 
       auth().signInWithEmailAndPassword(getforms.email, getforms.password).then((target)=>{
         navigation.navigate("Index")
+        console.log("Target" , target)
         console.log('sign in success' ,target.user.uid)
     }).catch((error)=>{
-        console.log('Error"', error)
-        Alert.alert('Error', "Sorry we didn't found your account", [
+        let error_message=  "Not founds any Account."
+
+        if(error.code === "auth/invalid-email" && error.code === "auth/wrong-password"){
+          error_message = "Not founds any Account."
+        }
+        else if(error.code === "auth/invalid-email" || error.code === "auth/wrong-password"){
+          error_message = "The Email or password is invalid."
+        }
+        Alert.alert('Error', error_message, [
           {
             text: 'OK',
           },

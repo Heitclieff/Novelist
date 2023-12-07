@@ -42,6 +42,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : "Try different from previous username.",
     email : 'Try different from previous email.',
     password : "Try different from previous password.",
+    phone : "",
     BirthDate : " ",
   })
 
@@ -49,6 +50,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : false , 
     email :false , 
     password : false,
+    phone : false,
     BirthDate : false,
   })
 
@@ -56,6 +58,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : "",
     email : "",
     password : "",
+    phone : "",
     BirthDate : "" ,
   });
 
@@ -155,12 +158,28 @@ const RegisterPage: FC<RegisterPageProps> = () => {
        
         setregisterFormsError((prev) => ({...prev , [filed] : error_message}))
         setRegisterFormsStatus((prev) => ({...prev , [filed] : isSecured}))
-      }else if (filed === "BirthDate"){
+      }else if(filed === "Phone") {
+        let isSecured = true;
+        let error_massage = "Try different from Phone number.";
+        const format = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+  
+        if(input){
+          if(format.test(input)){
+              isSecured = false;
+          }
+        }
+
+       
+        setregisterFormsError((prev) => ({...prev , [filed] : error_massage}))
+        setRegisterFormsStatus((prev) => ({...prev , [filed] : isSecured}))
+
+      }
+      else if (filed === "BirthDate"){
         Keyboard.dismiss();
         setDatapickerOpen(false);
 
-        if(registerForms.email && registerForms.username && registerForms.password){
-          if(!registerFormsStatus.email && !registerFormsStatus.username && !registerFormsStatus.password){
+        if(registerForms.email && registerForms.username && registerForms.phone && registerForms.password){
+          if(!registerFormsStatus.email && !registerFormsStatus.username && !registerFormsStatus.phone && !registerFormsStatus.password){
             setSignup(true)
           }
         }
@@ -205,7 +224,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         follower: 0,
         following: 0,
         notification : 0,
-        phone : "",
+        phone : registerForms.phone,
         createAt : firestore.FieldValue.serverTimestamp(),
         birthDate: selectedDate,
         message_token : "",

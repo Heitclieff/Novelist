@@ -5,6 +5,7 @@ VStack,
 HStack,
 Text,
 Input,
+Center,
 Icon
  } from 'native-base'
 
@@ -38,19 +39,16 @@ const MemorizedLibraryitem = React.memo(Libraryitem)
 const Library: React.FC <Pageprops> = () => {
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const theme:any = useContext(ThemeWrapper);
-  const myBooks = useSelector((state:any) => state.book);
+  const myBooks : any = useSelector((state: any) => state.book);
   const userdata = useSelector((state:any) => state.userData)
+  const userID = userdata[0]?.id; 
 
   const [serchingKey , setSearchingKey] = useState<string>("");
   const [refreshing ,setRefreshing] = useState<boolean>(false);
-  const [BookSlot , setBookSlot] = useState<any[]>([]);
   const [isLoading ,setLoading] = useState<boolean>(true);
-  const userID = userdata[0]?.id; 
 
   const getLibraryContent = async ():Promise<void> => {
     try {
-      console.log("fetch library")
-      // fixed userdata to Object
       const snapshotusers = firestore().collection("Users").doc(userID)
       const getlibrarykeys = await snapshotusers.collection("Library").orderBy("date" , "desc").get();
       const librarykeys = getlibrarykeys.docs.map(doc => doc.data().novelDoc);
@@ -60,7 +58,6 @@ const Library: React.FC <Pageprops> = () => {
       .get();
     
       const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
-      setBookSlot(novelDocs);
       dispatch(setMylibrary({book : novelDocs}))
 
     } catch (error) {
@@ -80,17 +77,17 @@ const Library: React.FC <Pageprops> = () => {
   }
   
   useEffect(() => {
-    const shouldrefresh = !myBooks || refreshing
+    const shouldrefresh = !myBooks.exists || refreshing
 
-    if(myBooks){
-      setBookSlot(myBooks.book);
+    if(myBooks.length > 0){
+      setLoading(false)
+      return
     }
 
     if(shouldrefresh) getLibraryContent();
     setLoading(false);
   },[userID , refreshing])
 
-  
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
         <MemorizedElementnavigation title = 'Library'/>
@@ -117,13 +114,21 @@ const Library: React.FC <Pageprops> = () => {
                 </Box>
               </Box>
               <VStack space={1} m={5} mt={6}>
-                {myBooks &&
-                  BookSlot?.length > 0 ?
-                  BookSlot.map((item: any, index: number) => (
+                {myBooks ?
+                  myBooks.book?.length > 0 ?
+                  myBooks.book.map((item: any, index: number) => (
                     <MemorizedLibraryitem key={index} id={item.id} data={item} />
                   ))
-                  : <Text color={theme.Text.base}>No data</Text>
+                  : 
+                  <Center>
+                    <Text color={theme.Text.base}>Not founds any Books.</Text>
+                  </Center>
+                  :
+                  <Box mt = {10}>
+                   <SpinnerItem/>
+                  </Box> 
                 }
+
               </VStack>
             </FlatList>
         }

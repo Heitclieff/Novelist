@@ -91,11 +91,10 @@ const NovelContent : React.FC <Pageprops> = () => {
         novel : true,
         chapter : true,
         creator : true,
+        Button : true,
     })
 
     const [showNavigate , setShowNavigate] = useState<boolean>(true);
-    
-    
 
     const fetchingNovels = async () : Promise<void> => {
         try {
@@ -176,12 +175,14 @@ const NovelContent : React.FC <Pageprops> = () => {
 
     const findingBookinMylibrary = () => {
         const findingBooks = myBooks.book?.find((doc) => doc.id === id)?.id
+        setLoading((prev :any) => ({...prev, Button : false}));
         if(!findingBooks) return
         setisMyOwn(true);
+
+
     }   
 
-    const findingBookinMyBookmarks = () => {
-        
+    const findingBookinMyBookmarks = () => {    
         const findingBookmarks = Mybookmarks.slot?.find((doc) => doc.id === id)?.id
         if(!findingBookmarks) return
         setisMarks(true);
@@ -276,20 +277,19 @@ const NovelContent : React.FC <Pageprops> = () => {
     }
 
     const setBookisLiked = async (liked:boolean) : Promise<void> => {
-        setisLiked(liked);    
-      
+        setisLiked(liked);   
         try{
             
             let increment = novelItem.like
-            let MyfavoriteBooks = [...myAccount[0].favorite];
+            let MyfavoriteBooks = myAccount[0].favorite?.length > 0 ? [...myAccount[0].favorite] : [];
             let userDoc = myAccount[0].id
             if(liked) {
                 increment += 1
                 MyfavoriteBooks.push(id);
                 await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(1)})
-                if (!novelItem.multiproject) {
-                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(1)})
-                }
+                // if (!novelItem.multiproject) {
+                //     await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(1)})
+                // }
                 // 
             }else{
                 increment -= 1
@@ -305,7 +305,7 @@ const NovelContent : React.FC <Pageprops> = () => {
             const userRef  = await db.collection('Users').doc(userDoc)
                             .update({favorite : MyfavoriteBooks})
             
-            const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
+            // const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
 
             dispatch(setUser([{...myAccount[0] , favorite : MyfavoriteBooks}]))
         }catch(error){
@@ -316,38 +316,48 @@ const NovelContent : React.FC <Pageprops> = () => {
     const setMylibraryBooks = async () : Promise<void> => {
         let status = "error";
         const prevOwn = isMyOwn;
+        setLoading((prev :any) => ({...prev, Button : true}));
         setisMyOwn(!isMyOwn);
-        try{
-            const uid = myAccount[0].id
-            const getuserpath =  db.collection('Users').doc(uid);
-            const librarypath =  getuserpath.collection("Library")
-            const timestamp = firestore.FieldValue.serverTimestamp();
-           
-            if(!prevOwn){
-                dispatch(setMylibrary({book : [{id : id , ...novelItem}, ...myBooks.book]}))
+        const uid = myAccount[0].id
+        const getuserpath =  db.collection('Users').doc(uid);
+        const librarypath =  getuserpath.collection("Library")
+        const timestamp = firestore.FieldValue.serverTimestamp();
+        
+        const BooksAdd = [{id  : id , ...novelItem}]
+        const ConcatBooks = myBooks.book ? BooksAdd.concat(...myBooks.book) : BooksAdd;
+        
+        console.log(ConcatBooks);
+        if(!prevOwn){
+            try{
+                dispatch(setMylibrary({book : ConcatBooks}))
                 const docRef = await librarypath.add({           
                     date : timestamp,
                     novelDoc : id,
                     type : 'Bought'
-                    });
+                });
+
                 status = "success"
                 console.log('Add success', docRef.id)
                 SendAlert(status , "Added success" , "Add failed" , toast)
-            }else{
-                const removeBooks = Mybookmarks.slot.filter((book) => book.id !== id)
-                dispatch(setMylibrary({book: removeBooks}));
-
-                const getlibrarykeys = await librarypath.where('novelDoc' , '==' , id).get()
-                const docID =  getlibrarykeys.docs.map(doc => doc.id)
-                const docRef = await librarypath.doc(docID[0]).delete();
-                console.log("Remove" , id , 'success');
-                
-            }
-
-          
-        }catch(error){
-            console.log("Add Book to library Failed" , error)
+            }catch(error){
+                console.log("Failed to Add library Books" , error);
+            }  
+        }else{
+            try{
+                if(myBooks.book){
+                    const removeBooks = myBooks.book.filter((book) => book.id !== id)
+                    dispatch(setMylibrary({book: removeBooks}));
+        
+                    const getlibrarykeys = await librarypath.where('novelDoc' , '==' , id).get()
+                    const docID =  getlibrarykeys.docs.map(doc => doc.id)
+                    const docRef = await librarypath.doc(docID[0]).delete();
+                    console.log("Remove" , id , 'success');
+                }
+            }catch(error){
+                console.log("Failed to Remove library Books" , error);
+            }   
         }
+        setLoading((prev :any) => ({...prev, Button : false}));
     }
 
     useEffect(() => {
@@ -434,6 +444,7 @@ const NovelContent : React.FC <Pageprops> = () => {
                 setisLiked={setBookisLiked}
                 bottomspace = {BOTTOM_SPACE}
                 myBook = {isMyOwn}
+                isLoading = {isLoading?.Button}
                 setlibrary = {setMylibraryBooks}
               />
               }
