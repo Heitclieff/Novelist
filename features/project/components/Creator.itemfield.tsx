@@ -14,7 +14,7 @@ import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image';
 //@Components
 import Avatarfield from '../../../components/field/Avatarfield'
-
+import EvilIcon from 'react-native-vector-icons/EvilIcons'
 //firebase
 import firestore from '@react-native-firebase/firestore'
 import { userdata } from '../../../assets/content/VisualCollectionsdata'
@@ -73,8 +73,9 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
      }) => {
           return (
           <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}>
-               <Box w= '25%' h= '100%' bg=  'gray.200' mr = {2} overflow={'hidden'}>
-                    <FastImage
+               <Box w= '25%' h= '100%' bg=  {theme.Bg.container} mr = {2} overflow={'hidden'} justifyContent={'center'} alignItems= "center">
+                    {image ? 
+                         <FastImage
                          id = 'item-image'
                          alt = "images"
                          resizeMode={FastImage.resizeMode.cover}
@@ -86,7 +87,16 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
                               width : '100%' , 
                               height : '100%'
                          }}
-                    />
+                         />
+
+                         :
+
+                         <EvilIcon
+                         name = "image"
+                         size = {25}
+                         color = {theme.Icon.base}
+                         />
+                    }
                </Box>
                <VStack w = '75%' h=  '100%'  bg = {theme.Bg.container} rounded={'md'} space = {2} pl = {3}>
                     <VStack justifyContent={'center'} pt = {1}>

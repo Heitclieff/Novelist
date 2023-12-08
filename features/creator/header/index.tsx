@@ -162,7 +162,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id , onMo
             <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
           </HStack>
           <Text  color={theme.Text.description}>
-            {data.overview}
+           {data.overview ? data.overview : "write something *"}
           </Text>
         </VStack>
           {

@@ -399,7 +399,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
 
       const GoBackwithReference = () => {
-          navigation.goBack();
+          navigation.navigate('Chapters');
           reference.update({during : false})
       }
 
@@ -484,6 +484,7 @@ const Readcontent : React.FC <pageProps> = () => {
           multiproject = {projectdocs.docs?.multiproject}
           approveproject = {approvedcommitRequest}
           createdBy = {createdBy}
+          
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
           GoBackwithReference = {GoBackwithReference}

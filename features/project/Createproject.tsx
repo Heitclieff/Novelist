@@ -49,7 +49,7 @@ const Createproject : React.FC = () => {
 
      const [showRating, setShowRating] = useState(false);
      const [selectRating , setSelectRating] = useState<{}>()
-
+     const [isLoading ,setLoading] = useState(false);
 
      const dispatch = useDispatch();
      const useraccount = useSelector((state) => state.userData);
@@ -132,7 +132,7 @@ const Createproject : React.FC = () => {
                let error_message = "Try different from previous project name."
                
                if(value){
-                    if(value.length > 6 || value.length > 255){
+                    if(value.length >= 6 || value.length > 255){
                          const isExists = await db.collection('Novels')
                          .where('title', '==', value)
                          .get();
@@ -180,7 +180,7 @@ const Createproject : React.FC = () => {
      }
 
      const OnCreateProject = async() : Promise<void> => { 
-          // console.log('click create project')
+          setLoading(true);
           const ImageURL : string | undefined = await uploadBackgroundImage(projectdocs?.background);
 
           let status  = "error"
@@ -210,6 +210,7 @@ const Createproject : React.FC = () => {
                     ...projectOption, 
                }
 
+               console.log(createDoc)
                const docRef = await getnovel.add({...createDoc});
                const getChapter =  getnovel.doc(docRef.id).collection('Chapters');
                const getCreator =  getnovel.doc(docRef.id).collection('Creator');
@@ -225,9 +226,11 @@ const Createproject : React.FC = () => {
                     username : userdocs.username,
                })
 
+               const Project_previous = projectprev?.docs ?  projectprev.docs : [];
                dispatch(setProjectContent({
-                    docs : [{...createDoc , id : docRef.id} , ...projectprev.docs]
+                    docs : [{...createDoc , id : docRef.id} , ...Project_previous]
                }));
+
                console.log("Create Project Success id :" ,docRef.id)
                status = "success";
                navigation.goBack();
@@ -235,6 +238,7 @@ const Createproject : React.FC = () => {
           }catch(error){
                console.log(`Failed to Create Project : ${projectdocs.title}` , error)
           }
+          setLoading(false);
           SendAlert(status ,  "Created Project" , "Create failed" , toast);
      }
 
@@ -257,7 +261,7 @@ const Createproject : React.FC = () => {
             maxHeight : 400
           });
       
-          if(result){
+          if(!result.didCancel){
                setSelectedImages(result);
           }
           handlePresentModalClose();
@@ -270,7 +274,7 @@ const Createproject : React.FC = () => {
             maxHeight : 400
           })
       
-          if(result){
+          if(!result.didCancel){
                setSelectedImages(result);
           }
           handlePresentModalClose();
@@ -292,6 +296,7 @@ const Createproject : React.FC = () => {
      useEffect(() => {
           fetchingRates();
      },[])
+
      return(
      <VStack flex = {1} bg = {theme.Bg.base}>
           <Centernavigation title = {"Create Project"} transparent = {true} Contentfixed = {false}/>
@@ -426,7 +431,7 @@ const Createproject : React.FC = () => {
                               </VStack>
                               <Button 
                                    w="100%" 
-                                   //     isLoading = {isLoading}
+                                   isLoading = {isLoading}
                                    rounded = "full"
                                    onPress = {OnCreateProject}
                                    isDisabled = {!allowCreate}

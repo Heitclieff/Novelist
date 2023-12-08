@@ -24,7 +24,7 @@ import { FlatList } from '../../../components/layout/Flatlist/FlatList'
 import Centernavigation from '../../../components/navigation/Centernavigation'
 import TagItem from '../components/Tagitem'
 import { StatusDialog } from '../assets/toastStatus'
-
+import SendAlert from '../../../services/alertService'
 
 //@Firestore
 import auth from '@react-native-firebase/auth'

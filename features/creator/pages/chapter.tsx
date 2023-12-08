@@ -33,12 +33,12 @@ import SendAlert from '../../../services/alertService'
 // @Firestore
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import database from '@react-native-firebase/database';
 
 //@redux
 import { useSelector , useDispatch } from 'react-redux'
 import { setChaptercontent } from '../../../systems/redux/action'
 import { AppSkeleton } from '../../../components/skelton/app'
-
 interface Pageprops {
   route: any
 }
@@ -52,8 +52,12 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
   const dispatch = useDispatch();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclose();
+
+  const [chaptersaperated ,setChapterSaperated] = useState<{}>({});
+  const [serchingKey ,setSearchingKey] = useState<string>('');
   const [refreshing , setRefreshing] = useState<boolean>(false);
   const [isLoading, setisLoading] = useState<boolean>(true);
+  const [isCreate ,setisCreate] = useState<boolean>(false);
   const [initial , setInitial] = useState<boolean>(true);
   
 
@@ -75,7 +79,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     bottomSheetModalRef.current?.snapToIndex(1);
   }
 
-  const separatedChapterdocs = useMemo(() => {
+  let separatedChapterdocs = useMemo(() => {
     if (!chapterdocs.content) return { draft: [], other: [] };
   
     const document = chapterdocs.content.reduce((acc, item) => {
@@ -87,12 +91,25 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       return acc;
     }, { draft: [], other: [] });
     
+    if(isLoading || isCreate){
+      setChapterSaperated(document);
+    }
+
+    if(isCreate){
+      setisCreate(false);
+    }
     setisLoading(false);
+    
     return document;
-  }, [chapterdocs.content]);
+  }, [chapterdocs.content , isCreate]);
 
   useEffect(() => {
   }, [separatedChapterdocs , refreshing])
+
+
+  const setCreateChapter = () => {
+    setisCreate(true);
+  }
 
   const DeleteChapter = async (id:string): Promise<void>=> { 
     let status = 'error'
@@ -105,6 +122,8 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
       
       await Contentpath.parent?.delete();
       const docRef = await chapterpath.delete();
+              
+      const newReference = await database().ref(`/task/${chapterdocs.id}`).child(id).remove()
       console.log("Remove Chapter Success" , id)
       status = "success"
     }catch(error){
@@ -112,6 +131,52 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }
     SendAlert(status , "Deleted" , "Delete failed" , toast)
   }
+
+  
+  const getFilterObject = (value:string) => {
+    setSearchingKey(value);
+
+    if(!chaptersaperated){
+      return
+    }
+
+    let fields = "draft"
+    let opposite_fields = "other"
+
+    if(!value){
+      separatedChapterdocs.draft = chaptersaperated.draft
+      separatedChapterdocs.other = chaptersaperated.other
+    }
+    
+    if (typeof (value) == "string") {
+        const draft_results = chaptersaperated?.draft.filter((item:any) =>
+            item.title.toLowerCase().includes(value.toLowerCase())
+        )
+
+        const other_results = chaptersaperated?.other.filter((item:any) =>
+        item.title.toLowerCase().includes(value.toLowerCase())
+       )
+   
+        if(draft_results.length > 0 && other_results.length > 0){
+          separatedChapterdocs.draft = draft_results;
+          separatedChapterdocs.other = other_results;
+          return
+        }
+
+        let results_used = draft_results
+
+        if(!draft_results.length > 0){
+          fields = "other";
+          opposite_fields = "draft";
+          results_used =  other_results;
+        }
+
+        separatedChapterdocs[fields] = results_used;
+        separatedChapterdocs[opposite_fields] = [];
+
+    }
+}
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -126,7 +191,7 @@ if(initial) return(
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
         rightElement={[
-          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id}) },
+          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id , setCreateChapter : setCreateChapter}) },
           { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />
@@ -140,6 +205,7 @@ if(initial) return(
               borderColor={theme.Bg.comment}
               color={theme.Text.base}
               h={9}
+              onChangeText={(e) => getFilterObject(e)}
               InputRightElement={<EvilIcon name='search' size={10} mr={2} />}
               placeholder='Seacrh your Chapter name'
             />

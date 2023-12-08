@@ -9,7 +9,8 @@ Text,
 Button,
 Pressable,
 HStack,
-Fab
+Fab,
+Center
 } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
@@ -71,6 +72,7 @@ const Creator : React.FC <Pageprops> = () => {
             const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
             const projectkey = snapshotprojectkey.data();
             const projectID = projectkey?.project;
+
             if(projectID?.length > 0){
                 const snapshotproject = projectCollection.where(firestore.FieldPath.documentId(), 'in' , projectID.map(String))   
                 const getProjectDocs = await snapshotproject.get();
@@ -78,10 +80,8 @@ const Creator : React.FC <Pageprops> = () => {
                 const projectdocs =  getProjectDocs.docs?.map(doc => ({id : doc.id , ...doc.data()}));
                 dispatch(setProjectContent({docs : projectdocs}))
                 setDocument(projectdocs);
-
-                setLoading(false);
             }
-    
+            setLoading(false);
         }catch(error) {    
             console.error("Error fetching document:", error);
         
@@ -126,6 +126,7 @@ const Creator : React.FC <Pageprops> = () => {
         type : 'multiple',
 }]
 
+
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>
         <Box >
@@ -159,8 +160,8 @@ const Creator : React.FC <Pageprops> = () => {
                         </Box>   
                     </Box> 
                     <VStack space = {1} m ={5} mt = {5}>
-                        {projectdocs && document?.length > 0  ?
-                            document.map((item:any , index:number) => {
+                        {projectdocs && projectdocs.docs?.length > 0  ?
+                            projectdocs.docs.map((item:any , index:number) => {
                                 return(
                                     <MemorizedCreatorItemfield 
                                     key = {index} 
@@ -176,7 +177,10 @@ const Creator : React.FC <Pageprops> = () => {
                             }
                                 
                                 ) 
-                            : null
+                            : 
+                            <Center mt = {3}>
+                                <Text color = {theme.Text.base}>Not founds any Project</Text>
+                            </Center>
                         }
                     </VStack> 
                 </FlatList>

@@ -38,7 +38,7 @@ const Background: React.FC<containerProps> = ({image , onModalPress}) => {
                             }}
                         />
                         :
-                        <VStack h = '100%' mt = {5} alignItems=  'center' justifyContent = 'center'>
+                        <VStack h = '100%' mt = {8} alignItems=  'center' justifyContent = 'center'>
                             <FeatherIcon
                             size = {25}
                             name = "camera"

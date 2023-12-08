@@ -10,7 +10,8 @@ import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import Animated from 'react-native-reanimated';
-
+import { Keyboard } from 'react-native';
+import { SpinnerItem } from '../Spinner';
 interface contianerProps { 
     title : string,
     onEditcontent : boolean
@@ -18,10 +19,15 @@ interface contianerProps {
     Contentfixed : boolean
     isAction : any
     isDisable : boolean
+    ButtonText : string
+    
+    isLoading : boolean
+    OpenLoading : boolean
+    setLoading : boolean
     // onSave : any
 }
 
-const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null , isDisable = true}) => {
+const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = false , transparent = false , Contentfixed = true ,isAction = null , isDisable = true , ButtonText = "save", setLoading = false , OpenLoading = false , isLoading = false}) => {
 
   const navigation:any  = useNavigation();
   const theme:any = useContext(ThemeWrapper);
@@ -30,8 +36,13 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
     if(isDisable){
         return
     }
+    if(OpenLoading){
+        setLoading(true);
+    }
+    Keyboard.dismiss();
     isAction(title);
   }
+  
   return (
     <Animated.View
       style={[{
@@ -78,24 +89,32 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
                 <Text fontSize={'md'} fontWeight={'semibold'} color = {transparent ? theme.Text.static : theme.Text.heading}>{title}</Text>
             </Box>
             <Box w = '15%' justifyContent='center' alignItems={'center'} >
-            {onEditcontent &&
-                <Pressable  onPress={onSavingPress}>
-                {({
-                isHovered,
-                isFocused,
-                isPressed
-                }) => {
-                return(
+          {onEditcontent &&
+            <Pressable isDisabled = {isDisable} onPress={onSavingPress}>
+                {({ isPressed, isHovered }) => (
+                    onEditcontent && OpenLoading ? (
+                    !isLoading ? (
+                        <Text
+                        fontSize={'md'}
+                        fontWeight={'medium'}
+                        color={!isDisable ? isPressed ? theme.Text.action : isHovered ? theme.Text.action : theme.Text.heading : theme.Text.action}
+                        >
+                        {ButtonText}
+                        </Text>
+                    ) : (
+                        <SpinnerItem />
+                    )
+                    ) : (
                     <Text
-                    fontSize={'md'}
-                    fontWeight={'medium'}
-                    color = {!isDisable ? isPressed ? theme.Text.action : isHovered ? theme.Text.action :theme.Text.heading : theme.Text.action}
-                    >save
+                        fontSize={'md'}
+                        fontWeight={'medium'}
+                        color={!isDisable ? isPressed ? theme.Text.action : isHovered ? theme.Text.action : theme.Text.heading : theme.Text.action}
+                    >
+                        {ButtonText}
                     </Text>
-                )
-                }}
-                </Pressable>
-                }
+                    ))}
+            </Pressable>
+            }
             </Box>
           
         </HStack>

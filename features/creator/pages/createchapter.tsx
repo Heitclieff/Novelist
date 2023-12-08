@@ -21,6 +21,7 @@ import { setChaptercontent } from '../../../systems/redux/action'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import database from '@react-native-firebase/database';
+import { Alert } from 'react-native'
 
 interface Pageprops {}
 const CreateChapter : React.FC <Pageprops> = () =>{
@@ -30,21 +31,35 @@ const CreateChapter : React.FC <Pageprops> = () =>{
      const route = useRoute();
      const dispatch = useDispatch();
      const chapterdocs = useSelector((state) => state.content);
-     const userdata = useSelector((state) => state.userData)
+     const userdata = useSelector((state) => state.userData);
+     const [isDisable , setDisable] = useState<boolean>(true);
      
+     const [isLoading ,setLoading] = useState<boolean>(false);
      const [ChapterTitle , setChapterTitle] = useState<string>('');
      const [isEdit ,setisEdit] = useState<boolean>(false);
-     const {doc_id} = route.params
+     const {doc_id , setCreateChapter} = route.params
+
+
+     const validateChapterTitle = () => {
+          if(!ChapterTitle){
+               setDisable(true);
+               return
+          }
+          setDisable(false);
+     }
 
      const CreateChapter = async () : Promise <void> => {
+          setLoading(true);
+          setDisable(true);
           let status=  "error"
           try{
                if(!ChapterTitle){
-                    console.log("INSERT TITLE")
-                     return
-                }
+                    Alert.alert("Error" , "Please Enter Chapter name");
+                    setDisable(true);
+                    return
+               }
       
-
+               setDisable(false);
                 const timestamp = firestore.FieldValue.serverTimestamp();
                 const projectpath = firestore().collection("Novels").doc(doc_id);
                 const chapterpath = projectpath.collection('Chapters');
@@ -106,16 +121,26 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                     commitable : false,
                })
                status = "success"
+               setCreateChapter();
           }catch(error){
                console.log("Failed To Create Chapter ", error);
            }
-          
           SendAlert(status , "Created" , "Create failed" , toast)
+          setDisable(false);
+          setLoading(false);
      }
 
   return (
      <VStack flex=  {1} bg = {theme.Bg.base}>
-          <Centernavigation title = "Create Chapter" onEditcontent = {isEdit} isAction = {CreateChapter}/>
+          <Centernavigation 
+          title = "Create Chapter" 
+          ButtonText = "create"
+          onEditcontent = {isEdit} 
+          isAction = {CreateChapter} 
+          OpenLoading = {true}
+          isLoading = {isLoading}
+          setLoading = {setLoading}
+          isDisable = {isDisable}/>
           <VStack p = {6} space = {2}>
                <Text color={theme.Text.base} fontWeight={'semibold'} pb={2} >Chapter Title</Text>
                     <FormControl mb="5">
@@ -126,7 +151,7 @@ const CreateChapter : React.FC <Pageprops> = () =>{
                     rounded={'full'} 
                     borderColor={theme.Bg.container}
                     color = {theme.Text.base}
-                    onChangeText={(e) => {setChapterTitle(e); setisEdit(true)}}
+                    onChangeText={(e) => {setChapterTitle(e); setisEdit(true); validateChapterTitle()}}
                     />
                     <FormControl.HelperText>
                          Give your a chapter title.

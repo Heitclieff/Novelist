@@ -193,12 +193,13 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                    }}>
                                         {
                                         status &&
-                                        <Menu.Item 
-                                        _text={{color : theme.Text.base}}
-                                        onPress = {() => openInvite(true)}
-                      
-                                        >Invite
-                                        </Menu.Item>
+                                        multiproject &&
+                                             <Menu.Item 
+                                             _text={{color : theme.Text.base}}
+                                             onPress = {() => openInvite(true)}
+                         
+                                             >Invite
+                                             </Menu.Item>
                                         }
                                         <Menu.Item 
                                         _text={{color : theme.Text.base}}

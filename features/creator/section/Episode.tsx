@@ -5,6 +5,7 @@ HStack ,
 Text, 
 IconButton ,
 Box, 
+Center,
 Icon } from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
@@ -56,7 +57,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
                     }
           />
           </HStack>
-        {saperatedChapter?.length > 0 &&
+        {saperatedChapter?.length > 0 ?
            <SwipeListView
               disableRightSwipe
               disableLeftSwipe={true}
@@ -81,6 +82,11 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
         leftOpenValue={60}
         rightOpenValue={-60}
          />
+      :
+      
+      <Center mt = {5}>
+         <Text color = {theme.Text.description}>Not founds chapter content</Text>
+      </Center>
       }
    </VStack>
   )

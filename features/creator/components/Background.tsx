@@ -21,7 +21,7 @@ const Background: React.FC<containerProps> = ({image , MAX_HEIGHT}) => {
                 isPressed
             }) => {
                 return (
-                    <Box w='100%' h={MAX_HEIGHT}  bg={theme.themeMode === 'dark' ?  'trueGray.800' : "trueGray.300"} position={'absolute'} zIndex={0} >
+                    <Box w='100%' h={MAX_HEIGHT}  bg={theme.themeMode === 'dark' ?  'trueGray.700' : "trueGray.300"} position={'absolute'} zIndex={0} >
                         <FastImage
                             id='background-images'
                             alt="images"
