@@ -14,7 +14,7 @@ Pressable,
 FormControl,
 useToast,
 Icon} from 'native-base'
-import { Alert } from 'react-native'
+import { Alert , BackHandler } from 'react-native'
 import AlertItem from '../../reader/components/Alert'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { FlatList } from '../../../components/layout/Flatlist/FlatList'
@@ -55,7 +55,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
      const [currentSnapshot, setCurrentSnapshot] = useState<any>("");
      const [showRating, setShowRating] = useState(false);
-     const [selectRating , setSelectRating] = useState<{}>({title : projectdocument?.rating})
+     // const [selectRating , setSelectRating] = useState<{}>({title : projectdocument?.rating})
      const [showAlert , setShowAlert] = useState<boolean>(false);
 
 
@@ -73,6 +73,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           novel_status : projectdocument.novel_status,
           status : projectdocument.status
      })
+
 
      
      const [projectdocsError, setprojectdocsError] = useState({
@@ -99,9 +100,11 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           return ratesdocs;
      }
 
+
+
      const setSelectedRating = (target:any) => {
           if(!isEdit) setIsedit(!isEdit);
-          
+
           Setprojectconfig((prevProjectconfig) => ({
                ...prevProjectconfig,
                rating : target,
@@ -124,16 +127,18 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                let current_tags = [];
                let isFailed = false;
 
+
                if(chapterdocs.content?.length <= 0) {
                     Alert.alert("Error" , "You need to have 1 chapters on your project.")
                     isFailed = true;
-               }
+                
+                    Setprojectconfig((prevProjectconfig) => ({
+                         ...prevProjectconfig,
+                         [field] : false,
+                    }))
 
-               if(!projectconfig?.rating){
-                    Alert.alert("Error" , "You need to  Select Rating Before Saving")
-                    isFailed = true
+                    return
                }
-
 
                console.log(typeof(currentSnapshot));
                console.log(currentSnapshot)
@@ -147,6 +152,26 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                else{
                     current_tags = currentSnapshot;
                }
+
+               if(!projectconfig?.rating && current_tags?.length <= 0){
+                    
+                    Alert.alert("Error" , "You need to  Select Rating and Select Tags first Before Saving")
+                    isFailed = true
+
+                    Setprojectconfig((prevProjectconfig) => ({
+                         ...prevProjectconfig,
+                         [field] : false,
+                    }))
+
+                    return
+               }
+
+               else if(!projectconfig?.rating){
+                    Alert.alert("Error" , "You need to  Select Rating Before Saving")
+                    isFailed = true
+               }
+
+             
 
                if(current_tags?.length <= 0){
                     isFailed = true;
@@ -188,11 +213,32 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
           }
 
+          else if (field === "novel_status"){
+              let isFailed = false
+              
+               if(chapterdocs.content?.length <= 0) {
+                    Alert.alert("Error" , "You need to have 1 chapters on your project.")
+                    isFailed = true;
+               }
+
+               if(isFailed){
+                    Setprojectconfig((prevProjectconfig) => ({
+                         ...prevProjectconfig,
+                         [field] : false,
+                    }))
+               }
+          }
+
 
      }
 
      const handleProjectUpdate = () => {
           let status  = "error"
+          if(projectconfig.title.length <= 6 || projectconfig.title.length > 255){
+               Alert.alert("Error" , "Project name must have more 6 to 255 charecters")
+               return
+          }
+
           try{
                setIsedit(false);
                const firestoreConfig = {};
@@ -210,6 +256,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                
                firestore().collection('Novels').doc(id).update(firestoreConfig);
                dispatch(setProjectDocument({docs :updateDocument}));
+               navigation.goBack();
                console.log("Sucessfull Updated Configuration.");
                status = "success"
           }catch(error){
@@ -281,6 +328,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      Alert.alert('Delete', 'you want to save this progress ?', [
           {
                text: 'Cancel',
+  
                style: 'cancel',
           },
           {text: 'Delete', onPress: () => DeleteProject()},
@@ -299,9 +347,51 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      }
 
      useEffect(() => {
+          if(!isEdit){
+               return
+          }
+
+          const backAction = () => {
+               Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
+                 {
+                   text: 'Cancel',
+                   onPress: () => null,
+                   style: 'cancel',
+                 },
+                 {text: 'YES', onPress: () => resetConfig()},
+               ]);
+               return true;
+             };
+         
+      
+          const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+          );
+      
+          return () => backHandler.remove();
+     }, [isEdit]);
+    
+
+     useEffect(() => {
           if(rating?.rates) return
           fetchingRates(); 
      },[])
+
+
+     const resetConfig = () => {
+          Setprojectconfig({
+               title : projectdocument.title ,
+               overview : projectdocument.overview,
+               rating : projectdocument.rating,
+          
+               comment_status : projectdocument.comment_status,
+               commit_status : projectdocument.commit_status,
+               novel_status : projectdocument.novel_status,
+               status : projectdocument.status
+          })
+          navigation.goBack();
+     }
 
   return (
        <VStack flex={1} bg={theme.Bg.base}>
@@ -362,11 +452,8 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                               />
                                    </HStack>
                                    
-                                   {projectdocument?.rating &&
-                                        projectconfig ? 
-                                    <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{projectconfig.rating?.title}</Text>
-                                    :     
-                                   <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>Select your Novel Rating</Text>
+                                   {projectdocument &&    
+                                        <Text pl = {1} color = {theme.Text.description} fontSize={'xs'}>{projectconfig.rating ? projectconfig.rating.title : "Select your Novel Rating"}</Text>
                                    }
                                    
                               </VStack>
@@ -395,14 +482,14 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         
                                              <Switch size={'sm'} value = {projectconfig.novel_status} onToggle={(target) => projectConfigChange('novel_status' , target)}/>
                                         </HStack>
-                                        <HStack alignItems={'center'} justifyContent={'space-between'}>
+                                        {/* <HStack alignItems={'center'} justifyContent={'space-between'}>
                                              <VStack w = {'80%'}>
                                                   <Text color={theme.Text.description} fontWeight={'semibold'}>Commit</Text>
                                                   <Text  color = {theme.Text.description} fontSize={'xs'}>this feature for single creator to commited your project</Text>
                                              </VStack>
                                         
                                              <Switch size={'sm'} value = {projectconfig.commit_status} onToggle={(target) => projectConfigChange('commit_status' , target)}/>
-                                        </HStack>
+                                        </HStack> */}
                                      <VStack space={2} mt =  {2}>
                                         <Text color={theme.Text.description} fontWeight={'semibold'}>Delete Project</Text>
                                         <Button 

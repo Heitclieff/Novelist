@@ -11,6 +11,7 @@ import { setChaptercontent } from '../../../systems/redux/action'
 // @firestore
 
 import firestore from '@react-native-firebase/firestore'
+import { Alert } from 'react-native'
 
 interface pageProps {}
 const EditChapter : React.FC <pageProps> = () => {
@@ -29,6 +30,11 @@ const EditChapter : React.FC <pageProps> = () => {
    
      const SavingEditChapter = async () => {
           let status = "error"
+          if(!chapterTitle.length >= 1){
+               Alert.alert("Error" , "Please Enter Chapter Title");
+               return
+          }
+
           try{
                const saperatedchapter = {updated : {} , still : []}
                chaptercontent.content.forEach(doc => {
@@ -70,7 +76,7 @@ const EditChapter : React.FC <pageProps> = () => {
 
   return (
      <VStack flex=  {1} bg = {theme.Bg.base}>
-     <Centernavigation title = "Edit Chapter" onEditcontent = {isEdit} isAction = {SavingEditChapter}/>
+     <Centernavigation title = "Edit Chapter" onEditcontent = {isEdit} isAction = {SavingEditChapter} isDisable = {false}/>
      <VStack p = {6} space = {2}>
           <Text color={theme.Text.base} fontWeight={'semibold'} pb={2} >Chapter Title</Text>
                <FormControl mb="5">

@@ -84,7 +84,6 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
         navigation.navigate(direction);
   }
 
-
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);

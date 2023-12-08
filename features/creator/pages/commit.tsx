@@ -45,6 +45,8 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
      
+
+     console.log(projectcommits)
      const fetchingCommit =  async () : Promise <void> => { 
           try{
                if(id === projectcommits.id){

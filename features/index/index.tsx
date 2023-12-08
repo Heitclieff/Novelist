@@ -866,8 +866,8 @@ const Index : React.FC = () => {
           }
 
           rightElement = {[
-            {id: 1 , icon: <AntdesignIcon name = 'search1' color = {theme.Icon.static} size = {18} /> , navigate : 'Search'} ,
-            {id: 2 ,icon: <IonIcon name = 'notifications' color = {theme.Icon.static} size = {18} /> , navigate : 'Notification'}
+            {id: 1 , icon: <AntdesignIcon  name = 'search1' color = {theme.Icon.static} size = {18} /> , navigate : 'Search'} ,
+            {id: 2 ,icon: <IonIcon  name = 'notifications' color = {theme.Icon.static} size = {18} /> , navigate : 'Notification'}
           ]}
           />
         }

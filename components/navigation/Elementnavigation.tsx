@@ -42,22 +42,24 @@ const Elementnavigation : React.FC <containerProps> = ({title = '' , rightElemen
             }  
             </Box>
             <HStack space = {2} alignItems={'center'}>
-                {rightElement.length > 0  && rightElement.map((item:any , index:number) =>{
-                    return(
-                        <IconButton
-                        key = {index} 
-                        onPress={() => item.navigate()}
-                        size = 'sm'
-                        rounded={'full'}
-                        colorScheme={'cyan'}
-                        icon = {item.icon}
-                        isDisabled = {item.status}
-                        />
-                    )
-                })         
+                {rightElement.length > 0  && 
+                !editable &&
+                    rightElement.map((item:any , index:number) =>{
+                        return(
+                            <IconButton
+                            key = {index} 
+                            onPress={() => item.navigate()}
+                            size = 'sm'
+                            rounded={'full'}
+                            colorScheme={'cyan'}
+                            icon = {item.icon}
+                            isDisabled = {item.status}
+                            />
+                        )
+                    })         
                 }
                 { editable && 
-                    <Pressable onPress={() => {isAction(); navigation.goBack()}}>
+                    <Pressable onPress={() => {isAction();}}>
                         {({
                         isHovered,
                         isFocused,

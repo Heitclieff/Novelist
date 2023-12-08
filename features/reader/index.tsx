@@ -296,9 +296,9 @@ const NovelContent : React.FC <Pageprops> = () => {
                 const deleteBooks = MyfavoriteBooks.filter(item => item !== id);
                 MyfavoriteBooks = deleteBooks;
                 await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(-1)})
-                if (!novelItem.multiproject) {
-                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
-                }
+                // if (!novelItem.multiproject) {
+                //     await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
+                // }
             }
             setnovelItem({...novelItem , like : increment})
 
@@ -326,7 +326,6 @@ const NovelContent : React.FC <Pageprops> = () => {
         const BooksAdd = [{id  : id , ...novelItem}]
         const ConcatBooks = myBooks.book ? BooksAdd.concat(...myBooks.book) : BooksAdd;
         
-        console.log(ConcatBooks);
         if(!prevOwn){
             try{
                 dispatch(setMylibrary({book : ConcatBooks}))

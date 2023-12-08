@@ -187,12 +187,13 @@ const Notification : React.FC = () => {
             {isLoading ?
               <SpinnerItem/>
               :
-              notificationlist.length > 0 &&    
-                  <VStack p = {4} flex = {1}>
+              <VStack p = {4} flex = {1}>
+              {notificationlist.length > 0 &&    
+              
                     <SwipeListView 
                     disableRightSwipe
                     data={notificationlist}
-                    ItemSeparatorComponent={<Box h=  '2'/>}
+                    // ItemSeparatorComponent={<Box  h=  '2'/>}
                     renderItem={(item:any , index:number) => (
                       <MemorizedNotifyItem
                         key = {item.item.id}
@@ -200,10 +201,11 @@ const Notification : React.FC = () => {
                         setInviteShow = {setInviteShow}
                       />
                     )}
-                    renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {removeNotification} id = {data.item.id}/>)}
+                    renderHiddenItem={ (data, rowMap) => (<Deletebutton key={data.item.id} action = {removeNotification} id = {data.item.id}/>)}
                     leftOpenValue={60}
                     rightOpenValue={-60}
                   />
+                  }
               </VStack>
           }
            

@@ -47,6 +47,8 @@ const Team : React.FC <pageprops> = ({route}) => {
      const projectdocs = useSelector((state) => state.content)
      const projectkeys =  useSelector((state) => state.docs)
      const [creators , setCreators] = useState<any[]>({pending : [] , other : []});
+     const [separedCreator ,setSeparedCreator] = useState<{}>({});
+     const [serchingKey ,setSearchingKey] = useState<string>('');
      const [isLoading , setisLoading] = useState<boolean>(true)
      const [isDisable , setisDisable] = useState<boolean>(false);
      const [refreshing , setRefreshing] = useState<boolean>(false);
@@ -60,6 +62,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                     separateditem.other.push(item)
                }
           });
+          setSeparedCreator(separateditem);
           setCreators(separateditem);
      }
 
@@ -134,6 +137,44 @@ const Team : React.FC <pageprops> = ({route}) => {
           SendAlert(status , "Removed" , "Removed failed" , toast)
      }
 
+     const getFilterObject = (value:string) => {
+          setSearchingKey(value);
+
+          
+          let fields = "pending"
+          let opposite_fields = "other"
+      
+          if(!value){
+            setCreators({pending : separedCreator?.pending , other : separedCreator.other})
+          }
+          
+          if (typeof (value) == "string") {
+              const pending_results = separedCreator?.pending.filter((item:any) =>
+                  item.username.toLowerCase().includes(value.toLowerCase())
+              )
+      
+              const other_results = separedCreator?.other.filter((item:any) =>
+              item.username.toLowerCase().includes(value.toLowerCase())
+             )
+         
+              if(pending_results.length > 0 && other_results.length > 0){
+                setCreators({pending : pending_results , other : other_results})
+                return
+              }
+      
+              let results_used = pending_results
+      
+              if(!pending_results.length > 0){
+                fields = "other";
+                opposite_fields = "pending";
+                results_used =  other_results;
+              }
+      
+              const appendList = {[fields] : results_used , [opposite_fields] : []}
+              setCreators(appendList)
+          }
+      }
+
      useEffect(() => {   
           if(!refreshing){
                initalteams();
@@ -168,9 +209,10 @@ const Team : React.FC <pageprops> = ({route}) => {
                   bg = {theme.Bg.container} 
                   borderColor={theme.Bg.comment} 
                   color={theme.Text.base}
+                  onChangeText={(e) => getFilterObject(e)}
                   h  = {9}
                   InputRightElement={<EvilIcon size = {10} />}
-                  placeholder='Seacrh your Teamate username'
+                  placeholder='Search your Teamate username'
                   />
               </Box> 
             </Box> 

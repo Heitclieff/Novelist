@@ -31,6 +31,7 @@ import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
 
+
 interface Pageprops {
 
 }
@@ -47,6 +48,7 @@ const Editfield : React.FC <Pageprops> =() => {
 
   const [input ,setInput] = useState<string>(options.value)
   const [Error , setError] = useState<boolean>(false);
+  const [isDisable ,setDisabled] = useState<boolean>(true);
   const [errorMassage , setErrorMassage] = useState<string>("");
 
   const [formError ,setFormError]   =useState<any>({
@@ -71,14 +73,17 @@ const Editfield : React.FC <Pageprops> =() => {
    
   const onFieldsChange = async (field:string , value : string) => {
     setInput(value);
-    let isExist = false
+    let isExist = true
     let error_massage = "";
 
 
     if(field === "Username"){
+   
       error_massage = "Try different from previous username.";
-      if(value){
+
+      if(value.length >= 1){
         if(value === userdata[0].username){
+          isExist = false
           return;
         }
         const result = await db.collection("Users")
@@ -86,9 +91,15 @@ const Editfield : React.FC <Pageprops> =() => {
         .get();
 
         if(result.docs?.length){
-            isExist = true;
-        } 
-    }
+          isExist = true;
+        }
+        
+        isExist = false;
+      }else {
+        isExist = true;
+        setDisabled(true);
+      }
+
 
   }else if (field === "Phone"){
       error_massage = "Try different from Phone number.";
@@ -101,20 +112,27 @@ const Editfield : React.FC <Pageprops> =() => {
       }
     }
 
+
+    if(!isExist){
+      setDisabled(false);
+    }
     setError(isExist)
     setErrorMassage(error_massage);
+
+
   }
 
   const handleUpdatebyFields = async (field:string) => {
     let fieldname  = ""
-    if(!input.length > 0){
-        Alert.alert(options.title , `should have more than 1 letter.`);
-        return
-    }
 
     const db_connect = db.collection("Users").doc(userdata?.[0].id)
     try{
       if(field === "Username"){
+        if(!input.length > 0){
+          Alert.alert(options.title , `should have more than 1 letter.`);
+          return
+        }
+
         fieldname  = 'username'
         const isUpdated =  await db_connect.update({username : input});
         console.log("Success", isUpdated);
@@ -180,9 +198,11 @@ const Editfield : React.FC <Pageprops> =() => {
     }
   }
 
+
+  console.log("Error" , Error);
     return (
       <Box flex = {1} bg = {theme.Bg.base}>
-            <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleUpdatebyFields} isDisable = {Error}/>
+            <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleUpdatebyFields} isDisable = {isDisable}/>
             <VStack p ={4} space = {2}>
                 <Text pl = {2} color={theme.Text.description} fontSize={'xs'} fontWeight={'semibold'}>{options.title}</Text>
                 {options.title === "Birthdate" ?

@@ -146,9 +146,8 @@ const Readcontent : React.FC <pageProps> = () => {
                const ProjectFields = [{...request , commit_id : docRef.id, commit_date : formattedDate}];
 
                if(projectcommits.field?.length > 0){
-                    ProjectFields.concat(projectcommits.field)
+                    ProjectFields.push(...projectcommits.field)
                }   
-
 
                dispatch(setChaptercontent({...chapterdocs , content : MergeChapters  , id : chapterdocs.id}))
                dispatch(setprojectCommits({field : ProjectFields }))
