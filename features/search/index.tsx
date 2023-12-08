@@ -49,46 +49,87 @@ const Searchpage : React.FC =() => {
      const userdocs = useSelector((state) => state.teams);
      const docID = useSelector((state) => state.content)
 
-     const searchUsers = async () : Promise<void> => {
-          if(!searchQuery) {
+
+
+     const searchingSomething = async (value : string) => {
+          setsearchQuery(value);
+
+          const account_query =  await searchUsers(value);
+          const novel_query =  await  searchnovel(value);
+
+          if(value.length >= 1){
+               if(account_query.length > 0 && novel_query.length > 0){
+
+                    const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
+                    const noveldocs = novel_query.map((doc) => ({id: doc.id ,...doc.data()}));
+
+                    setNovelResults(noveldocs);
+                    setSearchResults(users);
+     
+                    return
+               }
+     
+               
+               if(account_query.length > 0){
+                    const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
+                 
+                    setNovelResults([]);
+                    setSearchResults(users);
+               }
+               else if (novel_query.length > 1){
+                    const noveldocs = novel_query.map((doc) => ({id: doc.id ,...doc.data()}));
+                    setSearchResults([])
+                    setNovelResults(noveldocs);
+               }
+          }else{
+               setNovelResults([]);
+               setSearchResults([]);
+          }
+     }
+
+     const searchUsers = async (value : string) : Promise<T> => {
+          if(!value) {
                setSearchResults([]);
                return
           }
           try{
                const usersRef = await firestore().collection('Users')
-               .where('username', '>=' , searchQuery)
-               .where('username', '<=', searchQuery +`\uf8ff`)
+               .where('username', '>=' , value)
+               .where('username', '<=', value +`\uf8ff`)
                .get()
 
-               if(usersRef.docs.length > 0) {
-                    const users = usersRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
-                    setSearchResults(users);   
-               }else{
-                    setSearchResults([]);
-               }
+               return usersRef.docs;
+               // if(usersRef.docs.length > 0) {
+               //      const users = usersRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
+               //      setSearchResults(users);   
+               // }else{
+               //      setSearchResults([]);
+               // }
 
           }catch(error){
                console.log("Error Searching Users" , error)
           }
      }
 
-     const searchnovel = async () : Promise<void> => {
-          if(!searchQuery) {
+     const searchnovel = async (value : string) : Promise<void> => {
+          if(!value) {
                setSearchResults([]);
                return
           }
 
           try{
                const novelRef = await firestore().collection('Novels')
-               .where('title', '>=' , searchQuery)
-               .where('title', '<=', searchQuery +`\uf8ff`)
+               .where('title', '>=' , value)
+               .where('title', '<=', value +`\uf8ff`)
                .limit(5)
                .get()
 
-               if(novelRef.docs.length > 0) {
-                    const noveldocs = novelRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
-                    setNovelResults(noveldocs)
-               }
+
+               return novelRef.docs;
+               // if(novelRef.docs.length > 0) {
+               //      const noveldocs = novelRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
+               //      setNovelResults(noveldocs)
+               // }
 
           }catch(error){
                console.log("Error Searching Novels" , error)
@@ -141,11 +182,6 @@ const Searchpage : React.FC =() => {
 
           SendAlert(status , "Added" , "Add failed" , toast)
      }
-
-     useEffect(() => {
-          searchnovel();
-          searchUsers();
-     } , [searchQuery])
   return (
      <VStack flex = {1} bg=  {theme.Bg.base} space = {5}>
           <HStack  pl = {3} pr = {3} pt = {3} safeAreaTop space = {2}>
@@ -158,7 +194,7 @@ const Searchpage : React.FC =() => {
                   h  = {9}
                   InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
                   placeholder='Search'
-                  onChangeText={(e) => setsearchQuery(e)}
+                  onChangeText={(e) => searchingSomething(e)}
                   />
                <Pressable flex = {1} justifyContent={'center'} alignItems={'center'} onPress={()=> navigation.goBack()}> 
                     {({
@@ -176,7 +212,7 @@ const Searchpage : React.FC =() => {
           </HStack> 
           <FlatList flex = {1}>
                {novelResults?.length > 0 &&
-               <VStack p = {4}>
+               <VStack pl = {4} pr = {4} pt = {2}>
                     {
                          novelResults.map((item:any , index:number) => {
                               return(
@@ -192,7 +228,7 @@ const Searchpage : React.FC =() => {
                 </VStack>
                }
                {searchResults?.length > 0 &&
-                    <VStack p = {4}>
+                    <VStack pl = {4} pr = {4} pt = {1}>
                          {
                               fixedsearch ?
                               searchResults.map((item:any , index:number) => {

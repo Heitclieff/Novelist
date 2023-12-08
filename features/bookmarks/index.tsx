@@ -2,6 +2,7 @@ import React, {useContext , useEffect, useState}from 'react'
 import { 
 Box , 
 Center ,
+ Text,
  VStack} from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 // import { FlatList } from 'react-native'
@@ -98,7 +99,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
     <VStack flex = {1} bg = {theme.Bg.base} pt = {2}>
         
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
-            {Mybookmarks.slot?.length > 0 &&
+            {Mybookmarks.slot?.length > 0 ?
               Mybookmarks.slot?.map((item:any , index:number) => {
                 return(
                     <SwipeListView 
@@ -117,6 +118,11 @@ const Bookmarks : React.FC <Pageprops> = () => {
                   />
                 )
               })
+            :
+            <Center mt = {5}>
+           <Text color = {theme.Text.description}>Not founds any Books on Bookmarks</Text>
+            </Center>
+ 
             }
           </FlatList>
         

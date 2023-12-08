@@ -20,11 +20,12 @@ interface contianerProps {
     careersAmout : string
     isOwner : boolean
     isfollow : boolean,
+    isLoading : boolean,
     action : any
 
 }
 
-const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action , careersAmout}) =>{
+const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , isfollow , action , careersAmout , isLoading}) =>{
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
 
@@ -49,7 +50,12 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
                         {isOwner ? 
                         <EditProfileButton  navigation = {navigation}/>
                         :
-                        <FollowButton navigation={navigation} isfollow = {isfollow} action = {action}/>
+                        <FollowButton 
+                        navigation={navigation} 
+                        isfollow = {isfollow} 
+                        action = {action}
+                        isLoading = {isLoading}
+                        />
                         }
                         
                     </Box>

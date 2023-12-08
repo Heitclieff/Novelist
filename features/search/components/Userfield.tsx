@@ -10,6 +10,7 @@ IconButton} from 'native-base'
 import { useNavigation } from '@react-navigation/native'
 import { Image } from 'react-native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
+import FastImage from 'react-native-fast-image'
 
 import { useDispatch , useSelector } from 'react-redux'
 
@@ -45,7 +46,19 @@ const Userfield : React.FC <containerProps> = ({id ,data, status , UpdatedTeams 
           return(
                <HStack w="100%" alignItems={'center'} justifyContent={'center'} p={2} space={4} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.base} >
                     <Box w={50} h={50} bg='gray.200' rounded={'full'} overflow={'hidden'}>
-                         <Image source={{ uri: data.pf_image }} style={{ maxWidth: '100%', maxHeight: '100%',width : '100%' , height : '100%' , objectFit: 'cover' }} />
+                         {data.pf_image &&
+                              <FastImage
+                                   id="cover-image"
+                                   style={{ width: '100%', height: '100%' }}
+                                   source={{
+                                        uri: data.pf_image,
+                                        header: { Authorization: "someAuthToken" },
+                                        priority: FastImage.priority.normal
+                                   }}
+                                   alt="images"
+                                   resizeMode={FastImage.resizeMode.cover}
+                              />
+                         }
                     </Box>
                     <HStack w='80%' h='100%' justifyContent={'space-between'} alignItems={'center'}>
                          <VStack>

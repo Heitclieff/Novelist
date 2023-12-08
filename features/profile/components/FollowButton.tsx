@@ -11,14 +11,17 @@ interface ProfileButtonprops {
      navigation : any
      isfollow : boolean,
      action : any
+     isLoading :boolean
  }
 
-const FollowButton : React.FC <ProfileButtonprops> = ({navigation , isfollow = true , action}) => {
+const FollowButton : React.FC <ProfileButtonprops> = ({navigation , isfollow = true , action , isLoading}) => {
      const theme:any = useContext(ThemeWrapper);
 
      return(
          <Button
              w = {24}
+             isLoading ={isLoading}
+             _spinner={{color :theme.Button.follow.base}}
              variant={isfollow ? 'outline' : 'solid'}
              rounded={'2xl'}
              borderColor={theme.Button.outline}

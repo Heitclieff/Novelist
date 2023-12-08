@@ -47,6 +47,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const [isOwner, setisOwner] = useState<boolean>(false);
     const [isfollow ,setisfollow] = useState<boolean>(false);
     const [isLoading , setIsLoading] = useState<boolean>(true);
+    const [isBtnLoading ,setBtnLoading] = useState<boolean>(false);
     const [careersAmout ,setCareersAmount] = useState<number>(0);
     const [HeaderTitle , setHeaderTitle] =  useState<string>('');
     const [currentProfile , setCurrentProfile] = useState<any>();
@@ -66,11 +67,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const MAX_HEIGHT  = Screenheight / 3.5;
     const HEADER_HEIGHT_NARROWED = 90;
     const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
-    useEffect(() => {
-        // dispatch(getuserData());
-        // console.log('profile',userdata[0].bg_image)
-    } , [useritem])
-
 
     const ValidateAccount = () => {
         let current_profile = userdata[0];
@@ -98,35 +94,41 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
         }
     }
     const followPeople = async (follow:boolean) : Promise <void> => {
+        setBtnLoading(true);
         try{
             if(!profileRoute){
                 console.log("ERROR : Failed to following because cannot founds this account");
                 return
             }
 
-            const firebase = firestore().collection('Users');      
+            const firebase = firestore().collection('Users');     
+            const targetDoc = firebase.doc(currentProfile.id);
+            const myDoc = firebase.doc(userdata[0].id);
+            
+
             let myfollowlist = {...userdata[0]};
             let intrpeople_increment = currentProfile.follower 
-
+            let increment  = 1
             if(isfollow){
                 intrpeople_increment -= 1 
                 myfollowlist.following -= 1
-
+                increment  = -1
+                
                 const deletelist = myfollowlist.followlist.filter(doc => doc !== currentProfile.id)
                 myfollowlist.followlist = deletelist
+              
             }else{
                 intrpeople_increment += 1
                 myfollowlist.following += 1
                 myfollowlist.followlist.push(currentProfile.id)
-                
             }
-
+                   
+            await targetDoc.update({follower : firestore.FieldValue.increment(increment)});
+            await myDoc.update({following : firestore.FieldValue.increment(increment) , followlist  : myfollowlist.followlist });
             setisfollow(!isfollow)
             setCurrentProfile({...currentProfile, follower : intrpeople_increment})
-            dispatch(setUser([myfollowlist]))
-            const userRef = await firebase.doc(currentProfile.id).update({follower : intrpeople_increment})
-            const Myref = await firebase.doc(userdata[0].id).update({following : myfollowlist.following , followlist : myfollowlist.followlist})
-            
+
+            dispatch(setUser([{...myfollowlist}]))
             // Notification
             if(!isfollow){
                 if(profileRoute.message_token){
@@ -139,10 +141,9 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                         project : "profile",
                         id : userdata?.[0].id,
                     });
-                    return
+                }else{
+                    console.log("ERROR : Failed to send Notification because target doesn't have message token.")
                 }
-                console.log("ERROR : Failed to send Notification because target doesn't have message token.")
-                return
             }
             
 
@@ -150,6 +151,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             console.log("Failed to increment follow" , error);
         }
     
+        setBtnLoading(false);
     }
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -161,8 +163,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
 
     useEffect(() => {
         ValidateAccount();
-       
-    },[refreshing , useritem])
+    },[refreshing ])
 
 
     useEffect(() => {
@@ -170,7 +171,6 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
           setIsLoading(false);
         },0)
     },[])
-
 
     return ( 
         <Box bg={theme.Bg.base} flex={1}>
@@ -224,6 +224,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                             currentProfile={currentProfile} 
                             careersAmout = {careersAmout}
                             isfollow = {isfollow}
+                            isLoading = {isBtnLoading}
                             isOwner = {isOwner} 
                             action = {followPeople}/>
                             <VStack bg={theme.Bg.base}>
@@ -237,7 +238,7 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                             </VStack>
                         </VStack>
                   )
-                },[isLoading , isfollow , careersAmout , currentProfile])}
+                },[isLoading, isBtnLoading , isfollow , careersAmout , currentProfile])}
             >   
          
             </Animated.FlatList>

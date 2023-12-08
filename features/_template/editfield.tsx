@@ -110,7 +110,9 @@ const Editfield : React.FC <Pageprops> =() => {
           isExist = true
         }
       }
-    }
+  }else if(field === "Birthdate"){
+      setDisabled(false);
+  }
 
 
     if(!isExist){
@@ -124,6 +126,7 @@ const Editfield : React.FC <Pageprops> =() => {
 
   const handleUpdatebyFields = async (field:string) => {
     let fieldname  = ""
+    let birthDateformated = "";
 
     const db_connect = db.collection("Users").doc(userdata?.[0].id)
     try{
@@ -151,6 +154,7 @@ const Editfield : React.FC <Pageprops> =() => {
         const isUpdated = await db_connect.update({birthDate : timestamp});
         console.log("Success" , isUpdated)
 
+        birthDateformated = timestamp;
       }else if (field === "Phone"){
         fieldname  = 'phone'
         const isUpdated =  await db_connect.update({phone : input});
@@ -178,8 +182,13 @@ const Editfield : React.FC <Pageprops> =() => {
       }
 
       if(fieldname){
-        dispatch(setUser([{...userdata[0] , [fieldname] : input}]));
+        let appends = input;
+        if(fieldname === "birthDate"){
+          appends = birthDateformated
+        }
+        dispatch(setUser([{...userdata[0] , [fieldname] : appends}]));
       }
+
       navigation.goBack();
     }catch(error){
       console.log("ERROR: failed to update Users" , error);
