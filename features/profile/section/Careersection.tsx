@@ -1,5 +1,6 @@
-import React,{FC , Suspense , useEffect ,useMemo , useCallback, useState } from "react";
-import { Box, Center, HStack, VStack } from "native-base";
+import React,{FC , Suspense , useEffect ,useMemo , useCallback, useState ,useContext} from "react";
+import { ThemeWrapper } from "../../../systems/theme/Themeprovider";
+import { Box, Center, HStack, VStack , Text} from "native-base";
 import { useDispatch , useSelector } from "react-redux";
 import { RootState } from "../../../systems/redux/reducer";
 import { ThunkDispatch } from "redux-thunk";
@@ -28,6 +29,7 @@ const MemorizedCollectionItems = React.memo(({ item, index }: any) => {
   });
 
 const Careersection : React.FC <Pageprops> = ({id , setCareerAmout}) => {
+    const theme:any = useContext(ThemeWrapper);
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const collectionsData = useSelector((state:any) => state.userData)
 
@@ -59,12 +61,17 @@ const Careersection : React.FC <Pageprops> = ({id , setCareerAmout}) => {
     )
     return (
         <>
-        {snapProject &&    
+        {snapProject.length > 0 ?    
           <Center>
+            <Text mt = {4} color = {theme.Text.base} fontWeight={'semibold'}>Careers</Text>
             <ItemList collection = {snapProject}>
                 {(item:any , index:number) => <MemorizedCollectionItems item={item} index={index} />}
             </ItemList>
           </Center>   
+
+          :<Center mt = {5}>
+              <Text color = {theme.Text.base}>Not founds any Careers</Text>
+          </Center>
       }
       </>
     )

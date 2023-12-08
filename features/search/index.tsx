@@ -59,9 +59,11 @@ const Searchpage : React.FC =() => {
 
           if(value.length >= 1){
                if(account_query.length > 0 && novel_query.length > 0){
-
+                    console.log("Do this")
                     const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
-                    const noveldocs = novel_query.map((doc) => ({id: doc.id ,...doc.data()}));
+                    const noveldocs = novel_query
+                    .filter(doc => doc.data().status === true) 
+                    .map(doc => ({ id: doc.id, ...doc.data() }));
 
                     setNovelResults(noveldocs);
                     setSearchResults(users);
@@ -70,14 +72,16 @@ const Searchpage : React.FC =() => {
                }
      
                
-               if(account_query.length > 0){
+               if(account_query?.length > 0){
                     const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
-                 
+
                     setNovelResults([]);
                     setSearchResults(users);
                }
-               else if (novel_query.length > 1){
-                    const noveldocs = novel_query.map((doc) => ({id: doc.id ,...doc.data()}));
+               else if (novel_query?.length > 1){
+                    const noveldocs = novel_query
+                    .filter(doc => doc.data().status === true) 
+                    .map(doc => ({ id: doc.id, ...doc.data() }));
                     setSearchResults([])
                     setNovelResults(noveldocs);
                }
@@ -88,14 +92,11 @@ const Searchpage : React.FC =() => {
      }
 
      const searchUsers = async (value : string) : Promise<T> => {
-          if(!value) {
-               setSearchResults([]);
-               return
-          }
           try{
                const usersRef = await firestore().collection('Users')
                .where('username', '>=' , value)
                .where('username', '<=', value +`\uf8ff`)
+               .limit(5)
                .get()
 
                return usersRef.docs;
@@ -123,7 +124,6 @@ const Searchpage : React.FC =() => {
                .where('title', '<=', value +`\uf8ff`)
                .limit(5)
                .get()
-
 
                return novelRef.docs;
                // if(novelRef.docs.length > 0) {
