@@ -12,7 +12,7 @@ VStack,
 Pressable,
 useToast,
 } from 'native-base'
-import { Image } from 'react-native'
+import { Alert, Image } from 'react-native'
 
 import { Userfieds } from './userfieds'
 import AlertItem from '../../reader/components/Alert'
@@ -45,6 +45,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      const getchapter = getnovel.collection("Chapters").doc(data.id)
      
      const [selectedInvite , setSelectedInvited] = useState<any[]>([])
+     const [access , setAccess] = useState<any[]>([]);
 
      const filteruserwithoutPending = () => {
           if(userdocs?.teams.length == 1) {
@@ -58,6 +59,16 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      
      const sendInvitetoselected = () => {
           let toastStatus = "error";
+          if(!selectedInvite.length > 0){
+               Alert.alert("Error" , "Please select Member first.");
+               return
+          }
+
+          if(selectedInvite.length == 2){
+               Alert.alert("Error" , "this chapter was full");
+               return
+          }
+          
           try{
                setShowModal(false);
                const getnovel = firebase.collection("Novels").doc(doc_id);
@@ -103,6 +114,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
             
                if(chapterDOC){
                     setSelectedInvited(chapterDOC?.access)
+                    setAccess(chapterDOC?.access)
                }
           }catch(error){
                console.log("ERROR: Failed to get Access users" ,error)
@@ -150,18 +162,20 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                }
                </VStack>
                  </Modal.Body>
-                 <Modal.Footer bg = {theme.Bg.container} borderTopWidth={0}>
-                      {selectedInvite?.length > 0 &&
-                         <Button 
-                         w= '100%' 
-                         p = {1} 
-                         colorScheme={'teal'} 
-                         rounded={'sm'} 
-                         onPress={sendInvitetoselected}>
-                              Invite
-                         </Button>
-                      } 
-                 </Modal.Footer>
+                 {access?.length !== 2 &&
+                    <Modal.Footer bg = {theme.Bg.container} borderTopWidth={0}>
+                         {selectedInvite?.length > 0 &&
+                              <Button 
+                              w= '100%' 
+                              p = {1} 
+                              colorScheme={'teal'} 
+                              rounded={'sm'} 
+                              onPress={sendInvitetoselected}>
+                                   Invite
+                              </Button>
+                         } 
+                    </Modal.Footer>
+                 }
             </Modal.Content>
        </Modal>
   )

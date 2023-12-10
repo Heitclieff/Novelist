@@ -122,7 +122,6 @@ const Notification : React.FC = () => {
       }
     }
 
-
     const Acceptinvitation = async (data:any) => {
       setInviteShow({status : false});
       if(!data){
@@ -189,26 +188,23 @@ const Notification : React.FC = () => {
               :
               <VStack p = {4} flex = {1}>
               {notificationlist.length > 0 &&    
-              
-                    <SwipeListView 
-                    disableRightSwipe
-                    data={notificationlist}
-                    renderItem={(item:any) => {
-                      return(
-                      <MemorizedNotifyItem
-                        key={item.index}
-                        data = {item.item}
-                        setInviteShow = {setInviteShow}
-                      />
-                      )
-                    }}
-                    renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {removeNotification} id = {data.item.doc_id}/>)}
-                    leftOpenValue={60}
-                    rightOpenValue={-60}
-                    />
-                  
-                    
-      }
+                <SwipeListView 
+                disableRightSwipe
+                data={notificationlist}
+                renderItem={(item:any) => {
+                  return(
+                  <MemorizedNotifyItem
+                    key={item.index}
+                    data = {item.item}
+                    setInviteShow = {setInviteShow}
+                  />
+                  )
+                }}
+                renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {removeNotification} id = {data.item.doc_id}/>)}
+                leftOpenValue={60}
+                rightOpenValue={-60}
+                />                    
+            }
               </VStack>
           }
            

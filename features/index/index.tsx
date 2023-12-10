@@ -274,7 +274,9 @@ const Index : React.FC = () => {
           android: {
             channelId,
             largeIcon : notification.image,
-            smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+            smallIcon: 'ic_small_icon', // optional, defaults to 'ic_launcher'.
+            color: '#000000',
+    
             pressAction: {
               id: 'default',
             },

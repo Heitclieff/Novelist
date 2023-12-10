@@ -88,6 +88,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
     'Non-serializable values were found in the navigation state',
   ]);
 
+  console.log("Project" , id)
   const fetchchaptercontent = async () : Promise <void> => {
     try {
       const userdocs = await fetchmemberAccount();

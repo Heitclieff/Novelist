@@ -61,6 +61,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const [isDraft , setisDraft] = useState<boolean>(status);
      const [showModal, setShowModal] = useState(false);
+     const [accessable ,setAccessable]  = useState<boolean>(false);
      const [Editable, setEditable] = useState<boolean>(false);
      const [isEdit ,setisEdit] = useState<boolean>(false);
      const [inputValue ,setinputValue] = useState("");
@@ -96,11 +97,16 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const initialContent = async () : Promise <void> => {
           let setContent = contentdocs.contentdocs;
+
           if(editable){
                if(status){
                     setEditable(true);
                }
           }
+          if(useraccount?.[0].id === createdBy || useraccount?.[0].id === projectdocs.docs.owner){
+               setAccessable(true);
+          }
+
 
           if(contentdocs.docid === id) {
                setinputValue(contentdocs.contentdocs);
@@ -220,10 +226,16 @@ const Readcontent : React.FC <pageProps> = () => {
                     const commitRef = await getcommits.delete();
       
      
+                    let body = `${useraccount?.[0].username} has approved your commited.`;
+
+                    if(ownerCommits.id === useraccount?.[0].id){
+                         body = "you has Approve your commited."
+                    }
+
                     sendNotification({
                          token : ownerCommits.message_token,
                          target : ownerCommits.id,
-                         body : `${useraccount?.[0].username} has approved your commited.`,
+                         body : body,
                          icon: useraccount?.[0].pf_image,
                          type : 'notify',
                          project : doc_id,
@@ -287,10 +299,16 @@ const Readcontent : React.FC <pageProps> = () => {
                await getchapters.update({commits : false});
                const commitRef = await getcommits.delete();
                
+               let body = `${useraccount?.[0].username} has Removed your commited.`;
+
+               if(ownerCommits.id === useraccount?.[0].id){
+                    body = "you has Removed your commited."
+               }
+
                sendNotification({
                     token : ownerCommits.message_token,
                     target : ownerCommits.id,
-                    body : `${useraccount?.[0].username} has Removed your commited.`,
+                    body : body,
                     icon: useraccount?.[0].pf_image,
                     type : 'notify',
                     project : doc_id,
@@ -309,6 +327,15 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const changechapterStatement = async() : Promise<void> => {
           let status = "error"
+          
+          const currentContent =  chapterdocs.content.find((doc) => doc.id === id);
+          if(!currentContent.access?.includes(useraccount?.[0].id)){
+               if(projectdocs.owner !== useraccount?.[0].id){
+                    Alert.alert("Permission Denied" , "you don't have permission to access this chapters.")
+                    return
+               }
+          }   
+        
           try{
                reference.update({during : true});
                console.log("Chapterdocs",chapterdocs.content)
@@ -469,7 +496,6 @@ const Readcontent : React.FC <pageProps> = () => {
      useEffect(() => {
           initialContent();
       }, [id]);
-
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -483,7 +509,7 @@ const Readcontent : React.FC <pageProps> = () => {
           multiproject = {projectdocs.docs?.multiproject}
           approveproject = {approvedcommitRequest}
           createdBy = {createdBy}
-          
+          accessable = {accessable}
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
           GoBackwithReference = {GoBackwithReference}

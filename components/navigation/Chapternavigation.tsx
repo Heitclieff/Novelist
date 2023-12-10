@@ -40,6 +40,7 @@ interface contianerProps {
      status : boolean,
      multiproject : boolean
      chapterstate : any,
+     accessable : boolean
      event: any;
      title: string;
      chapterdocs : any,
@@ -51,7 +52,7 @@ interface contianerProps {
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite  ,approveproject, chapterstate,GoBackwithReference ,chapterdocs , multiproject , request }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite  ,approveproject, chapterstate ,accessable,GoBackwithReference ,chapterdocs , multiproject , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
      const dispatch = useDispatch();
@@ -194,6 +195,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                         {
                                         status &&
                                         multiproject &&
+                                        accessable && 
                                              <Menu.Item 
                                              _text={{color : theme.Text.base}}
                                              onPress = {() => openInvite(true)}

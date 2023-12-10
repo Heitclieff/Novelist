@@ -20,6 +20,7 @@ const sendNotification = async (params:any) : Promise<void> => {
                    title: 'Nobelist',
                    body: params?.body,
                    icon : params?.icon,
+            
                  },
                  data: {
                    custom_key: MessageConfig.custom_key,

@@ -201,6 +201,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                          .get();
 
                          if(isExists.docs?.length > 0) {
+                              setIsedit(false)
                               isAlert = true;
                          }
                     }else{

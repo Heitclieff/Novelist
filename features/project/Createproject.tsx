@@ -126,6 +126,7 @@ const Createproject : React.FC = () => {
 
      const OnProjectdocsChange = async (field :string , value:string) => {
           let allow = false;
+          let ispass = false;
           setprojectdocs({...projectdocs , [field] : value})
           if(field === "title"){
                let isAlert = false;
@@ -133,13 +134,18 @@ const Createproject : React.FC = () => {
                
                if(value){
                     if(value.length >= 6 || value.length > 255){
+                         ispass  = true;
                          const isExists = await db.collection('Novels')
                          .where('title', '==', value)
                          .get();
           
                          if(isExists.docs?.length > 0) {
                               isAlert = true;
+                              ispass  = false;
+                              setAllowCreate(false);
                          }
+                         
+                        
                     }else{
                          isAlert = true;
                          error_message = "Project name must have more 6 to 255 charecters";
@@ -150,7 +156,7 @@ const Createproject : React.FC = () => {
 
           }
 
-          if(!projectdocsStatus.title){
+          if(!projectdocsStatus.title || ispass){
                allow = true;
           }
           setAllowCreate(allow);
