@@ -251,6 +251,7 @@ const Editfield : React.FC <Pageprops> =() => {
                 setForm = {setForm}
                 formError = {formError}
                 setFormError = {setFormError}
+                setDisabled = {setDisabled}
                 /> 
                 :
 

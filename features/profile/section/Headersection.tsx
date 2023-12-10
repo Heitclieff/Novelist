@@ -34,9 +34,9 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
         <Box w = '100%' h = {5} bg = {'transparent'}></Box>
         <VStack  bg = {theme.Bg.base}>
 
-        <Box h = {100}>
+        <Box h = {75}>
             <HStack w = '100%' h = '100%' position={'relative'} justifyContent={'space-between'}>
-                <VStack w = {100} h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >                
+                <VStack w = {100}  h=  '100%' marginX={7}  position={'absolute'} alignItems={'flex-start'}   left = {0} top={-15} >                
                     
                     {currentProfile &&
                         <Avatarfield image={currentProfile.pf_image} size = {85} />
@@ -44,7 +44,7 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
 
                 </VStack>
                
-                <Box w = '100%' h = '50%' justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>
+                <Box w = '100%' h = '55%' justifyContent={'center'} alignItems={'flex-end'} paddingX = {6}>
                     <Box>
                         {/* Validate Profile for use Button between Follow && Followed and Edit profile. */}
                         {isOwner ? 
@@ -63,13 +63,15 @@ const Headersection : React.FC <contianerProps> = ({currentProfile , isOwner , i
             </HStack>
         </Box>
         
-        <VStack flex = {1} paddingY={-5} paddingX={9} justifyContent={'flex-start'} >
+        <VStack flex = {1}  paddingTop={3} paddingX={9} justifyContent={'flex-start'} >
                     <Text
                         color={theme.Text.base}
                         fontSize={'xl'}
                         fontWeight={'semibold'}
                     >{currentProfile.username}</Text>
                     <Text
+                        pt = {1}
+               
                         color={theme.Text.description}
                     >{currentProfile.description}
                     </Text>

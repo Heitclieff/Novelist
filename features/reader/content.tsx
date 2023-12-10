@@ -93,21 +93,17 @@ const Readcontent : React.FC <pageProps> = () => {
      ]);
 
 
-
-
      const initialContent = async () : Promise <void> => {
-          let setContent = contentdocs.contentdocs;
-
           if(editable){
                if(status){
                     setEditable(true);
                }
-          }
-          if(useraccount?.[0].id === createdBy || useraccount?.[0].id === projectdocs.docs.owner){
-               setAccessable(true);
-          }
 
-
+               if(useraccount?.[0].id === createdBy || useraccount?.[0].id === projectdocs.docs.owner){
+                    setAccessable(true);
+               }
+          }
+          
           if(contentdocs.docid === id) {
                setinputValue(contentdocs.contentdocs);
                setContentid(contentdocs.id);

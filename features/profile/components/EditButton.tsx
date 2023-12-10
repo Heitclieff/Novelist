@@ -16,7 +16,9 @@ const EditProfileButton : React.FC <ProfileButtonprops> = ({navigation}) => {
 
      return(
          <Button
-             h={8}
+             p = {1}
+             pl = {3}
+             pr = {3}
              variant={'outline'}
              rounded={'2xl'}
              borderColor={theme.Button.outline}
