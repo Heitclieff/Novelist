@@ -36,7 +36,6 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
           return
         }
 
-        console.log(data.project)
         if(data.type === 'invite'){
           if(!userdata[0].project?.includes(data.project)){
             setInviteShow({
@@ -54,18 +53,16 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
 
         if(data.type === 'follow'){
           try{
-            const getusers =  await firestore().collection("Users").doc(data.id).get()
+            const getusers =  await firestore().collection("Users").doc(data.user_id).get()
             const usersdoc = getusers.data();
 
             if(usersdoc){
-              usersdoc['id'] = data.id;
+              usersdoc['id'] = data.user_id;
               navigation.navigate('ProfileStack', {profile : usersdoc})
             }
           }catch(error){
             console.log("ERROR: Faied to connect useraccount to profile",error)
           }
-        
-          
         }
     }
 
@@ -107,13 +104,13 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
             <Box w='20%' h='100%' justifyContent={'center'} alignItems={'center'}>
               <Box w='50' h='50' overflow={'hidden'} rounded="full">
                 <FastImage
-                  style={{width : '100%', height : '100%' }}
+                  style={{ width: '100%', height: '100%' }}
                   source={{
-                    uri : data.image  , 
-                    priority : FastImage.priority.normal,
+                    uri: data.image,
+                    priority: FastImage.priority.normal,
                     cache: FastImage.cacheControl.cacheOnly
                   }}
-                  alt = "images"
+                  alt="images"
                   resizeMode={FastImage.resizeMode.cover}
                 />
               </Box>

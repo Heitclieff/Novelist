@@ -326,7 +326,7 @@ const Index : React.FC = () => {
             }
             
             if(remoteMessage.data?.type === 'follow'){
-              Notify_task['id'] = remoteMessage.data?.id;
+              Notify_task['user_id'] = remoteMessage.data?.id;
             }
 
             const Notification_insert = await getNotification.add(Notify_task);

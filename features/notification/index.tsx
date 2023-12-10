@@ -99,7 +99,7 @@ const Notification : React.FC = () => {
         const getnotification = getuser.collection('Notification').doc(id);
   
         const docRef = await getnotification.delete();
-        setNotificationList((prev) => prev.filter(item => item.id !== id));
+        setNotificationList((prev) => prev.filter(item => item.doc_id !== id));
         console.log("remove success")
       }catch(error){
         console.log("failed to delete notification" ,error)
@@ -113,7 +113,7 @@ const Notification : React.FC = () => {
       try{
         const getuser = firebase.collection('Users').doc(useritem.id);
         const getnotification = await getuser.collection('Notification').orderBy('date','desc').get();
-        const notificationdocs = getnotification.docs.map((doc) =>({id : doc.id , ...doc.data()}));
+        const notificationdocs = getnotification.docs.map((doc) =>({doc_id : doc.id , ...doc.data()}));
 
         setNotificationList(notificationdocs);
         setLoading(false);
@@ -131,7 +131,7 @@ const Notification : React.FC = () => {
       }
 
       try{  
-        if(!useritem.project.includes(data.project)){
+        if(!useritem.project?.includes(data.project)){
           const getuser = firebase.collection('Users').doc(useritem.id);
           const getproject = firebase.collection("Novels").doc(data.project);
           const getcreator = getproject.collection('Creator').where('userDoc' ,'==', useritem.id)
@@ -193,19 +193,22 @@ const Notification : React.FC = () => {
                     <SwipeListView 
                     disableRightSwipe
                     data={notificationlist}
-                    // ItemSeparatorComponent={<Box  h=  '2'/>}
-                    renderItem={(item:any , index:number) => (
+                    renderItem={(item:any) => {
+                      return(
                       <MemorizedNotifyItem
-                        key = {item.item.id}
+                        key={item.index}
                         data = {item.item}
                         setInviteShow = {setInviteShow}
                       />
-                    )}
-                    renderHiddenItem={ (data, rowMap) => (<Deletebutton key={data.item.id} action = {removeNotification} id = {data.item.id}/>)}
+                      )
+                    }}
+                    renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {removeNotification} id = {data.item.doc_id}/>)}
                     leftOpenValue={60}
                     rightOpenValue={-60}
-                  />
-                  }
+                    />
+                  
+                    
+      }
               </VStack>
           }
            
