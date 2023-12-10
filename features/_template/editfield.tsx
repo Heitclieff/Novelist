@@ -77,30 +77,32 @@ const Editfield : React.FC <Pageprops> =() => {
     let error_massage = "";
 
 
-    if(field === "Username"){
-   
-      error_massage = "Try different from previous username.";
+    if (field === "Username") {
 
-      if(value.length >= 1){
-        if(value === userdata[0].username){
+      error_massage = "Try different from previous username.";
+      if (value.length >= 1) {
+        if (value === userdata[0].username) {
           isExist = false
-          return;
+          return
         }
         const result = await db.collection("Users")
-        .where('username' ,'==' , value)
-        .get();
+          .where('username', '==', value)
+          .get();
 
-        if(result.docs?.length){
+        if (result.docs?.length) {
           isExist = true;
+          console.log("Exists username")
+        } else {
+          isExist = false;
         }
-        
-        isExist = false;
-      }else {
+
+      } else {
         isExist = true;
         setDisabled(true);
       }
 
-
+  }else if (field === "description"){
+    isExist = false
   }else if (field === "Phone"){
       error_massage = "Try different from Phone number.";
       const format = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
@@ -108,6 +110,8 @@ const Editfield : React.FC <Pageprops> =() => {
       if(value){
         if(!format.test(value)){
           isExist = true
+        }else {
+          isExist = false
         }
       }
   }else if(field === "Birthdate"){
@@ -115,10 +119,14 @@ const Editfield : React.FC <Pageprops> =() => {
   }
 
 
+    setError(isExist)
+
     if(!isExist){
       setDisabled(false);
+      return
     }
-    setError(isExist)
+
+    setDisabled(true);
     setErrorMassage(error_massage);
 
 
@@ -140,6 +148,7 @@ const Editfield : React.FC <Pageprops> =() => {
         const isUpdated =  await db_connect.update({username : input});
         console.log("Success", isUpdated);
       }else if (field === "description"){
+        fieldname = 'description'
         const isUpdated = await db_connect.update({description : input});
         console.log("Success" , isUpdated)
 
@@ -207,8 +216,6 @@ const Editfield : React.FC <Pageprops> =() => {
     }
   }
 
-
-  console.log("Error" , Error);
     return (
       <Box flex = {1} bg = {theme.Bg.base}>
             <Centernavigation title ={options.title} onEditcontent ={true} isAction={handleUpdatebyFields} isDisable = {isDisable}/>
