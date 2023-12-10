@@ -44,10 +44,13 @@ const Library: React.FC <Pageprops> = () => {
   const userID = userdata[0]?.id; 
 
   const [serchingKey , setSearchingKey] = useState<string>("");
+  const [booklength , setBooklength] = useState<number>(0);
+  const [BookSlot , setBookSlot] = useState<any[]>([]);
   const [refreshing ,setRefreshing] = useState<boolean>(false);
   const [isLoading ,setLoading] = useState<boolean>(true);
 
   const getLibraryContent = async ():Promise<void> => {
+    console.log("Fetching Library ...")
     try {
       const snapshotusers = firestore().collection("Users").doc(userID)
       const getlibrarykeys = await snapshotusers.collection("Library").orderBy("date" , "desc").get();
@@ -59,6 +62,8 @@ const Library: React.FC <Pageprops> = () => {
     
       const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
       dispatch(setMylibrary({book : novelDocs}))
+      setBooklength(findingNovels.docs.length);
+      setBookSlot(novelDocs);
 
     } catch (error) {
       console.log("fetching Userdata failed" , error)
@@ -77,16 +82,20 @@ const Library: React.FC <Pageprops> = () => {
   }
   
   useEffect(() => {
-    const shouldrefresh = !myBooks.exists || refreshing
+    let shouldrefresh = !myBooks.exists || refreshing
 
     if(myBooks.length > 0){
+      if(!isLoading){
+        if(myBooks.length > booklength){
+          shouldrefresh = true;
+        }
+      }
       setLoading(false)
       return
     }
-
     if(shouldrefresh) getLibraryContent();
     setLoading(false);
-  },[userID , refreshing])
+  },[userID , refreshing, myBooks.book?.length])
 
   return (
     <VStack flex= {1} bg = {theme.Bg.base} space  ={2}>
@@ -116,7 +125,7 @@ const Library: React.FC <Pageprops> = () => {
               <VStack space={1} m={5} mt={6}>
                 {myBooks ?
                   myBooks.book?.length > 0 ?
-                  myBooks.book.map((item: any, index: number) => (
+                  BookSlot.map((item: any, index: number) => (
                     <MemorizedLibraryitem key={index} id={item.id} data={item} />
                   ))
                   : 

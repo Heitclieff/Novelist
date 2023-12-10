@@ -1,4 +1,4 @@
-import React,{useEffect , Suspense , useContext} from 'react'
+import React,{useEffect , Suspense , useContext, useState} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import {
 Box,
@@ -20,9 +20,12 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import { getuserData } from '../../systems/redux/action'
 import { useNavigation } from '@react-navigation/native'
+import { setProjectContent , setMybookmarks , setMylibrary, setUser } from '../../systems/redux/action'
+
 //@Components
 import Editfield from '../../components/field/Editfiled'
 import Centernavigation from '../../components/navigation/Centernavigation'
+
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
@@ -35,7 +38,11 @@ const AccountSettings : React.FC <Pageprops> = () => {
   const theme:any = useContext(ThemeWrapper);
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const navigation = useNavigation();
-  const userdata = useSelector((state:any) => state.userData)
+  
+  const userdata = useSelector((state:any) => state.userData);
+  const library = useSelector((state : any) => state.book);
+  const project = useSelector((state : any) => state.project)
+  const bookmarks = useSelector((state: any) => state.slot)
 
   const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded)
 
@@ -76,11 +83,19 @@ const AccountSettings : React.FC <Pageprops> = () => {
       console.log("ERROR: faied to sign Out" ,error)
     }
 
+    try{
+      if(userdata.length > 0 || bookmarks.exists || project.docs?.length > 0) {
+        dispatch(setUser([]));
+        dispatch(setProjectContent({docs : [] }));
+        dispatch(setMylibrary({book : []}));
+        dispatch(setMybookmarks({slot : [] , dockey : ""}));
+      }
+    }catch(error){
+      console.log("ERROR: failed to Clear any Data" ,error);
+    }
+
   }
  
-  useEffect(() => {
-    // if(!isReduxLoaded) dispatch(getuserData());
-  },[userdata])
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>

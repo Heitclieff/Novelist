@@ -43,6 +43,7 @@ import { SpinnerItem } from '../../components/Spinner';
 // firebase
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import { userdata } from '../../assets/content/VisualCollectionsdata';
 
 interface Pageprops { 
     theme : any
@@ -67,6 +68,16 @@ const Creator : React.FC <Pageprops> = () => {
     const {dismiss} = useBottomSheetModal();
 
     const getProjectContent = async () : Promise<void> => {
+        setLoading(true);
+        if(USER_DATA.length === 0) {
+            return
+        }
+
+        if(projectdocs.docs?.length !== 0){
+            setLoading(false);
+            return
+        }
+
         try {
             const projectCollection = firestore().collection('Novels');
             const snapshotprojectkey = await firestore().collection('Users').doc(USER_DATA[0].id).get();
@@ -81,14 +92,14 @@ const Creator : React.FC <Pageprops> = () => {
                 dispatch(setProjectContent({docs : projectdocs}))
                 setDocument(projectdocs);
             }
-            setLoading(false);
         }catch(error) {    
             console.error("Error fetching document:", error);
         
         }
+        setLoading(false);
     }
 
-    const getFilterObject = (value:string) => {
+    const getFilterObject = async (value:string) => {
         setSearchingKey(value);
 
         if (typeof (value) == "string") {
@@ -100,8 +111,9 @@ const Creator : React.FC <Pageprops> = () => {
     }
     
     useEffect(() => {
+        console.log("Refreshing this")
         getProjectContent();
-    }, [refreshing])
+    }, [refreshing , projectdocs.docs?.length , USER_DATA[0]?.id])
 
     const windowHeight = Dimensions.get('window').height;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -161,7 +173,7 @@ const Creator : React.FC <Pageprops> = () => {
                     </Box> 
                     <VStack space = {1} m ={5} mt = {5}>
                         {projectdocs && projectdocs.docs?.length > 0  ?
-                            projectdocs.docs.map((item:any , index:number) => {
+                            document.map((item:any , index:number) => {
                                 return(
                                     <MemorizedCreatorItemfield 
                                     key = {index} 
