@@ -57,7 +57,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
   const projectdocs = useSelector((state) => state.docs.docs)
   const useraccount = useSelector((state) => state.userData);
 
-  const {projectdocument , snapshotcontent , id , isupdated , mainrefresh} :any = route.params;
+  const {projectdocument , snapshotcontent , id , isupdated , mainrefresh , inviting} :any = route.params;
   const [isLoading , setisLoading] = useState<boolean>(true);
   const [refreshing , setRefreshing] = useState<boolean>(false);
 
@@ -122,7 +122,7 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
          const snapshotuserMap = new Map(snapshotuser?.docs.map(doc => [doc.id, doc]));
          const userdocs = creatorDocs.map((doc_id:string , index:number) => {
           const doc = snapshotuserMap.get(doc_id)?.data();
-            return {
+          return {
                 id : doc_id ,
                 doc_id : projectdocs.creators[index].doc_id,
                 isleader : projectdocs.owner === doc_id,
@@ -213,12 +213,8 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
        }
 }
 
-
-
-
-
   const initailfetchContent = () => {  
-      if(refreshing){
+      if(refreshing || inviting){
         fetchchaptercontent();  
       }
 
@@ -230,7 +226,6 @@ const Creatorcontent : React.FC <Pageprops> = ({route}) =>{
       }  
       fetchchaptercontent();  
   }
-
   
   const onRefresh = React.useCallback(() => {
     mainrefresh(true);

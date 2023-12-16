@@ -138,16 +138,6 @@ const Searchpage : React.FC =() => {
      const UpdatedTeams = async (data:any) : Promise<void> => {
           let status = "error"
           try{
-               const updateItem = [
-                    ...userdocs.teams,
-                    {
-                         ...data,
-                         pending: true,
-                         isleader : false,
-                    }
-               ]
-               dispatch(setProjectTeams({teams : updateItem}));
-     
                if(data?.message_token){
                     sendNotification({
                          token : data?.message_token,
@@ -172,7 +162,18 @@ const Searchpage : React.FC =() => {
                                    addAt  : timestamp,
                               })
      
-               
+               const updateItem = [
+                    ...userdocs.teams,
+                    {
+                         ...data,
+                         doc_id : docRef.id,
+                         pending: true,
+                         isleader : false,
+                    }
+               ]
+
+               dispatch(setProjectTeams({teams : updateItem}));
+     
                console.log("docRef ID" , docRef.id)
                status = "success";
           }catch(error){

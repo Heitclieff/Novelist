@@ -439,6 +439,7 @@ const Createproject : React.FC = () => {
                                    w="100%" 
                                    isLoading = {isLoading}
                                    rounded = "full"
+                                   _pressed = {{bg : theme.Button.follow.focused}}
                                    onPress = {OnCreateProject}
                                    isDisabled = {!allowCreate}
                                    bg = {theme.Button.follow.base}  

@@ -381,6 +381,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
 
      const resetConfig = () => {
+          setIsedit(false);
           Setprojectconfig({
                title : projectdocument.title ,
                overview : projectdocument.overview,

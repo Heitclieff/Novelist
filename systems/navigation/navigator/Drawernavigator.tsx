@@ -34,6 +34,7 @@ const Drawernavigator : React.FC = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
 
+  const userdata = useSelector((state) => state.userData)
   const projectdocument = useSelector((state) => state.docs)
   const rating =  useSelector((state) => state.rates);
 
@@ -102,6 +103,7 @@ const Drawernavigator : React.FC = () => {
   
   },[id , refreshing])
   
+
   if(isLoading) return(
     <CreatorSkeleton/>
   )
@@ -165,8 +167,8 @@ const Drawernavigator : React.FC = () => {
             />
           </>
       }
-   
-      <Drawer.Screen name="Project Settings" 
+    {projectdocument.docs?.owner === userdata?.[0].id  &&
+        <Drawer.Screen name="Project Settings" 
         component={Projectsettings} 
         initialParams={{projectdocument : projectdocument.docs, id }}
         options={{headerShown : false , 
@@ -178,6 +180,8 @@ const Drawernavigator : React.FC = () => {
               />
           )}}
       />
+    }
+      
 
     </Drawer.Navigator>
   )

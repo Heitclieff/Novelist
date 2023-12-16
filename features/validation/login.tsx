@@ -22,12 +22,14 @@ interface LoginPageProps {
 const LoginPage: FC<LoginPageProps> = () => {
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
+  const [isLoading ,setLoading] = useState<boolean>(false);
   const [getforms , setForms] =  useState<{}>({
       email : "",
       password : "",
   });
 
   const handleLogin = async () : Promise <T> => {
+    setLoading(true);
     try{
       if(!getforms?.email || !getforms?.password){
         console.log("Email or Password doesn't not exists")
@@ -36,9 +38,7 @@ const LoginPage: FC<LoginPageProps> = () => {
 
       auth().signInWithEmailAndPassword(getforms.email, getforms.password).then((target)=>{
         navigation.navigate("Index")
-        console.log("Target" , target)
-        console.log('sign in success' ,target.user.uid)
-    }).catch((error)=>{
+      }).catch((error)=>{
         let error_message=  "Not founds any Account."
 
         if(error.code === "auth/invalid-email" && error.code === "auth/wrong-password"){
@@ -56,6 +56,7 @@ const LoginPage: FC<LoginPageProps> = () => {
     }catch(error){
       console.log("Failed to Login" , error);
     }
+    setLoading(false);
   };
 
 
@@ -123,10 +124,12 @@ const LoginPage: FC<LoginPageProps> = () => {
      
       <Box w = '80%' mt = {3}>
         <Button 
+        isLoading = {isLoading}
         w="100%" 
         rounded = "full"
         bg = {theme.Button.follow.base}  
         _text = {{color : theme.Text.between , fontWeight : 'semibold' }} 
+        _pressed={{bg : theme.Button.follow.focused}}
         p = {2} 
         mt={4} 
         isDisabled = {!getforms.email || !getforms.password}

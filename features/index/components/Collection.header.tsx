@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Box, Text, VStack, HStack ,View, theme } from 'native-base'
 import { ImageBackground,Image } from 'react-native'
 import FastImage from 'react-native-fast-image';
@@ -23,8 +23,17 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
     const ScreenHeight = Dimensions.get('window').height
     const HEADER_HEIGHT = ScreenHeight / 1.7
     const navigation = useNavigation();
-
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+
+    useEffect(() => {
+        FastImage.preload([
+          {
+            uri: data.image,
+          },
+        ]);
+      },[data.image])
+  
+
     return (
         <Pressable onPress={() => navigation.navigate('Novelmain', { id })}>
             {({

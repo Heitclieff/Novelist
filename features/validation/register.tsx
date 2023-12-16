@@ -66,40 +66,6 @@ const RegisterPage: FC<RegisterPageProps> = () => {
 
   const navigation = useNavigation();
 
-  // const lUri = await firestore().collection('Users').doc(uid).get()
-  // const options = {
-  //     mediaType: 'photo',
-  //     maxWidth: 1000,
-  //     maxHeight: 1000,
-  //     quality: 0.8,
-  //     includeBase64: false,
-  //   };
-
-  // ImagePicker.launchImageLibrary(options, async (response) => {
-  //     if (response.didCancel) {
-  //       console.log('User cancelled image picker');
-  //     } else if (response.error) {
-  //       console.log('ImagePicker Error:', response.error);
-  //     } else if (response.customButton) {
-  //       console.log('User tapped custom button:', response.customButton);
-  //     } else {
-  //       // Upload image to Firebase Cloud Storage
-  //       console.log(response.assets[0].uri)
-  //       const storageRef = storage().ref(`images/${uid}/${response.assets[0].uri}`);
-        
-  //       await storageRef.putFile(response.assets[0].uri);
-
-  //       // Get the download URL of the uploaded image
-  //       const downloadUrl = await storageRef.getDownloadURL();
-
-  //       // Update Firestore with the download URL
-  //       await firestore().collection('Users').doc(uid).update({
-  //         image: downloadUrl,
-  //       });
-
-  //       console.log('Image uploaded and URL stored in Firestore:', downloadUrl);
-  //     }
-  //   });
   const validateEmail = (email) => {
     const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return mailformat.test(email)
@@ -196,8 +162,8 @@ const RegisterPage: FC<RegisterPageProps> = () => {
   
 
   const handleRegister = async () => {
+    setisLoading(true);
     try{
-      setisLoading(true);
       const birthDateParts = registerForms.BirthDate.split('/');
       const formattedDate = `${birthDateParts[0]}-${birthDateParts[1]}-${birthDateParts[2]}`;
       const selectedDate = new Date(formattedDate);

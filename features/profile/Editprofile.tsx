@@ -168,7 +168,7 @@ const UploadPhotos =  async (result:any) => {
     <Box flex = {1} bg = {theme.Bg.base}>
       <TouchableOpacity style = {{flex :1}} activeOpacity={1} onPress = {()=>  bottomSheetModalRef.current?.close()}>
       <Memorizednavigation title = "Edit Profile"  onEditcontent = {false}/>
-      <FlatList>
+      <FlatList disableRefresh = {true}>
         <VStack flex = {1} mt = {1}  space = {2}> 
             <Box id = 'Picture-edit' h= {200} mb = {2} position={'relative'}>
               <Center>

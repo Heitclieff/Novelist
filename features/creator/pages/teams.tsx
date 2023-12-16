@@ -72,6 +72,7 @@ const Team : React.FC <pageprops> = ({route}) => {
           }
      }
 
+
      const fetchmemberAccount = async () => {
           try { 
                const getnovel =  firestore().collection("Novels").doc(projectdocs.id)
@@ -108,7 +109,6 @@ const Team : React.FC <pageprops> = ({route}) => {
            }
         }
 
-        
      const DisableAddmember = () => {
           if(userdocs.teams.length >= 3) {
                setisDisable(true);
@@ -120,17 +120,32 @@ const Team : React.FC <pageprops> = ({route}) => {
      const RemoveMember = async (id:string , doc_id:string) : Promise<void> => {
           let status = "error"
           try{
-               const removedSelecteduser = userdocs.teams.filter(user => user.id !== id);
-               dispatch(setProjectTeams({teams: removedSelecteduser}));
+               const userRef = firestore().collection('Users').doc(id);
+               const userDoc = await userRef.get();
 
+               const removedSelecteduser = userdocs.teams.filter(user => user.id !== id);
+        
+               if (userDoc.exists) {
+                    const currentProject = userDoc.data().project || [];
+                    const newProject = currentProject.filter((item) => item !== projectdocs.id);
+                    await userRef.update({
+                      project : newProject,
+                    });
+                  
+                    console.log("Update Target Project success")
+               }else {
+                    console.log("ERROR: not founds users Project");
+               }
+               
                const docRef = await firestore()
                               .collection('Novels')
                               .doc(projectdocs.id)
                               .collection('Creator')
                               .doc(doc_id)
                               .delete()
-               
+                   
                status = "success"
+               dispatch(setProjectTeams({teams: removedSelecteduser}));
           }catch(error) {
                console.log("Remove Failed " , error)
           }
@@ -184,6 +199,7 @@ const Team : React.FC <pageprops> = ({route}) => {
 
      useEffect(() => {
           if (refreshing){
+               console.log("Refreshing")
                fetchmemberAccount();
           }
          
@@ -227,9 +243,8 @@ const Team : React.FC <pageprops> = ({route}) => {
                               <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
                               <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.pending.length}/2`}</Text>
                          </HStack>
-                       
                               <SwipeListView 
-                                   disableRightSwipe = {(item) => !item.item.isleader}
+                                   disableRightSwipe
                                    data={creators.pending}
                                    leftOpenValue={60}
                                    rightOpenValue={-60}
@@ -277,6 +292,7 @@ const Team : React.FC <pageprops> = ({route}) => {
 
                                 renderHiddenItem={ () => (
                                    <Deletebutton 
+                                     id =  {item.id}
                                      action = {RemoveMember} 
                                      title = {item.username}/>
                                      )

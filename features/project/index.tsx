@@ -73,12 +73,12 @@ const Creator : React.FC <Pageprops> = () => {
             return
         }
 
-        if(projectdocs.docs){
-            if(projectdocs.docs.length !== 0){
-                setLoading(false);
-                return
-            }
-        }
+        // if(projectdocs.docs){
+        //     if(projectdocs.docs.length !== 0){
+        //         setLoading(false);
+        //         return
+        //     }
+        // }
 
         try {
             const projectCollection = firestore().collection('Novels');
@@ -139,6 +139,7 @@ const Creator : React.FC <Pageprops> = () => {
         title : "Multi Project",
         type : 'multiple',
 }]
+
 
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect} from 'react'
 import { 
 Box,
 VStack,
@@ -26,6 +26,15 @@ interface CollectionProps {
 const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, like ,avatar = null }) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+
+  useEffect(() => {
+    FastImage.preload([
+      {
+        uri: images,
+      },
+    ]);
+  },[images])
+  
   return (
     <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>
       {({

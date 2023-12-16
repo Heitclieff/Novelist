@@ -10,16 +10,18 @@ Input,
 Center,
 VStack,
 HStack,
+Spinner
 } from 'native-base'
 import { Image } from 'react-native'
-
+import { SpinnerItem } from '../../../../components/Spinner'
 interface containerProps {
+     isLoading : boolean
      inviteShow : boolean
      setInviteShow : any
      Accept: any
 }
 
-export const InviteModal: React.FC<containerProps> = ({inviteShow , setInviteShow , Accept}) => {
+export const InviteModal: React.FC<containerProps> = ({inviteShow , setInviteShow , Accept , isLoading}) => {
      const theme:any = useContext(ThemeWrapper);
 
      return (
@@ -46,12 +48,17 @@ export const InviteModal: React.FC<containerProps> = ({inviteShow , setInviteSho
                                         </Center>
                                    </VStack>  
                          </Modal.Body>
-                         <Modal.Footer bg  = {theme.Bg.container} borderTopWidth={0}>
-                              <HStack w = '100%' justifyContent = "center" space = {2} >
-                                   <Button w = {'40%'} h=  {30} p = {0} rounded = 'full' variant={'outline'} _text={{color : theme.Text.base}} onPress={() => setInviteShow({status : false})}>Cancel</Button>
-                                   <Button w = {'40%'} h=  {30} p = {0}  rounded = 'full' colorScheme={'teal'} onPress ={() => Accept(inviteShow.data)}>Accept</Button>
-                              </HStack>
-                            
+                         <Modal.Footer bg  = {theme.Bg.container} borderTopWidth={0} borderColor={theme.Bg.container}>
+                              {!isLoading ?
+                                   <HStack w='100%' justifyContent="center" space={2}>
+                                        <Button w={'40%'} h={30} p={0} rounded='full' variant={'outline'} _text={{ color: theme.Text.base }} onPress={() => setInviteShow({ status: false })}>Cancel</Button>
+                                        <Button w={'40%'} h={30} p={0} rounded='full' colorScheme={'teal'} onPress={() => Accept(inviteShow.data)}>Accept</Button>
+
+                                   </HStack>
+                                   :
+                                   
+                                   <SpinnerItem/>
+                              }
                          </Modal.Footer>
                     </Modal.Content>
                </Modal>

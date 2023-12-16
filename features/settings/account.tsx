@@ -29,6 +29,8 @@ import Centernavigation from '../../components/navigation/Centernavigation'
 
 //@Firestore
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+
 interface Pageprops {}
 
 const Memorizednavigation = React.memo(Centernavigation);
@@ -38,6 +40,7 @@ const AccountSettings : React.FC <Pageprops> = () => {
   const theme:any = useContext(ThemeWrapper);
   const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const navigation = useNavigation();
+  const fstore = firestore();
   
   const userdata = useSelector((state:any) => state.userData);
   const library = useSelector((state : any) => state.book);
@@ -75,8 +78,10 @@ const AccountSettings : React.FC <Pageprops> = () => {
   ]
 
   const Logout = async () => {
+    
     try{
-      await auth().signOut()
+      await fstore.collection("Users").doc(userdata?.[0].id).update({message_token : ""});
+      await auth().signOut();
       navigation.navigate("Index")
       console.log("Log out success")
     }catch(error){
@@ -100,7 +105,7 @@ const AccountSettings : React.FC <Pageprops> = () => {
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
       <Memorizednavigation title= 'Account' onEditcontent = {false} />
-      <FlatList>
+      <FlatList disableRefresh = {true}>
         <VStack flex = {1} mt = {1}  space = {3}> 
             <VStack >          
                <Suspense  fallback = {<Box>Loading..</Box>}>       

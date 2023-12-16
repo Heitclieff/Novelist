@@ -324,10 +324,9 @@ const Readcontent : React.FC <pageProps> = () => {
 
      const changechapterStatement = async() : Promise<void> => {
           let status = "error"
-          
           const currentContent =  chapterdocs.content.find((doc) => doc.id === id);
           if(!currentContent.access?.includes(useraccount?.[0].id)){
-               if(projectdocs.owner !== useraccount?.[0].id){
+               if(projectdocs.docs.owner !== useraccount?.[0].id){
                     Alert.alert("Permission Denied" , "you don't have permission to access this chapters.")
                     return
                }
@@ -512,7 +511,7 @@ const Readcontent : React.FC <pageProps> = () => {
           chapterdocs = {{id : id , docid: doc_id}} 
           GoBackwithReference = {GoBackwithReference}
           request = {sendcommitsRequest}/>
-          <FlatList>
+          <FlatList Verticalscroll = {true} disableRefresh = {true}>
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
                     {!editable && 

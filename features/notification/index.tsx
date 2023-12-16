@@ -5,6 +5,7 @@ Divider,
 HStack ,
 Button,
 Text, 
+useToast,
 VStack } from 'native-base';; 
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import { FlatList } from '../../components/layout/Flatlist/FlatList';
@@ -26,6 +27,7 @@ import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { SpinnerItem } from '../../components/Spinner';
+import SendAlert from '../../services/alertService';
 
 const MemorizedNotifyItem = React.memo(NotifyItem);
 
@@ -40,10 +42,12 @@ const Notification : React.FC = () => {
     const useritem = useraccount[0];
     const firebase = firestore();
     const navigation = useNavigation();
+    const toast = useToast();
 
     const [inviteShow ,setInviteShow] = useState<any>({status : false , data : {}});
     const [refreshing ,setRefreshing] = useState<boolean>(false);
     const [isLoading , setLoading] = useState<boolean>(true);
+    const [inviteLoading ,setInviteLoading] = useState<boolean>(false);
 
     const requestUserPermission = async () => {
       try{
@@ -123,7 +127,8 @@ const Notification : React.FC = () => {
     }
 
     const Acceptinvitation = async (data:any) => {
-      setInviteShow({status : false});
+      let status = "error";
+      setInviteLoading(true);
       if(!data){
         console.log("Not found any data with argument");
         return
@@ -136,9 +141,11 @@ const Notification : React.FC = () => {
           const getcreator = getproject.collection('Creator').where('userDoc' ,'==', useritem.id)
 
           const snapshot = await getcreator.get();
-  
+
           if(snapshot.empty){
-            console.log('Not found any invitation from project');
+            setInviteLoading(false);
+            status = "error";
+            Alert.alert("Error" ,"Not founds this Project anymore.")
             return
           }
          
@@ -148,16 +155,21 @@ const Notification : React.FC = () => {
           const updatedProject = [...useritem.project]
           updatedProject.push(data.project);
   
-          await creatordoc.ref.set({...creatordata , pending : false});
+          await creatordoc.ref.update({pending : false});
           await getuser.update({project : updatedProject})       
-          dispatch(setUser([{...useritem , project : updatedProject }]))
+          dispatch(setUser([{...useritem , project : updatedProject}]))
         }
 
-        navigation.navigate('CreatorContent',{id : data.project})
+        status = "success"
+        navigation.navigate('CreatorContent',{id : data.project , inviting : true})
         console.log("Add Project success.")
+
       }catch(error){
         console.log("Failed to joining project with id" ,error)
       }
+      setInviteLoading(false);
+      setInviteShow({status : false});
+      SendAlert(status , "joined" , "failed to join" , toast)
     }
 
     useEffect(() => {
@@ -209,7 +221,12 @@ const Notification : React.FC = () => {
           }
            
           </FlatList>
-       <InviteModal inviteShow ={inviteShow} setInviteShow = {setInviteShow} Accept = {Acceptinvitation}/>
+       <InviteModal 
+       isLoading = {inviteLoading}
+       inviteShow ={inviteShow} 
+       setInviteShow = {setInviteShow} 
+       Accept = {Acceptinvitation}
+       />
     </Box>
   )
 }
