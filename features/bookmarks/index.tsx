@@ -108,7 +108,7 @@ const Bookmarks : React.FC <Pageprops> = () => {
                     data={[0]}
                     ItemSeparatorComponent={<Box h=  '2'/>}
                     renderItem={(itemdisable:any , index:number) => (
-                      <Center>
+                      <Center mt = {2}>
                         <MemorizedBookmarkfield key  = {index}  data = {item} id = {item.id}/>
                       </Center>
                     )}

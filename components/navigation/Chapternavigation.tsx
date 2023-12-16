@@ -47,12 +47,12 @@ interface contianerProps {
      openInvite : any
      approveproject : any
      request: any
-
+     setShowReport : any
      GoBackwithReference : any
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite  ,approveproject, chapterstate ,accessable,GoBackwithReference ,chapterdocs , multiproject , request }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , setShowReport ,approveproject, chapterstate ,accessable,GoBackwithReference ,chapterdocs , multiproject , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
      const dispatch = useDispatch();
@@ -145,7 +145,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
 
                     </Box>
                     {!editable ?
-                         <HStack>
+                         <HStack alignItems={'center'} space = {1}>
                               <IconButton
                                    onPress={toggleSwitch}
                                    size='sm'
@@ -157,16 +157,23 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                              name= {darkmode ? 'sun' : 'moon'} />}
                               />
 
-                              <IconButton
-                                   size='sm'
-                                   rounded={'full'}
-                                   icon={
-                                        <IonIcon
-                                             size={20}
-                                             color={theme.Icon.base}
-                                             name='list'
-                                        />}
-                              />
+                          <Menu w="150" bg = {theme.Bg.container} trigger={triggerProps => {
+                                        return (
+                                        <Pressable {...triggerProps}>
+                                             <IonIcon
+                                               size={20}
+                                               color={theme.Icon.base}
+                                               name='list' />
+                                        </Pressable>
+                                        )
+                                   }}>
+                                        <Menu.Item 
+                                          _text={{color : theme.Text.base}}
+                                          onPress = {() => setShowReport(true)}
+                    
+                                        > Report
+                                        </Menu.Item>
+                                   </Menu>
                          </HStack>
                          :
                      

@@ -20,6 +20,7 @@ import { AppState, AppStateStatus , BackHandler  } from 'react-native';
 import Chapter from '../creator/pages/chapter';
 import { Invitemodal } from '../creator/components/Invitemodal'
 import SendAlert from '../../services/alertService'
+import ReportModal from '../../components/layout/Modal/Report'
 //@Redux Toolkits
 import { useDispatch , useSelector } from 'react-redux'
 import { setChapterWriteContent ,setChaptercontent , setprojectCommits } from '../../systems/redux/action'
@@ -29,7 +30,6 @@ import { AnyAction } from 'redux'
 import sendNotification from '../../services/notificationService'
 
 //@ firebase
-
 import firestore from '@react-native-firebase/firestore'
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
@@ -60,7 +60,8 @@ const Readcontent : React.FC <pageProps> = () => {
      const teamsdocs = useSelector((state) => state.teams);
 
      const [isDraft , setisDraft] = useState<boolean>(status);
-     const [showModal, setShowModal] = useState(false);
+     const [showModal, setShowModal] = useState<boolean>(false);
+     const [showReport , setShowReport] = useState<boolean>(false);
      const [accessable ,setAccessable]  = useState<boolean>(false);
      const [Editable, setEditable] = useState<boolean>(false);
      const [isEdit ,setisEdit] = useState<boolean>(false);
@@ -502,6 +503,7 @@ const Readcontent : React.FC <pageProps> = () => {
           chapterstate = {changechapterStatement}
           title = {title}
           openInvite = {setShowModal}
+          setShowReport = {setShowReport}
           multiproject = {projectdocs.docs?.multiproject}
           approveproject = {approvedcommitRequest}
           createdBy = {createdBy}
@@ -581,6 +583,15 @@ const Readcontent : React.FC <pageProps> = () => {
           showModal = {showModal} 
           setShowModal = {setShowModal}/>
      }
+
+     {!editable && 
+          <ReportModal
+          doc_id = {doc_id}
+          data = {data}
+          showReport = {showReport}
+          setShowReport={setShowReport}
+          />
+     } 
     </VStack>
   )
 }

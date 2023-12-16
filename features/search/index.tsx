@@ -49,17 +49,13 @@ const Searchpage : React.FC =() => {
      const userdocs = useSelector((state) => state.teams);
      const docID = useSelector((state) => state.content)
 
-
-
      const searchingSomething = async (value : string) => {
-          setsearchQuery(value);
-
           const account_query =  await searchUsers(value);
           const novel_query =  await  searchnovel(value);
 
           if(value.length >= 1){
                if(account_query.length > 0 && novel_query.length > 0){
-                    console.log("Do this")
+
                     const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
                     const noveldocs = novel_query
                     .filter(doc => doc.data().status === true) 
@@ -70,8 +66,7 @@ const Searchpage : React.FC =() => {
      
                     return
                }
-     
-               
+
                if(account_query?.length > 0){
                     const users = account_query.map((doc) => ({id: doc.id ,...doc.data()}));
 
@@ -90,6 +85,10 @@ const Searchpage : React.FC =() => {
                setSearchResults([]);
           }
      }
+
+     useEffect(() => {
+          searchingSomething(searchQuery);
+     },[searchQuery])
 
      const searchUsers = async (value : string) : Promise<T> => {
           try{
@@ -194,7 +193,7 @@ const Searchpage : React.FC =() => {
                   h  = {9}
                   InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
                   placeholder='Search'
-                  onChangeText={(e) => searchingSomething(e)}
+                  onChangeText={(e) => setsearchQuery(e)}
                   />
                <Pressable flex = {1} justifyContent={'center'} alignItems={'center'} onPress={()=> navigation.goBack()}> 
                     {({

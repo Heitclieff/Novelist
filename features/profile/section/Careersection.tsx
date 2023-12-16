@@ -63,7 +63,6 @@ const Careersection : React.FC <Pageprops> = ({id , setCareerAmout}) => {
         <>
         {snapProject.length > 0 ?    
           <Center>
-            <Text mt = {4} color = {theme.Text.base} fontWeight={'semibold'}>Careers</Text>
             <ItemList collection = {snapProject}>
                 {(item:any , index:number) => <MemorizedCollectionItems item={item} index={index} />}
             </ItemList>

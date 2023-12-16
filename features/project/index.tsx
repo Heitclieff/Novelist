@@ -69,13 +69,15 @@ const Creator : React.FC <Pageprops> = () => {
 
     const getProjectContent = async () : Promise<void> => {
         setLoading(true);
-        if(USER_DATA.length === 0) {
+        if(!USER_DATA.length > 0) {
             return
         }
 
-        if(projectdocs.docs?.length !== 0){
-            setLoading(false);
-            return
+        if(projectdocs.docs){
+            if(projectdocs.docs.length !== 0){
+                setLoading(false);
+                return
+            }
         }
 
         try {
@@ -137,7 +139,6 @@ const Creator : React.FC <Pageprops> = () => {
         title : "Multi Project",
         type : 'multiple',
 }]
-
 
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>

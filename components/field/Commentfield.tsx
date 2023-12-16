@@ -150,11 +150,12 @@ const Commentfield: React.FC<containerProps> = ({ data, updatePostliked, setRepl
                         }
                         
                         {isShowreply &&
-                            Object.keys(data?.reply).map((key) => {
+                            Object.keys(data?.reply).map((key:any , index:number) => {
                                 const replydata = data.reply[key];
 
                                 return(
                                     <Replyfield
+                                        key = {index}
                                         data = {replydata}
                                         id = {key}
                                         currentid = {id}

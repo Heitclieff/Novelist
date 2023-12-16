@@ -108,18 +108,23 @@ const Index : React.FC = () => {
         try{
           // await auth().signOut()
           let uid = auth().currentUser?.uid;
+          console.log("Current Login" ,uid);
           if(uid){
-            const snapUserData = await db.collection('Users').doc(uid).get()
-            
-            let userData = [{ id: snapUserData.id, ...snapUserData.data() }]
-            if(!userData?.[0].message_token){
-              setupMessageToken(uid);
-            }
+            const snapUserData = await db.collection('Users').doc(uid).get()  
+            const getUserdata = snapUserData.data();
 
-            dispatch(setUser(userData))
-            getLibraryContent(uid);
-            getBookmarks(uid);
-            return
+            if(getUserdata){
+              let userData = [{ id: snapUserData.id, ...getUserdata}]
+
+              if(!userData?.[0].message_token){
+                setupMessageToken(uid);
+              }
+  
+              dispatch(setUser(userData))
+              getLibraryContent(uid);
+              getBookmarks(uid);
+              return
+            }
           }
           navigation.navigate("Login");
         }catch(error){

@@ -229,10 +229,11 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
                             action = {followPeople}/>
                             <VStack bg={theme.Bg.base}>
     
-                                {/* <HStack pl={8} h={10} space={1} alignItems={'center'}>
-                                    <Text fontWeight={'semibold'} color={theme.Text.base}>{currentProfile?.username}</Text>
+                                <HStack pl={8} h={10} space={1} alignItems={'center'}>
+                                    <Text fontWeight={'semibold'}  color={theme.Text.base}>{currentProfile?.username}</Text>
                                     <Text fontWeight={'semibold'}  color={theme.Text.base}>Careers</Text>
-                                </HStack> */}
+                                </HStack>
+                                
                                 <VStack mb={HEADER_HEIGHT_EXPANDED}>
                                     <Careersection id = {currentProfile.id} setCareerAmout = {setCareersAmount}/>
                                 </VStack>
