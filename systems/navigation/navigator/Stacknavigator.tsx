@@ -42,8 +42,9 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
         }, 
         headerBackTitle : 'Back',
         headerTitleStyle : {color : theme.Text.tabbar} ,
-        animation : 'slide_from_left'
-        , headerTintColor : theme.Button.backbutton}
+        animation : 'slide_from_left', 
+        headerTintColor : theme.Button.backbutton
+        }
         }>
           <Stack.Screen 
           name = "MainStack"

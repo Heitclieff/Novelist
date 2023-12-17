@@ -22,8 +22,8 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
     const theme:any = useContext(ThemeWrapper);
 
     const iconList = [
-        <EvilIcon name = "user" size = {22} color = {theme.Icon.base}/>,
-        <IonIcon name = "notifications-outline" size = {20} color = {theme.Icon.base}/>,
+        <EvilIcon name = "user" size = {22} color = {theme.Icon.between}/>,
+        <IonIcon name = "notifications-outline" size = {20} color = {theme.Icon.between}/>,
     ]
   return (
 

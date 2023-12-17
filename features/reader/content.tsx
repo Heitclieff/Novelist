@@ -556,12 +556,12 @@ const Readcontent : React.FC <pageProps> = () => {
                               {/* {`${novelItem[0].overview}`} */}
                          </Text>
                          <TextInput        
-                         style = {{color : 'white'} }
+                         style = {{color : theme.Text.reading} }
                          multiline={true}
                          editable = {Editable}
                          textAlignVertical="top"
-                         placeholder="พิมพ์ข้อความที่นี่..."
-                         placeholderTextColor={'white'}
+                         placeholder="Type something..."
+                         placeholderTextColor={theme.Text.reading}
                          onChangeText={HandleChange}
                          // onChangeText={handleInputChange} // เรียกใช้งานเมื่อมีการเปลี่ยนแปลงข้อความ
                          value={inputValue} // กำหนดค่าของ TextInput จาก State

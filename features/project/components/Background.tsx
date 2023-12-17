@@ -21,7 +21,7 @@ const Background: React.FC<containerProps> = ({image , onModalPress}) => {
                 isPressed
             }) => {
                 return (
-                    <Box w='100%' h={200} bg={theme.themeMode === 'dark' ? isPressed ? 'trueGray.600' :  'trueGray.800' : "trueGray.300"} overflow ='hidden'>
+                    <Box w='100%' h={200} bg={theme.themeMode === 'dark' ? isPressed ? 'trueGray.600' :  'trueGray.800' : "trueGray.400"} overflow ='hidden'>
                        {image ? 
                             <FastImage
                             id = 'item-image'

@@ -305,13 +305,13 @@ const Createproject : React.FC = () => {
 
      return(
      <VStack flex = {1} bg = {theme.Bg.base}>
-          <Centernavigation title = {"Create Project"} transparent = {true} Contentfixed = {false}/>
+          <Centernavigation title = {"Create Project"} transparent = {true} Contentfixed = {false} />
           <FlatList>
                <VStack flex = {1}>
                     <Background image = {projectdocs.background?.image} onModalPress= {handlePresentModalPress}/>
                     <VStack space={5}  p = {4}>
                                 <VStack space={2} >
-                                     <Text color={theme.Text.description} fontWeight={'semibold'}>Project name</Text>
+                                     <Text color={theme.Text.heading} fontWeight={'semibold'}>Project name</Text>
                                      <FormControl isInvalid = {projectdocsStatus.title}>
                                      <Input
                                           rounded={'full'}
@@ -332,7 +332,7 @@ const Createproject : React.FC = () => {
                                 </VStack>
 
                                 <VStack space={2} >
-                                     <Text color={theme.Text.description} fontWeight={'semibold'}>Overview</Text>
+                                     <Text color={theme.Text.heading} fontWeight={'semibold'}>Overview</Text>
                                      <TextArea
                                           minH={30}
                                           bg={theme.Bg.container}
@@ -346,7 +346,7 @@ const Createproject : React.FC = () => {
 
                               <VStack space={2} >
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                        <Text color={theme.Text.description} fontWeight={'semibold'}>{`Tags (${projectdocs.tagDoc?.length}) `}</Text>
+                                        <Text color={theme.Text.heading} fontWeight={'semibold'}>{`Tags (${projectdocs.tagDoc?.length}) `}</Text>
                                         <IconButton 
                                         size = 'md'
                                         rounded={'full'}
@@ -379,7 +379,7 @@ const Createproject : React.FC = () => {
 
                               <VStack space={2} >
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                        <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
+                                        <Text color={theme.Text.heading} fontWeight={'semibold'}>Rating</Text>
                                         <IconButton 
                                         size = 'md'
                                         onPress={() => setShowRating(true)}
@@ -404,7 +404,7 @@ const Createproject : React.FC = () => {
                               <VStack mt = {2} space = {2}>
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
                                         <VStack>
-                                             <Text color={theme.Text.description} fontWeight={'semibold'}>Enable Comment</Text>           
+                                             <Text color={theme.Text.heading} fontWeight={'semibold'}>Enable Comment</Text>           
                                              <Text color = {theme.Text.description} fontSize={'xs'}>for people can comment your Novel</Text>                    
                                         </VStack>
                                         <Switch size={'sm'} value = {projectOption.comment_status} onToggle={(event) => OnOptionChange('comment_status' , event)}/>                                        
@@ -412,7 +412,7 @@ const Createproject : React.FC = () => {
                                    </HStack>
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
                                         <VStack>
-                                             <Text color={theme.Text.description} fontWeight={'semibold'}>Mulitple Arthors</Text>
+                                             <Text color={theme.Text.heading} fontWeight={'semibold'}>Mulitple Arthors</Text>
                                              <Text color = {theme.Text.description} fontSize={'xs'}>for people want to join your project</Text>
                                         </VStack>
                                    
@@ -439,11 +439,11 @@ const Createproject : React.FC = () => {
                                    w="100%" 
                                    isLoading = {isLoading}
                                    rounded = "full"
-                                   _pressed = {{bg : theme.Button.follow.focused}}
+                                   _pressed = {{bg : theme.Button.create.focused}}
                                    onPress = {OnCreateProject}
                                    isDisabled = {!allowCreate}
-                                   bg = {theme.Button.follow.base}  
-                                   _text = {{color : theme.Text.between , fontWeight : 'semibold' }} 
+                                   bg = {theme.Button.create.base}  
+                                   _text = {{color : theme.Text.create , fontWeight : 'semibold' }} 
                                    p = {2} 
                                    mt={5} 
                                    >

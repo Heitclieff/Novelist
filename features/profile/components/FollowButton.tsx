@@ -31,7 +31,7 @@ const FollowButton : React.FC <ProfileButtonprops> = ({navigation , isfollow = t
              onPress= {() => action(!isfollow)}
              size='xs'>
              <Center>
-                 <Text fontSize={'11'} fontWeight={'semibold'} color = {isfollow ? theme.Text.base : theme.Text.container}>
+                 <Text fontSize={'11'} fontWeight={'semibold'} color = {isfollow ? theme.Text.base : theme.Text.between}>
                      {isfollow ?`following` : `follow`}
                  </Text>
              </Center>  

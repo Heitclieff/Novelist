@@ -66,15 +66,15 @@ const LoginPage: FC<LoginPageProps> = () => {
 
   return (
     <VStack w="100%" h="100%" p={2} justifyContent="center" alignItems="center" bg = {theme.Bg.base}>
-          <Box w = '100%'  h = "30%" overflow ='hidden' justifyContent=  'flex-end' alignItems=  'center'>
+          <Box w = '100%'  h = "25%" overflow ='hidden' rounded = "md" justifyContent=  'center' alignItems=  'center'>
               <FastImage
                 id='background-images'
                 alt="images"
                 source={require("../../assets/logo/Nobelist_icon.png")}
                 resizeMode={FastImage.resizeMode.cover}
                 style={{
-                    width: '60%',
-                    height: '100%',
+                    width: '40%',
+                    height: '70%',
                     opacity : 1,
                     position : 'relative'
                 }}

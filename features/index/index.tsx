@@ -359,14 +359,14 @@ const Index : React.FC = () => {
             <Text
             fontSize={'2xl'}
             fontWeight={'bold'}
-            color={theme.Icon.static}
+            color={theme.Icon.between}
             >Nobelist
             </Text>     
           }
 
           rightElement = {[
-            {id: 1 , icon: <AntdesignIcon  name = 'search1' color = {theme.Icon.static} size = {18} /> , navigate : 'Search'} ,
-            {id: 2 ,icon: <IonIcon  name = 'notifications' color = {theme.Icon.static} size = {18} /> , navigate : 'Notification'}
+            {id: 1 , icon: <AntdesignIcon  name = 'search1' color = {theme.Icon.between} size = {18} /> , navigate : 'Search'} ,
+            {id: 2 ,icon: <IonIcon  name = 'notifications' color = {theme.Icon.between} size = {18} /> , navigate : 'Notification'}
           ]}
           />
         }

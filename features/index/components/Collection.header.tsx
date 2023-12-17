@@ -77,7 +77,7 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
                                     />
                                 </Box>
                                 <VStack w='60%' mt={2} >
-                                    <Text fontWeight={'semibold'} fontSize={'lg'} numberOfLines={1} color='white'>{data.title}</Text>
+                                    <Text fontWeight={'semibold'} fontSize={'lg'} numberOfLines={1} color= {theme.Text.between_heading}>{data.title}</Text>
                                     <HStack
                                         alignItems={'center'}
                                         space={2}
@@ -88,12 +88,12 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
                                         >
                                             <AntdesignIcon
                                               name = 'eyeo'
-                                              color = {theme.Icon.static}
+                                              color = {theme.Icon.between}
                                               size = {15}
                                             />
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.static}
+                                                color={theme.Text.between_heading}
                                             >{data.view}
                                             </Text>
                                         </HStack>
@@ -104,12 +104,12 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
                                         >
                                             <AntdesignIcon
                                               name = 'heart'
-                                              color = {theme.Icon.static}
+                                              color = {theme.Icon.between}
                                               size = {12}
                                             />
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.static}>
+                                                  color={theme.Text.between_heading}>
                                                 {data.like}
                                             </Text>
 

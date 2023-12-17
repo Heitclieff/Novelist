@@ -72,7 +72,7 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
          isPressed
      }) => {
           return (
-          <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}>
+          <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.boxaction : isHovered ? theme.Bg.boxaction  : null}>
                <Box w= '25%' h= '100%' bg=  {theme.Bg.container} mr = {2} overflow={'hidden'} justifyContent={'center'} alignItems= "center">
                     {image ? 
                          <FastImage

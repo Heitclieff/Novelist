@@ -192,7 +192,7 @@ if(initial) return(
       <Memorizednavigation title="Chapters"
         rightElement={[
           { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id , setCreateChapter : setCreateChapter}) },
-          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='appstore-o' />, navigate: navigation.openDrawer }
+          { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />
 
@@ -206,7 +206,7 @@ if(initial) return(
               color={theme.Text.base}
               h={9}
               onChangeText={(e) => getFilterObject(e)}
-              InputRightElement={<EvilIcon name='search' size={10} mr={2} />}
+              InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
               placeholder='Seacrh your Chapter name'
             />
           </Box>

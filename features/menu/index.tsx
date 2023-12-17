@@ -50,10 +50,10 @@ const Menu :React.FC <Pageprops> = () => {
   },[isReduxLoaded])
 
   const iconList = [
-      <FeatherIcon name = "edit" size = {15} color = {theme.Icon.base}/>,
-      <MaterialIcon name = "leaderboard" size = {15} color = {theme.Icon.base}/>,
-      <FeatherIcon name = "bookmark" size = {15} color = {theme.Icon.base}/>,
-      <FeatherIcon name = "settings" size = {15} color = {theme.Icon.base}/>,
+      <FeatherIcon name = "edit" size = {15} color = {theme.Icon.between}/>,
+      <MaterialIcon name = "leaderboard" size = {15} color = {theme.Icon.between}/>,
+      <FeatherIcon name = "bookmark" size = {15} color = {theme.Icon.between}/>,
+      <FeatherIcon name = "settings" size = {15} color = {theme.Icon.between}/>,
   ]
   
   return (
@@ -100,7 +100,7 @@ const Menu :React.FC <Pageprops> = () => {
                   direction = {item.direct}
                 />    
                 ))
-              },[navigation])}
+              },[navigation , theme])}
    
           </VStack>
         </VStack>

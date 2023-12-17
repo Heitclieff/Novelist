@@ -146,7 +146,7 @@ const Creator : React.FC <Pageprops> = () => {
         <Box >
             <Suspense fallback = {<Box>Loading...</Box>}>
                 <Memorizednavigation title = "Create Project"
-                    rightElement={[{icon : <AntdesignIcon size = {15} color = 'white'name = 'plus'/> , navigate : () => navigation.navigate('CreateProject')}]}
+                    rightElement={[{icon : <AntdesignIcon size = {15} color = {theme.Icon.base} name = 'plus'/> , navigate : () => navigation.navigate('CreateProject')}]}
             />
             </Suspense>
         </Box>

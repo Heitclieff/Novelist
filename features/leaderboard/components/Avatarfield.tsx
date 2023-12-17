@@ -39,8 +39,8 @@ const LeaderAvatarfield : React.FC <containerProps> = ({size , image  = null , u
                 />
         </Box>
         <VStack alignItems={'center'}>
-            <Text fontWeight={'semibold'} color = {theme.Text.base}>{username}</Text>
-            <Text color = {theme.Text.base}>{point}</Text>
+            <Text fontWeight={'semibold'} color = {'white'}>{username}</Text>
+            <Text color = {'white'}>{point}</Text>
         </VStack>
     </VStack>
 

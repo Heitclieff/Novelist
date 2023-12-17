@@ -146,7 +146,7 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id , onMo
                   <FontAwesomeIcon
                   name = "camera"
                   size = {15}
-                  color = {theme.Icon.static}
+                  color = {theme.Icon.between}
                   />
                 }
                 >

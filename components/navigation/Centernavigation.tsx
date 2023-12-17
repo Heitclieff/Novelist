@@ -72,14 +72,14 @@ const Centernavigation : React.FC <contianerProps> = ({title , onEditcontent = f
                     </Pressable>
                 :
                     <IconButton 
-                        size = 'sm'
+                        p = {1}
                         rounded={'full'}
                         onPress={() =>  navigation.goBack()}
                         icon = {
                             <EntypoIcon
                             name='chevron-left'
                             size={20}
-                            color = {theme.Icon.static}
+                            color = {transparent ? 'white' :theme.Icon.base}
                             />
                         }
                     />

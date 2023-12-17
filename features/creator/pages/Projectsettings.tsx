@@ -398,7 +398,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
   return (
        <VStack flex={1} bg={theme.Bg.base}>
             <Memorizednavigation title = "Project Settings"  editable = {isEdit} isAction  = {handleProjectUpdate}
-            rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.static} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
+            rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.between} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
             />
             <Box flex={1}>
                  <FlatList disableRefresh = {true}>
@@ -406,7 +406,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                            <Text color={theme.Text.base} fontWeight={'semibold'}>General</Text>
                            <VStack space={4} >
                                 <VStack space={2} >
-                                     <Text color={theme.Text.description} fontWeight={'semibold'}>Project name</Text>
+                                     <Text color={theme.Text.heading} fontWeight={'semibold'}>Project name</Text>
                                      <FormControl isInvalid = {projectdocsStatus.title}>
                                      <Input
                                           onChange={() => setisnotEmpty(true)}
@@ -427,7 +427,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                 </VStack>
 
                                 <VStack space={2} >
-                                     <Text color={theme.Text.description} fontWeight={'semibold'}>Overview</Text>
+                                     <Text color={theme.Text.heading} fontWeight={'semibold'}>Overview</Text>
                                      <TextArea
                                           minH={30}
                                           bg={theme.Bg.container}
@@ -439,7 +439,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                 </VStack>
                                 <VStack space={2} >
                                    <HStack alignItems={'center'} justifyContent={'space-between'}>
-                                        <Text color={theme.Text.description} fontWeight={'semibold'}>Rating</Text>
+                                        <Text color={theme.Text.heading} fontWeight={'semibold'}>Rating</Text>
                                         <IconButton 
                                         size = 'sm'
                                         onPress = {() => setShowRating(true)}
@@ -462,7 +462,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                 <VStack  space={2} >
                                    <HStack   alignItems={'center'} justifyContent={'space-between'}>
                                              <VStack w = {'80%'}>
-                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Enable Comment</Text>           
+                                                  <Text color={theme.Text.heading} fontWeight={'semibold'}>Enable Comment</Text>           
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for people can comment your Novel</Text>                    
                                              </VStack>
                                                   <Switch size={'sm'} value = {projectconfig.comment_status} onToggle={(target) => projectConfigChange('comment_status' , target)}/>                                        
@@ -470,7 +470,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
                                              <VStack w = {'80%'}>
-                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Public Project</Text>
+                                                  <Text color={theme.Text.heading} fontWeight={'semibold'}>Public Project</Text>
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for people can see your project</Text>
                                              </VStack>
                                         
@@ -478,7 +478,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                         </HStack>
                                         <HStack alignItems={'center'} justifyContent={'space-between'}>
                                              <VStack w = {'80%'}>
-                                                  <Text color={theme.Text.description} fontWeight={'semibold'}>Finshed Project</Text>
+                                                  <Text color={theme.Text.heading} fontWeight={'semibold'}>Finshed Project</Text>
                                                   <Text color = {theme.Text.description} fontSize={'xs'}>for finished your project</Text>
                                              </VStack>
                                         
@@ -493,7 +493,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
                                              <Switch size={'sm'} value = {projectconfig.commit_status} onToggle={(target) => projectConfigChange('commit_status' , target)}/>
                                         </HStack> */}
                                      <VStack space={2} mt =  {2}>
-                                        <Text color={theme.Text.description} fontWeight={'semibold'}>Delete Project</Text>
+                                        <Text color={theme.Text.heading} fontWeight={'semibold'}>Delete Project</Text>
                                         <Button 
                                         onPress ={DeleteAlertDailog}
                                         w= {120} 

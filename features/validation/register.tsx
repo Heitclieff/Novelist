@@ -225,7 +225,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
                 <EntypoIcon
                 name='chevron-left'
                 size = {20}
-                color = {theme.Icon.static}
+                color = {theme.Icon.between}
                 />
                 }
           />
