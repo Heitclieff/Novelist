@@ -11,6 +11,7 @@ Divider,
 IconButton,
 Menu,
 Pressable,
+Spinner,
 } from 'native-base';
 import { Animated, Alert  } from 'react-native';
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
@@ -20,7 +21,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import { beginEvent } from 'react-native/Libraries/Performance/Systrace';
-
+import { SpinnerItem } from '../Spinner';
 // @Redux toolkits
 import { useDispatch , useSelector } from 'react-redux';
 import { Themelight , Themedark } from '../../systems/theme/theme';
@@ -37,6 +38,7 @@ interface contianerProps {
      commitable : boolean,
      editable: boolean;
      isEdit : boolean,
+     isLoading : boolean;
      status : boolean,
      multiproject : boolean
      chapterstate : any,
@@ -52,7 +54,7 @@ interface contianerProps {
 }
 
 
-const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , commitable ,status ,openInvite , setShowReport ,approveproject, chapterstate ,accessable,GoBackwithReference ,chapterdocs , multiproject , request }) => {
+const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit , title , isLoading, commitable ,status ,openInvite , setShowReport ,approveproject, chapterstate ,accessable,GoBackwithReference ,chapterdocs , multiproject , request }) => {
      const navigation: any = useNavigation();
      const theme: any = useContext(ThemeWrapper);
      const dispatch = useDispatch();
@@ -178,7 +180,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                          :
                      
 
-                         <HStack alignItems={'center'} space={2}>
+                         <HStack alignItems={'center'} space={2} >
                               {/* <IconButton
                                    size='sm'
                                    rounded={'full'}
@@ -219,7 +221,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                    </Menu>
                               </Box> 
 
-                              {
+                              {!isLoading ?
                               status ? 
                                    isEdit ?
                                         
@@ -251,7 +253,9 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                                              name='edit' />}
                                    />
                                    
-                                   } 
+                              : 
+                              <Spinner/>
+                              } 
                             
                          </HStack>
                       

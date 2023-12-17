@@ -59,6 +59,7 @@ const Readcontent : React.FC <pageProps> = () => {
      const contentdocs = useSelector((state) => state.contentdocs);
      const teamsdocs = useSelector((state) => state.teams);
 
+     const [isLoading ,setLoading] = useState<boolean>(false);
      const [isDraft , setisDraft] = useState<boolean>(status);
      const [showModal, setShowModal] = useState<boolean>(false);
      const [showReport , setShowReport] = useState<boolean>(false);
@@ -118,6 +119,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
      const sendcommitsRequest = async () : Promise <void> => {
+          setLoading(true);
           let status = "error"
           try{
                const timestamp = firestore.FieldValue.serverTimestamp();
@@ -174,6 +176,7 @@ const Readcontent : React.FC <pageProps> = () => {
                console.log("Failed to Send Commit request" , error);
           }
           reference.update({during : false});
+          setLoading(false);
           SendAlert(status , "Pushed Commits" , "Push failed" , toast)
      }
 
@@ -240,8 +243,17 @@ const Readcontent : React.FC <pageProps> = () => {
 
                     status = "success"
                }else{
-                     const getchapters = chapterdocs.snapshotchapter.doc(id);
-                     await getchapters.update({status : false});
+
+                    status = "success"
+                    const getchapters = chapterdocs.snapshotchapter.doc(id);
+                    await getchapters.update({status : false});
+
+                    const currentchapter = chapterdocs.content?.find((doc) => doc.id == id);
+                    currentchapter['commits'] = false;
+                    currentchapter['status'] = false;
+     
+                    const removechapter = chapterdocs.content.filter(item => item.id !== id).concat(currentchapter)
+                    dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
                }
 
                navigation.goBack();
@@ -378,6 +390,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
 
      const updatedContent = async () : Promise <void> => {
+          setLoading(true);
           let toastStatus = "error"
           try {
                const currentDate = new Date();
@@ -415,7 +428,9 @@ const Readcontent : React.FC <pageProps> = () => {
                console.error("Update Content Problem ", error);
                reference.update({during : false})
           }
+          setLoading(false);
           SendAlert(toastStatus , "Saved" , "Saving failed" , toast)
+          
      }
 
 
@@ -506,6 +521,7 @@ const Readcontent : React.FC <pageProps> = () => {
           multiproject = {projectdocs.docs?.multiproject}
           approveproject = {approvedcommitRequest}
           createdBy = {createdBy}
+          isLoading = {isLoading}
           accessable = {accessable}
           status = {isDraft}
           chapterdocs = {{id : id , docid: doc_id}} 
