@@ -560,7 +560,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                                 })}}>
                 
                                 <ForegroundItem
-                                    isLoading = {isLoading.start}
+                                    isLoading = {isLoading?.start}
+                                    isBtnLoading = {isLoading?.Button}
                                     collection={novelItem}
                                     myBook = {isMyOwn}
                                     setlibrary = {setMylibraryBooks}
@@ -606,7 +607,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                             })}}>
                                 
                                 <ForegroundItem
-                                    isLoading = {isLoading.start}
+                                    isLoading = {isLoading?.start}
+                                    isBtnLoading = {isLoading?.Button}
                                     collection={novelItem}
                                     myBook = {isMyOwn}
                                     setlibrary = {setMylibraryBooks}

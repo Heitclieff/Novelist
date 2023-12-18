@@ -527,7 +527,7 @@ const Readcontent : React.FC <pageProps> = () => {
           chapterdocs = {{id : id , docid: doc_id}} 
           GoBackwithReference = {GoBackwithReference}
           request = {sendcommitsRequest}/>
-          <FlatList Verticalscroll = {true} disableRefresh = {true}>
+          <FlatList Verticalscroll = {true} disableRefresh = {true} >
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
                     {!editable && 
@@ -571,11 +571,12 @@ const Readcontent : React.FC <pageProps> = () => {
                          <Text id = "Novel-content" color = {theme.Text.base}>
                               {/* {`${novelItem[0].overview}`} */}
                          </Text>
-                         <TextInput        
+                         <TextInput     
                          style = {{color : theme.Text.reading} }
                          multiline={true}
                          editable = {Editable}
                          textAlignVertical="top"
+                         
                          placeholder="Type something..."
                          placeholderTextColor={theme.Text.reading}
                          onChangeText={HandleChange}

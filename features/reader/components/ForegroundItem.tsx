@@ -10,10 +10,11 @@ interface containerProps {
     collection: any
     myBook : boolean
     isLoading : boolean
+    isBtnLoaing : boolean
     setlibrary : any
 }
 
-const ForegroundItem: React.FC<containerProps> = ({ collection , isLoading , myBook , setlibrary}) => {
+const ForegroundItem: React.FC<containerProps> = ({ collection , isLoading ,isBtnLoading, myBook , setlibrary}) => {
     const theme:any = useContext(ThemeWrapper)
 
     return (
@@ -50,6 +51,7 @@ const ForegroundItem: React.FC<containerProps> = ({ collection , isLoading , myB
                     <Button
                         h='9'
                         size='sm'
+                        isLoading = {isBtnLoading}
                         _pressed={{ bg : 'amber.500'}}
                         onPress = {setlibrary}
                         variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}

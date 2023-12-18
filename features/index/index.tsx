@@ -77,6 +77,7 @@ const Index : React.FC = () => {
         try {
           const snapshortHot = await db.collection('Novels')
           .where("status" , '==' ,true)
+          .orderBy('like' , "desc")
           .orderBy('createAt', 'desc')
           .limit(10).get();
           setCollectionHotNew(snapshortHot.docs)
