@@ -16,6 +16,7 @@ export const Themedark = ({
     static : '#f3f4f6',
     between : '#1f2937',
     between_heading : "coolGray.200",
+    reading : "white",
     action : 'coolGray.700',
     heading : 'coolGray.200',
     base : 'coolGray.300',
