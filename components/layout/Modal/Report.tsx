@@ -18,11 +18,12 @@ import firestore from '@react-native-firebase/firestore'
 interface ModalProps { 
      showReport : boolean
      setShowReport : any
+     userid : string
      data : any
      doc_id : string
 }
 
-const ReportModal : React.FC <ModalProps> = ({showReport ,setShowReport , data ,doc_id}) => {
+const ReportModal : React.FC <ModalProps> = ({showReport ,setShowReport , data , userid ,doc_id}) => {
      const theme:any = useContext(ThemeWrapper);
      const fstore = firestore();
      const toast = useToast();
@@ -35,6 +36,7 @@ const ReportModal : React.FC <ModalProps> = ({showReport ,setShowReport , data ,
           try{
                const report = await fstore.collection("Report");
                report.add({
+                    user_id : userid,
                     doc_id : doc_id , 
                     chapter_id : data.id,
                     content : reportArea,

@@ -601,10 +601,12 @@ const Readcontent : React.FC <pageProps> = () => {
 
      {!editable && 
           <ReportModal
+          userid = {useraccount?.[0].id}
           doc_id = {doc_id}
           data = {data}
           showReport = {showReport}
           setShowReport={setShowReport}
+          
           />
      } 
     </VStack>

@@ -36,6 +36,7 @@ import { AnyAction } from 'redux';
 import { RootState } from '../../../systems/redux/reducer';
 import { TouchableWithoutFeedback } from 'react-native';
 import { KeyboardAvoidingView  } from 'native-base';
+import sendNotification from '../../../services/notificationService';
 //Comment Components
 import Commentfield from '../../field/Commentfield';
 
@@ -51,12 +52,15 @@ interface Modalprops {
     snapPoints : any
     handleSheetChange : any
     id : string
+    owner : string
  }
-const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleSheetChange , id}) => {
+const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleSheetChange , id , owner}) => {
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const theme:any = useContext(ThemeWrapper)
     const InputRef = useRef(null)
+    const fstore = firestore();
 
+    const [targetToken ,setTargetToken] = useState<string>("");
     const [LobbyChat ,setLobbyChat] = useState<any[]>([])
     const [contentInput , setContentInput] = useState<{}>({content : "" , placeholder : "Enter your comment"});
     const [currentReply , setCurrentReply] = useState<string>('');
@@ -96,6 +100,23 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
     }
    
 
+    const findingTargetToken = async (target : string) => {
+        try{
+        const getTarget = await fstore.collection("Users").doc(target).get();
+        const getToken = getTarget.data()?.message_token;
+
+        if(getToken){
+            if(!targetToken){
+                setTargetToken(getToken);
+            }
+        }
+        return getToken;
+
+        }catch(error){
+            console.log("Failed to finding Target Token" ,error);
+        }
+    }
+
     const  PushingChat = async () => {
         try{
             if(!contentInput.content){
@@ -112,6 +133,29 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                             userid : userdata?.[0].id, 
                             timestamp: database.ServerValue.TIMESTAMP
                         })
+            
+            if(owner === userdata?.[0].id){
+                return
+            }
+
+            let message_token = targetToken;
+            if(!message_token){
+               message_token = await findingTargetToken(owner);          
+            }
+
+            if(message_token){
+                sendNotification({
+                    token : message_token,
+                    target : owner,
+                    body : `${userdata[0].username} has comment to your project.`,
+                    icon: userdata?.[0].pf_image,
+                    type : 'notify',
+                    project : id,
+                });
+            }else{
+                console.log("Not founds message token in your account");
+            }
+
             setContentInput({content : "" , placeholder : "Enter your comment"})
         }catch(error){
             console.log("ERROR: Failed to Post this comment" ,error)

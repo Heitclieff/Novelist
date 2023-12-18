@@ -37,6 +37,7 @@ import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { setMylibrary ,setMybookmarks ,setUser } from '../../systems/redux/action';
+import sendNotification from '../../services/notificationService';
 
 //@Components
 import Bottomnavigation from './components/Bottomnavigation'
@@ -82,6 +83,7 @@ const NovelContent : React.FC <Pageprops> = () => {
     const [pageID  , setPageID] = useState("");
     const [refreshing ,setRefreshing] = useState<boolean>(false);
 
+    const [targetToken , setTargetToken] = useState<string>("");
     const [limiters , setlimiters] = useState<boolean>(true);
     const [isMyOwn , setisMyOwn] = useState<boolean>(false);
     const [isLiked , setisLiked] = useState<boolean>(false)
@@ -306,12 +308,53 @@ const NovelContent : React.FC <Pageprops> = () => {
                             .update({favorite : MyfavoriteBooks})
             
             // const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
+            if(novelItem?.owner === myAccount?.[0].id){
+                return
+            }
+
+            let message_token = targetToken;
+            if(!message_token){
+               message_token = await findingTargetToken(novelItem?.owner);          
+            }
+
+            if(message_token){
+                sendNotification({
+                    token : message_token,
+                    target : novelItem?.owner,
+                    body : `${myAccount[0].username} has like your project.`,
+                    icon: myAccount?.[0].pf_image,
+                    type : 'notify',
+                    project : id,
+                });
+            }else{
+                console.log("Not founds message token in your account");
+            }
 
             dispatch(setUser([{...myAccount[0] , favorite : MyfavoriteBooks}]))
         }catch(error){
             console.log("Failed To Like a Book",error)
         }
     }
+
+    
+    const findingTargetToken = async (target : string) => {
+        try{
+        const getTarget = await firestore().collection("Users").doc(target).get();
+        const getToken = getTarget.data()?.message_token;
+
+        if(getToken){
+            if(!targetToken){
+                setTargetToken(getToken);
+            }
+        }
+        return getToken;
+
+        }catch(error){
+            console.log("Failed to finding Target Token" ,error);
+        }
+    }
+
+
 
     const setMylibraryBooks = async () : Promise<void> => {
         let status = "error";
@@ -621,6 +664,7 @@ const NovelContent : React.FC <Pageprops> = () => {
         BottomRef={bottomSheetModalRef} 
         snapPoints = {snapPoints} 
         id = {id}
+        owner = {novelItem?.owner}
         handleSheetChange = {handleSheetChange}
         />
     </BottomSheetModalProvider>
