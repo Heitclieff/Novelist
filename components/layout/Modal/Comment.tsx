@@ -143,6 +143,8 @@ const CommentModal: React.FC<Modalprops> = ({BottomRef , snapPoints , handleShee
                message_token = await findingTargetToken(owner);          
             }
 
+            console.log("Owner" , owner);
+
             if(message_token){
                 sendNotification({
                     token : message_token,

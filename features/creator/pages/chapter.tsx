@@ -103,6 +103,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     return document;
   }, [chapterdocs.content , isCreate]);
 
+
   useEffect(() => {
   }, [separatedChapterdocs , refreshing])
 
@@ -241,6 +242,7 @@ if(initial) return(
                             data={[0]}
                             ItemSeparatorComponent={<Box h='2' />}
                             renderItem={() => {
+                  
                               return(
                                 <ChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
                               )

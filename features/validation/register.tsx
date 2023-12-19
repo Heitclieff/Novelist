@@ -42,7 +42,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : "Try different from previous username.",
     email : 'Try different from previous email.',
     password : "Try different from previous password.",
-    phone : "",
+    Phone : "",
     BirthDate : " ",
   })
 
@@ -50,7 +50,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : false , 
     email :false , 
     password : false,
-    phone : false,
+    Phone : false,
     BirthDate : false,
   })
 
@@ -58,7 +58,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
     username : "",
     email : "",
     password : "",
-    phone : "",
+    Phone : "",
     BirthDate : "" ,
   });
 
@@ -113,7 +113,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         let error_message = "Try different from previous password";
 
         if(input.length > 0){
-            if(input.length > 6){
+            if(input.length >= 6){
                 isSecured = false;
             }else{
               error_message = "password not enough secured";
@@ -135,6 +135,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
           }
         }
 
+        console.log(isSecured)
        
         setregisterFormsError((prev) => ({...prev , [filed] : error_massage}))
         setRegisterFormsStatus((prev) => ({...prev , [filed] : isSecured}))
@@ -144,22 +145,20 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         Keyboard.dismiss();
         setDatapickerOpen(false);
 
-        if(registerForms.email && registerForms.username && registerForms.phone && registerForms.password){
-          if(!registerFormsStatus.email && !registerFormsStatus.username && !registerFormsStatus.phone && !registerFormsStatus.password){
+        if(registerForms.email && registerForms.username && registerForms.Phone && registerForms.password){
+          if(!registerFormsStatus.email && !registerFormsStatus.username && !registerFormsStatus.Phone && !registerFormsStatus.password){
             setSignup(true)
           }
         }
 
       }
 
-      if(registerForms.email && registerForms.username && registerForms.password && registerForms.BirthDate){
-        if(!registerFormsStatus.email && !registerFormsStatus.username && !registerFormsStatus.password && !registerFormsStatus.BirthDate){
+      if(registerForms.email && registerForms.username && registerForms.password && registerForms.Phone && registerForms.BirthDate){
+        if(!registerFormsStatus.email && !registerFormsStatus.username  && !registerFormsStatus.password &&  !registerFormsStatus.Phone && !registerFormsStatus.BirthDate){
           setSignup(true)
         }
       }
   }
-
-  
 
   const handleRegister = async () => {
     setisLoading(true);
@@ -190,7 +189,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         follower: 0,
         following: 0,
         notification : 0,
-        phone : registerForms.phone,
+        phone : registerForms.Phone,
         createAt : firestore.FieldValue.serverTimestamp(),
         birthDate: selectedDate,
         message_token : "",
@@ -202,6 +201,15 @@ const RegisterPage: FC<RegisterPageProps> = () => {
       }).catch((error)=>{
           console.log('Error add document',error)
       })
+
+      await db.collection("Scores").doc(authRef.user.uid).set({
+        sum: 0,
+        totalbook: 0,
+        score: 0,
+        username: registerForms.username,
+      })
+
+
     }catch(error){
       console.log("ERROR: faied to Register" ,error)
     }

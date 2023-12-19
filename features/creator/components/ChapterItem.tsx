@@ -45,9 +45,10 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      
     const fetchingDuringTask = () => {
           try{
+
                const reference = database()
                .ref(`/task/${doc_id}/${data.id}`)
-        
+                 
                const recivedReference = (snapshot:any) => {    
                     if(!snapshot.exists){
                          return false

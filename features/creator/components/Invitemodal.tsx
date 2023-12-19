@@ -47,6 +47,8 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
      const [selectedInvite , setSelectedInvited] = useState<any[]>([])
      const [access , setAccess] = useState<any[]>([]);
 
+
+     console.log(selectedInvite)
      const filteruserwithoutPending = () => {
           if(userdocs?.teams.length == 1) {
                setuserDisplay(userdocs.teams);
@@ -64,7 +66,7 @@ export const Invitemodal : React.FC <containerProps> = ({showModal , setShowModa
                return
           }
 
-          if(selectedInvite.length == 2){
+          if(selectedInvite.length == 3){
                Alert.alert("Error" , "this chapter was full");
                return
           }

@@ -274,8 +274,6 @@ const NovelContent : React.FC <Pageprops> = () => {
         }catch(error){
             console.log("Add Book to Bookmarks Failed" , error)
         }
-    
-       
     }
 
     const setBookisLiked = async (liked:boolean) : Promise<void> => {
@@ -289,25 +287,33 @@ const NovelContent : React.FC <Pageprops> = () => {
                 increment += 1
                 MyfavoriteBooks.push(id);
                 await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(1)})
-                // if (!novelItem.multiproject) {
-                //     await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(1)})
-                // }
-                // 
+
+                if (!novelItem?.multiproject) {
+                    
+                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(1)})
+                    
+                }
+                const scoreRef = await db.collection('Scores').doc(userDoc).update({score: firestore.FieldValue.increment(1)})
+                
             }else{
                 increment -= 1
                 const deleteBooks = MyfavoriteBooks.filter(item => item !== id);
                 MyfavoriteBooks = deleteBooks;
                 await db.collection('Novels').doc(id).update({like : firestore.FieldValue.increment(-1)})
-                // if (!novelItem.multiproject) {
-                //     await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
-                // }
+             
+                if (!novelItem.multiproject) {
+                    await db.collection('Scores').doc(userDoc).update({sum: firestore.FieldValue.increment(-1)})
+                }
+
+                const scoreRef = await db.collection('Scores').doc(userDoc).update({score: firestore.FieldValue.increment(-1)})
+                
             }
             setnovelItem({...novelItem , like : increment})
 
             const userRef  = await db.collection('Users').doc(userDoc)
                             .update({favorite : MyfavoriteBooks})
             
-            // const scoreRef = await db.collection('Scores').doc(userDoc).update({score: increment})
+         
             if(novelItem?.owner === myAccount?.[0].id){
                 return
             }

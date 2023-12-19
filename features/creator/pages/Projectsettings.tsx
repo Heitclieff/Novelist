@@ -268,6 +268,7 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
           SendAlert(status , "Saved changes" , "Saving failed" , toast)
      }
 
+    
      const DeleteProject =  async () : Promise<void>   => {
           let status = 'error'
           try{
@@ -288,16 +289,22 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
 
                     const NewProject = myuser.project.filter((project) => project !== id)
                     getusers.doc(myuser.id.toString()).update({project : NewProject});
+
+                    await firebase.collection('Scores').doc(myuser.id).update({sum : firestore.FieldValue.increment(-1)})
                }
                else{
                     console.log("METHOD : Multiple Project")
 
                     const ProjectMember = projectdocument.creators?.map((member) => member.userDoc);
 
+                 
                     if(!ProjectMember?.length > 0){
                          console.log("Failed To delete Because Not found any Member.")
                          return
                     }
+
+                    
+                   
                     const getproject =  await getusers.where(firestore.FieldPath.documentId(), 'in' , ProjectMember).get();
                     const DeleteUserProject = getproject.docs?.map((doc) => ({
                          id : doc.id,
@@ -312,6 +319,12 @@ const Projectsettings : React.FC <Pageprops>= ({route}) => {
      
                     batch.commit()
                }
+
+               
+               await firebase.collection('Scores').doc(myuser.id).update({
+                    score : firestore.FieldValue.increment(-1) , 
+                    totalbook : firestore.FieldValue.increment(-1)
+               })
 
                await getnovels.collection('Creator').parent?.delete();
                await getnovels.collection('Chapters').parent?.delete();

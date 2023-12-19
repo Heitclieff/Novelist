@@ -94,6 +94,7 @@ const Readcontent : React.FC <pageProps> = () => {
           {text: 'yes', onPress: () => removecommitRequest()},
      ]);
 
+     console.log(id);
 
      const initialContent = async () : Promise <void> => {
           if(editable){

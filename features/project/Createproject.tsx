@@ -1,4 +1,4 @@
-import React,{useContext, useEffect, useState , useRef , useMemo , useCallback} from 'react'
+import React,{useContext, useEffect, useState , useRef , useMemo , useCallback, useDebugValue} from 'react'
 import { 
 Box, 
 VStack , 
@@ -216,7 +216,7 @@ const Createproject : React.FC = () => {
                     ...projectOption, 
                }
 
-               console.log(createDoc)
+     
                const docRef = await getnovel.add({...createDoc});
                const getChapter =  getnovel.doc(docRef.id).collection('Chapters');
                const getCreator =  getnovel.doc(docRef.id).collection('Creator');
@@ -237,6 +237,8 @@ const Createproject : React.FC = () => {
                     docs : [{...createDoc , id : docRef.id} , ...Project_previous]
                }));
 
+               const scoreRef = await db.collection('Scores').doc(userdocs.id).update({totalbook : firestore.FieldValue.increment(1)})
+                
                console.log("Create Project Success id :" ,docRef.id)
                status = "success";
                navigation.goBack();
