@@ -102,7 +102,7 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
                     <VStack justifyContent={'center'} pt = {1}>
                          <Text color={theme.Text.heading} fontWeight={'semibold'}>{title}</Text>
                          <HStack alignItems={'center'} space = {2}>
-                              <Box w={1} h= {1} bg = {status ? 'green.400' : 'red.400'} rounded={'full'}></Box>
+                              <Box w={1} h= {1} bg = {status ? theme.themeMode === "Dark" ? 'green.400' : 'green.600'  : 'red.400'} rounded={'full'}></Box>
                               <Text color = {theme.Text.base} fontSize={'xs'}>{status ? "Public" : "Private"}</Text>
                          </HStack>
                     </VStack>
@@ -126,7 +126,7 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
                                                        <Box w = '25' h = '25' rounded={'full'} bg = {theme.Bg.action} justifyContent={'center'} alignItems={'center'}>
                                                        <AntdesignIcon 
                                                             size={10}
-                                                            color = {'white'}
+                                                            color = {theme.Icon.between}
                                                             name = 'plus'/>
                                                        </Box>
                                                   }

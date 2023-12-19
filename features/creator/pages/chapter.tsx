@@ -192,7 +192,7 @@ if(initial) return(
     <VStack flex={1} bg={theme.Bg.base}>
       <Memorizednavigation title="Chapters"
         rightElement={[
-          { icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id , setCreateChapter : setCreateChapter}) },
+          { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id , setCreateChapter : setCreateChapter}) },
           { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='appstore-o' />, navigate: navigation.openDrawer }
         ]}
       />

@@ -210,7 +210,7 @@ const Team : React.FC <pageprops> = ({route}) => {
                rightElement={[
                     {
                          status: isDisable,
-                         icon: <AntdesignIcon size={18} color={theme.Icon.static} name='plus' />,
+                         icon: <AntdesignIcon size={18} color={theme.Icon.between} name='plus' />,
                          navigate: () => navigation.navigate('Search', { fixedsearch: true })
                     },
                     { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='appstore-o' />, navigate: navigation.openDrawer }
