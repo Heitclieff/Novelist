@@ -156,7 +156,8 @@ const Notification : React.FC = () => {
           updatedProject.push(data.project);
   
           await creatordoc.ref.update({pending : false});
-          await getuser.update({project : updatedProject})       
+          await getuser.update({project : firestore.FieldValue.arrayUnion(data.project)}) 
+                
           dispatch(setUser([{...useritem , project : updatedProject}]))
         }
 

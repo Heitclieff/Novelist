@@ -256,7 +256,7 @@ const Readcontent : React.FC <pageProps> = () => {
                     dispatch(setChaptercontent({...chapterdocs , content : removechapter , id : chapterdocs.id}))
                }
 
-               navigation.goBack();
+               navigation.navigate('Chapters');
                console.log("Approved this request success");
    
           }catch(error){
@@ -388,20 +388,23 @@ const Readcontent : React.FC <pageProps> = () => {
                
           }
      }
-
      const updatedContent = async () : Promise <void> => {
           setLoading(true);
           let toastStatus = "error"
+          
           try {
+               const getnovel = firestore().collection("Novels").doc(doc_id);
+               const snapChapters = getnovel.collection("Chapters").doc(id);
+
                const currentDate = new Date();
                const formattedDate = {
                    seconds: Math.floor(currentDate.getTime() / 1000),
                    nanoseconds: (currentDate.getTime() % 1000) * 1000000,
                };
                const userdocs = useraccount?.[0]
-               
                const index = chapterdocs.content.findIndex(chapter => chapter.id === id);
 
+               
                const updateddocs = chapterdocs.content;
 
                updateddocs[index].updateAt = formattedDate
@@ -411,12 +414,11 @@ const Readcontent : React.FC <pageProps> = () => {
                dispatch(setChaptercontent({content : updateddocs, ...chapterdocs}))
                dispatch(setChapterWriteContent({contentdocs : inputValue, docid : id , id : contentid}));
         
-               const getchapter = chapterdocs.snapshotchapter.doc(id)
-               const getcontent = getchapter.collection('Content');
+               const getcontent = snapChapters.collection('Content');
                const timestamp = firestore.FieldValue.serverTimestamp();
 
                const contentRef = await getcontent.doc(contentid).update({content : inputValue});
-               const docRef = await getchapter.update({
+               const docRef = await snapChapters.update({
                     updateAt : timestamp,
                     updatedBy : userdocs.id,
                });
@@ -433,7 +435,7 @@ const Readcontent : React.FC <pageProps> = () => {
           
      }
 
-
+     
 
       const GoBackwithReference = () => {
           navigation.navigate('Chapters');

@@ -61,6 +61,7 @@ const Searchpage : React.FC =() => {
                     .filter(doc => doc.data().status === true) 
                     .map(doc => ({ id: doc.id, ...doc.data() }));
 
+
                     setNovelResults(noveldocs);
                     setSearchResults(users);
      
@@ -73,10 +74,11 @@ const Searchpage : React.FC =() => {
                     setNovelResults([]);
                     setSearchResults(users);
                }
-               else if (novel_query?.length > 1){
+               else if (novel_query?.length > 0){
                     const noveldocs = novel_query
                     .filter(doc => doc.data().status === true) 
                     .map(doc => ({ id: doc.id, ...doc.data() }));
+
                     setSearchResults([])
                     setNovelResults(noveldocs);
                }
@@ -111,7 +113,7 @@ const Searchpage : React.FC =() => {
           }
      }
 
-     const searchnovel = async (value : string) : Promise<void> => {
+     const searchnovel = async (value : string) : Promise<T> => {
           if(!value) {
                setSearchResults([]);
                return
@@ -124,6 +126,7 @@ const Searchpage : React.FC =() => {
                .limit(5)
                .get()
 
+               
                return novelRef.docs;
                // if(novelRef.docs.length > 0) {
                //      const noveldocs = novelRef.docs.map((doc) => ({id: doc.id ,...doc.data()}));
