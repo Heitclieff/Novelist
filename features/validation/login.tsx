@@ -10,6 +10,8 @@ import {
   HStack,
 } from 'native-base';
 import { Alert } from 'react-native';
+
+import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { useNavigation } from '@react-navigation/native';
 import { WarningOutlineIcon } from 'native-base';
@@ -22,6 +24,7 @@ interface LoginPageProps {
 const LoginPage: FC<LoginPageProps> = () => {
   const theme:any = useContext(ThemeWrapper);
   const navigation = useNavigation();
+  const db = firestore();
   const [isLoading ,setLoading] = useState<boolean>(false);
   const [getforms , setForms] =  useState<{}>({
       email : "",
@@ -36,23 +39,35 @@ const LoginPage: FC<LoginPageProps> = () => {
         return
       }
 
-      auth().signInWithEmailAndPassword(getforms.email, getforms.password).then((target)=>{
-        navigation.navigate("Index")
-      }).catch((error)=>{
-        let error_message=  "Not founds any Account."
+      try {
+        const target = await auth().signInWithEmailAndPassword(getforms.email, getforms.password);
+        const getUsers = await db.collection("Users").doc(target.user.uid).get();
+        const Usersdocs = getUsers.data();
 
-        if(error.code === "auth/invalid-email" && error.code === "auth/wrong-password"){
-          error_message = "Not founds any Account."
+        if(target.user.uid){
+          if (Usersdocs?.disable) {
+            setLoading(false);
+            Alert.alert('Error', "Your Account was Disabled. Please try again!");
+            return;
+          }
         }
-        else if(error.code === "auth/invalid-email" || error.code === "auth/wrong-password"){
-          error_message = "The Email or password is invalid."
+        
+      
+        navigation.navigate("Index");
+      } catch (error) {
+        let error_message = "Not found any Account.";
+      
+        if (error.code === "auth/invalid-email" || error.code === "auth/wrong-password") {
+          error_message = "The Email or password is invalid.";
         }
+      
         Alert.alert('Error', error_message, [
           {
             text: 'OK',
           },
         ]);
-    })
+      }
+
     }catch(error){
       console.log("Failed to Login" , error);
     }

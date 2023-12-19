@@ -40,6 +40,7 @@ const Index : React.FC = () => {
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
     const navigation = useNavigation();
+    const [userid , setuserid] = useState<string>("");
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
@@ -113,9 +114,17 @@ const Index : React.FC = () => {
           if(uid){
             const snapUserData = await db.collection('Users').doc(uid).get()  
             const getUserdata = snapUserData.data();
-
+            setuserid(uid);
+      
             if(getUserdata){
               let userData = [{ id: snapUserData.id, ...getUserdata}]
+
+              if(findingDisabled(userData)){
+              //  if(auth().currentUser.uid){
+              //   await auth().signOut();
+              //  }
+                return
+              }
 
               if(!userData?.[0].message_token){
                 setupMessageToken(uid);
@@ -155,6 +164,13 @@ const Index : React.FC = () => {
             score: data.score,
           })
         });
+      }
+
+      const findingDisabled = (data : string) => {
+          if(data[0]?.disable){
+            Alert.alert("Security" , "your account was Disabled please try agian.")
+            return true
+          }
       }
 
       const getLibraryContent = async (uid):Promise<T> => {
@@ -301,6 +317,28 @@ const Index : React.FC = () => {
           },
         });
       }
+
+      useEffect(() => {
+        if(userid){
+          const subscriber = firestore()
+          .collection('Users')
+          .doc(userid)
+          .onSnapshot((doc) => {
+            const userdata  = doc.data();
+            console.log(userdata)
+            if(userdata.disable){
+              console.log("Do this")
+              Alert.alert("Security" , "your account was Disabled please try agian.")
+              auth().signOut();
+              navigation.navigate("Login")
+              return
+            }
+          });
+    
+        return () => subscriber();
+        }
+        
+      }, [userdata]);
 
       useEffect(() => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {

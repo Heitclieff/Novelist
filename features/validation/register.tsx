@@ -189,6 +189,7 @@ const RegisterPage: FC<RegisterPageProps> = () => {
         follower: 0,
         following: 0,
         notification : 0,
+        disable : false,
         phone : registerForms.Phone,
         createAt : firestore.FieldValue.serverTimestamp(),
         birthDate: selectedDate,
