@@ -18,8 +18,9 @@ const LeaderItem : React.FC <containerProps> = ({index, item}) => {
     const theme:any = useContext(ThemeWrapper);
     const navigation = useNavigation();
 
+
     return (
-        <Pressable onPress=  {() => navigation.navigate('ProfileStack', {profile : {pf_image : item.image , bg_image : item.image ,...item}})}>
+        <Pressable onPress=  {() => navigation.navigate('ProfileStack', {profile : {...item.account}})}>
         {({
             isHovered,
             isFocused,
@@ -43,7 +44,7 @@ const LeaderItem : React.FC <containerProps> = ({index, item}) => {
                 <FastImage
                 style={{ width: 50, height: 50, borderRadius: 25 }}
                 source={{
-                  uri : item.image  , 
+                  uri : item.account.pf_image  , 
                   priority : FastImage.priority.normal
                 }}
                 alt = "images"
@@ -55,7 +56,7 @@ const LeaderItem : React.FC <containerProps> = ({index, item}) => {
             </Box>
             <HStack w="70%" space={3} pl={3} justifyContent="space-between" pr={5}>
             <Text color={theme.Text.base} fontSize="md" fontWeight="normal">
-                {!item ? 'Default Username' : item.username}
+                {!item ? 'Default Username' : item.account.username}
             </Text>
             <Text color={theme.Text.base} fontSize="md" fontWeight="semibold">
                 {!item ? '0' : item.score}

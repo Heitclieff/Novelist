@@ -19,8 +19,8 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
             <Box mt = {10}>
                 {data.length > 0 ? (
                 <LeaderAvatarfield  
-                image = {data[1].image}
-                username = {data[1].username}
+                image = {data[1].account.pf_image}
+                username = {data[1].account.username}
                 point = {data[1].score}
                 size =  {100}
                 color = {'teal.500'}
@@ -40,8 +40,8 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
             {data.length > 0 ? 
             (
             <LeaderAvatarfield size =  {120} 
-            image = {data[0].image}
-            username = {data[0].username}
+            image = {data[0].account.pf_image}
+            username = {data[0].account.username}
             point = {data[0].score}
             color = "amber.400"
             index = {1}
@@ -60,8 +60,8 @@ const Leadheader : React.FC <containerProps> = ({data}) => {
                 {data.length > 0 ?
                 (
                     <LeaderAvatarfield 
-                    image = {data[2].image}
-                    username = {data[2].username}
+                    image = {data[2].account.pf_image}
+                    username = {data[2].account.username}
                     point = {data[2].score}
                     size =  {100}
                     color = "blue.400"

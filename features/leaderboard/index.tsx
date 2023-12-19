@@ -106,7 +106,7 @@ const Leaderboard: React.FC <pageProps> = () => {
         const getUsers = await  db.collection("Users").doc(id).get();
         const userdocs  = getUsers.data();
 
-        return userdocs?.pf_image
+        return {...userdocs, id : id}
     }
 
     const fetchLeaderBoard = async () => {
@@ -117,9 +117,11 @@ const Leaderboard: React.FC <pageProps> = () => {
             const userDataPromises = snapLeader.docs.map(doc => fetchingUsers(doc.id));
             const userDataArray = await Promise.all(userDataPromises);
             
+
+            console.log(userDataArray);
             const data = snapLeader.docs.map((doc, index) => ({ 
                 id: doc.id, 
-                image : userDataArray[index],
+                account : userDataArray.find((item) => item.id === doc.id),
                 ...doc.data() 
             }));
             
@@ -173,7 +175,7 @@ const Leaderboard: React.FC <pageProps> = () => {
                         <AnimatedBackground
                                 id='background-images'
                                 source={{
-                                    uri :header[0].image ,
+                                    uri :header?.[0].account.pf_image ,
                                     priority : FastImage.priority.normal,
                                     cache: FastImage.cacheControl.cacheOnly,
                                 }}
