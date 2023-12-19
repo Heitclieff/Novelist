@@ -79,11 +79,50 @@ const Leaderboard: React.FC <pageProps> = () => {
         });
     }
 
+    const callScore = async () => {
+        const mainScoreRef = db.collection('Scores')
+        const snapSocreDoc = await mainScoreRef.get()
+        // console.log(snapSocreDoc.docs)
+        let snapData = snapSocreDoc.docs
+        const score = snapData.map(doc => {
+          const data = doc.data();
+          const sum = data.sum;
+          const totalbook = data.totalbook;
+          const scoreValue = totalbook === 0 ? 0 : Math.floor(sum / totalbook);
+          return { id: doc.id, score: scoreValue };
+        });
+        console.log(score)
+        score.forEach(async(data) => {
+          const docRef = db.collection("Scores").doc(data.id);
+        
+          await docRef.update({
+            score: data.score,
+          })
+        });
+    }
+
+
+    const fetchingUsers = async (id : string) =>{
+        const getUsers = await  db.collection("Users").doc(id).get();
+        const userdocs  = getUsers.data();
+
+        return userdocs?.pf_image
+    }
+
     const fetchLeaderBoard = async () => {
         try{
             const mainLeaderRef = db.collection('Scores')
+ 
             const snapLeader = await mainLeaderRef.get()
-            const data = snapLeader.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const userDataPromises = snapLeader.docs.map(doc => fetchingUsers(doc.id));
+            const userDataArray = await Promise.all(userDataPromises);
+            
+            const data = snapLeader.docs.map((doc, index) => ({ 
+                id: doc.id, 
+                image : userDataArray[index],
+                ...doc.data() 
+            }));
+            
             data.sort((a, b) => b.score - a.score);
             const headerBoard = data.slice(0,3);
 
@@ -104,6 +143,10 @@ const Leaderboard: React.FC <pageProps> = () => {
       }, []);
 
     
+    useEffect(() => {
+        callScore();
+    },[])
+
     useEffect(() => {
         const shouldrefresh = itemleader?.length <= 0 || refreshing
         if(shouldrefresh)
