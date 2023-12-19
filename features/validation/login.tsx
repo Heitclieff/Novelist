@@ -76,7 +76,8 @@ const LoginPage: FC<LoginPageProps> = () => {
                     width: '40%',
                     height: '70%',
                     opacity : 1,
-                    position : 'relative'
+                    position : 'relative',
+                    borderRadius : 50
                 }}
 
               />
@@ -141,7 +142,13 @@ const LoginPage: FC<LoginPageProps> = () => {
       <HStack w = "80%" h = "50px" alignItems = {"flex-end"} space = {1}>
         <Text color = {theme.Text.description}>Dont't have an account?</Text>
         <Text color = {'teal.500'} onPress= {() => navigation.navigate("Register")}>Sign up</Text>
+     
       </HStack>
+      <HStack pt=  {5} alignItems={'flex-end'} >
+        <Text onPress = {() => navigation.navigate("Forget")} color = {theme.Text.base}>Forget password</Text>
+      </HStack>
+     
+
     </VStack>
   );
 };

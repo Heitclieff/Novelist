@@ -26,6 +26,8 @@ const Createproject = lazy(() => import('../../../features/project/Createproject
 const CreateChapter = lazy(() => import ('../../../features/creator/pages/createchapter'))
 const Tag = lazy(() => import('../../../features/creator/pages/Tag'));
 const Readcontent = lazy(() => import('../../../features/reader/content'));
+
+const Forgetpage =  lazy(() => import('../../../features/validation/forget'))
 const Loginpage = lazy(() => import('../../../features/validation/login'));
 const Registerpage = lazy(() => import('../../../features/validation/register'));
 
@@ -87,6 +89,17 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             }
           </Stack.Screen>
 
+
+          <Stack.Screen 
+          name = "Forget"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <Forgetpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
 
           <Stack.Screen 
           name = "Notification"
