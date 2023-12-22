@@ -1,14 +1,31 @@
 import React , {useContext} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
+import { Alert } from 'react-native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { 
 HStack , 
 IconButton , 
 Icon } from 'native-base'
 
-interface containerProps {}
-const Deletebutton : React.FC <containerProps> = () => {
+interface containerProps {
+     action : any
+     id : string
+     doc_id : string
+     title : string
+}
+const Deletebutton : React.FC <containerProps> = ({action , id ,doc_id , title }) => {
      const theme:any = useContext(ThemeWrapper);
+
+     const SavingAlertDailog = () => 
+     Alert.alert('Remove', `you want to remove ${title} ?`, [
+          {
+               text: 'Cancel',
+               style: 'cancel',
+          },
+          {text: 'Confirm', onPress: () => action(id,doc_id)},
+          
+          ]);
+
   return (
      <HStack  
      flex = {1} 
@@ -21,6 +38,7 @@ const Deletebutton : React.FC <containerProps> = () => {
      overflow={'hidden'}>
 
           <IconButton 
+          onPress={SavingAlertDailog}
           bg = {'rose.600'}
           colorScheme={'rose'}
           size = 'md'

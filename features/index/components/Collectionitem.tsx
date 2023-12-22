@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect} from 'react'
 import { 
 Box,
 VStack,
@@ -11,6 +11,7 @@ Pressable,
  } from 'native-base'
 import { Image } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -22,9 +23,18 @@ interface CollectionProps {
   avatar : any,
 }
 
-const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,avatar = null }) => {
+const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, like ,avatar = null }) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+
+  useEffect(() => {
+    FastImage.preload([
+      {
+        uri: images,
+      },
+    ]);
+  },[images])
+  
   return (
     <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>
       {({
@@ -44,11 +54,14 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,a
             id = "Displaycase"
             h = {210}
             >
-              <Image
-              style={{width : '100%', height : '100%'}}
-              contentFit= 'cover'
-              source={{uri : images}}
+              <FastImage
+              style={{width : '100%', height : '100%' }}
+              source={{
+                uri : images  , 
+                header :{Authorization : "someAuthToken"},
+                priority : FastImage.priority.normal}}
               alt = "images"
+              resizeMode={FastImage.resizeMode.cover}
               />
             </Box>
             <HStack justifyContent={'space-between'} w = '100%'>
@@ -83,7 +96,7 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images ,a
                       <Text 
                         fontSize={'xs'}
                         color={theme.Text.description}
-                        >4.7k
+                        >{like}
                         </Text>
                        
                     </HStack>

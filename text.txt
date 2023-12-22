@@ -1,0 +1,235 @@
+//example how to fetch data from firebase
+
+//get user collection
+const users_data = await firestore().collection('Users').get()
+const U_data = []
+for (const userDoc of users_data.docs) {
+  const createdAt = userDoc.data().createAt.toDate();
+  const birthDate = userDoc.data().birthDate.toDate();
+  U_data.push({ id: userDoc.id, ...userDoc.data(), createAt: createdAt, birthDate: birthDate })
+}
+U_data.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Background Image: ${item.bg_image}`);
+  console.log(`Birth Date: ${item.birthDate}`);
+  console.log(`Created At: ${item.createAt}`);
+  console.log(`Description: ${item.description}`);
+  console.log(`Email: ${item.email}`);
+  console.log(`ID: ${item.id}`);
+  console.log(`Password: ${item.password}`);
+  console.log(`Profile Image: ${item.pf_image}`);
+  console.log(`Phone: ${item.phone}`);
+  console.log(`Username: ${item.username}`);
+  console.log('-------------------------');
+  return null;
+});
+
+// get project collection
+const projects_data = await firestore().collection('Projects').get()
+const project_Data = []
+for (const projectDoc of projects_data.docs) {
+  project_Data.push({ id: projectDoc.id, ...projectDoc.data()})
+}
+project_Data.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Comment Status: ${item.comment_status}`);
+  console.log(`Commit Status: ${item.commit_status}`);
+  console.log(`Creators: ${item.creater}`);
+  console.log(`ID: ${item.id}`);
+  console.log(`Name: ${item.name}`);
+  console.log(`Overview: ${item.overview}`);
+  console.log(`Owner: ${item.owner}`);
+  console.log(`Project Status: ${item.project_status}`);
+  console.log(`Rating: ${item.rating}`);
+  console.log('-------------------------');
+  return null;
+});
+
+//get novel collection
+const novels_data = await firestore().collection('Novels').get()
+const novel_Data = []
+for (const novelDoc of novels_data.docs) {
+  const createdAt = novelDoc.data().createAt.toDate();
+  const lastUpdate = novelDoc.data().lastUpdate.toDate();
+  novel_Data.push({ id: novelDoc.id, ...novelDoc.data(), createAt: createdAt, lastUpdate: lastUpdate})
+}
+console.log('nd',novel_Data)
+novel_Data.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Create At: ${item.createAt}`);
+  console.log(`ID: ${item.id}`);
+  console.log(`Image: ${item.image}`);
+  console.log(`Last Update: ${item.lastUpdate}`);
+  console.log(`Like: ${item.like}`);
+  console.log(`Overview: ${item.overview}`);
+  console.log(`Status: ${item.status}`);
+  console.log(`Title: ${item.title}`);
+  console.log(`View: ${item.view}`);
+  console.log('-------------------------');
+  return null;
+});
+
+//get newestNovels
+const snapshot = await firestore().collection('Novels').orderBy('createAt', 'desc').limit(10).get();
+const newestNovels = [];
+for (const doc of snapshot.docs) {
+  const lastUpdate = doc.data().lastUpdate.toDate();
+  const createdAt = doc.data().createAt.toDate();
+  const creater = [];
+  const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
+  for (const projectDoc of projectSnapshot.docs) {
+    const userDoc = projectDoc.data().creater;
+    for (const user of userDoc) {
+      await firestore().collection('Users').doc(user).get().then((uData) => {
+        const data = uData.data()
+        creater.push({ id: user, username: data.username, image: data.pf_image });
+      })
+    }
+    const image = projectDoc.data().image;
+    newestNovels.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image, lastUpdate: lastUpdate });
+  }
+}
+newestNovels.sort((a, b) => b.view - a.view);
+newestNovels.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Create At: ${item.createAt}`);
+  console.log(`creater: ${item.creater}`) // this is object
+  console.log(`ID: ${item.id}`);
+  console.log(`Image: ${item.image}`);
+  console.log(`Last Update: ${item.lastUpdate}`);
+  console.log(`Like: ${item.like}`);
+  console.log(`Overview: ${item.overview}`);
+  console.log(`Status: ${item.status}`);
+  console.log(`Title: ${item.title}`);
+  console.log(`View: ${item.view}`);
+  console.log('-------------------------');
+  return null;
+});
+
+//get topnewNovel
+const snapshotnt = await firestore().collection('Novels').orderBy('createAt', 'desc').get()
+const topnewData = [];
+for (const doc of snapshotnt.docs) {
+  const createdAt = doc.data().createAt.toDate();
+  const lastUpdate = doc.data().lastUpdate.toDate();
+  const creater = [];
+
+  const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
+  for (const projectDoc of projectSnapshot.docs) {
+    const userDocs = projectDoc.data().creater;
+    for (const user of userDocs) {
+      await firestore().collection('Users').doc(user).get().then((uData) => {
+        const data = uData.data()
+        creater.push({ id: user, username: data.username, image: data.pf_image });
+      })
+    }
+    const image = projectDoc.data().image;
+    topnewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image, lastUpdate: lastUpdate });
+  }
+}
+topnewData.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Create At: ${item.createAt}`);
+  console.log(`creater: ${item.creater}`) // this is object
+  console.log(`ID: ${item.id}`);
+  console.log(`Image: ${item.image}`);
+  console.log(`Last Update: ${item.lastUpdate}`);
+  console.log(`Like: ${item.like}`);
+  console.log(`Overview: ${item.overview}`);
+  console.log(`Status: ${item.status}`);
+  console.log(`Title: ${item.title}`);
+  console.log(`View: ${item.view}`);
+  console.log('-------------------------');
+  return null;
+});
+
+/get mostviewNovel
+const snapshotmv = await firestore().collection('Novels').orderBy('view', 'desc').get();
+const mostviewData = [];
+
+for (const doc of snapshotmv.docs) {
+  const createdAt = doc.data().createAt.toDate();
+  const creater = [];
+
+  const projectSnapshot = await firestore().collection('Projects').where('novelDoc', '==', doc.id).get();
+  for (const projectDoc of projectSnapshot.docs) {
+    const userDocs = projectDoc.data().creater;
+    for (const user of userDocs) {
+      await firestore().collection('Users').doc(user).get().then((uData) => {
+        const data = uData.data()
+        creater.push({ id: user, username: data.username, image: data.image });
+      })
+    }
+    const image = projectDoc.data().image;
+    mostviewData.push({ id: doc.id, ...doc.data(), createAt: createdAt, creater: creater, image: image });
+  }
+}
+mostviewData.map((item, index) => {
+  console.log(`Item ${index + 1}:`);
+  console.log(`Create At: ${item.createAt}`);
+  console.log(`creater: ${item.creater}`) //this is object
+  console.log(`ID: ${item.id}`);
+  console.log(`Image: ${item.image}`);
+  console.log(`Last Update: ${item.lastUpdate}`);
+  console.log(`Like: ${item.like}`);
+  console.log(`Overview: ${item.overview}`);
+  console.log(`Status: ${item.status}`);
+  console.log(`Title: ${item.title}`);
+  console.log(`View: ${item.view}`);
+  console.log('-------------------------');
+  return null;
+});
+
+//get library at present only PK1 has library
+let uid = auth().currentUser.uid
+const libra = await firestore().collection('Libraries').where('userDoc', '==', uid).get()
+const libra_data = []
+for (const libraDoc of libra.docs) {
+  const date_add = libraDoc.data().date_add.toDate();
+  const data = libraDoc.data()
+  libra_data.push({ id: libraDoc.id, ...libraDoc.data(), date_add: date_add })
+}
+
+const uid = auth().currentUser.uid
+const libra = await firestore().collection('Libraries').where('userDoc', '==', uid).get()
+const libra_data = []
+for (const libraDoc of libra.docs) {
+  const date_add = libraDoc.data().date_add.toDate();
+  const data = libraDoc.data()
+  const ref = data.projectRef
+  const project = await firestore().collection('Projects').doc(ref).get()
+  libra_data.push({ id: libraDoc.id, date_add: date_add, ...project.data() }) // , noveldata: noveldata
+}
+console.log(libra_data)
+libra_data.map((item) => {
+  console.log("comment_status:", item.comment_status);
+  console.log("commit_status:", item.commit_status);
+  console.log("creater:", item.creater);
+  console.log("date_add:", item.date_add);
+  console.log("id:", item.id); //library id
+  console.log("image:", item.image);
+  console.log("name:", item.name);
+  console.log("novelDoc:", item.novelDoc);
+  console.log("overview:", item.overview);
+  console.log("owner:", item.owner);
+  console.log("project_status:", item.project_status);
+  console.log("rating:", item.rating);
+});
+//to get noveldata 
+console.log(libra_data[0]['novelDoc'])
+const novel = await firestore().collection('Novels').doc(libra_data[0]['novelDoc']).get()
+console.log(novel)
+const novel_data = []
+const createdAt = novel.data().createAt.toDate();
+novel_data.push({ id: novel.id, ...novel.data(), createAt: createdAt })
+novel_data.map((item) => {
+  console.log("createAt:", item.createAt);
+  console.log("id:", item.id);
+  console.log("image:", item.image);
+  console.log("lastUpdate:", item.lastUpdate);
+  console.log("like:", item.like);
+  console.log("overview:", item.overview);
+  console.log("status:", item.status);
+  console.log("title:", item.title);
+  console.log("view:", item.view);
+});

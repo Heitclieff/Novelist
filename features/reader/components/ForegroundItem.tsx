@@ -1,16 +1,22 @@
 import React, { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-import { Box , VStack , Button, Text , Icon } from 'native-base'
+import { Box , VStack , Button, Text , Icon , Skeleton } from 'native-base'
 import { Image , Platform } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import FastImage from 'react-native-fast-image'
+import { CheckCircleIcon } from 'native-base'
 
 interface containerProps {
     collection: any
+    myBook : boolean
+    isLoading : boolean
+    isBtnLoaing : boolean
+    setlibrary : any
 }
 
-const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
+const ForegroundItem: React.FC<containerProps> = ({ collection , isLoading ,isBtnLoading, myBook , setlibrary}) => {
     const theme:any = useContext(ThemeWrapper)
-    
+
     return (
         <VStack
             w='100%'
@@ -21,28 +27,44 @@ const ForegroundItem: React.FC<containerProps> = ({ collection }) => {
             zIndex={10}
             space={2}
         >
-            <Box w='150' h='220' bg='gray.300' overflow='hidden'>
-                <Image
-                    style={{ width: '100%', height: '100%'}}
-                    source={{uri :collection.images}}
-                    alt="images"
+            {isLoading ?
+                <Skeleton
+                    w = "150"
+                    h = '220'
+                    startColor = {theme.Bg.container}
+                />
+            :
+            <Box w='150' h='220' bg= {theme.Bg.container} overflow='hidden'>
+                <FastImage
+                style={{width : '100%', height : '100%' }}
+                source={{
+                    uri : collection.image  , 
+                    priority : FastImage.priority.normal,
+                }}
+                alt = "images"
+                resizeMode={FastImage.resizeMode.cover}
                 />
             </Box>
-            <Box w='140'>
+            }
+            <Box w='150'>
                 {Platform.OS == 'ios' &&
                     <Button
                         h='9'
                         size='sm'
+                        isLoading = {isBtnLoading}
+                        _pressed={{ bg : 'amber.500'}}
+                        onPress = {setlibrary}
                         variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
-                        bg={theme.themeMode === 'dark' ? null : 'amber.400'}
+                        bg={theme.themeMode === 'dark' ? myBook ? 'amber.400' :  null : 'amber.400'}
                         borderColor={'amber.400'}
                         leftIcon={
-                        <IonIcon
-                            size= {15}
-                            color={theme.themeMode === 'dark' ? '#fbbf24' : theme.Icon.base}
-                            name={'library-outline'} />}
+                            <CheckCircleIcon
+                            size={"15px"}
+                            color={myBook ? 'black' :'#fbbf24'}
+                            />
+                        }
                     >
-                        <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? 'amber.400' : null}>Add to library</Text>
+                        <Text fontWeight={'medium'} fontSize={'xs'} color={theme.themeMode === 'dark' ? myBook ? 'black' : 'amber.400' : null}>{!myBook ? `Add to Library`: `On Your Library`}</Text>
                 </Button>    
                 }
             </Box>

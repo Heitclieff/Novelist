@@ -4,11 +4,11 @@ import React,{
 } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Box , Icon } from 'native-base';
+import { AppSkeleton } from '../../../components/skelton/app';
 import FontAwesomeIcon  from 'react-native-vector-icons/FontAwesome5'
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-
 //@Pages
 const Index = lazy(() => import('../../../pages/Index'));
 const Category = lazy(() => import('../../../pages/Category'));
@@ -21,11 +21,13 @@ interface navigatorProps {
   theme:any
 }
 const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
+  
   return (
     <Tab.Navigator screenOptions={{
       tabBarStyle : {backgroundColor : theme.Bg.tabbar ,borderTopColor : theme.Divider.tabbar} ,
       headerStyle : {backgroundColor : theme.Bg.tabbar , shadowColor : theme.Divider.stackbar},
       headerTitleStyle : {color : theme.Text.tabbar} ,
+      tabBarHideOnKeyboard : true,
       lazy : true,
     }}
     >
@@ -45,7 +47,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
          {(props:any) => (
-                <Suspense fallback={<Box>Loading...</Box>}>
+                <Suspense fallback={<AppSkeleton/>}>
                   <Index {...props}/>
                 </Suspense> 
           )}
@@ -67,7 +69,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Category {...props}/>
           </Suspense>
         )}
@@ -89,7 +91,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Creator {...props}/>
           </Suspense>
         )}
@@ -111,7 +113,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Library {...props}/>
           </Suspense>
         )}
@@ -133,7 +135,7 @@ const Tabsnavigator : React.FC <navigatorProps> = ({theme}) => {
           }}
       >
         {(props:any) => (
-          <Suspense fallback={<Box>Loading...</Box>}>
+          <Suspense fallback={<AppSkeleton/>}>
             <Menu {...props}/>
           </Suspense>
         )}

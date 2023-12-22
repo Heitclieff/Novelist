@@ -11,20 +11,29 @@ Icon,
 Skeleton,
 HStack,
  } from 'native-base'
-import { Animated , Dimensions } from 'react-native'
+import { Animated , Dimensions, RefreshControl } from 'react-native'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
+import { useRoute } from '@react-navigation/native'
 
 //@Redux Toolkits
+import { setUser } from '../../systems/redux/action'
 import { useDispatch , useSelector } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { RootState } from '../../systems/redux/reducer'
 import { AnyAction } from 'redux'
-import { getuserData } from '../../systems/redux/action'
+// import { getuserData } from '../../systems/redux/action'
 
 //@Components && Sections;
 import Headersection from './section/Headersection'
 import Centernavigation from '../../components/navigation/Centernavigation'
 import Careersection from './section/Careersection'
+
+//@Firestore
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import sendNotification from '../../services/notificationService'
+import { SpinnerItem } from '../../components/Spinner'
+
 interface StackProps {
     Profiledata : any
 }
@@ -33,51 +42,131 @@ const ParallaxBackground  = React.lazy(() =>import('./components/Background'));
 
 const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
     const theme:any = useContext(ThemeWrapper)
-    const [canEdit, setcanEdit] = useState<boolean>(false);
-    const [isLoading , setIsLoading] = useState<boolean>(true);
-    const [HeaderTitle , setHeaderTitle] =  useState<string>('');
 
+  
+    const [isOwner, setisOwner] = useState<boolean>(false);
+    const [isfollow ,setisfollow] = useState<boolean>(false);
+    const [isLoading , setIsLoading] = useState<boolean>(true);
+    const [isBtnLoading ,setBtnLoading] = useState<boolean>(false);
+    const [careersAmout ,setCareersAmount] = useState<number>(0);
+    const [HeaderTitle , setHeaderTitle] =  useState<string>('');
+    const [currentProfile , setCurrentProfile] = useState<any>();
+    const [refreshing  , setRefreshing] = useState<boolean>(false);
+
+    const route = useRoute();
     const navigation = useNavigation();
     const dispatch =  useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
-    
+
+    const profileRoute = route.params?.profile;
     const Screenheight = Dimensions.get('window').height
     const userdata = useSelector((state:any) => state.userData)
+    const useritem = userdata[0];
     const isReduxLoaded = useSelector((state:RootState) =>state.isuserLoaded )
-    const [currentProfile , setCurrentProfile] = useState<any>(userdata[0]);
-    
-        
+ 
     const scrollY = useRef(new Animated.Value(0)).current;
     const MAX_HEIGHT  = Screenheight / 3.5;
     const HEADER_HEIGHT_NARROWED = 90;
     const HEADER_HEIGHT_EXPANDED = MAX_HEIGHT / 2.5; 
 
-    useEffect(() => {
-        dispatch(getuserData());
-    } , [dispatch , isReduxLoaded])
+    const ValidateAccount = () => {
+        let current_profile = userdata[0];
+        let PROFILE_TITLE = userdata[0].username
 
-    const ValidatePiorityAccount = () => {
-        if(Profiledata.length === 0 || !Profiledata){      
-            setcanEdit(true);
-            return currentProfile
+     
+        if(profileRoute){
+            if(profileRoute.id !== userdata[0].id) {
+                current_profile = profileRoute;
+                PROFILE_TITLE = profileRoute.username
+            }else{
+                setisOwner(true);
+            }
+        }else{
+            setisOwner(true);
         }
-        if(userdata[0].username !== 'Heitclieff'){ //validate If not User Account it's view spectetor mode.
-            setCurrentProfile(Profiledata[0]);
-            return userdata[0]
-        }
+        findingfollower(current_profile.id);
+        setCurrentProfile(current_profile)
+        setHeaderTitle(PROFILE_TITLE);
     }
 
-    const SetProfileHeaderTitle = () => {
-        const account = ValidatePiorityAccount();
-        setHeaderTitle(account.username)
+    const findingfollower = (current:any) => {
+        if(userdata[0].followlist.includes(current)){
+            setisfollow(true);
+        }
     }
+    const followPeople = async (follow:boolean) : Promise <void> => {
+        setBtnLoading(true);
+        try{
+            if(!profileRoute){
+                console.log("ERROR : Failed to following because cannot founds this account");
+                return
+            }
+
+            const firebase = firestore().collection('Users');     
+            const targetDoc = firebase.doc(currentProfile.id);
+            const myDoc = firebase.doc(userdata[0].id);
+            
+
+            let myfollowlist = {...userdata[0]};
+            let intrpeople_increment = currentProfile.follower 
+            let increment  = 1
+            if(isfollow){
+                intrpeople_increment -= 1 
+                myfollowlist.following -= 1
+                increment  = -1
+                
+                const deletelist = myfollowlist.followlist.filter(doc => doc !== currentProfile.id)
+                myfollowlist.followlist = deletelist
+              
+            }else{
+                intrpeople_increment += 1
+                myfollowlist.following += 1
+                myfollowlist.followlist.push(currentProfile.id)
+            }
+                   
+            await targetDoc.update({follower : firestore.FieldValue.increment(increment)});
+            await myDoc.update({following : firestore.FieldValue.increment(increment) , followlist  : myfollowlist.followlist });
+            setisfollow(!isfollow)
+            setCurrentProfile({...currentProfile, follower : intrpeople_increment})
+
+            dispatch(setUser([{...myfollowlist}]))
+            // Notification
+            if(!isfollow){
+                if(profileRoute.message_token){
+                    sendNotification({
+                        token : profileRoute.message_token,
+                        target : profileRoute.id,
+                        body :`${userdata?.[0].username} start following you`,
+                        icon : userdata?.[0].pf_image,
+                        type : "follow",
+                        project : "profile",
+                        id : userdata?.[0].id,
+                    });
+                }else{
+                    console.log("ERROR : Failed to send Notification because target doesn't have message token.")
+                }
+            }
+            
+
+        }catch(error){
+            console.log("Failed to increment follow" , error);
+        }
+    
+        setBtnLoading(false);
+    }
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 1000);
+      }, []);
+
 
     useEffect(() => {
-        SetProfileHeaderTitle();
-    } , []);
+        ValidateAccount();
+    },[refreshing ])
+
 
     useEffect(() => {
-        setIsLoading(true);
-  
         setTimeout(() => {
           setIsLoading(false);
         },0)
@@ -91,10 +180,19 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             Contentfixed = {false}
             />
             <Box w = '100%' h = {MAX_HEIGHT} position={'absolute'}>
-                <ParallaxBackground background={currentProfile.background} scrollY={scrollY}/>
+                <ParallaxBackground background={currentProfile?.bg_image} scrollY={scrollY}/>
             </Box>
+            
+          
             <Animated.FlatList
             data={[0]}
+            refreshControl={
+                <RefreshControl 
+                refreshing = {refreshing} 
+                onRefresh={onRefresh}
+                tintColor={'white'}
+                />
+            }
             keyExtractor={(item:any) => item.id}
             numColumns={2}
             showsVerticalScrollIndicator = {false}
@@ -119,33 +217,32 @@ const Profile : React.FC <StackProps> = ({Profiledata = []}) => {
             }}
             renderItem={React.useCallback(
                 ({ item, index }: any) => {
-                  return (
-                    <VStack flex = {1}>
-                        <Headersection currentProfile={currentProfile}/>
-                    <VStack bg = {theme.Bg.base}>                    
-                        <HStack pl = {8} h = {10} space=  {1} alignItems={'center'}>
-                            <Text fontWeight={'semibold'} color = {theme.Text.base}>{currentProfile.username}</Text>
-                            <Text color = {theme.Text.base}>Careers</Text>
-                        </HStack>
-                        <VStack mb = {HEADER_HEIGHT_EXPANDED}>
-                            {isLoading ? 
-                            <Center w = '100%' h= '100%' justifyContent={'flex-start'} mt = {10}>
-                            <VStack  w = '100%'rounded="md">
-                                <VStack w = '100%' flex=  {1}  pb = {1} alignItems={'center'}>
-                                    <Skeleton w = '90%' h = '150' rounded = 'md' startColor= {theme.Bg.container}/>
-                                    <Skeleton.Text  lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
-                                    <Skeleton w = '90%' h = '150' rounded = 'md'  mt = {50} startColor= {theme.Bg.container}/>
-                                    <Skeleton.Text lines={2} alignItems="flex-start" mt = {-70}  px="12" startColor= {theme.Text.skelton}/>
-                                </VStack>    
+                    return (
+                        currentProfile &&
+                        <VStack flex={1}>
+                            <Headersection 
+                            currentProfile={currentProfile} 
+                            careersAmout = {careersAmout}
+                            isfollow = {isfollow}
+                            isLoading = {isBtnLoading}
+                            isOwner = {isOwner} 
+                            action = {followPeople}/>
+                            <VStack bg={theme.Bg.base}>
+    
+                                <HStack pl={8} h={10} space={1} alignItems={'center'}>
+                                    <Text fontWeight={'semibold'}  color={theme.Text.base}>{currentProfile?.username}</Text>
+                                    <Text fontWeight={'semibold'}  color={theme.Text.base}>Careers</Text>
+                                </HStack>
+                                
+                                <VStack mb={HEADER_HEIGHT_EXPANDED}>
+                                    <Careersection id = {currentProfile.id} setCareerAmout = {setCareersAmount}/>
                                 </VStack>
-                            </Center> : 
-                            <Careersection/> }
+                            </VStack>
                         </VStack>
-                        </VStack>
-                    </VStack>
                   )
-                },[isLoading])}
+                },[isLoading, isBtnLoading , isfollow , careersAmout , currentProfile])}
             >   
+         
             </Animated.FlatList>
         </Box>
     )

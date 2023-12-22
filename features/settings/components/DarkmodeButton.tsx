@@ -60,11 +60,11 @@ const DarkmodeButton : React.FC <containerProps> = () => {
                             <FeatherIcon
                                 name= {'moon'}
                                 size={20}
-                                color = {theme.Text.between}
+                                color = "#171717"
                                 />
                     </Box>
                     <Box w = '85%' pl = {2}>
-                         <Text color = {theme.Text.between} fontSize={'md'} fontWeight={theme.themeMode == 'dark' ? 'semibold': 'normal'} >Dark Mode</Text>
+                         <Text color = {"coolGray.800"} fontSize={'md'} fontWeight={theme.themeMode == 'dark' ? 'semibold': 'normal'} >Dark Mode</Text>
                     </Box>
                     
                 </HStack>

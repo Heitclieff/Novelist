@@ -1,6 +1,7 @@
 import React,{lazy , Suspense} from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Box } from 'native-base';
+import { AppSkeleton } from '../../../components/skelton/app';
 
 import Tabsnavigator from './Tabsnavigator';
 import Drawernavigator from './Drawernavigator';
@@ -12,16 +13,23 @@ const Leaderboard = lazy(() => import('../../../features/leaderboard'));
 const Profile = lazy(() => import('../../../features/profile'));
 const Bookmarks = lazy(() => import('../../../features/bookmarks'));
 const Editprofile = lazy(() => import('../../../features/profile/Editprofile'));
+const EditChapter = lazy(() => import ('../../../features/creator/pages/editchapter'))
 const Settings = lazy(() => import('../../../features/settings'));
 const AccountSettings = lazy(() => import('../../../features/settings/account'));
 const NotificationSettings = lazy(() => import('../../../features/settings/notification'));
-const Template = lazy(() => import('../../../features/_template'));
 
+const Template = lazy(() => import('../../../features/_template'));
+const Editpage = lazy(() => import('../../../features/_template/editfield'));
 const NovelContent = lazy(() => import('../../../features/reader'));
 const Creatorcontent = lazy(() => import('../../../features/creator'));
 const Createproject = lazy(() => import('../../../features/project/Createproject'));
+const CreateChapter = lazy(() => import ('../../../features/creator/pages/createchapter'))
 const Tag = lazy(() => import('../../../features/creator/pages/Tag'));
 const Readcontent = lazy(() => import('../../../features/reader/content'));
+
+const Forgetpage =  lazy(() => import('../../../features/validation/forget'))
+const Loginpage = lazy(() => import('../../../features/validation/login'));
+const Registerpage = lazy(() => import('../../../features/validation/register'));
 
 interface navigatorProps {
     theme:any
@@ -36,8 +44,9 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
         }, 
         headerBackTitle : 'Back',
         headerTitleStyle : {color : theme.Text.tabbar} ,
-        animation : 'slide_from_left'
-        , headerTintColor : theme.Button.backbutton}
+        animation : 'slide_from_left', 
+        headerTintColor : theme.Button.backbutton
+        }
         }>
           <Stack.Screen 
           name = "MainStack"
@@ -51,8 +60,43 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
             headerShown : false,
             }}>
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <NovelContent {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "Login"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <Loginpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+
+          <Stack.Screen 
+          name = "Register"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <Registerpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+
+          <Stack.Screen 
+          name = "Forget"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <Forgetpage {...props}/>
             </Suspense>
             }
           </Stack.Screen>
@@ -61,7 +105,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           name = "Notification"
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Notification {...props}/>
             </Suspense>
             }
@@ -72,7 +116,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Search {...props}/>
             </Suspense>
             }
@@ -83,7 +127,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Profile {...props}/>
             </Suspense>
             }
@@ -94,18 +138,40 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Editprofile {...props}/>
             </Suspense>
             }
           </Stack.Screen>
 
           <Stack.Screen 
+          name = "Editchapter"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <EditChapter {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+          <Stack.Screen 
+          name = "EditPage"
+          options={{headerShown : false}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <Editpage {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+      
+          <Stack.Screen 
           name = "Leaderboard"
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Leaderboard {...props}/>
             </Suspense>
             }
@@ -116,7 +182,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Bookmarks {...props}/>
             </Suspense>
             }
@@ -127,7 +193,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Settings {...props}/>
             </Suspense>
             }
@@ -138,7 +204,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <AccountSettings {...props}/>
             </Suspense>
             }
@@ -149,7 +215,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : true , headerTitle : "Notification"}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <NotificationSettings {...props}/>
             </Suspense>
             }
@@ -160,7 +226,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Template {...props}/>
             </Suspense>
             }
@@ -168,21 +234,33 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
 
           <Stack.Screen 
           name = "CreateProject"
-          options={{headerShown : false}}
+          options={{headerShown : false }}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Createproject {...props}/>
             </Suspense>
             }
           </Stack.Screen>
 
           <Stack.Screen 
+          name = "CreateChapter"
+          options={{headerShown : false, animation : 'slide_from_bottom'}}
+          >
+            {(props:any) => 
+            <Suspense fallback = {<AppSkeleton/>}>
+              <CreateChapter {...props}/>
+            </Suspense>
+            }
+          </Stack.Screen>
+
+
+          <Stack.Screen 
           name = "CreatorContent"
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Drawernavigator {...props}/>
             </Suspense>
             }
@@ -193,7 +271,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Readcontent {...props}/>
             </Suspense>
             }
@@ -204,7 +282,7 @@ const Stacknavigator : React.FC <navigatorProps> = ({theme}) => {
           options={{headerShown : false}}
           >
             {(props:any) => 
-            <Suspense fallback = {<Box>Loading..</Box>}>
+            <Suspense fallback = {<AppSkeleton/>}>
               <Tag {...props}/>
             </Suspense>
             }

@@ -49,7 +49,7 @@ const Menunavigation :React.FC <MenubarProps> = () => {
           <IoniconsIcon
             name= {theme.themeMode === 'dark' ? 'moon' : 'sunny'}
             color={theme.Icon.base}
-            size={'sm'}
+            fontSize = {16}
           />
         </Box>
         <Switch

@@ -11,20 +11,60 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
-
+import FastImage from 'react-native-fast-image';
 //@Components
 import Avatarfield from '../../../components/field/Avatarfield'
+import EvilIcon from 'react-native-vector-icons/EvilIcons'
+//firebase
+import firestore from '@react-native-firebase/firestore'
+import { userdata } from '../../../assets/content/VisualCollectionsdata'
 
 interface containerProps {
      id : number,
-     data : any
+     title: string,
+     image :string,
+     status: string,
+     creator : any,
+     refreshing : boolean
+
+
 }
-const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
+const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , image , status , creator})=> {
      const theme:any = useContext(ThemeWrapper)
      const navigation = useNavigation();
+     const [creatorlist ,setCreatorlist] = useState<any[]>([]);
+     
+     const MatchingUserid = async (creatordocs:any): Promise <void>  => {
+        try{
+          const snapshotuser = await firestore().collection('Users').where(firestore.FieldPath.documentId(), 'in' , creatordocs.map(String)).get();
+          const userdocs = snapshotuser.docs.map(doc => ({id : doc.id , ...doc.data()}));
+          setCreatorlist(userdocs)
+
+        }catch(error){
+          console.error("Error fetching userdocs:", error);
+        }
+     }
 
 
-  return ( 
+     const fetchingcreator = async (): Promise<void> => {
+          console.log("Fetching Creators");
+          try{
+               const projectkey = firestore().collection('Novels').doc(id);
+               const creatorkey = await projectkey.collection("Creator").get();
+
+               const creatordocs = creatorkey?.docs.map(doc => doc.data().userDoc)
+               MatchingUserid(creatordocs);
+          }catch(error) {
+               console.error("Error fetching creator from collection:", error);
+          }
+     }
+
+     useEffect(() => {
+          fetchingcreator();
+          // MatchingUserid()
+     }, [id , refreshing])
+
+     return ( 
      <Pressable onPress = {() => navigation.navigate('CreatorContent',{id})}>
      {({
          isHovered,
@@ -32,43 +72,61 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
          isPressed
      }) => {
           return (
-          <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}>
-               <Box w= '25%' h= '100%' bg=  'gray.200' mr = {2} overflow={'hidden'}>
-                    <Image
+          <HStack w = '100%' h= {130} pl ={2} pr = {4} pt = {2} pb = {2} bg = {isPressed ? theme.Bg.boxaction : isHovered ? theme.Bg.boxaction  : null}>
+               <Box w= '25%' h= '100%' bg=  {theme.Bg.container} mr = {2} overflow={'hidden'} justifyContent={'center'} alignItems= "center">
+                    {image ? 
+                         <FastImage
                          id = 'item-image'
-                         style={{width : '100%' , height : '100%'}}
-                         source={{uri:data.images}}
-                    />
+                         alt = "images"
+                         resizeMode={FastImage.resizeMode.cover}
+                         source={{
+                              uri : image  , 
+                              header :{Authorization : "someAuthToken"},
+                              priority : FastImage.priority.normal}}
+                         style={{
+                              width : '100%' , 
+                              height : '100%'
+                         }}
+                         />
+
+                         :
+
+                         <EvilIcon
+                         name = "image"
+                         size = {25}
+                         color = {theme.Icon.base}
+                         />
+                    }
                </Box>
                <VStack w = '75%' h=  '100%'  bg = {theme.Bg.container} rounded={'md'} space = {2} pl = {3}>
                     <VStack justifyContent={'center'} pt = {1}>
-                         <Text color={theme.Text.heading} fontWeight={'semibold'}>{data.title}</Text>
+                         <Text color={theme.Text.heading} fontWeight={'semibold'}>{title}</Text>
                          <HStack alignItems={'center'} space = {2}>
-                              <Box w={1} h= {1} bg = 'green.400' rounded={'full'}></Box>
-                              <Text color = {theme.Text.base} fontSize={'xs'}>Public</Text>
+                              <Box w={1} h= {1} bg = {status ? theme.themeMode === "Dark" ? 'green.400' : 'green.600'  : 'red.400'} rounded={'full'}></Box>
+                              <Text color = {theme.Text.base} fontSize={'xs'}>{status ? "Public" : "Private"}</Text>
                          </HStack>
                     </VStack>
                     <Box w ='100%' pr = {2}>
                          <Divider bg=  {theme.Divider.comment}/>
                     </Box>
-                         {data.creater &&
+                         {creatorlist.length > 0 &&
                               <HStack w = '100%' justifyContent={'flex-end'}>
-                                   {data.creater.length >= 2 ? 
+                                   {creatorlist.length >= 2 ? 
                                         <HStack flex=  {1} alignItems={'center'} justifyContent={'space-between'} mr = {5} space=  {2} >  
                                              <Box id = "Member-user" w = '60%' >
                                                   <Text color={theme.Text.base} fontSize={'xs'} numberOfLines={2}>
-                                                       {`${data.creater[0].username} and ${data.creater[1].username}`} {data.creater.length > 2 ? `and ${data.creater.length -2} more`: null}                                            
+                                                       {`${creatorlist[0].username} and ${creatorlist[1].username}`} {creatorlist.length > 2 ? `and ${creatorlist.length -2} more`: null}                                            
                                                   </Text>
                                              </Box>
                                    
                                         <HStack>
-                                             <Avatarfield image = {data.creater[0].image}/>
-                                             <Avatarfield image = {data.creater[1].image}/>
-                                             {data.creater.length > 2 &&
+                                             <Avatarfield image = {creatorlist[0].pf_image}/>
+                                             <Avatarfield image = {creatorlist[1].pf_image}/>
+                                             {creatorlist.length > 2 && 
                                                        <Box w = '25' h = '25' rounded={'full'} bg = {theme.Bg.action} justifyContent={'center'} alignItems={'center'}>
                                                        <AntdesignIcon 
                                                             size={10}
-                                                            color = {'white'}
+                                                            color = {theme.Icon.between}
                                                             name = 'plus'/>
                                                        </Box>
                                                   }
@@ -78,11 +136,11 @@ const CreatorItemfield : React.FC <containerProps> =({id,data})=> {
                                         <HStack flex=  {1} alignItems={'center'} justifyContent={'space-between'} mr = {5} space=  {2} >  
                                              <Box id = "Member-user" w = '60%' >
                                                   <Text color={theme.Text.base} fontSize={'xs'} numberOfLines={2}>
-                                                       {data.creater[0].username}
+                                                       {creatorlist[0].username}
                                                   </Text>
                                              </Box>
-                                             {data.creater.map((item:any , index:number) =>
-                                             <Avatarfield key = {index} image = {item.image}/>
+                                             {creatorlist.map((item:any , index:number) =>
+                                             <Avatarfield key = {index} image = {item.pf_image}/>
                                              )}
                                         </HStack>
                               }

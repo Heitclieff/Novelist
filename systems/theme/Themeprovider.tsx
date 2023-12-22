@@ -34,7 +34,7 @@ const ThemeBigprovider : React.FC <ThemeContext> = ({children}) => {
     const isReduxLoaded = useSelector((state:RootState) => state.isthemeLoaded);
   
     useEffect(() => {
-        if(!isReduxLoaded) dispatch(loadThemefromStorage());
+        dispatch(loadThemefromStorage());
     } , [dispatch ,theme])
 
   return (

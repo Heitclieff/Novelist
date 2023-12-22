@@ -1,20 +1,37 @@
-import React , {useCallback , Suspense} from "react"
+import React , {useCallback , Suspense , useContext} from "react"
 import {Box ,VStack } from "native-base"
 import Animated from "react-native-reanimated"
-
+import { RefreshControl } from "react-native"
+import { ThemeWrapper } from "../../../systems/theme/Themeprovider"
 interface Provider {
     children : any,
     collection: any[ ],
     onScroll : any,
     horizontal : any,
+    refreshing : boolean ,
+    setRefreshing : any,
+    disableRefresh : boolean
  }
 
 const ItemList :React.FC <Provider> = ({
     children , 
     collection,
+    disableRefresh = false,
     onScroll = null ,
-    horizontal = false }) => {
+    horizontal = false,
+    refreshing,
+    setRefreshing
+    }) => {
 
+    const theme : any = useContext(ThemeWrapper);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1000);
+        }, []);
+        
     return(
         <Animated.FlatList
             contentInset={{ top: 5}}
@@ -22,6 +39,15 @@ const ItemList :React.FC <Provider> = ({
             data={collection}
             scrollEventThrottle={16}
             onScroll= {onScroll}
+            refreshControl={
+                !disableRefresh &&
+                    <RefreshControl 
+                    refreshing = {refreshing} 
+                    onRefresh={onRefresh}
+                    tintColor={theme.Icon.base}
+                    />
+            }
+
             renderItem={({ item, index }) => children(item, index)}
         /> 
     )

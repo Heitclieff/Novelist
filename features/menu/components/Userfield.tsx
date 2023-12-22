@@ -11,6 +11,7 @@ Divider,
 Icon,
 Pressable
 } from 'native-base'
+import FastImage from 'react-native-fast-image'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
@@ -22,6 +23,8 @@ interface FiledProps {
 const Userfield: React.FC<FiledProps> = ({data}) => {
     const theme:any = useContext(ThemeWrapper)
     const navigation = useNavigation();
+    // console.log('userfield',data)
+    // data.map((item : any , key : number) => console.log(item))
     return ( data.map((item : any , key : number) => 
     <Pressable key = {key} onPress={()=> navigation.navigate("ProfileStack")}>
             {({
@@ -44,12 +47,16 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                                 bg='gray.200'
                                 overflow='hidden'
                             >
-                                <Image
-                                    w='100%'
-                                    h='100%'
-                                    resizeMode='cover'
-                                    source={{ uri: item.image }}
-                                    alt="images"
+                                <FastImage
+                                    style={{width : '100%', height : '100%' }}
+                                    source={{
+                                        uri : item.pf_image  , 
+                                        header :{Authorization : "someAuthToken"},
+                                        priority : FastImage.priority.normal,
+                                        cache: FastImage.cacheControl.cacheOnly
+                                    }}
+                                    alt = "images"
+                                    resizeMode={FastImage.resizeMode.cover}
                                 />
                             </Box>
                         </Box>

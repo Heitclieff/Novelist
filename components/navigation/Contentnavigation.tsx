@@ -22,6 +22,7 @@ interface contianerProps {
 const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNavigate}) => {
     const navigation:any  = useNavigation();
     const theme:any = useContext(ThemeWrapper);
+
   return (
     <Animated.View
       style={[{
@@ -30,7 +31,7 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
       position : 'absolute', 
       zIndex: 10 }]
     }>
-    <HStack w = '100%' safeAreaTop justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5}> 
+    <HStack w = '100%' h = {'100%'}  safeAreaTop justifyContent={'space-between'} alignItems={'center'}  pl = {5} pr = {5}> 
             <Box>
                 <IconButton 
                     size = 'sm'
@@ -39,7 +40,7 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
                     icon = {
                         <EntypoIcon
                         name='chevron-left'
-                        size= {20}
+                        size= {25}
                         color = {theme.Icon.static}
                         />
                     }
@@ -48,11 +49,11 @@ const Navigationbar : React.FC <contianerProps> = ({isMarks , setisMarks ,showNa
             <IconButton 
                 size = 'sm'
                 rounded={'full'}
-                // onPress={() => {setisMarks(!isMarks);  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}}
+                onPress={() => {setisMarks()}}
                 icon = {
                     <IonIcon 
-                    size = {15}
-                    color = {isMarks ? 'amber.400': theme.Icon.static}
+                    size = {20}
+                    color = {isMarks ? '#fbbf24': theme.Icon.static}
                     name = {isMarks ? 'bookmark' : 'bookmark-outline'}/>}
                 />
         </HStack>

@@ -1,4 +1,4 @@
-import React,{useContext} from "react";
+import React,{useContext, useEffect} from "react";
 import { 
 Box,
 Text,
@@ -12,12 +12,16 @@ interface containerProps {
     follower : string | number,
     following : string | number,
     career : string | number,
+    careersAmout : string
 }
 
-const Statusdisplay : React.FC <containerProps> = ({follower, following , career}) => {
+const Statusdisplay : React.FC <containerProps> = ({follower, following , career  ,careersAmout}) => {
     const theme:any = useContext(ThemeWrapper);    
-    const MenuVariant = {  follower : follower , following :following , Career : career}
+    const MenuVariant = {  follower : follower , following :following , Careers : careersAmout ?  careersAmout : 0}
 
+    useEffect(() => {
+
+    },[follower])
     return(
         <Box justifyContent={'flex-end'}>
             <HStack  alignItems={'flex-end'} space = {4}>

@@ -1,6 +1,8 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Box, Text, VStack, HStack ,View, theme } from 'native-base'
 import { ImageBackground,Image } from 'react-native'
+import FastImage from 'react-native-fast-image';
+
 import { Dimensions } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
@@ -8,19 +10,30 @@ import { Pressable } from 'native-base'
 import Animated from 'react-native-reanimated'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient'
+import { HeaderSkelton } from '../../../components/skelton/index/header';
 interface containerProps {
     data: any
     id: number,
     translateX: any
+    isLoading : boolean
 }
-const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) => {
+const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height
     const HEADER_HEIGHT = ScreenHeight / 1.7
     const navigation = useNavigation();
-
     const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
+
+    useEffect(() => {
+        FastImage.preload([
+          {
+            uri: data.image,
+          },
+        ]);
+      },[data.image])
+  
+
     return (
         <Pressable onPress={() => navigation.navigate('Novelmain', { id })}>
             {({
@@ -31,17 +44,18 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                 return (
                     <Box w={ScreenWidth} h={HEADER_HEIGHT} overflow={'hidden'} alignItems={'center'} position='relative'>
                         <Box w={ScreenWidth} h='100%' overflow={'hidden'} position={'absolute'} bg={'trueGray.800'}>
-                            <AnimatedBackground
-                                id='background-images'
-                                source={{ uri: data.images }}
-                                alt="images"
-                                blurRadius={3}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    opacity: 0.6,
-                                    position: 'relative',
-                                }} />
+                            <FastImage
+                             id='background-images'
+                             source={{ uri: data.image }}
+                             alt = "images"
+                             blurRadius = {3}
+                             style = {{
+                                width: '100%',
+                                height: '100%',
+                                opacity: 0.6,
+                                position: 'relative',
+                             }}
+                            />
                         </Box>
                         <Box w='100%' h='100%' position='absolute' zIndex={10}>
                             <LinearGradient colors={['transparent',theme.Bg.header]} style = {{width : '100%' , height : HEADER_HEIGHT}}/>           
@@ -51,15 +65,19 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                         <Box safeAreaTop w='100%' h='100%' position={'absolute'} mt={2} zIndex={10}>
                             <VStack w="100%" h='100%' justifyContent={'center'} alignItems={'center'} >
                                 <Box w='60%' h='70%' bg='gray.200' rounded={'xs'} overflow={'hidden'} >
-                                    <Image
-                                        id='Item-image'
-                                        style={{ width: '100%', height: '100%' }}
-                                        source={{uri : data.images}}
-                                        alt="images"
+                                    <FastImage
+                                        id = "Item-image"
+                                        style={{width : '100%', height : '100%' }}
+                                        source={{
+                                            uri : data.image  , 
+                                            header :{Authorization : "someAuthToken"},
+                                            priority : FastImage.priority.normal}}
+                                        alt = "images"
+                                        resizeMode={FastImage.resizeMode.cover}
                                     />
                                 </Box>
                                 <VStack w='60%' mt={2} >
-                                    <Text fontWeight={'semibold'} fontSize={'lg'} numberOfLines={1} color='white'>{data.title}</Text>
+                                    <Text fontWeight={'semibold'} fontSize={'lg'} numberOfLines={1} color= {theme.Text.between_heading}>{data.title}</Text>
                                     <HStack
                                         alignItems={'center'}
                                         space={2}
@@ -70,12 +88,12 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                         >
                                             <AntdesignIcon
                                               name = 'eyeo'
-                                              color = {theme.Icon.static}
+                                              color = {theme.Icon.between}
                                               size = {15}
                                             />
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.static}
+                                                color={theme.Text.between_heading}
                                             >{data.view}
                                             </Text>
                                         </HStack>
@@ -86,13 +104,13 @@ const Collectionheader: React.FC<containerProps> = ({ data, id, translateX }) =>
                                         >
                                             <AntdesignIcon
                                               name = 'heart'
-                                              color = {theme.Icon.static}
+                                              color = {theme.Icon.between}
                                               size = {12}
                                             />
                                             <Text
                                                 fontSize={'sm'}
-                                                color={theme.Text.static}>
-                                                4.7k
+                                                  color={theme.Text.between_heading}>
+                                                {data.like}
                                             </Text>
 
                                         </HStack>

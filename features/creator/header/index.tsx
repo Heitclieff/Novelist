@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext , useEffect , useState} from 'react'
 import { 
 Box , 
 Text ,
@@ -10,94 +10,220 @@ IconButton ,
 Divider,
 Icon} from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { Image } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
+import AlertItem from '../../reader/components/Alert'
+
+
+//@Firebase
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 interface containerProps {
-  data : any
+  data : any,
+  timestamp : any,
+  userid : string
+  id : string,
+  onModalPress : any
 }
 
-const Headercontent : React.FC <containerProps> = ({data})=> {
+const Headercontent : React.FC <containerProps> = ({data , timestamp , id , onModalPress , userid})=> {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+
+  const [formattedDate , setformattedDate] = useState<{}>({});
+  const [Tagdocs ,setTagsdocs] = useState<any[]>([])
+
+  const TimeConvert = (timestamp) => {
+    if(timestamp.createAt && timestamp.updatedAt){
+      const createAt = new Date(timestamp.createAt.seconds * 1000 + timestamp.createAt.nanoseconds / 1000000);
+      const lastupdate = new Date(timestamp.updatedAt.seconds * 1000 + timestamp.updatedAt.nanoseconds / 1000000);
+      
+      const formattedDateCreateAt = createAt.toLocaleString();
+      const formattedDatelastupdate = lastupdate.toLocaleString();
+
+      setformattedDate({createAt : formattedDateCreateAt , lastupdated : formattedDatelastupdate});
+    }
+  }
+ 
+  const fetchingTagsTitle = async () : Promise<void> => {
+      try{ 
+        const tagsID =  data.tagDoc;
+
+        if(tagsID?.length > 0){
+          const snapshotTags = await firestore().collection('Tags').where(firestore.FieldPath.documentId() , 'in' ,  tagsID).get();
+          const tagdocs = snapshotTags.docs.map(doc => ({id : doc.id , ...doc.data()}))
+          setTagsdocs(tagdocs)
+        }
+      
+      }catch(error) {
+        console.error("Error fetching Tag title :", error);
+      }
+  }
+
+  const handleTagupdate = async (tagdocs:any , selectedCategory:any) :Promise<T> => {
+    try {
+        const tagid = tagdocs.map((doc => doc.id))
+        firestore()
+        .collection('Novels')
+        .doc(id)
+        .update({ tagDoc: tagid , cateDoc : selectedCategory})
+       
+        setTagsdocs(tagdocs);
+
+        return true
+    } catch (error) {
+        console.error("Error Update Novel Tag :", error);
+        return false
+    }
+  }
+
+  useEffect(() => {
+    TimeConvert(timestamp);
+  },[timestamp])
+
+  useEffect(() => {
+    fetchingTagsTitle();
+  } , [data.tagDoc])
+
+  
+
   return (
-    <VStack w = '100%' space = {2}>
+   data && <VStack w = '100%' space = {2}>
         <VStack pl = {5} pr = {5} pt = {5} pb = {1}>
-          <Text color={theme.Text.base} fontSize={'lg'} fontWeight={'semibold'}>{data.title}</Text>
-          <HStack mt = {1}>
-            <Box rounded={'full'} pl = {1} pr = {1} borderColor={theme.Text.description} borderWidth={1}>
-              <Text color={theme.Text.description} fontSize={'xs'}>Public</Text>
+          <Text color={theme.Text.heading} fontSize={'xl'} fontWeight={'semibold'}>{data.title}</Text>
+          <HStack  pb =  {1} mt = {2} space = {1}>
+            <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!data.status ? "red.500" : "teal.500"} borderWidth={1}>
+              <Text fontSize={'xs'} color =   {!data.status ? "red.500" : "teal.500"} >{data.status ? "Public" : "Private"}</Text>
+            </Box>
+            <Box rounded={'full'} h = "22px"   pl = {2} pr = {2} borderColor = {!data.novel_status ? "orange.500" : "teal.500"} borderWidth={1}>
+              <Text  fontSize={'xs'} color = {!data.novel_status ? "orange.500" : "teal.500"} >{data.novel_status ? "Finished" : "Release"}</Text>
             </Box>
           </HStack>
-          <HStack mt = {1} space={1} alignItems={'center'}>
-              <Box>
-                  <AntdesignIcon
-                      size={15}
-                      color={theme.Text.description}
-                      name='eyeo'
+          <HStack justifyContent=  "space-between" mr = {2} alignItems = 'center'>
+            <VStack>
+              <HStack mt = {1} space={1} alignItems={'center'}>
+                    <Box>
+                        <AntdesignIcon
+                            size={15}
+                            color={theme.Text.description}
+                            name='eyeo'
+                        />
+                    </Box>
+                    <Text fontSize={'xs'} color={theme.Text.description}>
+                        {data.view}
+                    </Text>
+                </HStack>
+                <HStack mt = {1} space={1} alignItems={'center'}>
+                    <Box>
+                      <AntdesignIcon
+                          size={15}
+                          color={theme.Text.description}
+                          name='heart'
+                      />
+                    </Box>
+                    <Text fontSize={'xs'} color={theme.Text.description}>
+                        {data.like}
+                    </Text>
+                
+                </HStack>
+            </VStack>
+            {userid &&
+              data.owner === userid &&
+                <Button 
+                onPress= {onModalPress}
+                _pressed={{bg : theme.Bg.container}}
+                rounded = 'full' 
+                variant={'outline'} 
+                p = {0} 
+                _text={{fontSize : 'sm' , color : theme.Text.base}}
+                h = {"25px"}
+                pl = {2}
+                pr = {2}
+                leftIcon={
+                  <FontAwesomeIcon
+                  name = "camera"
+                  size = {15}
+                  color = {theme.Icon.between}
                   />
-              </Box>
-              <Text fontSize={'xs'} color={theme.Text.description}>
-                  {data.view}
-              </Text>
-          </HStack>
-          <HStack mt = {1} space={1} alignItems={'center'}>
-              <Box>
-                <AntdesignIcon
-                    size={15}
-                    color={theme.Text.description}
-                    name='heart'
-                />
-              </Box>
-              <Text fontSize={'xs'} color={theme.Text.description}>
-                  4.7k
-              </Text>
-            
+                }
+                >
+                  Edit photos
+                </Button>
+              }
+          
           </HStack>
         </VStack>
         <Divider mt = {2} bg = {theme.Divider.base}/>
         <VStack pl = {5} pr = {5} space = {1}>
           <HStack justifyContent={'space-between'}>
-            <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
+            <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Overview</Text>
           </HStack>
           <Text  color={theme.Text.description}>
-            Lorem , ipsum dolor sit amet consectetur adipisicing elit. Laboriosam dolorum distinctio consequatur autem provident error doloribus ex earum? Provident culpa dolorum vero harum, labore dicta officiis adipisci corporis quae voluptates. 
+           {data.overview ? data.overview : "write something *"}
           </Text>
         </VStack>
-        <VStack pl = {5} pr= {5} pt = {5} space = {2}>
-          <HStack justifyContent={'space-between'}>
-          <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
-          <IconButton 
-            onPress={() => navigation.navigate('Tags')}
-            size = 'md'
-            rounded={'full'}
-            icon = {
-                <AntdesignIcon
-                    name='plus'
-                    size={15}
-                    color = {theme.Icon.base}
-                />
-            }
-            />
-          </HStack>
-       
-          <HStack space=  {2}>
-            <Button size = 'xs' rounded={'full'} bg = {'gray.700'}>Romantic</Button>
-            <Button size = 'xs' rounded={'full'} bg = {'gray.700'}>Comendy</Button>
-          </HStack>
-        </VStack>
+          {
+            data.tagDoc &&
+            <VStack pl = {5} pr= {5} pt = {3} space = {2}>
+              
+             
+                  <>
+                  <HStack justifyContent={'space-between'}>
+                    <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Tags</Text>
+           
+                    <IconButton 
+                      onPress={() => navigation.navigate('Tags', {current_tags : Tagdocs , handleTagupdate , status : data.status})}
+                      size = 'md'
+                      rounded={'full'}
+                      icon = {
+                          <AntdesignIcon
+                              name='plus'
+                              size={15}
+                              color = {theme.Icon.base}
+                          />
+                        }
+                    />
+                  
+                  </HStack>
+                  {Tagdocs.length > 0 ?
+                    <HStack space=  {2}>
+                      {Tagdocs.map((item:any,index:number) =>{
+                        return(
+                          <Button 
+                          key = {index} 
+                          size = 'xs' 
+                          rounded={'full'}
+                          colorScheme={'teal'}
+                          _text={{fontWeight : 'medium'}}
+                          >{item.title}</Button>
+                      )}) 
+                    } 
+                      
+                      
+                  </HStack>
+                  :
+                  <Text color = {theme.Text.description}>Create New Tags*</Text>
+                }
+              </>
+             
+          </VStack>
+          }
+         
 
         <VStack pl = {5} pr= {5} pt = {2} space = {2} >
-          <Text color = {theme.Text.base} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
+          <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
        
           <VStack space=  {2}>
-                <Text color = {theme.Text.description}>Date: 10 Octorber 2022</Text>
-                <Text color = {theme.Text.description}>Last updated: 24 August 2023</Text>
+                <Text color = {theme.Text.description}>{`Date: ${formattedDate.createAt}`}</Text>
+                <Text color = {theme.Text.description}>{`Last updated: ${formattedDate.lastupdated}`}</Text>
           </VStack>
         </VStack>
 
     </VStack>
+
   )
 }
 
