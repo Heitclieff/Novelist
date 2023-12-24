@@ -1,4 +1,4 @@
-import React , {useCallback , Suspense , useContext} from "react"
+import React , {useCallback , Suspense , useContext , useRef} from "react"
 import {Box ,VStack } from "native-base"
 import Animated from "react-native-reanimated"
 import { RefreshControl } from "react-native"
@@ -24,7 +24,7 @@ const ItemList :React.FC <Provider> = ({
     }) => {
 
     const theme : any = useContext(ThemeWrapper);
-
+    const flatListRef = useRef(null);
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setTimeout(() => {
@@ -34,6 +34,8 @@ const ItemList :React.FC <Provider> = ({
         
     return(
         <Animated.FlatList
+            ref = {flatListRef}
+            initialNumToRender={5}
             contentInset={{ top: 5}}
             showsVerticalScrollIndicator={false}
             data={collection}
@@ -49,6 +51,7 @@ const ItemList :React.FC <Provider> = ({
             }
 
             renderItem={({ item, index }) => children(item, index)}
+            keyExtractor={(i , key) => key.toString()}
         /> 
     )
 }

@@ -6,6 +6,7 @@ import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import Collectionheader from '../components/Collection.header';
 import LinearGradient from 'react-native-linear-gradient';
 import { HeaderSkelton } from '../../../components/skelton/index/header';
+import { SpinnerItem } from '../../../components/Spinner';
 
 interface layoutProps {
     collections : any,
@@ -13,6 +14,7 @@ interface layoutProps {
 }
 const Indexheader : React.FC <layoutProps> = ({collections , isLoading}) => {
     const theme:any = useContext(ThemeWrapper)
+    const flatListRef = useRef(null);
     const scrollY = useRef(new Animated.Value(0)).current
     const ScreenWidth = Dimensions.get('window').width
  
@@ -25,7 +27,7 @@ const Indexheader : React.FC <layoutProps> = ({collections , isLoading}) => {
                 extrapolate: 'clamp',
             }))
             return(
-                <Suspense callback = {<Box>Loading..</Box>}>
+                <Suspense callback = {<SpinnerItem/>}>
                     <Collectionheader 
                     key = {round}
                     data={document} 
@@ -45,6 +47,8 @@ const Indexheader : React.FC <layoutProps> = ({collections , isLoading}) => {
     <VStack flex = {1} justifyContent={'center'} >
         <VStack space = {1} position = 'relative'>
             <FlatList
+                ref = {flatListRef}
+                initialNumToRender = {5}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={collections}
