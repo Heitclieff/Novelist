@@ -81,7 +81,7 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
   )
   return (
    <VStack flex = {1} bg = {theme.Bg.base}>
-        <Memorizednavigation title = "Commits" 
+        <Memorizednavigation title = "Publishing" 
             rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.between} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
      <VStack pl ={6} pt = {5} pr = {6} flex= {1}>
@@ -111,7 +111,6 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
               
           </FlatList>
      </VStack>
-    
    </VStack>
   )
 }

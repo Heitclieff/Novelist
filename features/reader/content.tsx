@@ -77,7 +77,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
      
      const ApprovedDialogs = () => 
-     Alert.alert('Approved', 'Are you sure you want to Aprroved this request ?', [
+     Alert.alert('Approved', 'Are you sure you want to approve this request ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -86,15 +86,13 @@ const Readcontent : React.FC <pageProps> = () => {
      ]);
 
      const DeleteRequestDialogs = () => 
-     Alert.alert('Delete', 'Are you sure you want to Delete this request ?', [
+     Alert.alert('Delete', 'Are you sure you want to delete this request?', [
           {
                text: 'No',
                style: 'cancel',
           },
           {text: 'yes', onPress: () => removecommitRequest()},
      ]);
-
-     console.log(id);
 
      const initialContent = async () : Promise <void> => {
           if(editable){
@@ -114,7 +112,6 @@ const Readcontent : React.FC <pageProps> = () => {
           }
        
           if(id){
-               console.log("DOTHIS")
                getnovelContent();
           }      
      }
@@ -563,7 +560,7 @@ const Readcontent : React.FC <pageProps> = () => {
                                    _text={{fontSize : "xs"}}
                                    variant={'outline'}
                                    w = "100px" h={8}
-                                   >Approved</Button>
+                                   >Approve</Button>
                                }        
                               </HStack>
                               }

@@ -113,7 +113,6 @@ const Creator : React.FC <Pageprops> = () => {
     }
     
     useEffect(() => {
-        console.log("Refreshing this")
         getProjectContent();
     }, [refreshing , projectdocs.docs?.length , USER_DATA[0]?.id])
 
@@ -130,16 +129,6 @@ const Creator : React.FC <Pageprops> = () => {
    const handleReturnChange = () => {
      bottomSheetModalRef.current?.snapToIndex(1);
    }
-
-   const ProjectType = [{
-        title : 'Single Project',
-        type : 'single',
-   },   
-    {
-        title : "Multi Project",
-        type : 'multiple',
-}]
-
 
   return (
     <VStack flex=  {1} bg = {theme.Bg.base} space = {2}>

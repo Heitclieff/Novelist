@@ -112,10 +112,15 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                <Text color={theme.Text.base} fontWeight={'semibold'}>{data.title}</Text>
 
                {during?.during ? 
-                    <Text  color={theme.Text.description} fontSize={'xs'}>Someone has Edit this Chapter right now.</Text>
+                    <Box  w = "75px" alignItems={'center'} borderWidth = {1} borderColor = {'orange.400'} rounded={'full'}>
+                         <Text  color= 'orange.400' fontSize={'xs'}>In Progress</Text>
+                    </Box>
+                   
                :
                     data?.commits ?
-                         <Text  color={theme.Text.description} fontSize={'xs'}>Wating for leader to Aprroved</Text>
+                         <Box  w = "85px" alignItems={'center'} borderWidth = {1} borderColor = {'teal.500'} rounded={'full'}>
+                              <Text  color= 'teal.500' fontSize={'xs'}>on Publishing</Text>
+                         </Box>
                     :
                     <HStack space = {1} alignItems={'center'}>
                     <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
