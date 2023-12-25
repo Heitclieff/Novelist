@@ -15,6 +15,7 @@ interface Fieldprops {
     data : any
     doc_id : string;
     title : string
+    episode : string
     noveltitle : string
     content : string;
     timestamp : any;
@@ -60,16 +61,16 @@ const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id, data ,title, 
         isPressed
       }) => {
         return(
-            <HStack w = '100%' space  ={2} pt = {3} pb = {3} bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeractionaction  : theme.Bg.container} rounded= 'full'>
-            <Box w = '15%' justifyContent={'center'} alignItems={'center'}>
-                <Text color = {theme.Text.base} fontSize={'xl'} fontWeight={'semibold'}>{episode}</Text>       
-            </Box>
-        
-            <VStack>
-                <Text fontWeight={'medium'} color = {theme.Text.base}>{`${title}`}</Text>
-                <Text color = {theme.Text.description} fontSize={'xs'}>{`${formattedDateTime}`}</Text>
-            </VStack>      
-        </HStack>
+          <VStack pl = {2} space = {2} pr = {3}>
+            <HStack w = '100%' space  ={2} pt = {2} pb = {1}  bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeraction  : 'transparent'}>
+                <VStack >
+                    <Text fontWeight={'semibold'} color = {theme.Text.base}>{`Ep ${episode} ${title}`}</Text>
+                    <Text color = {theme.Text.description} fontSize={'xs'}>{`${formattedDateTime}`}</Text>
+                </VStack>
+            
+            </HStack>
+            <Divider bg = {theme.Divider.comment}/>
+          </VStack>
     )}
     }
     </Pressable>

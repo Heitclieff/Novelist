@@ -6,6 +6,7 @@ Button,
 HStack,
 useToast,
 Text,
+Spinner,
 } from 'native-base'
 
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
@@ -34,6 +35,7 @@ import firestore from '@react-native-firebase/firestore'
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth'
+import { SpinnerItem } from '../../components/Spinner'
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
@@ -77,7 +79,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
      
      const ApprovedDialogs = () => 
-     Alert.alert('Approved', 'Are you sure you want to approve this request ?', [
+     Alert.alert('Approve', 'Are you sure you want to approve this request ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -180,6 +182,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
 
      const approvedcommitRequest = async () : Promise <void> => {
+          setLoading(true);
           let status = "error"
           try{
                const getnovel =  firebase.collection("Novels").doc(doc_id);
@@ -262,11 +265,13 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
 
-          SendAlert(status , "Approved" , "Approve failed" , toast)     
+          SendAlert(status , "Approved" , "Approve failed" , toast);
+          setLoading(false);
      }
 
 
      const removecommitRequest = async () : Promise <void> => {
+          setLoading(true);
           let status = "error"
           try{
                if(!commit_id){
@@ -330,9 +335,11 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
           SendAlert(status , "Removed" , "Remove failed" , toast)
+          setLoading(false);
      }
 
      const changechapterStatement = async() : Promise<void> => {
+          setLoading(true);
           let status = "error"
           const currentContent =  chapterdocs.content.find((doc) => doc.id === id);
           if(!currentContent.access?.includes(useraccount?.[0].id)){
@@ -367,7 +374,7 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
           SendAlert(status , "Edit Mode" , "Changes failed" , toast)
-
+          setLoading(false);
      }
 
      const getnovelContent =  async () : Promise<void> => {
@@ -533,36 +540,39 @@ const Readcontent : React.FC <pageProps> = () => {
                     {!editable && 
                     <HStack id = "story-heading-wrap" justifyContent={'center'} >
                          <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} >{noveltitle}</Text>
+                              <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text>
                               <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
-                              {
+                               
+                              {isLoading ?
+                                   <SpinnerItem/>
+                              :
                               commit_id &&
-                              <HStack space = {1} mt = {2}>
-                                   <Button 
-                                   onPress = {DeleteRequestDialogs}
-                                   variant={'outline'}
-                                   borderColor={'rose.500'}
-                                   colorScheme={'rose'}
-                                   rounded={'full'} 
-                                   p = {1.5} 
-                                   _text={{fontSize : "xs"}} 
-                                   w = "100px" 
-                                   h={8}>Delete request</Button>
+                                   <HStack space = {1} mt = {2}>
+                                        <Button 
+                                        onPress = {DeleteRequestDialogs}
+                                        variant={'outline'}
+                                        borderColor={'rose.500'}
+                                        colorScheme={'rose'}
+                                        rounded={'full'} 
+                                        p = {1.5} 
+                                        _text={{fontSize : "xs"}} 
+                                        w = "100px" 
+                                        h={8}>Delete request</Button>
 
-                              {
-                              projectdocs.docs?.owner === useraccount?.[0].id &&
-                                   <Button 
-                                   onPress={ApprovedDialogs}
-                                   borderColor={'teal.500'}
-                                   colorScheme={'teal'}
-                                   rounded={'full'} 
-                                   p = {1.5} 
-                                   _text={{fontSize : "xs"}}
-                                   variant={'outline'}
-                                   w = "100px" h={8}
-                                   >Approve</Button>
-                               }        
-                              </HStack>
+                                   {
+                                   projectdocs.docs?.owner === useraccount?.[0].id &&
+                                        <Button 
+                                        onPress={ApprovedDialogs}
+                                        borderColor={'teal.500'}
+                                        colorScheme={'teal'}
+                                        rounded={'full'} 
+                                        p = {1.5} 
+                                        _text={{fontSize : "xs"}}
+                                        variant={'outline'}
+                                        w = "100px" h={8}
+                                        >Approve</Button>
+                                   }        
+                                   </HStack>
                               }
                          </VStack>  
                     </HStack>            

@@ -494,6 +494,8 @@ const NovelContent : React.FC <Pageprops> = () => {
                 myBook = {isMyOwn}
                 isLoading = {isLoading?.Button}
                 setlibrary = {setMylibraryBooks}
+                handleCommentButton = {handlePresentModalPress}
+                comment_status = {novelItem.comment_status}
               />
               }
               { novelItem &&
