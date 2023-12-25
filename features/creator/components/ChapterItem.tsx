@@ -21,10 +21,11 @@ import database from '@react-native-firebase/database';
 interface containerProps {
      data : any
      doc_id : string
+     chapterTitle :string
      isDisable : boolean
      action : any
 }
-const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,action}) => {
+const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,action , chapterTitle}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
      const [timeago ,settimeago] = useState('');
@@ -105,6 +106,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,acti
                     doc_id: doc_id,
                     title: data.title , 
                     content: data.content,
+                    noveltitle : chapterTitle,
                     editable : true,
                     createdBy : data.createdBy,
                     data : data,
@@ -118,8 +120,8 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,acti
                }) => {
                     return(
                     <HStack  w = '100%' pt = {2} space  ={2} bg = {theme.Bg.base}>
-                         <VStack w = '100%' space = {data.commits ? 0 : 1}  pl = {1}  justifyContent={'center'} bg = {data.commits ? 'amber.400' : null} rounded =  'md'> 
-                              <HStack pl = {2} pr=  {1} pb = {1}  justifyContent = 'space-between' alignItems = 'center' bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeraction : theme.Bg.base}>
+                         <VStack w = '100%'  pl = {1}  justifyContent={'center'} bg = {data.commits ? 'amber.400' : null} rounded =  'md'> 
+                              <HStack  pl = {2} pr=  {1} pb = {2}  justifyContent = 'space-between' alignItems = 'center' bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeraction : theme.Bg.base}>
                               <VStack space = {2} opacity = {during?.during || data.commits ? 0.5 : 1} >
                                    <HStack space = {1}>
                                         <Badge
@@ -170,6 +172,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,acti
      }
      
      
+     console.log(isDisable)
   return (
      <SwipeListView
        disableLeftSwipe = {isDisable || during?.during}

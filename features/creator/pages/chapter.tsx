@@ -186,6 +186,7 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     },0)
 },[])
 
+
 if(initial) return(
   <AppSkeleton/>
 )
@@ -258,6 +259,8 @@ if(initial) return(
                           <ChapterItem 
                           key = {index} 
                           data={item} 
+                          chapterTitle = {projectdocs?.title}
+                          isDisable = {isDisable}
                           doc_id = {chapterdocs.id}
                           action = {DeleteChapter}
                           />  
@@ -292,6 +295,8 @@ if(initial) return(
                           <MemorizedChapterItem 
                           key = {index} 
                           data={item}
+                          chapterTitle = {projectdocs?.title}
+                          isDisable ={isDisable}
                           doc_id = {chapterdocs.id}
                           action = {DeleteChapter}
                           />

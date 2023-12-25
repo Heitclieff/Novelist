@@ -77,7 +77,7 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id , projecttitle}) =
      }) => {
           return(
                <Stack pl = {1.5} bg=  "amber.500" rounded = 'sm' >
-                    <VStack p ={3}  bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : 'rgba(23, 22, 19 , 1)'} space = {1} alignItems = 'flex-start'  justifyContent={'center'}>
+                    <VStack p ={3}  bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  :  theme.themeMode === 'dark' ? 'rgba(23, 22, 19 , 1)' : theme.Bg.base} space = {1} alignItems = 'flex-start'  justifyContent={'center'}>
                          <VStack >
                               <Badge  colorScheme="amber" variant={'outline'} rounded={'full'}>{"EP." +  data.chap_id}</Badge>
                          </VStack>

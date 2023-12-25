@@ -82,7 +82,7 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                          myBook? 
                               <CheckCircleIcon
                               size={"20px"}
-                              color={theme.Bg.base}
+                              color={theme.Icon.base}
                               />
                               :
                               <CheckCircleIcon

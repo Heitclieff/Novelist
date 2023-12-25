@@ -71,7 +71,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           <Heading 
           size= 'md'
-          color = {theme.Text.base}
+          color = {theme.Text.heading}
           >{title}</Heading>
           <Box>
             <IconButton 

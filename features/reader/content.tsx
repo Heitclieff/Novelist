@@ -517,6 +517,8 @@ const Readcontent : React.FC <pageProps> = () => {
      useEffect(() => {
           initialContent();
       }, [id]);
+
+
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -540,64 +542,68 @@ const Readcontent : React.FC <pageProps> = () => {
           <FlatList Verticalscroll = {true} disableRefresh = {true} >
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
-                    {!editable && 
+                   
+             
                     <HStack id = "story-heading-wrap" justifyContent={'center'}>
-                         <Stack w = '95%' bg = 'teal.400' pl = {2} p = {0.4} rounded= 'sm'>
-                         <VStack  id = 'story-heading' alignItems={'center'} space = {2} bg = {'rgba(23, 22, 19 , 1)'} p = {2} rounded= 'sm'>
-                              <Badge alignSelf="center" variant={'outline'} colorScheme={'amber'} rounded= 'full'>
-                                   <HStack space = {1}>
-                                        <Spinner size = {12} color = "amber.500" />
-                                        <Text color = "amber.500" fontSize={'xs'} >EP.{chap_id}</Text>
-                                   </HStack>
-                              
-                              </Badge>
-                              {/* <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text> */}
-                              <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
-                              {isLoading ?
-                                   <SpinnerItem/>
-                              :
-                              commit_id &&
-                                   <HStack space = {1} mt = {2}  alignItems={'center'}>
-                                   <Button 
-                                        onPress = {DeleteRequestDialogs}
-                                        bg={'transparent'}
-                                        borderColor={'gray.800'}
-                                        colorScheme={'rose'}
-                                        rounded={'full'} 
-                                        p = {1.5} 
-                                        borderWidth={1}
-                                        h={8}
-                                        _text={{fontSize : "xs" , color : 'white'}} 
-                                        w = "130px" 
-                                        leftIcon={<SmallCloseIcon style = {{color : 'red'}}/>}
-                                        >
-                                        Cancel
-                                   </Button>
-                                   {
-                                   projectdocs.docs?.owner === useraccount?.[0].id &&
-                                        <Button 
-                                        onPress={ApprovedDialogs}
-                                        borderColor={'teal.500'}
-                                        colorScheme={'teal'}
-                                        rounded={'full'} 
-                                        p = {1.5} 
-                                        _text={{fontSize : "xs"}}
-                                        variant={'outline'}
-                                        w=  "130px" 
-                                        h={8}
-                                        leftIcon={
-                                             <CheckIcon/>
-                                        }
-                                        >Publish
-                                        </Button>
-                                   }    
-                                   
-                                   </HStack>
+                         <Stack w = '95%' bg = {commit_id ?  'amber.500' : 'teal.500'} pl = {2} p = {0.4} rounded= 'sm'>
+                         <VStack  id = 'story-heading' alignItems={'center'} space = {2} bg = {theme.themeMode === "dark" ? 'rgba(23, 22, 19 , 1)' : 'trueGray.50'} p = {2} rounded= 'sm'> 
+                              {!commit_id ? 
+                                   <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text>
+                                   :
+                                   <Badge alignSelf="center" variant={'outline'} colorScheme={'amber'} rounded= 'full'>
+                                        <HStack space = {1}>
+                                             <Spinner size = {12} color = "amber.500" />
+                                             <Text color = "amber.500" fontSize={'xs'} >EP.{chap_id}</Text>
+                                        </HStack>
+                                   </Badge>
                               }
+                              <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
+                    {commit_id && isLoading ?
+                         <SpinnerItem/>
+                    :         
+                    commit_id &&
+                         <HStack space = {1} mt = {2}  alignItems={'center'}>
+                         
+                         <Button 
+                              onPress = {DeleteRequestDialogs}
+                              bg={'transparent'}
+                              borderColor={'gray.800'}
+                              colorScheme={'rose'}
+                              rounded={'full'} 
+                              p = {1.5} 
+                              borderWidth={1}
+                              h={8}
+                              _text={{fontSize : "xs" , color : theme.Text.base}} 
+                              w = "130px" 
+                              leftIcon={<SmallCloseIcon style = {{color : 'red'}}/>}
+                              >
+                              Cancel
+                         </Button>
+                         {
+                         projectdocs.docs?.owner === useraccount?.[0].id &&
+                              <Button 
+                              onPress={ApprovedDialogs}
+                              borderColor={'teal.500'}
+                              colorScheme={'teal'}
+                              rounded={'full'} 
+                              p = {1.5} 
+                              _text={{fontSize : "xs"}}
+                              variant={'outline'}
+                              w=  "130px" 
+                              h={8}
+                              leftIcon={
+                                   <CheckIcon/>
+                              }
+                              >Publish
+                              </Button>
+                         }    
+                         
+                         </HStack>
+                    }
                          </VStack>  
                          </Stack>
                     </HStack>            
-                    }
+                    
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>
                               {/* {`${novelItem[0].overview}`} */}

@@ -38,7 +38,7 @@ const NotificationAlertIcon = () => {
             <Box position='absolute' zIndex={10} minW={2} minH={2} bg='red.500' rounded='full' />
         </Box>
         <Box position='absolute'>
-            <IonIcon name='notifications' color={theme.Icon.static} size={15} />
+            <IonIcon name='notifications' color={theme.Icon.between} size={15} />
         </Box>
     </VStack>
     )

@@ -24,8 +24,9 @@ const MemorizedChapterItem = React.memo(ChapterItem);
 
 interface  containerProps {
    doc_id : string;
+   title : string
 }
-const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
+const EpisodeSection : React.FC <containerProps> = ({doc_id , title})=> {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const chapterdocs = useSelector((state) => state.content);
@@ -73,6 +74,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
                        key={item.id}
                        data={item.item}
                        doc_id={doc_id}
+                       chapterTitle= {title}
                     />
                  )
               }}

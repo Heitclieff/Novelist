@@ -78,7 +78,7 @@ export const Themelight = ({
     base : 'coolGray.100',
     header : '#f3f4f6',
     comment : '#f5f5f5',
-    container : 'coolGray.200',
+    container : 'trueGray.200',
     boxaction : "blueGray.200",
     action : 'coolGray.200',
     containeraction : 'coolGray.300',

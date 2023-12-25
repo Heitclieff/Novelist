@@ -39,7 +39,7 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,ch
     <VStack space = {1} position={'relative'} >
         <Box w = '100%' h = {10}  justifyContent={'center'} >
             <Stack mr = {5} ml = {5} bg = 'teal.500' rounded = 'sm' pl = {1.5} overflow = 'hidden'>
-                <HStack justifyContent={'space-between'} p = {0.5} pl = {2} alignItems={'center'} bg = "trueGray.800" >
+                <HStack justifyContent={'space-between'} p = {0.5} pl = {2} alignItems={'center'} bg = {theme.Bg.container}>
                     <Text 
                     fontSize={'sm'} 
                     color = {theme.Text.heading}
