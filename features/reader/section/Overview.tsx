@@ -15,7 +15,7 @@ const Overviewsection : React.FC <containerProps> = ({overview}) => {
     <VStack  ml = {3} p  ={2} mt = {2} mr = {3}  pt = {2} space = {2}  rounded={'md'}>
     <Text fontSize={'md'} fontWeight={'semibold'} color = {theme.Text.heading}>Overview</Text>
     <Box w = '100%'>
-        <Text color = {theme.Text.base}>{`${overview}`}</Text>
+        <Text color = {theme.Text.base}>{overview ? `${overview}` : "* No overview"}</Text>
     </Box>
 </VStack>
   )

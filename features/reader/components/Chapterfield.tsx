@@ -10,7 +10,8 @@ Icon ,
 IconButton, 
 VStack , 
 Divider ,
-PresenceTransition
+PresenceTransition,
+Stack
 } from 'native-base';
 
 //@Components
@@ -37,24 +38,31 @@ const Chapterfield : React.FC <containerProps> = ({noveltitle ,comment_status,ch
   return (
     <VStack space = {1} position={'relative'} >
         <Box w = '100%' h = {10}  justifyContent={'center'} >
-            <HStack justifyContent={'space-between'}  ml = {5} p = {2} mr = {6}alignItems={'center'} bg = "trueGray.800" rounded = 'sm'>
-                <Text fontSize={'md'} color = {theme.Text.heading} fontWeight={'semibold'}>All Episodes ({chapterdata?.length})</Text>
-                <IconButton 
-                    isDisabled = {!comment_status}
-                    size = 'sm'
-                    w = "30px"
-                    h = "30px"
-                    rounded={'full'}
-                    onPress= {() => setReverseOrder(!reverseOrder)}
-                    icon = {
-                        <FontAwesome5Icon 
-                        size = {14}
-                        color = {theme.Icon.base}
-                        name = {'sort'}
-                        />
-                    }
-                />    
-            </HStack>
+            <Stack mr = {5} ml = {5} bg = 'teal.500' rounded = 'sm' pl = {1.5} overflow = 'hidden'>
+                <HStack justifyContent={'space-between'} p = {0.5} pl = {2} alignItems={'center'} bg = "trueGray.800" >
+                    <Text 
+                    fontSize={'sm'} 
+                    color = {theme.Text.heading}
+                    fontWeight={'semibold'}>
+                        All Episodes ({chapterdata?.length})
+                    </Text>
+                    <IconButton 
+                        isDisabled = {!comment_status}
+                        size = 'sm'
+                        w = "30px"
+                        h = "30px"
+                        rounded={'full'}
+                        onPress= {() => setReverseOrder(!reverseOrder)}
+                        icon = {
+                            <FontAwesome5Icon 
+                            size = {14}
+                            color = {theme.Icon.base}
+                            name = {'sort'}
+                            />
+                        }
+                    />    
+                </HStack>
+            </Stack>
         </Box>
         
         <VStack  pl = {4}  pr = {4}  space=  {2}>

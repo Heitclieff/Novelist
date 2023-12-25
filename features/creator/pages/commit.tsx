@@ -3,9 +3,11 @@ import {
 Box , 
 VStack ,
 HStack , 
+Stack,
 Icon , 
 Text , 
 Select,
+Badge,
 Center} from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
@@ -42,11 +44,11 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
      const [isLoading , setisLoading] = useState<boolean>(true); 
      const [initial , setInitial] = useState<boolean>(true);
      
+     const projectdocs = useSelector((state) => state.project);
      const projectcommits = useSelector((state) => state.field);
      const {snapshotcontent , id} = route.params;
      
 
-     console.log(projectcommits)
      const fetchingCommit =  async () : Promise <void> => { 
           try{
                if(id === projectcommits.id){
@@ -84,9 +86,26 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
         <Memorizednavigation title = "Publishing" 
             rightElement={[{icon : <AntdesignIcon size = {18} color = {theme.Icon.between} name = 'appstore-o'/> , navigate : navigation.openDrawer}]}
         />
-     <VStack pl ={6} pt = {5} pr = {6} flex= {1}>
-          <Box w = '100%' h= {5}>
-          </Box>
+     <VStack pl ={6} pt = {5} pr = {6} flex= {1} >
+          <Stack w = '100%' pl = {1.5} bg = 'amber.500'rounded= "sm" overflow = 'hidden'>
+               <HStack w = '100%' p = {1} pl = {2}  bg = {theme.Bg.container} alignItems = 'center' justifyContent={'space-between'}>
+                    <Text color = {theme.Text.heading} fontWeight={'semibold'} fontSize={'xs'}>Publishing List</Text>
+                    <Badge
+                        colorScheme="amber" 
+                        rounded="full"
+                     
+                        variant="outline" 
+                        
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        _text={{
+        
+                          fontSize: 10
+                    }}>
+                         {projectcommits.field?.length + " Item"} 
+                    </Badge>
+               </HStack>
+          </Stack>
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
                <VStack mt = {5} space = {3}>
                     {
@@ -99,12 +118,13 @@ const Commit : React.FC <Pageprops> =  ({route}) => {
                                    key = {index} 
                                    data= {item} 
                                    doc_id=  {id}
+                                   projecttitle =  {projectdocs.docs?.[0].title}
                                    />
                               )
                          :
 
                          <Center>
-                              <Text color = {theme.Text.base} fontSize={'xs'}>Nothing to commit right now.</Text>
+                              <Text color = {theme.Text.base} fontSize={'xs'}>Nothing to Publish right now.</Text>
                          </Center>   
                }
                </VStack>

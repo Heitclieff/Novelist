@@ -48,7 +48,8 @@ const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, l
         h = {290}
         p = {1}
         space= {3}
-        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null}      
+        
+        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : 'transparent'}      
         >
             <Box 
             id = "Displaycase"

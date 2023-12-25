@@ -126,7 +126,7 @@ const Drawernavigator : React.FC = () => {
             )}}
           />
 
-          <Drawer.Screen name="Chapters" 
+          <Drawer.Screen name="Episodes" 
             component={Chapter} 
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (

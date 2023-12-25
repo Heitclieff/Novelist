@@ -4,10 +4,12 @@ HStack,
 Box, 
 VStack, 
 Text , 
+Badge,
 Divider , 
 Pressable} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
+
 
 interface Fieldprops {
     id : number,
@@ -56,9 +58,20 @@ const ChapterItem : React.FC <Fieldprops> = ({episode ,id, doc_id, data ,title, 
       }) => {
         return(
           <VStack pl = {2} space = {2} pr = {3}>
-            <HStack w = '100%' space  ={2} pt = {2} pb = {1} bg={isPressed ? 'rgba(255, 191, 0, 0.4)' : isHovered ? theme.Bg.containeraction : 'transparent'}>
-                <VStack >
-                    <Text fontWeight={'semibold'} color = {isPressed ? theme.Text.heading : theme.Text.base}>{`Ep ${episode} ${title}`}</Text>
+            <HStack w = '100%' space  ={2} pt = {2} pb = {1} bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeraction : 'transparent'}>
+                <VStack alignItems= 'flex-start'>
+                  <HStack space = {1}>
+                    <Badge
+                    colorScheme={'teal'}
+                    rounded = 'full'
+                    variant={'outline'}
+                    >
+                      {"EP." + episode}
+                    </Badge>
+                    <Text fontWeight={'semibold'} color = {isPressed ? theme.Text.heading : theme.Text.base}>{`${title}`}</Text>
+                  </HStack>
+                    
+                    
                     <Text color = {isPressed ? theme.Text.heading : theme.Text.description} fontSize={'xs'}>{`${formattedDateTime}`}</Text>
                 </VStack>
             

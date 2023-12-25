@@ -4,7 +4,11 @@ Box ,
 HStack, 
 Text , 
 VStack , 
-Pressable} from 'native-base'
+Pressable,
+Badge,
+Stack,
+Divider,
+Flex} from 'native-base'
 import { Image } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useDispatch , useSelector } from 'react-redux'
@@ -13,13 +17,16 @@ import { useNavigation } from '@react-navigation/native'
 interface containerProps {
      data : any
      doc_id : string
+     projecttitle : string
 }
-const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
+
+const CommitItem : React.FC <containerProps>= ({data , doc_id , projecttitle}) => {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
 
      const [timeago ,settimeago] = useState('');
 
+     console.log("Project Title" , projecttitle)
      const teams = useSelector((state) => state.teams);
      const profile = teams?.teams.find((member) => member.id == data.commit_by)
 
@@ -55,8 +62,10 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
      <Pressable onPress = {() => navigation.navigate('Readcontent',{
           commit_id : data.commit_id,
           id : data.id,
+          chap_id : data.chap_id,
           doc_id: doc_id,
-          title: data.title, 
+          title: data.title,
+          noveltitle : projecttitle, 
           editable : false,
           commitable : true,
      })}
@@ -67,24 +76,31 @@ const CommitItem : React.FC <containerProps>= ({data , doc_id}) => {
          isPressed
      }) => {
           return(
-               <VStack w = '100%' p ={3} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container} space = {1} rounded={'md'}>
-                    <Text color = {theme.Text.base} numberOfLines={1} fontWeight={'semibold'}>{data.title}</Text>
-                    <Text color = {theme.Text.description} fontSize={'xs'}>{`Chapter ${data.chap_id}`}</Text>
-                    <HStack space = {2} mt = {1}>
-                         <Box w = {5} h=  {5} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
-                              <Image
-                              id = 'Profile-image'
-                              style ={{width : '100%' , height : '100%'}}
-                              source={{uri :profile?.pf_image}}
-                              />
+               <Stack pl = {1.5} bg=  "amber.500" rounded = 'sm' >
+                    <VStack p ={3}  bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : 'rgba(23, 22, 19 , 1)'} space = {1} alignItems = 'flex-start'  justifyContent={'center'}>
+                         <VStack >
+                              <Badge  colorScheme="amber" variant={'outline'} rounded={'full'}>{"EP." +  data.chap_id}</Badge>
+                         </VStack>
+                         <Box>
+                              <Text color = {theme.Text.base} numberOfLines={1} fontWeight={'semibold'}>{data.title}</Text>
                          </Box>
-                         <HStack space = {1}>
-                              <Text fontSize={'xs'} color = {theme.Text.description} fontWeight={'medium'}>{`${profile?.username}`}</Text> 
-                              <Text fontSize={'xs'} color = {theme.Text.description}>{timeago}</Text> 
+                         <HStack space = {2} mt = {1}>
+                              <Box w = {5} h=  {5} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
+                                   <Image
+                                   id = 'Profile-image'
+                                   style ={{width : '100%' , height : '100%'}}
+                                   source={{uri :profile?.pf_image}}
+                                   />
+                              </Box>
+                              <HStack space = {1}>
+                                   <Text fontSize={'xs'} color = {theme.Text.description} fontWeight={'medium'}>{`${profile?.username}`}</Text> 
+                                   <Text fontSize={'xs'} color = {theme.Text.description}>{timeago}</Text> 
+                              </HStack>
+                         
                          </HStack>
-                    
-                    </HStack>
-               </VStack>
+                    </VStack>
+                    <Divider bg=  {theme.Divider.base}/>
+               </Stack>
           )
      }}
      </Pressable>

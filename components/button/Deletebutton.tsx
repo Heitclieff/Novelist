@@ -17,7 +17,7 @@ const Deletebutton : React.FC <containerProps> = ({action , id ,doc_id , title }
      const theme:any = useContext(ThemeWrapper);
 
      const SavingAlertDailog = () => 
-     Alert.alert('Remove', `you want to remove ${title} ?`, [
+     Alert.alert('Delete', `Do you want to delete ${title} ?`, [
           {
                text: 'Cancel',
                style: 'cancel',
@@ -28,23 +28,24 @@ const Deletebutton : React.FC <containerProps> = ({action , id ,doc_id , title }
 
   return (
      <HStack  
+     w = '100%'
      flex = {1} 
      m = {1}  
      space = {1} 
      flexDirection={'row'} 
      alignItems={'center'} 
      justifyContent={'flex-end'} 
-     rounded={'full'} 
-     overflow={'hidden'}>
+     overflow={'hidden'}
+     >
 
           <IconButton 
           onPress={SavingAlertDailog}
           bg = {'rose.600'}
           colorScheme={'rose'}
+          borderRadius={0}
           size = 'md'
-          w = {50}
-          h = {50}    
-          rounded={'full'}
+          w = {55}
+          h = "100%"   
           icon = {
                <AntdesignIcon
                     name='delete'

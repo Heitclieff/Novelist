@@ -5,6 +5,7 @@ Alert ,
 VStack , 
 HStack , 
 Text, 
+Badge,
 IconButton , 
 Box ,
 Icon,
@@ -19,16 +20,12 @@ const CreatorAlert : React.FC <containerProps>  = () => {
 
   return (
      <Center>
-          <VStack   pl = {3} pr = {3}>
-          <HStack  justifyContent="space-between">
-               <HStack  alignItems="center" space= {2}>
-               <WarningTwoIcon color = {'yellow.600'} size=  'xs'/>
-               <Text fontSize="xs" fontWeight="normal" color = {theme.Text.base}>
-                    Teams sizes was full.
-               </Text>
-               </HStack>
-          </HStack>
-          </VStack>
+          <Badge
+           rounded={'full'}
+           variant={'outline'}
+           colorScheme={'amber'}
+          >TEAM FULL
+          </Badge>
      </Center>
   )
 }

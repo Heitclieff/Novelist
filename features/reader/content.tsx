@@ -2,13 +2,16 @@ import React,{useContext, useEffect, useRef, useState} from 'react'
 import { 
 Box , 
 VStack , 
+Stack,
+IconButton,
 Button,
 HStack,
 useToast,
 Text,
+Badge,
 Spinner,
 } from 'native-base'
-
+import { SmallCloseIcon , CheckIcon } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { TextInput  , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
@@ -79,7 +82,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
      
      const ApprovedDialogs = () => 
-     Alert.alert('Approve', 'Are you sure you want to approve this request ?', [
+     Alert.alert('Publish', 'Are you sure you want to publish this episode ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -88,7 +91,7 @@ const Readcontent : React.FC <pageProps> = () => {
      ]);
 
      const DeleteRequestDialogs = () => 
-     Alert.alert('Delete', 'Are you sure you want to delete this request?', [
+     Alert.alert('Cancel', 'Are you sure you want to unpublish this episode ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -133,7 +136,7 @@ const Readcontent : React.FC <pageProps> = () => {
                };
                
                const request = {
-                    title : `Request Commit ${title}`,
+                    title : `${title}`,
                     chap_id : chap_id,
                     id :id,
                     doc_id : doc_id,
@@ -443,7 +446,7 @@ const Readcontent : React.FC <pageProps> = () => {
      
 
       const GoBackwithReference = () => {
-          navigation.navigate('Chapters');
+          navigation.navigate('Episodes');
           reference.update({during : false})
       }
 
@@ -538,27 +541,38 @@ const Readcontent : React.FC <pageProps> = () => {
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
                     {!editable && 
-                    <HStack id = "story-heading-wrap" justifyContent={'center'} >
-                         <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text>
+                    <HStack id = "story-heading-wrap" justifyContent={'center'}>
+                         <Stack w = '95%' bg = 'teal.400' pl = {2} p = {0.4} rounded= 'sm'>
+                         <VStack  id = 'story-heading' alignItems={'center'} space = {2} bg = {'rgba(23, 22, 19 , 1)'} p = {2} rounded= 'sm'>
+                              <Badge alignSelf="center" variant={'outline'} colorScheme={'amber'} rounded= 'full'>
+                                   <HStack space = {1}>
+                                        <Spinner size = {12} color = "amber.500" />
+                                        <Text color = "amber.500" fontSize={'xs'} >EP.{chap_id}</Text>
+                                   </HStack>
+                              
+                              </Badge>
+                              {/* <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text> */}
                               <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
-                               
                               {isLoading ?
                                    <SpinnerItem/>
                               :
                               commit_id &&
-                                   <HStack space = {1} mt = {2}>
-                                        <Button 
+                                   <HStack space = {1} mt = {2}  alignItems={'center'}>
+                                   <Button 
                                         onPress = {DeleteRequestDialogs}
-                                        variant={'outline'}
-                                        borderColor={'rose.500'}
+                                        bg={'transparent'}
+                                        borderColor={'gray.800'}
                                         colorScheme={'rose'}
                                         rounded={'full'} 
                                         p = {1.5} 
-                                        _text={{fontSize : "xs"}} 
-                                        w = "100px" 
-                                        h={8}>Delete request</Button>
-
+                                        borderWidth={1}
+                                        h={8}
+                                        _text={{fontSize : "xs" , color : 'white'}} 
+                                        w = "130px" 
+                                        leftIcon={<SmallCloseIcon style = {{color : 'red'}}/>}
+                                        >
+                                        Cancel
+                                   </Button>
                                    {
                                    projectdocs.docs?.owner === useraccount?.[0].id &&
                                         <Button 
@@ -569,12 +583,19 @@ const Readcontent : React.FC <pageProps> = () => {
                                         p = {1.5} 
                                         _text={{fontSize : "xs"}}
                                         variant={'outline'}
-                                        w = "100px" h={8}
-                                        >Approve</Button>
-                                   }        
+                                        w=  "130px" 
+                                        h={8}
+                                        leftIcon={
+                                             <CheckIcon/>
+                                        }
+                                        >Publish
+                                        </Button>
+                                   }    
+                                   
                                    </HStack>
                               }
                          </VStack>  
+                         </Stack>
                     </HStack>            
                     }
                     <VStack p = {2}>
