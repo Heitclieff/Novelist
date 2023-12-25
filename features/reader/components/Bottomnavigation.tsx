@@ -76,13 +76,13 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                     variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
                     bg={theme.themeMode === 'dark' ? myBook ? 'amber.400' : null :  'amber.400'}
                     borderColor={'amber.400'}
-                    opacity={myBook ? theme.themeMode === 'dark' ?   0.9 : 0.5 : 1}
+                    opacity={myBook ? 0.85 : 1}
                     
                     rightIcon={
                          myBook? 
                               <CheckCircleIcon
                               size={"20px"}
-                              color={theme.Icon.base}
+                              color={'black'}
                               />
                               :
                               <CheckCircleIcon

@@ -46,7 +46,7 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
                                     <MemorizedOptionfield
                                         title = {optionitem.title}
                                         isDividerEnable = {false}
-                                        isChevronEnable={false}
+                                        isChevronEnable={true}
                                         justifyIcon  = 'center'
                                         direction={optionitem.direct}
                                         detail = {optionitem.detail}

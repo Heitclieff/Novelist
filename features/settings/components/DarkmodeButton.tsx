@@ -40,10 +40,11 @@ const DarkmodeButton : React.FC <containerProps> = () => {
          return (
           <VStack
            w = '100%'
-           h = {60}
+           h = {50}
            m = {0.3}
-           bg= {isPressed ? 'coolGray.300' : isHovered ? 'coolGray.300' : 'coolGray.200'}
-           rounded={'full'}>
+           rounded = 'md'
+           bg= {isPressed ? 'coolGray.300' : isHovered ? 'coolGray.300' : theme.themeMode === 'dark' ? 'coolGray.300' : theme.Bg.base}
+           >
                <HStack 
                 w= '100%'
                 h = '100%'

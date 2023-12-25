@@ -96,7 +96,9 @@ const Menu :React.FC <Pageprops> = () => {
                   icon = {iconList[key]}
                   navigation={navigation}
                   isDividerEnable = {false}
-                  isChevronEnable={false}
+                  isChevronEnable={true}
+                  colorScheme = {true}
+                  isDividerEnable = {true}
                   direction = {item.direct}
                 />    
                 ))
