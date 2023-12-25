@@ -29,8 +29,7 @@ const Deletebutton : React.FC <containerProps> = ({action , id ,doc_id , title }
   return (
      <HStack  
      w = '100%'
-     flex = {1} 
-     m = {1}  
+     flex = {1}  
      space = {1} 
      flexDirection={'row'} 
      alignItems={'center'} 
