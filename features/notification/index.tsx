@@ -183,7 +183,7 @@ const Notification : React.FC = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-       <HStack mt = {5} justifyContent={'space-between'} pl = {5} >
+       <HStack mt = {5} justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5} pb = {2}>
             <Text color = {theme.Text.base}>Recently</Text>
             {useritem && 
               useritem.notify > 0 &&

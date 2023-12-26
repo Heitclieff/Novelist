@@ -36,7 +36,7 @@ const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
 const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,rightElement = [] ,notify}) => {
     const theme: any = useContext(ThemeWrapper);
     const navigation = useNavigation();
-    
+
     const animatedNavbarStyle = useAnimatedStyle(() => {
         const backgroundColor = interpolateColor(scrollY.value, [0, 100],
             ['transparent', theme.Bg.header]);
@@ -67,7 +67,7 @@ const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,
                     justifyContent={'space-between'}
                     alignItems={'center'}
                     safeAreaTop
-                    pl = {4}
+                    pl = {5}
                 >
                     
                         <Animated.Text
