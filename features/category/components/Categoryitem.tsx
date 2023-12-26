@@ -1,4 +1,4 @@
-import React,{FC} from 'react'
+import React,{useRef} from 'react'
 import { 
 Box , 
 VStack ,
@@ -6,7 +6,6 @@ Text ,
 Center,
 Pressable,
  } from 'native-base'
-import { Image } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useContext } from 'react'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
@@ -21,7 +20,6 @@ interface Itemsprops {
 const CategoryItems : React.FC <Itemsprops> = ({images , title , id}) =>{
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
-  // console.log('cate item',title)
 
   return (
     <Pressable onPress={()=> navigation.navigate('Template',{title, path : 'Novels' , option : id})}>

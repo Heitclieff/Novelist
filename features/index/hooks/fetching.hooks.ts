@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect , useRef} from 'react'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { useNavigation } from '@react-navigation/native';
@@ -83,6 +83,7 @@ const FetchingLibraryHooks =  async (uid : string , db: any , dispatch : any) =>
   
             const novelDocs = findingNovels.docs.map(doc => ({id: doc.id ,...doc.data()}))
             dispatch(setMylibrary({book : novelDocs}))
+            console.log("--> Library Loaded.")
           }
      } catch (error) {
           console.log("Fetching Hooks: Failed to fetch Library content." , error)
@@ -115,6 +116,7 @@ const FetchingBookmarkHooks =  async (uid : string , db: any , dispatch : any) =
             });
   
             dispatch(setMybookmarks({slot : Mybooks , dockey : bookmarkKeys}));
+            console.log("--> Bookmarks Loaded.")
           }
 
      }catch(error){
@@ -130,10 +132,12 @@ const FetchingCategoryHooks = (refreshing : boolean) => {
           try {
                const getcategory = await db.collection('Category').get()
                const categorydocs = getcategory.docs.map(doc => ({id : doc.id , ...doc.data()}))
-               
+    
                dispatch(setCategory({category : categorydocs}));
+               console.log("--> Category Loaded.")
           } catch (error) {
-               console.error('Fetching Hooks: Failed to fetch Category.', error);
+               console.log('Fetching Hooks: Failed to fetch Category.', error);
+               console.log("Location : index/hooks/fetching.hooks.ts");
           }
      }
      
@@ -148,6 +152,7 @@ const FetchingUserHooks = (setuserid :any) => {
      const Auth : any = auth();
      const navigation = useNavigation();
      const dispatch : any = useDispatch();
+     const prevAuthUser = useRef(Auth.currentUser);
 
      const fetchingUserCollection = async () => {
           try {
@@ -167,20 +172,23 @@ const FetchingUserHooks = (setuserid :any) => {
                     dispatch(setUser(userData))
                     FetchingLibraryHooks(uid , db ,dispatch);
                     FetchingBookmarkHooks(uid , db ,dispatch);
-
-                    return
+                    console.log(`--> auth Login : ${userData[0].username}`)
                  }
+               }else{
+                    navigation.navigate("Login");
                }
-               navigation.navigate("Login");
           }catch(error){
                     console.log("Error to get Authentication User" ,error);
           }
      }
 
      useEffect(() => {
-          fetchingUserCollection();
-     },[Auth.currentUser])
-  
+          if (prevAuthUser.current !== Auth.currentUser) {
+            fetchingUserCollection();
+          }
+          prevAuthUser.current = Auth.currentUser;
+     }, [Auth.currentUser]);
+
      return null;
 }
 
