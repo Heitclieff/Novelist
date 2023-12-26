@@ -4,6 +4,7 @@ export const Themedark = ({
   Bg : {
     tabbar : '#171717',
     header : '#171717',
+    menu : '#212121',
     base : 'trueGray.900',
     container : 'trueGray.800',
     comment : '#262626',
@@ -50,6 +51,7 @@ export const Themedark = ({
   },
   Divider : {
     base : 'trueGray.800',
+    menu : 'trueGray.700',
     comment : '#404040',
     tabbar : '#262626',
     stackbar : '#18181b',
@@ -75,9 +77,10 @@ export const Themelight = ({
   themeMode : 'light',
   Bg : {
     tabbar : 'white',
+    menu : 'trueGray.50',
     base : 'coolGray.100',
     header : '#f3f4f6',
-    comment : '#f5f5f5',
+    comment : '#fafafa',
     container : 'trueGray.200',
     boxaction : "blueGray.200",
     action : 'coolGray.200',
@@ -122,6 +125,7 @@ export const Themelight = ({
   },
   Divider : {
     base : 'trueGray.200',
+    menu : 'trueGray.200',
     tabbar : '#e4e4e7',
     stackbar : '#e4e4e7',
   },

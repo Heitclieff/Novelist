@@ -28,7 +28,7 @@ const DarkmodeButton : React.FC <containerProps> = () => {
           dispatch(setTheme(selectedTheme))
           dispatch(saveThemetoStorage(selectedTheme))
           setdarkmode(!darkmode);
-      }
+    }
 
   return (
      <Pressable onPress={toggleSwitch}>
@@ -40,15 +40,17 @@ const DarkmodeButton : React.FC <containerProps> = () => {
          return (
           <VStack
            w = '100%'
-           h = {50}
+           h = {"55px"}
            m = {0.3}
+           borderWidth = {1}
+           borderColor={theme.Divider.menu}
            rounded = 'md'
-           bg= {isPressed ? 'coolGray.300' : isHovered ? 'coolGray.300' : theme.themeMode === 'dark' ? 'coolGray.300' : theme.Bg.base}
+           bg= {isPressed ? 'coolGray.300' : isHovered ? 'coolGray.300' : theme.themeMode === 'dark' ? 'coolGray.300' : theme.Bg.menu}
            >
                <HStack 
                 w= '100%'
                 h = '100%'
-                pl = {5}
+                pl = {1.5}
                 justifyContent={'center'}
                 alignItems={'center'}
                 >
@@ -65,7 +67,7 @@ const DarkmodeButton : React.FC <containerProps> = () => {
                                 />
                     </Box>
                     <Box w = '85%' pl = {2}>
-                         <Text color = {"coolGray.800"} fontSize={'md'} fontWeight={theme.themeMode == 'dark' ? 'semibold': 'normal'} >Dark Mode</Text>
+                         <Text color = {theme.themeMode == 'dark' ? 'coolGray.800': 'coolGray.600'} fontSize={'sm'} fontWeight={theme.themeMode == 'dark' ? 'semibold': 'normal'} >Dark Mode</Text>
                     </Box>
                     
                 </HStack>

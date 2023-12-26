@@ -9,6 +9,7 @@ Text,
 Divider,
 Button,
 Input,
+Stack,
  } from 'native-base'
 import { Image , Alert} from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
@@ -106,25 +107,31 @@ const AccountSettings : React.FC <Pageprops> = () => {
     <Box flex = {1} bg = {theme.Bg.base}>
       <Memorizednavigation title= 'Account' onEditcontent = {false} />
       <FlatList disableRefresh = {true}>
-        <VStack flex = {1} mt = {1}  space = {3}> 
-            <VStack >          
-               <Suspense  fallback = {<Box>Loading..</Box>}>       
-               {MenuOptions.map((items , key) => 
-               <VStack space = {1}  key=  {key}>
-                    <MemoriedEditfield  
-                    inputColor = {theme.Text.description}
-                    inputStyle = {'space-between'} 
-                    options = {items}/>
-               </VStack>
-               )}
-               </Suspense>    
-            </VStack>
-            <Box p = {5}>
-               <Button size={'sm'} rounded={'full'}  variant={'outline'} borderColor={'red.500'} onPress=  {LogoutAlert}>
-                    <Text color={'red.500'} fontSize={'xs'}>Sign out</Text>        
-               </Button>
-            </Box>
-        </VStack>
+        <Stack pl = {6} pr = {6}>
+          <VStack flex = {1} mt = {1}  space = {3}> 
+              <VStack rounded = 'md' overflow = 'hidden' space = {'1px'} borderWidth={1} borderColor = {theme.Divider.menu} bg = {theme.Divider.menu}>           
+                {MenuOptions.map((items , key) => 
+                      <MemoriedEditfield 
+                      key = {key} 
+                      inputColor = {theme.Text.description}
+                      inputStyle = {'space-between'} 
+                      options = {items}/>
+                )}
+              </VStack>
+              <Box pt = {2}>
+                <Button 
+                size={'sm'} 
+                rounded={'full'}  
+                variant={'outline'}
+                _pressed={{bg : 'red.500' , _text : {color : 'white'}}}
+                _text={{color : 'red.500'}}
+                borderColor={'red.500'} 
+                onPress=  {LogoutAlert}>
+                      Sign out
+                </Button>
+              </Box>
+          </VStack>
+        </Stack>
       </FlatList>
       
     </Box>

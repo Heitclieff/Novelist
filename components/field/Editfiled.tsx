@@ -29,16 +29,22 @@ const Editfield : React.FC <containerProps> = ({options , inputStyle = 'flex-sta
       isPressed
     }) => {
     return(
-        <Box pl = {2} justifyContent ={options.height ? 'flex-start' : 'center'}  h = {options.height ? options.height : '10'}  bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : null} >
+        <Box 
+        w = '100%'
+        justifyContent ={options.height ? 'flex-start' : 'center'}  
+        h = {options.height ? options.height : 10}  
+        bg={isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.menu}
+        >
         <HStack pl={4} mr = {4} alignItems={'center'} justifyContent={inputStyle} pt = {1} space = {2}>
             <Box w = '22%' >
                 <Text
-                fontWeight={'semibold'}
+                fontSize = '13px'
+                fontWeight={'medium'}
                 color = {theme.Text.base}
                 >{options.title}</Text>
             </Box>
             <Box>
-                <Text color={inputColor}>{options.value}</Text>
+                <Text color={inputColor} fontSize = '13px'>{options.value}</Text>
             </Box>
             
         </HStack>

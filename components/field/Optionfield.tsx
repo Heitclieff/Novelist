@@ -50,17 +50,16 @@ const Optionfield :React.FC <FiledProps> = ({
     }) => {
         return (
             <Stack 
-            h = {60}
-            pl = { colorScheme ? 1.5 : 0}
-            rounded = 'xs'
-            bg ={'teal.500'} 
+            w= '100%'           
+            h = {"55px"}
             >
                 <VStack   
-                bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.base}
-                h = {60}
+                    bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.menu}
+                    h = '100%'
                 >
                     <HStack 
                     w= '100%'
+   
                     h = '100%'
                     justifyContent={'space-between'}
                     alignItems={'center'}
@@ -71,7 +70,7 @@ const Optionfield :React.FC <FiledProps> = ({
                         {icon}
                         
                         <VStack justifyContent={'center'}  p = {1}  w = {'80%'} pl = {2}>
-                            <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize='md' >{title ? title : 'Options title'}</Text>
+                            <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize='sm' >{title ? title : 'Options title'}</Text>
                             {detail && <Text fontSize='xs' color = {theme.Text.description} >{detail}</Text>}
                         </VStack>
                         {isChevronEnable && 
@@ -84,8 +83,9 @@ const Optionfield :React.FC <FiledProps> = ({
                             </Box>
                         }
                     </HStack>
+                    <Divider bg = {theme.Divider.menu}/>
                 </VStack>
-                {isDividerEnable && <Divider bg = {theme.Divider.base}/>}
+              
             </Stack>
         )
     }}
