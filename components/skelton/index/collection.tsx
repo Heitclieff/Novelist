@@ -1,25 +1,21 @@
 import React,{useContext} from 'react'
 import {
 HStack, 
-VStack , 
-Text ,
-Box,
 Skeleton
 } from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { Dimensions } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
-export const CollectionSkelton = () => {
-    const theme:any = useContext(ThemeWrapper);
+interface skeltonProps {
+  args : number[]
+}
 
-    const ScreenWidth = Dimensions.get('window').width
-    const ScreenHeight = Dimensions.get('window').height
-    const HEADER_HEIGHT = ScreenHeight / 1.7
+export const CollectionSkelton : React.FC <skeltonProps> = ({args}) => {
+  const theme:any = useContext(ThemeWrapper);
 
   return (
     <HStack space = {2.5}>
-        {[0,0,0].map((item , key) =>
+        {args?.map((item , key) =>
             <Skeleton 
                 key = {key}
                 id = "Displaycase"    

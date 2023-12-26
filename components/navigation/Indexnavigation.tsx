@@ -12,6 +12,7 @@ Button,
 Icon
 }   from 'native-base'
 
+import { IndexnavigationHooks } from '../hooks/navigation.hooks'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -36,25 +37,8 @@ const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
 const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,rightElement = [] ,notify}) => {
     const theme: any = useContext(ThemeWrapper);
     const navigation = useNavigation();
-
-    const animatedNavbarStyle = useAnimatedStyle(() => {
-        const backgroundColor = interpolateColor(scrollY.value, [0, 100],
-            ['transparent', theme.Bg.header]);
-        return {
-            backgroundColor,
-
-        };
-    });
-
-    const AnimatedTextStyle = useAnimatedStyle(() => {
-        const textColor = interpolateColor(scrollY.value, [0, 100],
-        ['white', theme.Text.between_heading]);
-
-        return {
-            color : textColor
-        }
-    })
-
+    const {animatedNavbarStyle , AnimatedTextStyle} = IndexnavigationHooks(theme , scrollY)
+    
     return (
         <VStack
             w='100%'

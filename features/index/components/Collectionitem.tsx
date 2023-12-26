@@ -1,39 +1,32 @@
 import React, {useContext , useEffect} from 'react'
+import FastImage from 'react-native-fast-image';
 import { 
 Box,
 VStack,
 HStack,
 Text,
-Button,
-Icon,
-IconButton,
 Pressable,
- } from 'native-base'
-import { Image } from 'react-native'
+} from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 
+import { PreloadHooks } from '../hooks/image.hooks';
+
 interface CollectionProps { 
-  id : number | string,
-  title : string,
-  view : string,
-  images : string,
-  avatar : any,
+  id? : number | string,
+  title? : string,
+  view? : string,
+  like? : string
+  images : string | undefined,
+  avatar? : any | unknown,
 }
 
 const CollectionItem :React.FC <CollectionProps> = ({id, title , view, images, like ,avatar = null }) => {
   const theme:any = useContext(ThemeWrapper)
   const navigation = useNavigation();
 
-  useEffect(() => {
-    FastImage.preload([
-      {
-        uri: images,
-      },
-    ]);
-  },[images])
+  PreloadHooks(images)
   
   return (
     <Pressable onPress={() => navigation.navigate('Novelmain' ,{id})}>

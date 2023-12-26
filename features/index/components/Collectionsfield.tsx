@@ -1,22 +1,18 @@
-import React, { useCallback, useRef , Suspense} from 'react'
+import React, { useCallback, useRef , Suspense , useContext} from 'react'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { 
 Box,
 VStack,
 HStack,
-Text,
 Heading,
-Button,
-Icon,
 IconButton,
 } from 'native-base'
-import { View } from 'react-native';
-import { FlatList } from 'native-base'
-import { useContext } from 'react'
+import { View , FlatList } from 'react-native';
+import { SpinnerItem } from '../../../components/Spinner';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
 import { CollectionSkelton } from '../../../components/skelton/index/collection';
-import EntypoIcon from 'react-native-vector-icons/Entypo'
-import { SpinnerItem } from '../../../components/Spinner';
+
 const LazyCollectionItems = React.lazy(() => import('./Collectionitem'));
 
 interface Fieldsprops {
@@ -46,7 +42,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
     (item : Collections, round : number) => {
       const document : any = item.data()
       return(
-        <Suspense fallback = {<SpinnerItem/>} key={round}>
+        <Suspense fallback = {<CollectionSkelton args= {[0]}/>} key={round}>
           <MemorizedColletionItems
             id = {item.id}
             title = {document.title}
@@ -56,7 +52,6 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
           />
       </Suspense>
       )
-  
     },[]
   );
 
@@ -72,7 +67,9 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
           <Heading 
           size= 'md'
           color = {theme.Text.heading}
-          >{title}</Heading>
+          >
+            {title}
+          </Heading>
           <Box>
             <IconButton 
             onPress={() => navigation.navigate('Template',{title, path : 'Novels'})}
@@ -89,7 +86,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
         </HStack>
 
         {isLoading ?
-            <CollectionSkelton/>
+            <CollectionSkelton args= {[0,0,0]}/>
             :
             <FlatList
               ref = {flatListRef}
@@ -101,7 +98,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
               ItemSeparatorComponent={() => <View style={{width: 0}} />}
               onEndReachedThreshold={0.5}
             />
-          }
+        }
       </VStack> 
     </Box>
   )
