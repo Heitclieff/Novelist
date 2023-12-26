@@ -3,7 +3,10 @@ import React,{useContext, useState} from 'react'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider';
 import {Text, VStack} from 'native-base';
 import { useSharedValue , useAnimatedScrollHandler } from 'react-native-reanimated';
-
+import Animated, {
+useAnimatedStyle,
+interpolateColor,
+} from 'react-native-reanimated';
 //@ --Icons
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -42,6 +45,8 @@ interface loadingProps {
   second : boolean
 }
 
+const AnimatedAntdesignIcon = Animated.createAnimatedComponent(AntdesignIcon)
+
 const Index : React.FC <pageProps> = () => {
     const theme:any = useContext(ThemeWrapper);
     const scrollY = useSharedValue(0);
@@ -49,6 +54,24 @@ const Index : React.FC <pageProps> = () => {
       scrollY.value = event.contentOffset.y;
     })
 
+    
+    const AnimatedTextStyle = useAnimatedStyle(() => {
+      const textColor = interpolateColor(scrollY.value, [0, 100],
+      ['white', theme.Text.between_heading]);
+
+      return {
+          color : textColor
+      }
+    })
+
+    const AnimatedIconStyle = useAnimatedStyle(() => {
+      const textColor = interpolateColor(scrollY.value, [0, 100],
+      ['white', theme.Text.between_heading]);
+
+      return {
+          color : textColor,
+      }
+    })
     const userdata : any = useSelector((state : any | unknown) => state.userData);
     const [userid , setuserid] = useState<string>("");
     const [CollectionMostview , setCollectionMostview] = useState<any[]>([]);
@@ -77,6 +100,7 @@ const Index : React.FC <pageProps> = () => {
       refreshing
     )
    
+    
   return (
     <VStack bg = {theme.Bg.base} flex = {1} position = 'relative'>
         {userdata?.length > 0 &&
@@ -85,22 +109,20 @@ const Index : React.FC <pageProps> = () => {
             notify = {userdata[0].notify}
             
             leftElement = {
-              <Text
-                fontSize={'2xl'}
-                fontWeight={'bold'}
-                color={theme.Icon.between}
+              <Animated.Text
+                style = {[AnimatedTextStyle,  {fontSize : 20 , fontWeight : 'bold' }]}
               >Nobelist
-              </Text>     
+              </Animated.Text>     
             }
-
+            
             rightElement = {[{
               id: 1 , 
               navigate : 'Search',
-              icon: <AntdesignIcon  
-                      name = 'search1' 
-                      color = {theme.Icon.between} 
-                      size = {18}
-                    /> 
+              icon: <AnimatedAntdesignIcon  
+                name = 'search1' 
+                size = {18}
+              />
+             
               },{
               id: 2 ,
               navigate : 'Notification',
@@ -121,7 +143,7 @@ const Index : React.FC <pageProps> = () => {
               collections={CollectionMostview}
               isLoading = {isLoading.heading}
             />
-
+             
             <VStack  pl = {3} mt = {4}>
               <MemorizedCollectionField
               title="Hot New Novels"

@@ -16,7 +16,7 @@ export const Themedark = ({
     placeholder : '#a3a3a3',
     static : '#f3f4f6',
     between : '#1f2937',
-    between_heading : "coolGray.200",
+    between_heading : "#e5e7eb",
     reading : "white",
     action : 'coolGray.700',
     heading : 'coolGray.200',
