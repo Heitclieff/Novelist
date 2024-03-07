@@ -55,28 +55,38 @@ const ReportModal : React.FC <ModalProps> = ({showReport ,setShowReport , data ,
    return (
        <Center>
             <Modal isOpen={showReport} onClose={() => setShowReport(false)}>
-                 <Modal.Content maxWidth="400px" bg = {theme.Bg.container}>     
+                 <Modal.Content maxWidth="400px" bg = {theme.Bg.menu}>     
                       <Modal.CloseButton />
-                      <Modal.Header borderBottomWidth={0} bg = {theme.Bg.container} _text = {{color : theme.Text.heading}}>Report</Modal.Header>
+                      <Modal.Header borderBottomWidth={0} bg = {theme.Bg.menu} _text = {{color : theme.Text.heading}}>Report</Modal.Header>
                       <Modal.Body>
                          <TextArea
                               value = {reportArea}
                               onChangeText={(e : string) => setReportArea(e)}
                               placeholder = "Please type something to let us know about this."
                               color = {theme.Text.base}
-                              bg = {theme.Bg.action}
+                              borderColor = {theme.Text.menu}
+                              bg = {theme.Bg.container}
                          />
                       </Modal.Body>
-                      <Modal.Footer bg = {theme.Bg.container} borderTopWidth={0}>
-                           <Button.Group space={2}>
-                                <Button variant="ghost" _text={{color : theme.Text.base}} onPress={() => {
+                      <Modal.Footer bg = {theme.Bg.menu} borderTopWidth={0}>
+                           <Button.Group space={2} alignItems = 'center'>
+                                <Button
+                                variant="ghost" 
+                                rounded= 'full'
+                         
+                                _text={{color : theme.Text.base}}
+                                onPress={() => {
                                      setShowReport(false);
                                 }}>
                                      Cancel
                                 </Button>
                                 <Button
-                                
+                                rounded={'full'}
+                                p = {0}
+                                w = "80px"
+                                h = "35px"
                                 colorScheme={'teal'}
+                              
                                 onPress={() => {
                                     sendReport();
                                 }}>

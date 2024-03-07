@@ -113,22 +113,21 @@ const Drawernavigator : React.FC = () => {
       drawerContent={props => <Customdrawer {...props}/>}
       screenOptions={{drawerActiveTintColor : theme.Text.tab.active, drawerInactiveTintColor : theme.Text.tab.inactive}}>
 
-          <Drawer.Screen name="Dashboard" 
+          <Drawer.Screen name="Home" 
             component={Creatorcontent} 
             initialParams={{projectdocument:  projectdocument.docs  ,snapshotcontent , id , isupdated , mainrefresh : setRefreshing}}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <MaterialIcon
-                name='dashboard'
+                name='home'
                 size={15}
                 color = {focused ? theme.Icon.drawer : theme.Icon.base}
                 />
             )}}
           />
 
-          <Drawer.Screen name="Chapters" 
+          <Drawer.Screen name="Episodes" 
             component={Chapter} 
-            initialParams={{}}
             options={{headerShown : false , 
             drawerIcon : ({focused , size}) => (
               <EntypoIcon
@@ -140,7 +139,7 @@ const Drawernavigator : React.FC = () => {
           />
       {projectdocument.docs?.multiproject &&
           <>
-                <Drawer.Screen name="Commit" 
+                <Drawer.Screen name="Publishing" 
                 component={Commit} 
                 initialParams={{snapshotcontent , id}}
                 options={{headerShown : false , 

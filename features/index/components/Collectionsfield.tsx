@@ -1,58 +1,57 @@
-import React, { useCallback , Suspense} from 'react'
+import React, { useCallback, useRef , Suspense , useContext} from 'react'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { 
 Box,
 VStack,
 HStack,
-Text,
 Heading,
-Button,
-Icon,
 IconButton,
 } from 'native-base'
-import { View } from 'react-native';
-import { FlatList } from 'native-base'
-import { useContext } from 'react'
+import { View , FlatList } from 'react-native';
+import { SpinnerItem } from '../../../components/Spinner';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { useNavigation } from '@react-navigation/native';
 import { CollectionSkelton } from '../../../components/skelton/index/collection';
-import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 const LazyCollectionItems = React.lazy(() => import('./Collectionitem'));
 
 interface Fieldsprops {
-  title : string,
-  collections  : any ,
-  theme : any
+  title : string
+  collections  : any 
+  isLoading : boolean
  }
 
 interface Collections {
+  item? : any
+  data ? :any
   id : string  | number,
   title : string,
   images : string[ ];
   view : number;
-  isLoading : boolean
 }
 
 const MemorizedColletionItems = React.memo(LazyCollectionItems)
 
 const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoading}) => {
-  const theme:any = useContext(ThemeWrapper)
+  const theme: any = useContext(ThemeWrapper)
   const navigation = useNavigation();
+  const flatListRef = useRef(null);
+
+
   const renderCollectionItem = useCallback(
     (item : Collections, round : number) => {
-      const document = item.data()
+      const document : any = item.data()
       return(
-        <Suspense fallback = {<Box>Loading...</Box>} key={round}>
-        <MemorizedColletionItems
+        <Suspense fallback = {<CollectionSkelton args= {[0]}/>} key={round}>
+          <MemorizedColletionItems
             id = {item.id}
             title = {document.title}
             view = {document.view}
             images = {document.image}
             like = {document.like}
-            />
+          />
       </Suspense>
       )
-  
     },[]
   );
 
@@ -67,8 +66,10 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
         <HStack justifyContent={'space-between'} alignItems={'center'}>
           <Heading 
           size= 'md'
-          color = {theme.Text.base}
-          >{title}</Heading>
+          color = {theme.Text.heading}
+          >
+            {title}
+          </Heading>
           <Box>
             <IconButton 
             onPress={() => navigation.navigate('Template',{title, path : 'Novels'})}
@@ -85,9 +86,11 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
         </HStack>
 
         {isLoading ?
-            <CollectionSkelton/>
+            <CollectionSkelton args= {[0,0,0]}/>
             :
             <FlatList
+              ref = {flatListRef}
+              initialNumToRender={5}
               showsHorizontalScrollIndicator={false}
               horizontal
               data={collections}
@@ -95,7 +98,7 @@ const CollectionsField : React.FC <Fieldsprops> = ({title , collections , isLoad
               ItemSeparatorComponent={() => <View style={{width: 0}} />}
               onEndReachedThreshold={0.5}
             />
-          }
+        }
       </VStack> 
     </Box>
   )

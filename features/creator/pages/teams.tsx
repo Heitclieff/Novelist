@@ -6,7 +6,9 @@ Input ,
 Icon ,
 HStack,
 useToast,
-Text } from 'native-base';
+Text, 
+Badge,
+Stack} from 'native-base';
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
 import { FlatList } from '../../../components/layout/Flatlist/FlatList';
 import { useNavigation } from '@react-navigation/native';
@@ -218,7 +220,7 @@ const Team : React.FC <pageprops> = ({route}) => {
           />
          <Box flex = {1}>
           <FlatList refreshing = {refreshing} setRefreshing={setRefreshing}>
-            <Box w= '100%' mt = {2}>
+            <Box w= '100%' mt = {2} >
               <Box pl = {6} pr = {6}>
                   <Input 
                   rounded={'full'} 
@@ -232,78 +234,106 @@ const Team : React.FC <pageprops> = ({route}) => {
                   />
               </Box> 
             </Box> 
-            <VStack space = {2} m ={5} mt = {6}>
-               {userdocs.teams?.length >= 3 &&
-                    <CreatorAlert/>
-               }
-               <VStack mb = {4} space = {1}>
+            <VStack space = {2} mt = {6}>
+               <VStack  mb = {4} space = {3}>
                     {creators.pending?.length  > 0 &&
                          <>
-                         <HStack justifyContent = {'space-between'}>
-                              <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
-                              <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.pending.length}/2`}</Text>
-                         </HStack>
+                         <Stack ml = {4} mr = {4}  bg = {'amber.500'} pl = {1.5} rounded={'sm'} overflow= 'hidden'>
+                              <HStack p = {1} pr = {2} bg = {theme.Bg.container} justifyContent = {'space-between'} alignItems={'center'}>
+                                   <Text pl = {2} color = {theme.Text.heading} fontWeight={'semibold'} fontSize={'xs'}>Pending</Text>
+                                   <Badge
+                                     rounded = 'full'
+                                     colorScheme={'amber'}
+                                     variant={'outline'}
+                                     _text={{
+                                        fontSize: 10
+                                      }}
+                                   >{creators.pending.length + " User"}
+                                   </Badge>
+                              </HStack>
+                         </Stack>
                               <SwipeListView 
-                                   disableRightSwipe
                                    data={creators.pending}
-                                   leftOpenValue={60}
                                    rightOpenValue={-60}
                                    ItemSeparatorComponent={<Box h=  '2'/>}
                                    renderItem={(item:any , index:number) => {
                                         return(
-                                             <MemorizedTeamitem key = {index} id = {item.id} data= {item.item}/>
+                                             <MemorizedTeamitem 
+                                             key = {index} 
+                                             id = {item.id} 
+                                             data= {item.item}
+                                             />
                                         )
                                    }}
                                    renderHiddenItem={ (data, rowMap) => (
-                                        <Deletebutton 
-                                             action = {RemoveMember} 
-                                             id = {data.item.id} 
-                                             doc_id = {data.item.doc_id}
-                                             title = {data.item.username}
-                                        />
+                                        <Box w=  '100%' h= '100%' pr = {5}>
+                                             <Deletebutton 
+                                                  action = {RemoveMember} 
+                                                  id = {data.item.id} 
+                                                  doc_id = {data.item.doc_id}
+                                                  title = {data.item.username}
+                                             />
+                                        </Box>
                                          )
                                    }
                               />
                          </>
                     }         
                </VStack>
-               <HStack justifyContent = {'space-between'}>
-                    <Text pl = {3} color = {theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
-                    <Text pr = {3} color = {theme.Text.description} fontSize={'xs'}>{`${creators.other.length}/3`}</Text>
-               </HStack>
-               {creators.other.length > 0 ? 
-                    creators.other.map((item:string , index:number) => {
-                         const isDisable = item?.id === item.owner || item.owner !== useraccount[0].id
-                         return(
-                              <SwipeListView 
-                                key = {index}
-                                disableRightSwipe
-                                disableLeftSwipe = {isDisable}
-                                data={[0]}
-                                ItemSeparatorComponent={<Box h=  '2'/>}
-                                leftOpenValue={60}
-                                rightOpenValue={-60}
-                            
-                                renderItem={() => {
-                                   return(
-                                        <MemorizedTeamitem key = {index} id = {item.id} data= {item}/>
-                                   )
-                                }}
+               <Stack ml = {4} mr = {4} mb = {2} bg = {'trueGray.400'} pl = {1.5} rounded={'sm'} overflow= 'hidden'>
+                    <HStack p = {1} pr = {2} bg = {theme.Bg.container} justifyContent = {'space-between'} alignItems={'center'}>
+                         <Text pl = {2} color = {theme.Text.heading} fontWeight={'semibold'} fontSize={'xs'}>Member</Text>
+                         <Badge
+                           rounded = 'full'
+                           colorScheme={userdocs.teams?.length >= 3 ? 'teal' : null }
+                           borderColor={userdocs.teams?.length >= 3 ? null :  theme.Icon.base}
+                           variant={'outline'}
+                           _text={{
+                              fontSize: 10,
+                              color : userdocs.teams?.length < 3 ? theme.Text.base : 'teal.500'
+                         }}
+                         >{userdocs.teams?.length >= 3 ? "MAX" : creators.other.length + "/3"}
+                         </Badge>
+                    </HStack>
+               </Stack>
+               <VStack space = {2} >
+                    {creators.other.length > 0 ? 
+                         creators.other.map((item:string , index:number) => {
+                              const isDisable = item?.id === item.owner || item.owner !== useraccount[0].id
+                              return(
+                                   <SwipeListView 
+                                   key = {index}
+                                   disableLeftSwipe = {isDisable}
+                                   data={[0]}
+                                   ItemSeparatorComponent={<Box h=  '2'/>}
+               
+                                   rightOpenValue={-75}
+                              
+                                   renderItem={() => {
+                                        return(
+                                             <MemorizedTeamitem key = {index} id = {item.id} data= {item}/>
+                                        )
+                                   }}
 
-                                renderHiddenItem={ () => (
-                                   <Deletebutton 
-                                     id =  {item.id}
-                                     action = {RemoveMember} 
-                                     title = {item.username}/>
-                                     )
-                                }
-                                
-                              />
-                         )
-                    })
-                   
-               :null }
+                                   renderHiddenItem={ () => (
+                                        <Box w=  '100%' h= '100%' pr = {5}>
+                                             <Deletebutton 
+                                             id =  {item.id}
+                                             action = {RemoveMember} 
+                                             title = {item.username}/>
+                                             
+                                        </Box>
+                                        )
+                                   }
+                                   
+                                   />
+                              )
+                         })
+                    
+                    :null }
+               </VStack>
             </VStack>
+
             </FlatList>
         </Box>
      </VStack>

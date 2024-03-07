@@ -75,7 +75,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
 
      }
      const SavingAlertDailog = () => 
-     Alert.alert('Saving', 'you want to save this progress ?', [
+     Alert.alert('Saving', 'Do you want to save this progress ?', [
           {
                text: 'Cancel',
                style: 'cancel',
@@ -84,7 +84,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
      ]);
 
      const PushingDialogs = () => 
-     Alert.alert('Pushing', 'you want to push this progress to Commits ?', [
+     Alert.alert('Pushing', 'Do you want to push this progress to Publishing ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -98,7 +98,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                return
           }
 
-          Alert.alert('Saving!', 'Are you sure you want to go back without save?', [
+          Alert.alert('Saving', 'Are you sure you want to go back without saving ?', [
             {
               text: 'Cancel',
               onPress: () => null,
@@ -111,7 +111,7 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
     
 
      const EditingDialogs = () => 
-     Alert.alert('Edit', 'you want to edit this progress ?', [
+     Alert.alert('Edit', 'Do you want to change this progress to edit mode?', [
           {
                text: 'No',
                style: 'cancel',
@@ -179,49 +179,40 @@ const Chapternavigation: React.FC<contianerProps> = ({ editable, event, isEdit ,
                          </HStack>
                          :
                      
-
+                      
                          <HStack alignItems={'center'} space={2} >
-                              {/* <IconButton
-                                   size='sm'
-                                   rounded={'full'}
-                                  
-                                   icon={
-                                        <FeatherIcon
-                                             size={20}
-                                             color={theme.Icon.base}
-                                             name='settings' />}
-                              /> */}
-
-                              <Box  alignItems="center" >
-                                   <Menu w="150" bg = {theme.Bg.container} trigger={triggerProps => {
-                                        return <Pressable {...triggerProps}>
-                                             <FeatherIcon
-                                               size={20}
-                                               color={theme.Icon.base}
-                                               name='settings' />
-                                        </Pressable>
-                                   }}>
-                                        {
-                                        status &&
-                                        multiproject &&
-                                        accessable && 
+                              {!isEdit &&
+                                   <Box  alignItems="center" >
+                                        <Menu w="150" bg = {theme.Bg.container} trigger={triggerProps => {
+                                             return <Pressable {...triggerProps}>
+                                                  <FeatherIcon
+                                                  size={20}
+                                                  color={theme.Icon.base}
+                                                  name='settings' />
+                                             </Pressable>
+                                        }}>
+                                             {
+                                             status &&
+                                             multiproject &&
+                                             accessable && 
+                                                  <Menu.Item 
+                                                  _text={{color : theme.Text.base}}
+                                                  onPress = {() => openInvite(true)}
+                              
+                                                  >Invite
+                                                  </Menu.Item>
+                                             }
                                              <Menu.Item 
                                              _text={{color : theme.Text.base}}
-                                             onPress = {() => openInvite(true)}
-                         
-                                             >Invite
+                                             onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
+                                             >Settings
                                              </Menu.Item>
-                                        }
-                                        <Menu.Item 
-                                        _text={{color : theme.Text.base}}
-                                        onPress ={() => navigation.navigate('Editchapter', {title : chapterheader , chapterdocs , setChapterheader})}
-                                        >Settings
-                                        </Menu.Item>
-                                        
-                                   </Menu>
-                              </Box> 
+                                             
+                                        </Menu>
+                                   </Box> 
+                              }
 
-                              {!isLoading ?
+                         {!isLoading ?
                               status ? 
                                    isEdit ?
                                         
