@@ -6,6 +6,7 @@ HStack,
 Text,
 Divider,
 Button,
+Stack,
  } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import FeatherIcon from 'react-native-vector-icons/Feather'
@@ -81,28 +82,35 @@ const Menu :React.FC <Pageprops> = () => {
               <Userfield data = {userdata}/> 
             }
           </Box>
-          <VStack
-          id = 'Options-section'
-          w = '100%'
-          space=  {2}  
-          pl = {2}
-          pr = {2}
-          >
-               {React.useMemo(() => {
-                return  Menuitems.map((item, key) => (
-                  <MemorizeOptionfield
-                  key={key}
-                  title  = {item.title}
-                  icon = {iconList[key]}
-                  navigation={navigation}
-                  isDividerEnable = {false}
-                  isChevronEnable={false}
-                  direction = {item.direct}
-                />    
-                ))
-              },[navigation , theme])}
-   
-          </VStack>
+          <Stack pl = {3} pr = {3}>
+            <VStack
+            id = 'Options-section'
+            w = '100%'
+            rounded = 'md'
+            borderColor={theme.Divider.menu}
+            space = {'1px'}
+            borderWidth = {1}
+            bg = {theme.Divider.menu}
+            overflow = 'hidden'
+            >
+                {React.useMemo(() => {
+                  return  Menuitems.map((item, key) => (
+                    <MemorizeOptionfield
+                    key={key}
+                    title  = {item.title}
+                    icon = {iconList[key]}
+                    navigation={navigation}
+                    isDividerEnable = {false}
+                    isChevronEnable={true}
+                    colorScheme = {true}
+                    isDividerEnable = {true}
+                    direction = {item.direct}
+                  />    
+                  ))
+                },[navigation , theme])}
+    
+            </VStack>
+          </Stack>
         </VStack>
     </Box>
   )

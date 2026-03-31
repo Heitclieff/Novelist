@@ -15,7 +15,7 @@ import 'react-native-reanimated'
 
 enableScreens();
 LogBox.ignoreLogs(['Reanimated 2']);
-
+LogBox.ignoreLogs(['In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.']);
 // Register background handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);

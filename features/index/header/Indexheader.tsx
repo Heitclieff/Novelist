@@ -1,36 +1,31 @@
-import React, {useMemo , Suspense , useCallback , useContext, useRef } from 'react'
-import { Box , HStack, Text , Heading, VStack} from 'native-base';
+import React, {Suspense , useCallback, useRef } from 'react'
+import {VStack} from 'native-base';
 import { FlatList } from 'native-base';
-import { View , Animated , Dimensions } from 'react-native';
-import { ThemeWrapper } from '../../../systems/theme/Themeprovider';
+
 import Collectionheader from '../components/Collection.header';
-import LinearGradient from 'react-native-linear-gradient';
 import { HeaderSkelton } from '../../../components/skelton/index/header';
+import { SpinnerItem } from '../../../components/Spinner';
 
 interface layoutProps {
     collections : any,
     isLoading : boolean,
 }
+
+const MemorizedCollectionHeader = React.memo(Collectionheader)
+
 const Indexheader : React.FC <layoutProps> = ({collections , isLoading}) => {
-    const theme:any = useContext(ThemeWrapper)
-    const scrollY = useRef(new Animated.Value(0)).current
-    const ScreenWidth = Dimensions.get('window').width
- 
+    const flatListRef = useRef(null);
+
     const renderCollectionItem = useCallback(
-        (item : Collections, round : number) => {
+        (item : any, round : number) => {
             const document = item.data();
-            const translateX = Animated.add(scrollY , Animated.multiply(round , ScreenWidth * 0.8).interpolate({
-                inputRange: [0, ScreenWidth * 0.8],
-                outputRange: [0, (ScreenWidth - ScreenWidth * 0.8) / 2],
-                extrapolate: 'clamp',
-            }))
             return(
-                <Suspense callback = {<Box>Loading..</Box>}>
-                    <Collectionheader 
-                    key = {round}
-                    data={document} 
-                    id = {item.id}
-                    translateX = {translateX}/>  
+                <Suspense fallback = {<SpinnerItem/>}>
+                    <MemorizedCollectionHeader 
+                      key = {round}
+                      data={document} 
+                      id = {item.id}
+                    />
                 </Suspense>
             )
         },[]
@@ -45,6 +40,8 @@ const Indexheader : React.FC <layoutProps> = ({collections , isLoading}) => {
     <VStack flex = {1} justifyContent={'center'} >
         <VStack space = {1} position = 'relative'>
             <FlatList
+                ref = {flatListRef}
+                initialNumToRender = {5}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={collections}

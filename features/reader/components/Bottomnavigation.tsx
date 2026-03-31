@@ -15,6 +15,7 @@ import { CheckCircleIcon } from 'native-base';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 
 interface containerProps {
      isLiked : boolean ,
@@ -24,26 +25,45 @@ interface containerProps {
      bottomspace : number,
      myBook : boolean
      setlibrary : any
+
+     comment_status : boolean
+     handleCommentButton : any
 }
-const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bottomspace, myBook , isLoading , setlibrary}) => {
+const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bottomspace, myBook , isLoading , setlibrary , handleCommentButton , comment_status}) => {
      const theme:any = useContext(ThemeWrapper)
   return (
      <VStack safeAreaBottom w = '100%'  h = {bottomspace}   zIndex={10} position={'absolute'} bottom={0} alignItems={'center'} bg= {theme.Bg.base} space = {2}>
            <Divider bg = {theme.Divider.base} />
-           <HStack space = {3} mt = {1}>
+           <HStack space = {3} mt = {1} pl = {2} pr = {2}>
             <IconButton
-                  size='sm'
-                  w='15%'
-                  _pressed={{ bg : '#ef4444'}}
-                  bg = {isLiked ? '#ef4444' : theme.Bg.base}
-                  rounded={'full'}
-                  onPress={() => { setisLiked(!isLiked);}}
-                  icon={
-                      <AntdesignIcon
-                          size= {25}
-                          color={isLiked ? 'white' : theme.Icon.base}
-                          name={isLiked ? 'heart' : 'hearto'} />}
+               w=  "35px"
+               h =  "35px"
+               size='sm'
+               _pressed={{ bg : '#ef4444'}}
+               bg = {isLiked ? '#ef4444' : theme.Bg.base}
+               rounded={'full'}
+               onPress={() => { setisLiked(!isLiked);}}
+               icon={
+                    <AntdesignIcon
+                         size= {15}
+                         color={isLiked ? 'white' : theme.Icon.base}
+                         name={isLiked ? 'heart' : 'hearto'} />}
           />
+
+          <IconButton 
+               w=  "35px"
+               h =  "35px"
+               isDisabled = {!comment_status}
+               size = 'sm'
+               rounded={'full'}
+               onPress={handleCommentButton}
+               icon = {
+                    <FontAwesome5Icon 
+                    size = {15}
+                    color = {theme.Icon.base}
+                    name = {'comment-alt'}/>}
+          />
+
           <Box w = "70%" alignItems={'center'}>
                <Button
                     w = "100%"
@@ -56,13 +76,13 @@ const Bottomnavigation : React.FC <containerProps> = ({isLiked , setisLiked , bo
                     variant={theme.themeMode === 'dark' ? 'outline' : 'solid'}
                     bg={theme.themeMode === 'dark' ? myBook ? 'amber.400' : null :  'amber.400'}
                     borderColor={'amber.400'}
-                    opacity={myBook ? theme.themeMode === 'dark' ?   0.9 : 0.5 : 1}
+                    opacity={myBook ? 0.85 : 1}
                     
                     rightIcon={
                          myBook? 
                               <CheckCircleIcon
                               size={"20px"}
-                              color={theme.Bg.base}
+                              color={'black'}
                               />
                               :
                               <CheckCircleIcon

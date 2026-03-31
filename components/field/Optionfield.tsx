@@ -6,6 +6,7 @@ HStack,
 Text,
 Divider,
 Icon,
+Stack,
 IconButton,
 Pressable
 } from 'native-base'
@@ -33,6 +34,7 @@ const Optionfield :React.FC <FiledProps> = ({
     title , 
     detail , 
     icon,
+    colorScheme = false,
     direction , 
     }) => {
     
@@ -47,37 +49,44 @@ const Optionfield :React.FC <FiledProps> = ({
         isPressed
     }) => {
         return (
-            <VStack
-            w = '100%'
-            h = {60}
-            m = {0.3}
-            rounded= 'full'
-            bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.container}
+            <Stack 
+            w= '100%'           
+            h = {"55px"}
             >
-                <HStack 
-                w= '100%'
-                h = '100%'
-                justifyContent={'center'}
-                alignItems={'center'}
-                space = {2}
+                <VStack   
+                    bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.menu}
+                    h = '100%'
                 >
-                    {icon}
-                    
-                    <VStack justifyContent={'center'}  p = {1}  w = {'75%'} pl = {2}>
-                        <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize='md' >{title ? title : 'Options title'}</Text>
-                        {detail && <Text fontSize='xs' color = {theme.Text.description} >{detail}</Text>}
-                    </VStack>
-                    {isChevronEnable && 
-                        <Box w = '10%' h = '100%' justifyContent={'center'}>
-                            <EntypoIcon
-                                name='chevron-right'
-                                size= {30}
-                            />
-                        </Box>
-                    }
-                </HStack>
-                {isDividerEnable && <Divider bg = {theme.Divider.base}/>}
-            </VStack>
+                    <HStack 
+                    w= '100%'
+   
+                    h = '100%'
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                    pl = {5}
+                    pr = {1}
+                    space = {2}
+                    >
+                        {icon}
+                        
+                        <VStack justifyContent={'center'}  p = {1}  w = {'80%'} pl = {2}>
+                            <Text color = {fontcolor ? fontcolor : theme.Text.base} fontSize='sm' >{title ? title : 'Options title'}</Text>
+                            {detail && <Text fontSize='xs' color = {theme.Text.description} >{detail}</Text>}
+                        </VStack>
+                        {isChevronEnable && 
+                            <Box h = '100%' justifyContent={'center'}>
+                                <EntypoIcon
+                                    name='chevron-right'
+                                    size= {20}
+                                    color = {theme.Icon.base}
+                                />
+                            </Box>
+                        }
+                    </HStack>
+                    <Divider bg = {theme.Divider.menu}/>
+                </VStack>
+              
+            </Stack>
         )
     }}
     </Pressable>

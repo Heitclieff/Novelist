@@ -33,7 +33,7 @@ const Creatorsection : React.FC <containerProps> = ({collection}) => {
                 }) => {
                         return(
                             <HStack h= '30'  alignItems={'center'} rounded = 'md' space = {1} bg= {isPressed ? theme.Bg.container : isHovered ? theme.Bg.container  : null} >
-                                <Box  bg = 'black' h = '7' w ='7' rounded = 'full' overflow = 'hidden' alignItems={'center'}>
+                                <Box  bg = 'black' h = '5' w ='5' rounded = 'full' overflow = 'hidden' alignItems={'center'}>
                                 <FastImage
                                     id = "cover-image"
                                     style={{width : '100%', height : '100%' }}

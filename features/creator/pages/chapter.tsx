@@ -15,6 +15,8 @@ Icon,
 Center,
 Spinner,
 useToast,
+Stack,
+Badge
 } from 'native-base'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { BottomSheetModalProvider, BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet'
@@ -178,19 +180,19 @@ const Chapter: React.FC<Pageprops> = ({ route }) => {
     }
 }
 
-
   useEffect(() => {
     setTimeout(() => {
       setInitial(false);
     },0)
 },[])
 
+
 if(initial) return(
   <AppSkeleton/>
 )
   return (
     <VStack flex={1} bg={theme.Bg.base}>
-      <Memorizednavigation title="Chapters"
+      <Memorizednavigation title="Episodes"
         rightElement={[
           { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='plus' />, navigate: () => navigation.navigate('CreateChapter' , {doc_id : chapterdocs.id , setCreateChapter : setCreateChapter}) },
           { icon: <AntdesignIcon size={18} color={theme.Icon.between} name='appstore-o' />, navigate: navigation.openDrawer }
@@ -208,7 +210,7 @@ if(initial) return(
               h={9}
               onChangeText={(e) => getFilterObject(e)}
               InputRightElement={<Icon as = {<EvilIcon name='search'/>} size = {5} mr = {2}/>}
-              placeholder='Seacrh your Chapter name'
+              placeholder='Search your episode name'
             />
           </Box>
           {chapterdocs.content?.length > 0 ? 
@@ -216,12 +218,30 @@ if(initial) return(
             <VStack space={2} m={5} mt={6}>
               {separatedChapterdocs.draft?.length > 0 &&
                 <>
-                  <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
+                  <Stack bg = {'amber.500'} rounded={'sm'}  overflow={'hidden'}>
+                    <HStack ml = {"5px"} bg = {theme.Bg.container} p = {1} alignItems = 'center' justifyContent={'space-between'}>
+                      <Text pl={2} color={theme.Text.heading} fontWeight={'semibold'} fontSize={'xs'}>Draft</Text>
+                      <Badge
+                        colorScheme="amber" 
+                        rounded="full"
+                        variant="outline" 
+                        
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        _text={{
+        
+                          fontSize: 10
+                        }}>
+                          {separatedChapterdocs.draft?.length + " Item"}
+                      </Badge>
+                    </HStack>
+                  </Stack>
                   <VStack mb={4} space={2}>
                     {separatedChapterdocs.draft.map((item:string , index:number) => {
                       const isVisible = item.access?.includes(useraccount?.[0].id) || projectdocs.owner === useraccount?.[0].id
                       let isDisable = false
 
+                      
                       if(projectdocs.owner !== useraccount?.[0].id){
                         isDisable = true;
                       } 
@@ -233,55 +253,57 @@ if(initial) return(
                       if (item.commits){
                         isDisable = true;
                       }
+
                       if(isVisible)
                         return(
-                          <SwipeListView
-                            key = {index}
-                            disableRightSwipe
-                            disableLeftSwipe = {isDisable}
-                            data={[0]}
-                            ItemSeparatorComponent={<Box h='2' />}
-                            renderItem={() => {
-                  
-                              return(
-                                <ChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
-                              )
-                            }}
-                            renderHiddenItem={() => (<Deletebutton id = {item.id} action = {DeleteChapter}/>)}
-                            leftOpenValue={60}
-                            rightOpenValue={-60}
-                          />
+                          <ChapterItem 
+                          key = {index} 
+                          data={item} 
+                          chapterTitle = {projectdocs?.title}
+                          isDisable = {isDisable}
+                          doc_id = {chapterdocs.id}
+                          action = {DeleteChapter}
+                          />  
                       )
                     })}
                   </VStack>
                 </>
               }
               
-              <Text pl={3} color={theme.Text.description} fontWeight={'semibold'} fontSize={'xs'}>All</Text>
-              <VStack mb={4} space={3} >
+              <Stack bg = {'teal.500'} rounded={'sm'}  overflow={'hidden'}>
+                <HStack ml = {"5px"} bg = {theme.Bg.container} p = {1} alignItems = 'center' justifyContent = 'space-between'>
+                  <Text pl=  {2} color={theme.Text.heading} fontWeight={'semibold'} fontSize={'xs'}>Published</Text>
+                  <Badge
+                        colorScheme="teal" 
+                        rounded="full"
+                        variant="outline" 
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        _text={{
+        
+                          fontSize: 10
+                        }}>
+                          {separatedChapterdocs.other?.length + " Item"}
+                      </Badge>
+                </HStack>
+              </Stack>
+              <VStack mb={4} space = {2}>
                 {separatedChapterdocs.other && 
                   separatedChapterdocs.other.map((item:any , index:number) => {
                     const isDisable = projectdocs.owner !== useraccount?.[0].id 
                     return (
-                      <SwipeListView
-                      key = {index}
-                      disableRightSwipe
-                      disableLeftSwipe = {isDisable}
-                      data={[0]}
-                      ItemSeparatorComponent={<Box h='2' />}
-                      renderItem={() => {
-                        return(
-                          <MemorizedChapterItem key = {index} data={item} doc_id = {chapterdocs.id}/>
+                          <MemorizedChapterItem 
+                          key = {index} 
+                          data={item}
+                          chapterTitle = {projectdocs?.title}
+                          isDisable ={isDisable}
+                          doc_id = {chapterdocs.id}
+                          action = {DeleteChapter}
+                          />
                         )
-                       
-                      }}
-                      renderHiddenItem={() => (<Deletebutton  id = {item.id} action = {DeleteChapter}/>)}
-                      leftOpenValue={60}
-                      rightOpenValue={-60}
-                    />
-                    )
+                    
                   })
-                }
+              }
              
               </VStack>
              
@@ -312,7 +334,7 @@ if(initial) return(
                   <Text color={theme.Text.base} fontWeight={'semibold'} pb={2} >Chapter Title</Text>
                   <BottomSheetTextInput onSubmitEditing={handleReturnChange} style={{ width: '100%', height: 35, borderWidth: 1, borderRadius: 100, borderColor: theme.Divider.comment, color: 'white', backgroundColor: theme.Divider.comment, paddingLeft: 10 }} />
                   <FormControl.HelperText>
-                    Give your a chapter title.
+                      Give your a chapter title.
                   </FormControl.HelperText>
                 </FormControl>
                 <Button rounded={'full'} colorScheme={'teal'}>Create</Button>

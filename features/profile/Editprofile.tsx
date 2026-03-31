@@ -6,6 +6,7 @@ Box,
 Button,
 VStack,
 HStack,
+Stack,
 Center,
 Text,
 Divider,
@@ -209,18 +210,26 @@ const UploadPhotos =  async (result:any) => {
             </Box>
             
             <VStack >          
-            <Divider bg = {theme.Divider.base}/>
-                <Suspense  fallback = {<Box>Loading..</Box>}>       
-                  {/* <MemorizedEditfield options = {MenuOptions}/> */}
-                  {MenuOptions.map((items , key) => 
-                    <VStack space = {1}  key=  {key} >
-                      <MemorizedEditfield options = {items}/>
-                      <Divider bg = {theme.Divider.base}/>
-                    </VStack>
-                  )}
-                </Suspense>    
+           
+                <Stack 
+                pl  ={4} 
+                pr = {4}  
+                pt = {2}>
+                  <VStack 
+                      space = {'1px'}   
+                      bg = {theme.Divider.menu}
+                      borderWidth = {1}
+                      borderColor = {theme.Divider.menu}
+                      rounded= 'md'
+                      overflow = 'hidden'
+                      >
+                      {MenuOptions.map((items , key) => 
+                          <MemorizedEditfield  key = {key} options = {items}/>
+                      )}
+                  </VStack>
+                </Stack>
             </VStack>
-            <Box pl = {6}>
+            <Box pl = {5} pt = {1}>
             <Pressable onPress={() => {bottomSheetModalRef.current?.close(); navigation.navigate('AccountSettings');}}>
               {({
               isHovered,

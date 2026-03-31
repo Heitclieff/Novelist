@@ -1,9 +1,9 @@
-import React , {useCallback , Suspense , useContext} from "react"
+import React , {useCallback , Suspense , useContext , useRef} from "react"
 import {Box ,VStack } from "native-base"
 import Animated from "react-native-reanimated"
 import { RefreshControl } from "react-native"
 import { ThemeWrapper } from "../../../systems/theme/Themeprovider"
-
+import { SpinnerItem } from "../../Spinner"
 interface Provider {
     children : any,
     Verticalscroll : boolean
@@ -14,16 +14,17 @@ interface Provider {
     setRefreshing : any
  }
 
-const FlatList :React.FC <Provider> = ({children , onScroll = null , horizontal = false , refreshing, setRefreshing , disableRefresh = false , Verticalscroll = false}) => {
+const FlatList : React.FC <Provider> = React.memo(({children , onScroll = null , horizontal = false , refreshing, setRefreshing , disableRefresh = false , Verticalscroll = false}) => {
     const theme : any = useContext(ThemeWrapper);
+    const flatListRef = useRef(null);
+
     const renderChildren = useCallback(({ item }: any) => {
         return (
-        <Suspense fallback = {<Box>Loading...</Box>}>     
+          <Suspense fallback={<SpinnerItem />}>
             {children}
-        </Suspense>
-        )
-    }
-    , [children])
+          </Suspense>
+        );
+      }, [children]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -35,6 +36,8 @@ const FlatList :React.FC <Provider> = ({children , onScroll = null , horizontal 
       
     return(
         <Animated.FlatList
+            ref = {flatListRef}
+            initialNumToRender={5}
             contentInset={{ bottom: 10}}
             showsVerticalScrollIndicator={Verticalscroll}
             data={[0]}
@@ -49,8 +52,9 @@ const FlatList :React.FC <Provider> = ({children , onScroll = null , horizontal 
                 />
             }
             renderItem={renderChildren}
+            keyExtractor={(i , key) => key.toString()}
         /> 
     )
-}
+})
 
 export {FlatList}

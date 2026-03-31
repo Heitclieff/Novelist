@@ -2,12 +2,16 @@ import React,{useContext, useEffect, useRef, useState} from 'react'
 import { 
 Box , 
 VStack , 
+Stack,
+IconButton,
 Button,
 HStack,
 useToast,
 Text,
+Badge,
+Spinner,
 } from 'native-base'
-
+import { SmallCloseIcon , CheckIcon } from 'native-base'
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { TextInput  , Alert } from 'react-native'
 import { FlatList } from '../../components/layout/Flatlist/FlatList'
@@ -34,6 +38,7 @@ import firestore from '@react-native-firebase/firestore'
 import messaging from '@react-native-firebase/messaging';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth'
+import { SpinnerItem } from '../../components/Spinner'
 
 interface pageProps {}
 const Readcontent : React.FC <pageProps> = () => {
@@ -77,7 +82,7 @@ const Readcontent : React.FC <pageProps> = () => {
      }
      
      const ApprovedDialogs = () => 
-     Alert.alert('Approved', 'Are you sure you want to Aprroved this request ?', [
+     Alert.alert('Publish', 'Are you sure you want to publish this episode ?', [
           {
                text: 'No',
                style: 'cancel',
@@ -86,15 +91,13 @@ const Readcontent : React.FC <pageProps> = () => {
      ]);
 
      const DeleteRequestDialogs = () => 
-     Alert.alert('Delete', 'Are you sure you want to Delete this request ?', [
+     Alert.alert('Cancel', 'Are you sure you want to unpublish this episode ?', [
           {
                text: 'No',
                style: 'cancel',
           },
           {text: 'yes', onPress: () => removecommitRequest()},
      ]);
-
-     console.log(id);
 
      const initialContent = async () : Promise <void> => {
           if(editable){
@@ -114,7 +117,6 @@ const Readcontent : React.FC <pageProps> = () => {
           }
        
           if(id){
-               console.log("DOTHIS")
                getnovelContent();
           }      
      }
@@ -134,7 +136,7 @@ const Readcontent : React.FC <pageProps> = () => {
                };
                
                const request = {
-                    title : `Request Commit ${title}`,
+                    title : `${title}`,
                     chap_id : chap_id,
                     id :id,
                     doc_id : doc_id,
@@ -183,6 +185,7 @@ const Readcontent : React.FC <pageProps> = () => {
 
 
      const approvedcommitRequest = async () : Promise <void> => {
+          setLoading(true);
           let status = "error"
           try{
                const getnovel =  firebase.collection("Novels").doc(doc_id);
@@ -265,11 +268,13 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
 
-          SendAlert(status , "Approved" , "Approve failed" , toast)     
+          SendAlert(status , "Approved" , "Approve failed" , toast);
+          setLoading(false);
      }
 
 
      const removecommitRequest = async () : Promise <void> => {
+          setLoading(true);
           let status = "error"
           try{
                if(!commit_id){
@@ -333,9 +338,11 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
           SendAlert(status , "Removed" , "Remove failed" , toast)
+          setLoading(false);
      }
 
      const changechapterStatement = async() : Promise<void> => {
+          setLoading(true);
           let status = "error"
           const currentContent =  chapterdocs.content.find((doc) => doc.id === id);
           if(!currentContent.access?.includes(useraccount?.[0].id)){
@@ -370,7 +377,7 @@ const Readcontent : React.FC <pageProps> = () => {
                reference.update({during : false})
           }
           SendAlert(status , "Edit Mode" , "Changes failed" , toast)
-
+          setLoading(false);
      }
 
      const getnovelContent =  async () : Promise<void> => {
@@ -439,7 +446,7 @@ const Readcontent : React.FC <pageProps> = () => {
      
 
       const GoBackwithReference = () => {
-          navigation.navigate('Chapters');
+          navigation.navigate('Episodes');
           reference.update({during : false})
       }
 
@@ -510,6 +517,8 @@ const Readcontent : React.FC <pageProps> = () => {
      useEffect(() => {
           initialContent();
       }, [id]);
+
+
   return (
     <VStack bg = {theme.Bg.base} flex ={1}>
           <Chapternavigation 
@@ -533,43 +542,68 @@ const Readcontent : React.FC <pageProps> = () => {
           <FlatList Verticalscroll = {true} disableRefresh = {true} >
           {/* {novelItem.length > 0 &&  */}
                <VStack flex = {1}  p = {5} space = {5}>
-                    {!editable && 
-                    <HStack id = "story-heading-wrap" justifyContent={'center'} >
-                         <VStack w = '80%' id = 'story-heading' alignItems={'center'} space = {2}>
-                              <Text color = {theme.Text.base} fontWeight={'semibold'} >{noveltitle}</Text>
-                              <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
-                              {
-                              commit_id &&
-                              <HStack space = {1} mt = {2}>
-                                   <Button 
-                                   onPress = {DeleteRequestDialogs}
-                                   variant={'outline'}
-                                   borderColor={'rose.500'}
-                                   colorScheme={'rose'}
-                                   rounded={'full'} 
-                                   p = {1.5} 
-                                   _text={{fontSize : "xs"}} 
-                                   w = "100px" 
-                                   h={8}>Delete request</Button>
-
-                              {
-                              projectdocs.docs?.owner === useraccount?.[0].id &&
-                                   <Button 
-                                   onPress={ApprovedDialogs}
-                                   borderColor={'teal.500'}
-                                   colorScheme={'teal'}
-                                   rounded={'full'} 
-                                   p = {1.5} 
-                                   _text={{fontSize : "xs"}}
-                                   variant={'outline'}
-                                   w = "100px" h={8}
-                                   >Approved</Button>
-                               }        
-                              </HStack>
+                   
+             
+                    <HStack id = "story-heading-wrap" justifyContent={'center'}>
+                         <Stack w = '95%' bg = {commit_id ?  'amber.500' : 'teal.500'} pl = {2} p = {0.4} rounded= 'sm'>
+                         <VStack  id = 'story-heading' alignItems={'center'} space = {2} bg = {theme.themeMode === "dark" ? 'rgba(23, 22, 19 , 1)' : 'trueGray.50'} p = {2} rounded= 'sm'> 
+                              {!commit_id ? 
+                                   <Text color = {theme.Text.base} fontWeight={'semibold'} textAlign={'center'}>{noveltitle}</Text>
+                                   :
+                                   <Badge alignSelf="center" variant={'outline'} colorScheme={'amber'} rounded= 'full'>
+                                        <HStack space = {1}>
+                                             <Spinner size = {12} color = "amber.500" />
+                                             <Text color = "amber.500" fontSize={'xs'} >EP.{chap_id}</Text>
+                                        </HStack>
+                                   </Badge>
                               }
-                         </VStack>  
-                    </HStack>            
+                              <Text color = {theme.Text.base} textAlign={'center'}>{`${title}`}</Text>
+                    {commit_id && isLoading ?
+                         <SpinnerItem/>
+                    :         
+                    commit_id &&
+                         <HStack space = {1} mt = {2}  alignItems={'center'}>
+                         
+                         <Button 
+                              onPress = {DeleteRequestDialogs}
+                              bg={'transparent'}
+                              borderColor={'gray.800'}
+                              colorScheme={'rose'}
+                              rounded={'full'} 
+                              p = {1.5} 
+                              borderWidth={1}
+                              h={8}
+                              _text={{fontSize : "xs" , color : theme.Text.base}} 
+                              w = "130px" 
+                              leftIcon={<SmallCloseIcon style = {{color : 'red'}}/>}
+                              >
+                              Cancel
+                         </Button>
+                         {
+                         projectdocs.docs?.owner === useraccount?.[0].id &&
+                              <Button 
+                              onPress={ApprovedDialogs}
+                              borderColor={'teal.500'}
+                              colorScheme={'teal'}
+                              rounded={'full'} 
+                              p = {1.5} 
+                              _text={{fontSize : "xs"}}
+                              variant={'outline'}
+                              w=  "130px" 
+                              h={8}
+                              leftIcon={
+                                   <CheckIcon/>
+                              }
+                              >Publish
+                              </Button>
+                         }    
+                         
+                         </HStack>
                     }
+                         </VStack>  
+                         </Stack>
+                    </HStack>            
+                    
                     <VStack p = {2}>
                          <Text id = "Novel-content" color = {theme.Text.base}>
                               {/* {`${novelItem[0].overview}`} */}

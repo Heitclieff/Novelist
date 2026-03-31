@@ -6,7 +6,8 @@ Text,
 IconButton ,
 Box, 
 Center,
-Icon } from 'native-base'
+Icon, 
+Stack} from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { SwipeListView } from 'react-native-swipe-list-view'
@@ -23,8 +24,9 @@ const MemorizedChapterItem = React.memo(ChapterItem);
 
 interface  containerProps {
    doc_id : string;
+   title : string
 }
-const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
+const EpisodeSection : React.FC <containerProps> = ({doc_id , title})=> {
      const theme:any = useContext(ThemeWrapper);
      const navigation = useNavigation();
      const chapterdocs = useSelector((state) => state.content);
@@ -42,21 +44,23 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
       } , [doc_id])
   return (
      <VStack pl = {5} pr= {5} pt = {5} space = {2}>
-          <HStack justifyContent={'space-between'}>
-          <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Chapter</Text>
-          <IconButton 
-                    onPress={() => navigation.navigate('Chapters')}
-                    size = 'md'
-                    rounded={'full'}
-                    icon = {
-                    <AntdesignIcon
-                    name='plus'
-                    size={15}
-                    color = {theme.Icon.base}
-                    />
-                    }
-          />
-          </HStack>
+         <Stack pl = {1.5} bg = "teal.500" rounded = "sm" overflow ='hidden'>
+            <HStack justifyContent={'space-between'} pl = {2}  bg=  {theme.Bg.container} alignItems={'center'} >
+               <Text color = {theme.Text.heading} fontSize={'sm'} fontWeight={'semibold'}>All Episodes ({saperatedChapter?.length})</Text>
+               <IconButton 
+                        onPress={() => navigation.navigate('Episodes')}
+                        size = 'md'
+                        rounded={'full'}
+                        icon = {
+                        <AntdesignIcon
+                        name='plus'
+                        size={15}
+                        color = {theme.Icon.base}
+                        />
+                        }
+               />
+            </HStack>
+         </Stack>
         {saperatedChapter?.length > 0 ?
            <SwipeListView
               disableRightSwipe
@@ -70,6 +74,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
                        key={item.id}
                        data={item.item}
                        doc_id={doc_id}
+                       chapterTitle= {title}
                     />
                  )
               }}
@@ -85,7 +90,7 @@ const EpisodeSection : React.FC <containerProps> = ({doc_id})=> {
       :
       
       <Center mt = {5}>
-         <Text color = {theme.Text.description}>Not founds chapter content</Text>
+         <Text color = {theme.Text.description}>Not founds any Episodes.</Text>
       </Center>
       }
    </VStack>

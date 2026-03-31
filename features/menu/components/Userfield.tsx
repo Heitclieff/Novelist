@@ -4,6 +4,7 @@ Box,
 Text,
 VStack,
 HStack,
+Stack,
 Image,
 IconButton,
 Center,
@@ -33,10 +34,15 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                 isPressed
             }) => {
                 return (
+                    <Stack
+                    bg = 'amber.500'
+                    // pl =  {1.5}
+                    rounded = 'sm'
+                    >
                     <HStack
                         alignItems= 'center'
-                        rounded = 'md'
-                        bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : null}
+                        h = "90px"
+                        bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action : theme.Bg.base}
                         p = {2}
                     >
                         <Box >
@@ -95,8 +101,9 @@ const Userfield: React.FC<FiledProps> = ({data}) => {
                         />
     
                         </Box>
-
                     </HStack>
+
+                </Stack>
                 )
 
             }}

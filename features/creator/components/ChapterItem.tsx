@@ -4,24 +4,37 @@ Box,
 HStack , 
 Text, 
 Pressable,
-VStack } from 'native-base'
+VStack,
+Divider,
+Spinner,
+Badge,
+} from 'native-base'
 import { Image } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useNavigation } from '@react-navigation/native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
-
+import { SwipeListView } from 'react-native-swipe-list-view'
+import Deletebutton from '../../../components/button/Deletebutton'
 // @Firestore
 import database from '@react-native-firebase/database';
 
 interface containerProps {
      data : any
+     doc_id : string
+     chapterTitle :string
+     isDisable : boolean
+     action : any
 }
-const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
+const ChapterItem : React.FC <containerProps> = ({data ,doc_id , isDisable ,action , chapterTitle}) => {
      const theme:any = useContext(ThemeWrapper)
      const navigation  = useNavigation();
      const [timeago ,settimeago] = useState('');
-     const [during ,setDuring] = useState(false);
+     const [during ,setDuring] = useState<{}>(false);
    
+     const onRowDidOpen = rowKey => {
+          console.log('This row opened', rowKey);
+     };
+
      const getTimeAgo = (timestamp:any) => {
           const currentDate = new Date();
           const timestampDate = new Date(timestamp);
@@ -45,7 +58,6 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
      
     const fetchingDuringTask = () => {
           try{
-
                const reference = database()
                .ref(`/task/${doc_id}/${data.id}`)
                  
@@ -54,6 +66,7 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
                          return false
                     }
                     setDuring(snapshot.val())
+                    
                };
                reference.on('value' , recivedReference);
 
@@ -83,60 +96,96 @@ const ChapterItem : React.FC <containerProps> = ({data ,doc_id}) => {
           unsubscribe();
           }
      }, [])
-     
-     
-  return (
-     <Pressable isDisabled = {data?.commits || during?.during} onPress={() => navigation.navigate('Readcontent',{
-          id : data.id,
-          chap_id : data.chap_id,
-          doc_id: doc_id,
-          title: data.title , 
-          content: data.content,
-          editable : true,
-          createdBy : data.createdBy,
-          data : data,
-          status : data.status,
-          commitable : data.commits,
-          })}>
-     {({
-         isHovered,
-         isFocused,
-         isPressed
-     }) => {
-          return(
-    <HStack w=  '100%' p = {3} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container} rounded={'full'}>
-          <Box w = '20%'  justifyContent={'center'} alignItems={'center'}>
-               <Text color={theme.Text.base} fontWeight={'semibold'} fontSize={'xl'}>{data.chap_id}</Text>
-          </Box>
-          <VStack w = '80%'  justifyContent={'center'} space = {1}> 
-               <Text color={theme.Text.base} fontWeight={'semibold'}>{data.title}</Text>
 
-               {during?.during ? 
-                    <Text  color={theme.Text.description} fontSize={'xs'}>Someone has Edit this Chapter right now.</Text>
-               :
-                    data?.commits ?
-                         <Text  color={theme.Text.description} fontSize={'xs'}>Wating for leader to Aprroved</Text>
-                    :
-                    <HStack space = {1} alignItems={'center'}>
-                    <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
-                         <FastImage
-                         id = 'Profile-Image'
-                         style={{width : '100%' ,height :'100%'}}
-                         resizeMode={FastImage.resizeMode.cover}
-                         source={{
-                              uri : data.updatedimg  , 
-                              priority : FastImage.priority.normal
-                            }}
-                         />
-                    </Box>
-                         <Text  color={theme.Text.base} fontSize={'xs'}>{timeago}</Text>
+
+     const renderItem = () => {
+          return(
+               <Pressable isDisabled = {data?.commits || during?.during} onPress={() => navigation.navigate('Readcontent',{
+                    id : data.id,
+                    chap_id : data.chap_id,
+                    doc_id: doc_id,
+                    title: data.title , 
+                    content: data.content,
+                    noveltitle : chapterTitle,
+                    editable : true,
+                    createdBy : data.createdBy,
+                    data : data,
+                    status : data.status,
+                    commitable : data.commits,
+                    })}>
+               {({
+                   isHovered,
+                   isFocused,
+                   isPressed
+               }) => {
+                    return(
+                    <HStack  w = '100%' pt = {2} space  ={2} bg = {theme.Bg.base}>
+                         <VStack w = '100%'  pl = {1}  justifyContent={'center'} bg = {data.commits ? 'amber.400' : null} rounded =  'md'> 
+                              <HStack  pl = {2} pr=  {1} pb = {2}  justifyContent = 'space-between' alignItems = 'center' bg={isPressed ? theme.Bg.containeraction : isHovered ? theme.Bg.containeraction : theme.Bg.base}>
+                              <VStack space = {2} opacity = {during?.during || data.commits ? 0.5 : 1} >
+                                   <HStack space = {1}>
+                                        <Badge
+                                             colorScheme={data.status ?  'amber' : 'teal'}
+                                             rounded = 'full'
+                                             variant={'outline'}
+                                             >
+                                             {"EP." + data.chap_id}
+                                        </Badge>
+                                        <Text color={theme.Text.base} fontWeight={'semibold'}>{data.title}</Text>
+                                   </HStack>
+                                   <HStack space = {1} alignItems={'center'} pl = {1}>
+                                        <Box w= {4} h = {4} bg = 'gray.200' rounded={'full'} overflow={'hidden'}>
+                                             <FastImage
+                                             id = 'Profile-Image'
+                                             style={{width : '100%' ,height :'100%'}}
+                                             resizeMode={FastImage.resizeMode.cover}
+                                             source={{
+                                                  uri : data.updatedimg  , 
+                                                  priority : FastImage.priority.normal
+                                             }}
+                                             />
+                                        </Box>
+                                        <Text  color={theme.Text.base} fontSize={'xs'}>{timeago}</Text>
+                                   </HStack>
+                                   </VStack>
+                                   {during?.during ?
+                                    <HStack  w = "90px"  space = {0.5} justifyContent = 'center' alignItems={'center'} borderWidth = {1} borderColor = {'tertiary.500'} rounded={'full'}>
+                                        <Spinner color = 'tertiary.500' accessibilityLabel="Loading posts" size=  {12} />
+                                        <Text  color= 'tertiary.500' fontSize={'xs'}>In Progress</Text>
+                                    </HStack>
+          
+                                    :
+                                    data?.commits &&
+                                        <HStack  w = "100px" space = {0.5} justifyContent = 'center' alignItems={'center'} borderWidth = {1} borderColor = {'amber.500'} rounded={'full'}>
+                                              <Spinner color = 'amber.500' accessibilityLabel="Loading posts" size=  {12} />
+                                             <Text  color= 'amber.500' fontSize={'xs'}>on Publishing</Text>
+                                        </HStack>
+                                   }    
+                              </HStack>
+                              <Divider bg = {theme.Divider.base}/>
+                         </VStack>
                     </HStack>
-               }
-          </VStack>
-    </HStack>
-     )
-     }}
-     </Pressable>
+               )
+               }}
+               </Pressable>
+          )
+     }
+     
+     
+     console.log(isDisable)
+  return (
+     <SwipeListView
+       disableLeftSwipe = {isDisable || during?.during}
+       data={[0]}
+       ItemSeparatorComponent={<Box h='2' />}
+       previewRowKey={data.id}
+       previewOpenValue={-40}
+       previewOpenDelay={3000} 
+       renderItem={renderItem}
+       renderHiddenItem={() => (<Deletebutton id = {data.id} title = {data.title} action = {action}/>)}
+       onRowDidOpen={() => onRowDidOpen(data.id)}
+       rightOpenValue={-60}
+     />
   )
 }
 

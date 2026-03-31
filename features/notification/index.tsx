@@ -183,7 +183,7 @@ const Notification : React.FC = () => {
 
   return (
     <Box flex = {1} bg = {theme.Bg.base}>
-       <HStack mt = {5} justifyContent={'space-between'} pl = {5} pr = {5}>
+       <HStack mt = {5} justifyContent={'space-between'} alignItems={'center'} pl = {5} pr = {5} pb = {2}>
             <Text color = {theme.Text.base}>Recently</Text>
             {useritem && 
               useritem.notify > 0 &&
@@ -199,25 +199,37 @@ const Notification : React.FC = () => {
             {isLoading ?
               <SpinnerItem/>
               :
-              <VStack p = {4} flex = {1}>
-              {notificationlist.length > 0 &&    
-                <SwipeListView 
-                disableRightSwipe
-                data={notificationlist}
-                renderItem={(item:any) => {
-                  return(
-                  <MemorizedNotifyItem
-                    key={item.index}
-                    data = {item.item}
-                    setInviteShow = {setInviteShow}
-                  />
-                  )
-                }}
-                renderHiddenItem={ (data, rowMap) => (<Deletebutton action = {removeNotification} id = {data.item.doc_id}/>)}
-                leftOpenValue={60}
-                rightOpenValue={-60}
-                />                    
-            }
+              <VStack m = {2}>
+                {notificationlist.length > 0 &&    
+                  <SwipeListView 
+                  disableRightSwipe
+                  initialNumToRender={10}
+                  
+                  ItemSeparatorComponent={<Box h='2' />}
+                  data={notificationlist}
+                  renderItem={(item:any) => {
+                    return(
+                    <MemorizedNotifyItem
+                      key={item.index}
+                      data = {item.item}
+                      setInviteShow = {setInviteShow}
+                    />
+                    )
+                  }}
+                  renderHiddenItem={ (data, rowMap) => (
+                    <Box w = '100%' h=  '100%'>
+                      <Deletebutton 
+                      action = {removeNotification} 
+                      id = {data.item.doc_id}
+                      title = "this notification"
+                      />
+                    </Box>
+                  
+                  )}
+                  leftOpenValue={60}
+                  rightOpenValue={-55}
+                  />                    
+              }
               </VStack>
           }
            

@@ -117,8 +117,6 @@ const Leaderboard: React.FC <pageProps> = () => {
             const userDataPromises = snapLeader.docs.map(doc => fetchingUsers(doc.id));
             const userDataArray = await Promise.all(userDataPromises);
             
-
-            console.log(userDataArray);
             const data = snapLeader.docs.map((doc, index) => ({ 
                 id: doc.id, 
                 account : userDataArray.find((item) => item.id === doc.id),
@@ -217,6 +215,7 @@ const Leaderboard: React.FC <pageProps> = () => {
             <Box flex=  {1}>
                 <Animated.ScrollView
                 showsVerticalScrollIndicator = {false}
+                initialNumToRender={5}
                 onScroll={Animated.event([
                     {
                     nativeEvent : {
@@ -249,10 +248,9 @@ const Leaderboard: React.FC <pageProps> = () => {
                         borderTopLeftRadius={'lg'} 
                         borderTopRightRadius={'lg'} 
                         pt = {6}
-                        
                         pb = {HEADER_HEIGHT_EXPANDED} 
                         alignItems={'center'} 
-                        space = {3}>
+                        space = {2}>
                         
                             {itemleader.map((item:any , index:number) => 
                                 <LeaderItem key= {index} index = {index + 1} item = {item}/>

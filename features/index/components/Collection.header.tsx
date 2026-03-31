@@ -1,39 +1,35 @@
-import React, { useContext, useEffect, useRef } from 'react'
-import { Box, Text, VStack, HStack ,View, theme } from 'native-base'
-import { ImageBackground,Image } from 'react-native'
-import FastImage from 'react-native-fast-image';
-
+import React, { useContext, useEffect} from 'react'
 import { Dimensions } from 'react-native'
 import { ThemeWrapper } from '../../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
-import { Pressable } from 'native-base'
-import Animated from 'react-native-reanimated'
+import { 
+Box, 
+Text, 
+VStack, 
+HStack,
+Pressable
+} from 'native-base'
+
+import FastImage from 'react-native-fast-image';
 import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient'
-import { HeaderSkelton } from '../../../components/skelton/index/header';
+
+import { PreloadHooks } from '../hooks/image.hooks'
+
 interface containerProps {
     data: any
     id: number,
-    translateX: any
-    isLoading : boolean
 }
+
 const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
     const theme: any = useContext(ThemeWrapper)
     const ScreenWidth = Dimensions.get('window').width
     const ScreenHeight = Dimensions.get('window').height
     const HEADER_HEIGHT = ScreenHeight / 1.7
     const navigation = useNavigation();
-    const AnimatedBackground = Animated.createAnimatedComponent(ImageBackground)
-
-    useEffect(() => {
-        FastImage.preload([
-          {
-            uri: data.image,
-          },
-        ]);
-      },[data.image])
-  
-
+    
+    PreloadHooks(data?.image);
+    
     return (
         <Pressable onPress={() => navigation.navigate('Novelmain', { id })}>
             {({
@@ -47,7 +43,6 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
                             <FastImage
                              id='background-images'
                              source={{ uri: data.image }}
-                             alt = "images"
                              blurRadius = {3}
                              style = {{
                                 width: '100%',
@@ -70,9 +65,8 @@ const Collectionheader: React.FC<containerProps> = ({ data, id}) => {
                                         style={{width : '100%', height : '100%' }}
                                         source={{
                                             uri : data.image  , 
-                                            header :{Authorization : "someAuthToken"},
-                                            priority : FastImage.priority.normal}}
-                                        alt = "images"
+                                            priority : FastImage.priority.normal
+                                        }}
                                         resizeMode={FastImage.resizeMode.cover}
                                     />
                                 </Box>

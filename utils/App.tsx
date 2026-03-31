@@ -7,9 +7,10 @@ import SplashScreen from 'react-native-splash-screen'
 export default function App(){
   useEffect(() => {
     console.log("Render Splash Screen.")
-    setTimeout(() => {
+    const hideSplashScreen = ()=> {
       SplashScreen.hide();
-    }, 0)
+    }
+    requestAnimationFrame(hideSplashScreen)
   }, [])
   
   return <Mainprovider/>

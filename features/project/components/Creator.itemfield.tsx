@@ -47,7 +47,6 @@ const CreatorItemfield : React.FC <containerProps> = ({id, refreshing ,title , i
 
 
      const fetchingcreator = async (): Promise<void> => {
-          console.log("Fetching Creators");
           try{
                const projectkey = firestore().collection('Novels').doc(id);
                const creatorkey = await projectkey.collection("Creator").get();

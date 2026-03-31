@@ -8,6 +8,7 @@ Button ,
 TextArea , 
 IconButton , 
 Divider,
+Badge,
 Icon} from 'native-base'
 import AntdesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -217,8 +218,16 @@ const Headercontent : React.FC <containerProps> = ({data , timestamp , id , onMo
           <Text color = {theme.Text.heading} fontSize={'md'} fontWeight={'semibold'}>Publish</Text>
        
           <VStack space=  {2}>
-                <Text color = {theme.Text.description}>{`Date: ${formattedDate.createAt}`}</Text>
-                <Text color = {theme.Text.description}>{`Last updated: ${formattedDate.lastupdated}`}</Text>
+            <HStack space = {1}>
+              <Text fontWeight = "semibold" color = {theme.Text.base} fontSize=  'xs'>DATE :</Text>
+              <Text color = {theme.Text.description} fontSize={'xs'}>{`${formattedDate.createAt}`}</Text>
+            </HStack>
+               <HStack space = {1}>
+
+                <Text fontWeight = "semibold" color = {theme.Text.base} fontSize=  'xs'>LAST UPDATED :</Text>
+              <Text color = {theme.Text.description} fontSize={'xs'}>{`${formattedDate.lastupdated}`}</Text>
+               </HStack>
+                
           </VStack>
         </VStack>
 

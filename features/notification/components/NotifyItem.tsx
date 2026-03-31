@@ -7,6 +7,8 @@ Text,
 VStack , 
 Icon,  
 Pressable,
+Stack,
+Divider,
 IconButton } from 'native-base'
 import { Image } from 'react-native'
 import FastImage from 'react-native-fast-image'
@@ -100,31 +102,33 @@ const NotifyItem : React.FC <containerProps> = ({data ,setInviteShow }) => {
         isPressed
       }) => {
         return (
-          <HStack w='100%' h={70} mt={2} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.container} rounded={'full'} justifyContent={'center'}>
-            <Box w='20%' h='100%' justifyContent={'center'} alignItems={'center'}>
-              <Box w='50' h='50' overflow={'hidden'} rounded="full">
-                <FastImage
-                  style={{ width: '100%', height: '100%' }}
-                  source={{
-                    uri: data.image,
-                    priority: FastImage.priority.normal,
-                    cache: FastImage.cacheControl.cacheOnly
-                  }}
-                  alt="images"
-                  resizeMode={FastImage.resizeMode.cover}
-                />
+          <Stack bg = 'trueGray.500'  rounded='sm' >
+            <HStack w='100%' h={70} bg = {isPressed ? theme.Bg.action : isHovered ? theme.Bg.action  : theme.Bg.base} justifyContent={'center'}>
+              <Box w='20%' h='100%' justifyContent={'center'} alignItems={'center'}>
+                <Box w='50' h='50' overflow={'hidden'} rounded="full">
+                  <FastImage
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri: data.image,
+                      priority: FastImage.priority.normal,
+                      cache: FastImage.cacheControl.cacheOnly
+                    }}
+                    alt="images"
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                </Box>
               </Box>
-            </Box>
-            <VStack w='80%' justifyContent={'center'}>
-              <HStack w='100%' space={1}>
-                <Text color={theme.Text.base} >{data.title}</Text>
-              </HStack>
-              <Text color={theme.Text.description} fontSize={'xs'}>{timeago}</Text>
-            </VStack>
-          </HStack>
+              <VStack w='80%' justifyContent={'center'}>
+                <HStack w='100%' space={1}>
+                  <Text color={theme.Text.base} >{data.title}</Text>
+                </HStack>
+                <Text color={theme.Text.description} fontSize={'xs'}>{timeago}</Text>
+              </VStack>
+            </HStack>
+  
+            </Stack>
         )
       }}
-  
     </Pressable>
   )
 }

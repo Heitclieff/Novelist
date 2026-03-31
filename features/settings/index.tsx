@@ -32,21 +32,30 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
             {SettingsCategory.map((item ,round) => {
                 const option = Settingmenu.filter((optionfiltered) => optionfiltered.tag == item.tag)
                 return (
-                    <VStack key = {round} space  ={3} mt = {3}>
+                    <VStack 
+                    key = {round} 
+                    space  ={3} 
+                    mt = {3}>
                         <Text
                         pl = {5}
                         fontWeight={'semibold'}
                         color = {theme.Text.heading}
                         >{item.title}</Text>
-                        <VStack  pl = {2} pr = {2}>
+                        <VStack  pl = {4} pr = {4}>
                             {option.map((optionitem , key) => {
                              
                             return( 
-                                <Box mb = {1} key = {key}>
+                                <Box  
+                                key = {key} 
+                                rounded= 'md' 
+                                borderWidth = {1}
+                                borderColor={theme.Divider.menu}
+                                overflow = 'hidden'
+                                >
                                     <MemorizedOptionfield
                                         title = {optionitem.title}
                                         isDividerEnable = {false}
-                                        isChevronEnable={false}
+                                        isChevronEnable={true}
                                         justifyIcon  = 'center'
                                         direction={optionitem.direct}
                                         detail = {optionitem.detail}
@@ -61,7 +70,7 @@ const Settings : React.FC <Pageprops> = ({setTheme})  => {
                     </VStack>
                 )
             })}
-            <Box p = {2}>
+            <Box pl = {4} pr = {4}>
                 <DarkmodeButton/>
             </Box>
             

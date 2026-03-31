@@ -1,104 +1,120 @@
-import React, {
-useContext
-}   from 'react'
+import React, { useContext } from 'react'
 import {
 HStack,
 VStack,
 Box,
-Text,
-Divider,
-IconButton,
 Button,
-Icon
-}   from 'native-base'
+} from 'native-base'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+import AntdesignIcon from 'react-native-vector-icons/AntDesign'
+import Animated from 'react-native-reanimated';
 
 import { ThemeWrapper } from '../../systems/theme/Themeprovider'
 import { useNavigation } from '@react-navigation/native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
-import AntdesignIcon from 'react-native-vector-icons/AntDesign'
-import Animated, {
-     useSharedValue,
-     useAnimatedStyle,
-     interpolateColor,
-} from 'react-native-reanimated';
+
+import { IndexnavigationHooks } from '../hooks/navigation.hooks'
 
 interface AppbarProps {
-     scrollY : any
-     leftElement : any 
-     rightElement : any
-     notify : number
-
+    scrollY : any
+    notify : number
 }
 
-const NotificationAlertIcon = () => {
-    const theme:any = useContext(ThemeWrapper);
-    return(
-        <VStack position='relative' alignItems='center' justifyContent='center' pl={2} pr={2}>
-        <Box position='absolute' zIndex={10} pt={5}>
-            <Box position='absolute' zIndex={10} minW={2} minH={2} bg='red.500' rounded='full' />
-        </Box>
-        <Box position='absolute'>
-            <IonIcon name='notifications' color={theme.Icon.static} size={15} />
-        </Box>
-    </VStack>
-    )
-}
+const AnimatedAntdesignIcon = Animated.createAnimatedComponent(AntdesignIcon)
+const AnimatedIonIcon = Animated.createAnimatedComponent(IonIcon)
 
-const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , leftElement = null ,rightElement = [] ,notify}) => {
+const Indexnavigation: React.FC<AppbarProps> = ({ scrollY , notify}) => {
     const theme: any = useContext(ThemeWrapper);
     const navigation = useNavigation();
-    const animatedNavbarStyle = useAnimatedStyle(() => {
-        const backgroundColor = interpolateColor(scrollY.value, [0, 100],
-            ['transparent', theme.Bg.header]);
-        return {
-            backgroundColor,
-        };
-    });
-
-
+    const {animatedNavbarStyle , AnimatedTextStyle} = IndexnavigationHooks(theme , scrollY)
+    
     return (
         <VStack
-            w='100%'
-            position={'absolute'}
-            zIndex={10}
-            justifyContent={'flex-end'}
+          w='100%'
+          position={'absolute'}
+          zIndex={10}
+          justifyContent={'flex-end'}
         >
             <Animated.View style={[animatedNavbarStyle]}>
                 <HStack
-                    justifyContent={'space-between'}
-                    alignItems={'center'}
-                    safeAreaTop
+                  justifyContent={'space-between'}
+                  alignItems={'center'}
+                  safeAreaTop
+                  pl = {5}
                 >
-                    <VStack
-                        pl={5}
+                    <Animated.Text
+                      style = {[AnimatedTextStyle,  {fontSize : 20 , fontWeight : 'bold' }]}
                     >
-                        {leftElement}
-                    </VStack>
+                        Nobelist
+                    </Animated.Text>
                     <HStack
-                        pr={5}
-                        space={1}
+                      pr={5}
+                      space={2}
                     >   
-
-                {
-                rightElement.length > 0 && rightElement.map((item: any ,key:number) => {
-                    const notifyAlert = item.id == 2  && notify > 0;
-                    // const key = notifyAlert ? 'notify_' + item.id :  item.id;
-                    return (
-                        <IconButton
-                        key = {key}
-                        onPress={() => navigation.navigate(item.navigate)}
-                        size='sm'
-                        rounded='full'
-                        colorScheme='cyan'
-                        icon={ notifyAlert ? (
-                            <NotificationAlertIcon key = {key}/>
-                        ) : item.icon
+                        <Button
+                          onPress= {() => navigation.navigate('Search')}
+                          w='30px'
+                          h="30px"
+                          p={0}
+                          rounded='full'
+                          alignItems={'center'}
+                          bg = {'transparent'}
+                          justifyContent={'center'}
+                          _pressed={{opacity : 0.5 , backgroundColor : 'transparent' }}   
+                        >
+                            <AnimatedAntdesignIcon
+                              name='search1'
+                              size={18}
+                              style={AnimatedTextStyle}
+                            />
+                        </Button>
                         
-                        }
-                      />
-                    );
-                })
-                }
+                        <Button
+                          onPress= {() => navigation.navigate("Notification")}
+                          w='30px'
+                          h="30px"
+                          p={0}
+                          rounded='full'
+                          alignItems={'center'}
+                          bg = {'transparent'}
+                          justifyContent={'center'}
+                          _pressed={{opacity : 0.5 , backgroundColor : 'transparent' }}
+                        >
+                            {notify > 0 ?
+                                <VStack
+                                  position='relative' 
+                                  alignItems='center' 
+                                  justifyContent='center' 
+                                  pl={2} 
+                                  pr={2}
+                                >
+                                    <Box position='absolute' zIndex={10} pt={5}>
+                                        <Box 
+                                          position='absolute' 
+                                          zIndex={10} 
+                                          minW={2} 
+                                          minH={2} 
+                                          bg='red.500' 
+                                          rounded='full' 
+                                        />
+                                    </Box>
+                                    <Box position='absolute'>
+                                        <AnimatedIonIcon 
+                                          name='notifications' 
+                                          style={AnimatedTextStyle} 
+                                          size={15} 
+                                        />
+                                    </Box>
+                                </VStack>  
+                                
+                                :
+
+                                <AnimatedIonIcon
+                                    name = 'notifications'
+                                    size={18}
+                                    style={AnimatedTextStyle}
+                                />
+                            }
+                    </Button>                 
                     </HStack>
                 </HStack>
             </Animated.View>
